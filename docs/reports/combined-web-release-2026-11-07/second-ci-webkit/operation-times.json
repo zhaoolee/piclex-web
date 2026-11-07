@@ -1,0 +1,354 @@
+[
+  {
+    "operation": "Create context",
+    "params": {},
+    "milliseconds": 29
+  },
+  {
+    "operation": "Create page",
+    "params": {},
+    "milliseconds": 253
+  },
+  {
+    "operation": "Set viewport size",
+    "params": {
+      "width": "320",
+      "height": "700"
+    },
+    "milliseconds": 11
+  },
+  {
+    "operation": "Add init script",
+    "params": {},
+    "milliseconds": 3
+  },
+  {
+    "operation": "Route requests",
+    "params": {},
+    "milliseconds": 1
+  },
+  {
+    "operation": "Route requests",
+    "params": {},
+    "milliseconds": 0
+  },
+  {
+    "operation": "Navigate",
+    "params": {
+      "url": "/piclex-web/#/learn"
+    },
+    "milliseconds": 303
+  },
+  {
+    "operation": "Click",
+    "params": {
+      "locator": "getByRole('button', { name: '下载第三方卡组', exact: true })"
+    },
+    "milliseconds": 2380
+  },
+  {
+    "operation": "Fill \"https://decks.example.test/feed.json?token=long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-\"",
+    "params": {
+      "locator": "getByRole('textbox', { name: '粘贴卡组 URL' })",
+      "value": "https://decks.example.test/feed.json?token=long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-l…"
+    },
+    "milliseconds": 46
+  },
+  {
+    "operation": "Fulfill request",
+    "params": {},
+    "milliseconds": 8
+  },
+  {
+    "operation": "Click",
+    "params": {
+      "locator": "getByRole('button', { name: '下载卡组', exact: true })"
+    },
+    "milliseconds": 2866
+  },
+  {
+    "operation": "Fulfill request",
+    "params": {},
+    "milliseconds": 24
+  },
+  {
+    "operation": "Click",
+    "params": {
+      "locator": "getByRole('button', { name: '测试照片卡组 下载', exact: true })"
+    },
+    "milliseconds": 943
+  },
+  {
+    "operation": "Click",
+    "params": {
+      "locator": "getByRole('button', { name: '按键 X', exact: true })"
+    },
+    "milliseconds": 898
+  },
+  {
+    "operation": "Get input value",
+    "params": {
+      "locator": "getByRole('textbox', { name: '输入英文', exact: true })"
+    },
+    "milliseconds": 18
+  },
+  {
+    "operation": "Evaluate",
+    "params": {},
+    "milliseconds": 133
+  },
+  {
+    "operation": "Click",
+    "params": {
+      "locator": "getByRole('button', { name: '下载第三方卡组', exact: true })"
+    },
+    "milliseconds": 474
+  },
+  {
+    "operation": "Click",
+    "params": {
+      "locator": "locator('.deck-subscriptions>summary')"
+    },
+    "milliseconds": 1221
+  },
+  {
+    "operation": "Bounding box",
+    "params": {
+      "locator": "getByRole('article', { name: '测试照片卡组' })",
+      "state": "attached"
+    },
+    "milliseconds": 76
+  },
+  {
+    "operation": "Click",
+    "params": {
+      "locator": "getByRole('article', { name: '测试照片卡组' }).getByRole('button', { name: '订阅链接', exact: true })"
+    },
+    "milliseconds": 897
+  },
+  {
+    "operation": "Bounding box",
+    "params": {
+      "locator": "getByRole('article', { name: '测试照片卡组' })",
+      "state": "attached"
+    },
+    "milliseconds": 16
+  },
+  {
+    "operation": "Click",
+    "params": {
+      "locator": "getByRole('article', { name: '测试照片卡组' }).getByRole('button', { name: '订阅链接', exact: true })"
+    },
+    "milliseconds": 1293
+  },
+  {
+    "operation": "Click",
+    "params": {
+      "locator": "getByRole('article', { name: '测试照片卡组' }).getByRole('button', { name: '复制测试照片卡组的订阅链接' })"
+    },
+    "milliseconds": 970
+  },
+  {
+    "operation": "Evaluate",
+    "params": {},
+    "milliseconds": 6
+  },
+  {
+    "operation": "Evaluate",
+    "params": {},
+    "milliseconds": 5
+  },
+  {
+    "operation": "Reload",
+    "params": {},
+    "milliseconds": 393
+  },
+  {
+    "operation": "Click",
+    "params": {
+      "locator": "getByRole('button', { name: '下载第三方卡组', exact: true })"
+    },
+    "milliseconds": 1758
+  },
+  {
+    "operation": "Click",
+    "params": {
+      "locator": "locator('.deck-subscriptions>summary')"
+    },
+    "milliseconds": 1283
+  },
+  {
+    "operation": "Screenshot",
+    "params": {
+      "type": "png",
+      "fullPage": "true"
+    },
+    "milliseconds": 692
+  },
+  {
+    "operation": "Evaluate",
+    "params": {
+      "locator": "getByRole('article', { name: '测试照片卡组' })",
+      "state": "attached"
+    },
+    "milliseconds": 56
+  },
+  {
+    "operation": "Evaluate",
+    "params": {},
+    "milliseconds": 9
+  },
+  {
+    "operation": "Reload",
+    "params": {},
+    "milliseconds": 366
+  },
+  {
+    "operation": "Click",
+    "params": {
+      "locator": "getByRole('button', { name: '下载第三方卡组', exact: true })"
+    },
+    "milliseconds": 1231
+  },
+  {
+    "operation": "Click",
+    "params": {
+      "locator": "locator('.deck-subscriptions>summary')"
+    },
+    "milliseconds": 1153
+  },
+  {
+    "operation": "Screenshot",
+    "params": {
+      "type": "png",
+      "fullPage": "true"
+    },
+    "milliseconds": 594
+  },
+  {
+    "operation": "Evaluate",
+    "params": {
+      "locator": "getByRole('article', { name: '测试照片卡组' })",
+      "state": "attached"
+    },
+    "milliseconds": 49
+  },
+  {
+    "operation": "Click",
+    "params": {
+      "locator": "getByRole('article', { name: '测试照片卡组' }).getByRole('button', { name: '取消订阅', exact: true })"
+    },
+    "milliseconds": 679
+  },
+  {
+    "operation": "Click",
+    "params": {
+      "locator": "getByRole('dialog', { name: '取消订阅？', exact: true }).getByRole('button', { name: '保留订阅' })"
+    },
+    "milliseconds": 936
+  },
+  {
+    "operation": "Click",
+    "params": {
+      "locator": "getByRole('article', { name: '测试照片卡组' }).getByRole('button', { name: '取消订阅', exact: true })"
+    },
+    "milliseconds": 969
+  },
+  {
+    "operation": "Press \"Escape\"",
+    "params": {
+      "key": "Escape"
+    },
+    "milliseconds": 11
+  },
+  {
+    "operation": "Click",
+    "params": {
+      "locator": "getByRole('article', { name: '测试照片卡组' }).getByRole('button', { name: '取消订阅', exact: true })"
+    },
+    "milliseconds": 775
+  },
+  {
+    "operation": "Screenshot",
+    "params": {
+      "type": "png",
+      "fullPage": "true"
+    },
+    "milliseconds": 678
+  },
+  {
+    "operation": "Click",
+    "params": {
+      "locator": "getByRole('dialog', { name: '取消订阅？', exact: true }).getByRole('button', { name: '取消订阅', exact: true })"
+    },
+    "milliseconds": 1282
+  },
+  {
+    "operation": "Evaluate",
+    "params": {},
+    "milliseconds": 16
+  },
+  {
+    "operation": "Click",
+    "params": {
+      "locator": "getByRole('button', { name: '关闭', exact: true })"
+    },
+    "milliseconds": 397
+  },
+  {
+    "operation": "Reload",
+    "params": {},
+    "milliseconds": 258
+  },
+  {
+    "operation": "Click",
+    "params": {
+      "locator": "getByRole('button', { name: '下载第三方卡组', exact: true })"
+    },
+    "milliseconds": 955
+  },
+  {
+    "operation": "Click",
+    "params": {
+      "locator": "locator('.deck-subscriptions>summary')"
+    },
+    "milliseconds": 1025
+  },
+  {
+    "operation": "Evaluate",
+    "params": {},
+    "milliseconds": 26
+  },
+  {
+    "operation": "Fill \"https://decks.example.test/feed.json?token=long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-\"",
+    "params": {
+      "locator": "getByRole('textbox', { name: '粘贴卡组 URL' })",
+      "value": "https://decks.example.test/feed.json?token=long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-long-source-l…"
+    },
+    "milliseconds": 35
+  },
+  {
+    "operation": "Fulfill request",
+    "params": {},
+    "milliseconds": 18
+  },
+  {
+    "operation": "Click",
+    "params": {
+      "locator": "getByRole('button', { name: '下载卡组', exact: true })"
+    },
+    "milliseconds": 743
+  },
+  {
+    "operation": "Click",
+    "params": {
+      "locator": "getByRole('button', { name: '测试照片卡组 恢复订阅', exact: true })"
+    },
+    "milliseconds": 1232
+  },
+  {
+    "operation": "Close context",
+    "params": {},
+    "milliseconds": 15
+  }
+]

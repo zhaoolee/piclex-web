@@ -1,0 +1,19 @@
+npm notice run piclex-web@0.1.0 npx
+npm notice run 'playwright' test tests/browser/deck-subscriptions.spec.ts tests/browser/deck-subscription-themes.spec.ts --reporter=line
+[WebServer] npm notice run piclex-web@0.1.0 preview
+
+[WebServer] npm notice run vite preview --host 127.0.0.1 --port 18120
+
+
+Running 9 tests using 2 workers
+
+[1/9] [desktop] › tests/browser/deck-subscriptions.spec.ts:4:1 › confirmation and persistent cancellation preserve downloaded bytes and draft
+[2/9] [desktop] › tests/browser/deck-subscription-themes.spec.ts:5:1 › subscription links expand, copy and fit light and dark themes after reload at 320px
+[3/9] [desktop] › tests/browser/deck-subscriptions.spec.ts:13:1 › failed clipboard and storage writes do not falsely confirm or remove a subscription
+[4/9] [mobile] › tests/browser/deck-subscription-themes.spec.ts:5:1 › subscription links expand, copy and fit light and dark themes after reload at 320px
+[5/9] [mobile] › tests/browser/deck-subscriptions.spec.ts:4:1 › confirmation and persistent cancellation preserve downloaded bytes and draft
+[6/9] [mobile] › tests/browser/deck-subscriptions.spec.ts:13:1 › failed clipboard and storage writes do not falsely confirm or remove a subscription
+[7/9] [mobile-webkit] › tests/browser/deck-subscription-themes.spec.ts:5:1 › subscription links expand, copy and fit light and dark themes after reload at 320px
+[8/9] [mobile-webkit] › tests/browser/deck-subscriptions.spec.ts:4:1 › confirmation and persistent cancellation preserve downloaded bytes and draft
+[9/9] [mobile-webkit] › tests/browser/deck-subscriptions.spec.ts:13:1 › failed clipboard and storage writes do not falsely confirm or remove a subscription
+  9 passed (23.1s)

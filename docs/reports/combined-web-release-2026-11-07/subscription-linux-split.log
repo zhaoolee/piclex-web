@@ -1,0 +1,22 @@
+
+Running 18 tests using 2 workers
+
+[1/18] [desktop] › tests/browser/deck-subscription-themes.spec.ts:5:1 › subscription links expand, copy and fit light and dark themes after reload at 320px
+[2/18] [desktop] › tests/browser/deck-subscriptions.spec.ts:4:1 › confirmation and persistent cancellation preserve downloaded bytes and draft
+[3/18] [desktop] › tests/browser/deck-subscriptions.spec.ts:13:1 › failed clipboard and storage writes do not falsely confirm or remove a subscription
+[4/18] [desktop] › tests/browser/deck-subscription-themes.spec.ts:5:1 › subscription links expand, copy and fit light and dark themes after reload at 320px
+[5/18] [desktop] › tests/browser/deck-subscriptions.spec.ts:4:1 › confirmation and persistent cancellation preserve downloaded bytes and draft
+[6/18] [desktop] › tests/browser/deck-subscriptions.spec.ts:13:1 › failed clipboard and storage writes do not falsely confirm or remove a subscription
+[7/18] [mobile] › tests/browser/deck-subscription-themes.spec.ts:5:1 › subscription links expand, copy and fit light and dark themes after reload at 320px
+[8/18] [mobile] › tests/browser/deck-subscriptions.spec.ts:4:1 › confirmation and persistent cancellation preserve downloaded bytes and draft
+[9/18] [mobile] › tests/browser/deck-subscriptions.spec.ts:13:1 › failed clipboard and storage writes do not falsely confirm or remove a subscription
+[10/18] [mobile] › tests/browser/deck-subscription-themes.spec.ts:5:1 › subscription links expand, copy and fit light and dark themes after reload at 320px
+[11/18] [mobile] › tests/browser/deck-subscriptions.spec.ts:4:1 › confirmation and persistent cancellation preserve downloaded bytes and draft
+[12/18] [mobile] › tests/browser/deck-subscriptions.spec.ts:13:1 › failed clipboard and storage writes do not falsely confirm or remove a subscription
+[13/18] [mobile-webkit] › tests/browser/deck-subscription-themes.spec.ts:5:1 › subscription links expand, copy and fit light and dark themes after reload at 320px
+[14/18] [mobile-webkit] › tests/browser/deck-subscriptions.spec.ts:4:1 › confirmation and persistent cancellation preserve downloaded bytes and draft
+[15/18] [mobile-webkit] › tests/browser/deck-subscriptions.spec.ts:13:1 › failed clipboard and storage writes do not falsely confirm or remove a subscription
+[16/18] [mobile-webkit] › tests/browser/deck-subscription-themes.spec.ts:5:1 › subscription links expand, copy and fit light and dark themes after reload at 320px
+[17/18] [mobile-webkit] › tests/browser/deck-subscriptions.spec.ts:4:1 › confirmation and persistent cancellation preserve downloaded bytes and draft
+[18/18] [mobile-webkit] › tests/browser/deck-subscriptions.spec.ts:13:1 › failed clipboard and storage writes do not falsely confirm or remove a subscription
+  18 passed (1.0m)
