@@ -1,0 +1,10 @@
+{
+  "apps/public/src/NativePractice.tsx": "a50493bd2c60a05861670657eb035eb96df9a379341466f25d20b80280945885",
+  "apps/public/src/useSpeech.ts": "27cb6876d8760c421e37b2ee52bcb35d6f07d8a269da46b1e547c9eba9ff6c02",
+  "apps/public/src/practice.css": "6c0e6da5ff71b4ddb2f7d84d30d420afa9f53ea9e5ab956942c96ddc2727f556",
+  "playwright.config.ts": "3d863642e49027d0a16c4a45907c86874024982b181e296d61b164589e8b910e",
+  "tests/browser/playback-parity.spec.ts": "fbdfe311dc8ca52fbf10fba6d709122e59d7007c2d628eef20ffc933d3496c20",
+  "tests/browser/deck-picker-audio.spec.ts": "255c1ec4ae5fddea20798a3c14b968fde99f69c4d30be026188974bfb72b45f6",
+  "tests/browser/audio-unlock.spec.ts": "b293975489a3a3e6637009a1f3742bafb89d8a51f097fdf424d1ca837d64e0d3",
+  "tests/browser/audio-unlock-speech.spec.ts": "fe25edf113d41e43b69125d9bc6b86612141a917a007e6c55d428aa88d6b314d"
+}

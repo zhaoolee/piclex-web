@@ -1,0 +1,500 @@
+[
+  {
+    "scenario": "keyboard",
+    "before": {
+      "activated": false,
+      "input": "",
+      "heading": "小提琴",
+      "icon": {
+        "x": 581,
+        "y": 127,
+        "width": 34,
+        "height": 34
+      },
+      "photo": {
+        "x": 97,
+        "y": 117,
+        "width": 528,
+        "height": 330
+      },
+      "footer": {
+        "x": 97,
+        "y": 621,
+        "width": 528,
+        "height": 100
+      },
+      "keyboard": {
+        "x": 93,
+        "y": 729,
+        "width": 536,
+        "height": 120
+      },
+      "keyF": {
+        "x": 282.578125,
+        "y": 774,
+        "width": 48.953125,
+        "height": 34
+      },
+      "attempts": [
+        {
+          "src": "http://127.0.0.1:18440/piclex-web/library/0a1ff2e2-3db0-4bb1-889a-b27b62798cbe/v6-c60d2b10263a6780/audio/41c488e03b80ef50b1c417fd791862f308eea85b46164a5b7c0860c980f85457.mp3",
+          "result": "NotAllowedError"
+        }
+      ],
+      "media": [
+        {
+          "time": 0,
+          "paused": true
+        }
+      ],
+      "scrollWidth": 722,
+      "viewport": 722,
+      "module": "spelling",
+      "dialog": false
+    },
+    "playing": {
+      "activated": true,
+      "input": "f",
+      "heading": "小提琴",
+      "icon": null,
+      "photo": {
+        "x": 97,
+        "y": 117,
+        "width": 528,
+        "height": 330
+      },
+      "footer": {
+        "x": 97,
+        "y": 621,
+        "width": 528,
+        "height": 100
+      },
+      "keyboard": {
+        "x": 93,
+        "y": 729,
+        "width": 536,
+        "height": 120
+      },
+      "keyF": {
+        "x": 282.578125,
+        "y": 774,
+        "width": 48.953125,
+        "height": 34
+      },
+      "attempts": [
+        {
+          "src": "http://127.0.0.1:18440/piclex-web/library/0a1ff2e2-3db0-4bb1-889a-b27b62798cbe/v6-c60d2b10263a6780/audio/41c488e03b80ef50b1c417fd791862f308eea85b46164a5b7c0860c980f85457.mp3",
+          "result": "NotAllowedError"
+        },
+        {
+          "src": "http://127.0.0.1:18440/piclex-web/library/0a1ff2e2-3db0-4bb1-889a-b27b62798cbe/v6-c60d2b10263a6780/audio/41c488e03b80ef50b1c417fd791862f308eea85b46164a5b7c0860c980f85457.mp3",
+          "result": "playing"
+        }
+      ],
+      "media": [
+        {
+          "time": 0,
+          "paused": true
+        },
+        {
+          "time": 0.127389,
+          "paused": false
+        }
+      ],
+      "scrollWidth": 722,
+      "viewport": 722,
+      "module": "spelling",
+      "dialog": false
+    },
+    "next": {
+      "activated": true,
+      "input": "",
+      "heading": "爱",
+      "icon": null,
+      "photo": {
+        "x": 97,
+        "y": 117,
+        "width": 528,
+        "height": 330
+      },
+      "footer": {
+        "x": 97,
+        "y": 621,
+        "width": 528,
+        "height": 100
+      },
+      "keyboard": {
+        "x": 93,
+        "y": 729,
+        "width": 536,
+        "height": 120
+      },
+      "keyF": {
+        "x": 282.578125,
+        "y": 774,
+        "width": 48.953125,
+        "height": 34
+      },
+      "attempts": [
+        {
+          "src": "http://127.0.0.1:18440/piclex-web/library/0a1ff2e2-3db0-4bb1-889a-b27b62798cbe/v6-c60d2b10263a6780/audio/41c488e03b80ef50b1c417fd791862f308eea85b46164a5b7c0860c980f85457.mp3",
+          "result": "NotAllowedError"
+        },
+        {
+          "src": "http://127.0.0.1:18440/piclex-web/library/0a1ff2e2-3db0-4bb1-889a-b27b62798cbe/v6-c60d2b10263a6780/audio/41c488e03b80ef50b1c417fd791862f308eea85b46164a5b7c0860c980f85457.mp3",
+          "result": "playing"
+        },
+        {
+          "src": "http://127.0.0.1:18440/piclex-web/library/0a1ff2e2-3db0-4bb1-889a-b27b62798cbe/v6-c60d2b10263a6780/audio/390b9ca5b1fc5c83ae4e15b25e69ee82f0c64084b49f7d93d64334f46701c5af.mp3",
+          "result": "playing"
+        }
+      ],
+      "media": [
+        {
+          "time": 0,
+          "paused": true
+        },
+        {
+          "time": 0,
+          "paused": true
+        },
+        {
+          "time": 0.010744,
+          "paused": false
+        }
+      ],
+      "scrollWidth": 722,
+      "viewport": 722,
+      "module": "spelling",
+      "dialog": false
+    },
+    "errors": []
+  },
+  {
+    "scenario": "icon",
+    "before": {
+      "activated": false,
+      "input": "",
+      "heading": "小提琴",
+      "icon": {
+        "x": 330,
+        "y": 127,
+        "width": 34,
+        "height": 34
+      },
+      "photo": {
+        "x": 16,
+        "y": 117,
+        "width": 358,
+        "height": 253
+      },
+      "footer": {
+        "x": 16,
+        "y": 466,
+        "width": 358,
+        "height": 154
+      },
+      "keyboard": {
+        "x": 12,
+        "y": 628,
+        "width": 366,
+        "height": 120
+      },
+      "keyF": {
+        "x": 142.375,
+        "y": 671,
+        "width": 31.765625,
+        "height": 36
+      },
+      "attempts": [
+        {
+          "src": "http://127.0.0.1:18440/piclex-web/library/0a1ff2e2-3db0-4bb1-889a-b27b62798cbe/v6-c60d2b10263a6780/audio/41c488e03b80ef50b1c417fd791862f308eea85b46164a5b7c0860c980f85457.mp3",
+          "result": "NotAllowedError"
+        }
+      ],
+      "media": [
+        {
+          "time": 0,
+          "paused": true
+        }
+      ],
+      "scrollWidth": 390,
+      "viewport": 390,
+      "module": "spelling",
+      "dialog": false
+    },
+    "playing": {
+      "activated": true,
+      "input": "",
+      "heading": "小提琴",
+      "icon": null,
+      "photo": {
+        "x": 16,
+        "y": 117,
+        "width": 358,
+        "height": 253
+      },
+      "footer": {
+        "x": 16,
+        "y": 466,
+        "width": 358,
+        "height": 154
+      },
+      "keyboard": {
+        "x": 12,
+        "y": 628,
+        "width": 366,
+        "height": 120
+      },
+      "keyF": {
+        "x": 142.375,
+        "y": 671,
+        "width": 31.765625,
+        "height": 36
+      },
+      "attempts": [
+        {
+          "src": "http://127.0.0.1:18440/piclex-web/library/0a1ff2e2-3db0-4bb1-889a-b27b62798cbe/v6-c60d2b10263a6780/audio/41c488e03b80ef50b1c417fd791862f308eea85b46164a5b7c0860c980f85457.mp3",
+          "result": "NotAllowedError"
+        },
+        {
+          "src": "http://127.0.0.1:18440/piclex-web/library/0a1ff2e2-3db0-4bb1-889a-b27b62798cbe/v6-c60d2b10263a6780/audio/41c488e03b80ef50b1c417fd791862f308eea85b46164a5b7c0860c980f85457.mp3",
+          "result": "playing"
+        }
+      ],
+      "media": [
+        {
+          "time": 0,
+          "paused": true
+        },
+        {
+          "time": 0.078729,
+          "paused": false
+        }
+      ],
+      "scrollWidth": 390,
+      "viewport": 390,
+      "module": "spelling",
+      "dialog": false
+    },
+    "errors": []
+  },
+  {
+    "scenario": "touch-key",
+    "before": {
+      "activated": false,
+      "input": "",
+      "heading": "小提琴",
+      "icon": {
+        "x": 330,
+        "y": 127,
+        "width": 34,
+        "height": 34
+      },
+      "photo": {
+        "x": 16,
+        "y": 117,
+        "width": 358,
+        "height": 253
+      },
+      "footer": {
+        "x": 16,
+        "y": 466,
+        "width": 358,
+        "height": 154
+      },
+      "keyboard": {
+        "x": 12,
+        "y": 628,
+        "width": 366,
+        "height": 120
+      },
+      "keyF": {
+        "x": 142.375,
+        "y": 671,
+        "width": 31.765625,
+        "height": 36
+      },
+      "attempts": [
+        {
+          "src": "http://127.0.0.1:18440/piclex-web/library/0a1ff2e2-3db0-4bb1-889a-b27b62798cbe/v6-c60d2b10263a6780/audio/41c488e03b80ef50b1c417fd791862f308eea85b46164a5b7c0860c980f85457.mp3",
+          "result": "NotAllowedError"
+        }
+      ],
+      "media": [
+        {
+          "time": 0,
+          "paused": true
+        }
+      ],
+      "scrollWidth": 390,
+      "viewport": 390,
+      "module": "spelling",
+      "dialog": false
+    },
+    "playing": {
+      "activated": true,
+      "input": "f",
+      "heading": "小提琴",
+      "icon": null,
+      "photo": {
+        "x": 16,
+        "y": 117,
+        "width": 358,
+        "height": 253
+      },
+      "footer": {
+        "x": 16,
+        "y": 466,
+        "width": 358,
+        "height": 154
+      },
+      "keyboard": {
+        "x": 12,
+        "y": 628,
+        "width": 366,
+        "height": 120
+      },
+      "keyF": {
+        "x": 142.375,
+        "y": 671,
+        "width": 31.765625,
+        "height": 36
+      },
+      "attempts": [
+        {
+          "src": "http://127.0.0.1:18440/piclex-web/library/0a1ff2e2-3db0-4bb1-889a-b27b62798cbe/v6-c60d2b10263a6780/audio/41c488e03b80ef50b1c417fd791862f308eea85b46164a5b7c0860c980f85457.mp3",
+          "result": "NotAllowedError"
+        },
+        {
+          "src": "http://127.0.0.1:18440/piclex-web/library/0a1ff2e2-3db0-4bb1-889a-b27b62798cbe/v6-c60d2b10263a6780/audio/41c488e03b80ef50b1c417fd791862f308eea85b46164a5b7c0860c980f85457.mp3",
+          "result": "playing"
+        }
+      ],
+      "media": [
+        {
+          "time": 0,
+          "paused": true
+        },
+        {
+          "time": 0.144769,
+          "paused": false
+        }
+      ],
+      "scrollWidth": 390,
+      "viewport": 390,
+      "module": "spelling",
+      "dialog": false
+    },
+    "errors": []
+  },
+  {
+    "scenario": "blank-click",
+    "before": {
+      "activated": false,
+      "input": "",
+      "heading": "小提琴",
+      "icon": {
+        "x": 581,
+        "y": 127,
+        "width": 34,
+        "height": 34
+      },
+      "photo": {
+        "x": 97,
+        "y": 117,
+        "width": 528,
+        "height": 330
+      },
+      "footer": {
+        "x": 97,
+        "y": 621,
+        "width": 528,
+        "height": 100
+      },
+      "keyboard": {
+        "x": 93,
+        "y": 729,
+        "width": 536,
+        "height": 120
+      },
+      "keyF": {
+        "x": 282.578125,
+        "y": 774,
+        "width": 48.953125,
+        "height": 34
+      },
+      "attempts": [
+        {
+          "src": "http://127.0.0.1:18440/piclex-web/library/0a1ff2e2-3db0-4bb1-889a-b27b62798cbe/v6-c60d2b10263a6780/audio/41c488e03b80ef50b1c417fd791862f308eea85b46164a5b7c0860c980f85457.mp3",
+          "result": "NotAllowedError"
+        }
+      ],
+      "media": [
+        {
+          "time": 0,
+          "paused": true
+        }
+      ],
+      "scrollWidth": 722,
+      "viewport": 722,
+      "module": "spelling",
+      "dialog": false
+    },
+    "playing": {
+      "activated": true,
+      "input": "",
+      "heading": "小提琴",
+      "icon": null,
+      "photo": {
+        "x": 97,
+        "y": 117,
+        "width": 528,
+        "height": 330
+      },
+      "footer": {
+        "x": 97,
+        "y": 621,
+        "width": 528,
+        "height": 100
+      },
+      "keyboard": {
+        "x": 93,
+        "y": 729,
+        "width": 536,
+        "height": 120
+      },
+      "keyF": {
+        "x": 282.578125,
+        "y": 774,
+        "width": 48.953125,
+        "height": 34
+      },
+      "attempts": [
+        {
+          "src": "http://127.0.0.1:18440/piclex-web/library/0a1ff2e2-3db0-4bb1-889a-b27b62798cbe/v6-c60d2b10263a6780/audio/41c488e03b80ef50b1c417fd791862f308eea85b46164a5b7c0860c980f85457.mp3",
+          "result": "NotAllowedError"
+        },
+        {
+          "src": "http://127.0.0.1:18440/piclex-web/library/0a1ff2e2-3db0-4bb1-889a-b27b62798cbe/v6-c60d2b10263a6780/audio/41c488e03b80ef50b1c417fd791862f308eea85b46164a5b7c0860c980f85457.mp3",
+          "result": "playing"
+        }
+      ],
+      "media": [
+        {
+          "time": 0,
+          "paused": true
+        },
+        {
+          "time": 0.097531,
+          "paused": false
+        }
+      ],
+      "scrollWidth": 722,
+      "viewport": 722,
+      "module": "spelling",
+      "dialog": false
+    },
+    "errors": []
+  }
+]

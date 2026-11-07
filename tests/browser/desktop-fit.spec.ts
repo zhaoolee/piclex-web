@@ -20,7 +20,7 @@ test('desktop preserves full photograph and fits answer, rate and keyboard witho
    expect(geometry.keyboard.bottom).toBeLessThanOrEqual(geometry.tabs.top);expect(geometry.rate.bottom).toBeLessThanOrEqual(geometry.keyboard.top);expect(geometry.available).toBeGreaterThan(geometry.text);
    await page.getByLabel('播放速度',{exact:true}).selectOption('1.15');await expect(page.getByLabel('播放速度',{exact:true})).toHaveValue('1.15');await page.getByLabel('播放速度',{exact:true}).selectOption('1');
    if(mode==='spelling'){
-    await fillEnglish(page.getByRole('textbox',{name:'输入英文',exact:true}),'z');await expect(page.locator('.native-answer')).toHaveClass(/wrong/);await expect(page.locator('.answer-feedback')).toHaveText('');
+    await fillEnglish(page.getByRole('textbox',{name:'输入英文',exact:true}),'z');await expect(page.locator('.native-answer')).toHaveClass(/wrong/);await expect(page.locator('.answer-feedback')).toHaveCount(0);
     await expect.poll(()=>page.locator('.native-practice').evaluate(n=>n.scrollHeight-n.clientHeight)).toBeLessThanOrEqual(1);
     await page.getByRole('button',{name:'退格',exact:true}).click();
    }

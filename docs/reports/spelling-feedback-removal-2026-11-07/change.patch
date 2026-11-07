@@ -1,0 +1,156 @@
+diff --git a/apps/public/src/NativePractice.tsx b/apps/public/src/NativePractice.tsx
+index 2435d09..e54bd77 100644
+--- a/apps/public/src/NativePractice.tsx
++++ b/apps/public/src/NativePractice.tsx
+@@ -344,8 +344,7 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,selec
+     </section>)}
+     {state.module==='speaking'&&(word.example?<Reading key={word.id} continuation={readingContinuation} word={word} active={active} audio={audio} rate={state.rate} notify={notify} saved={readingSaved.current} reward={(matched,count)=>award({id:`reading:${studyEventScope(deck,state,word)}:${word.id}`,kind:"reading",matched,wordCount:count})} next={()=>dispatch({type:'speakingNext'})}/>:<div><p className="native-unavailable">这张卡片没有可跟读的例句。</p><button className="native-button" onClick={()=>dispatch({type:'speakingNext'})}>下一句</button></div>)}
+    </div>
+-   {state.module==='spelling'?<div className="native-answer-footer"><p className="answer-feedback" role="status">{draft.result==='revealed'?`正确答案：${word.english}`:draft.result?`✓ ${draft.hadMistake?'已纠正':'答对了'}，${word.english}`:''}</p>
+-    <div className={`native-answer ${wrong>=0?'wrong':''}`} onClick={()=>input.current?.focus({preventScroll:true})}><AnswerSlots expected={word.english} entered={draft.input} revealed={draft.result==='revealed'} quickIndices={draft.quickIndices} scope={key} active={active} effect={particleEffect} completed={draft.result==='correct'||draft.result==='reviewed'} perfect={draft.result==='correct'}/><SpellingGlow progress={progress} complete={draft.result==='correct'||draft.result==='reviewed'} revealed={draft.result==='revealed'} error={wrong>=0} active={active} scope={`${deck.fingerprint}:${state.round}`}/><EnglishInput key={key} ref={input} label="输入英文" className="spelling-input" onVirtualKey={virtualPress} value={draft.input} readOnly={!!draft.result} onWarning={setImeWarning} onComposing={setComposing} onValue={value=>dispatch({type:'input',value})}/></div>
++   {state.module==='spelling'?<div className="native-answer-footer"><div className={`native-answer ${wrong>=0?'wrong':''}`} onClick={()=>input.current?.focus({preventScroll:true})}><AnswerSlots expected={word.english} entered={draft.input} revealed={draft.result==='revealed'} quickIndices={draft.quickIndices} scope={key} active={active} effect={particleEffect} completed={draft.result==='correct'||draft.result==='reviewed'} perfect={draft.result==='correct'}/><SpellingGlow progress={progress} complete={draft.result==='correct'||draft.result==='reviewed'} revealed={draft.result==='revealed'} error={wrong>=0} active={active} scope={`${deck.fingerprint}:${state.round}`}/><EnglishInput key={key} ref={input} label="输入英文" className="spelling-input" onVirtualKey={virtualPress} value={draft.input} readOnly={!!draft.result} onWarning={setImeWarning} onComposing={setComposing} onValue={value=>dispatch({type:'input',value})}/></div>
+     <Playback play={replay} audio={audio} rate={state.rate} setRate={setRate} label={word.example?'播放句子和单词':'播放单词'}/>
+     {draft.result==='revealed'||draft.result&&!state.pending?<button className="native-primary" onClick={()=>dispatch({type:'next'})}>{state.index+1===deck.words.length?'完成本轮':'下一个'}</button>:<button className="native-primary" disabled={!!draft.result} onClick={revealWord}>不认识 <kbd>Esc</kbd></button>}
+    </div>:state.module==='listening'&&prompt&&!state.sentenceFinished?<div className="native-answer-footer sentence-footer">
+diff --git a/apps/public/src/practice.css b/apps/public/src/practice.css
+index 5538ca6..1b45d3a 100644
+--- a/apps/public/src/practice.css
++++ b/apps/public/src/practice.css
+@@ -22,7 +22,6 @@ body[data-practice=true] .app-tabs{position:absolute}
+ .sentence-toolbar>select{min-width:0;max-width:60%;background:none;border:0;color:inherit;padding:8px 0;font-size:14px}.sentence-toolbar>select+select{margin-left:auto;font-size:12px}
+ .native-example{height:44px;min-height:44px;flex:none;text-align:left;padding:0;display:flex;flex-direction:row;align-items:center;gap:12px;white-space:nowrap;overflow-x:auto;scrollbar-width:none;line-height:1.4;font-size:14px}.native-example>span{display:block;min-width:max-content;flex:none}.native-example small{flex:none;font-size:12px;color:var(--muted)}.spoken-word{background:var(--ink);color:var(--bg);border-radius:3px}
+ .native-answer-footer{flex:none;display:flex;flex-direction:column;gap:8px;padding:0}
+-.native-answer-footer .answer-feedback{margin:0;font-size:12px;line-height:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.native-answer-footer .answer-feedback:empty{display:none}
+ .native-answer{position:relative;flex:none;height:50px;border:1px solid var(--line);border-radius:15px;background:var(--surface);padding:0 12px;cursor:text;isolation:isolate}
+ .native-answer.wrong{border:2px solid #c64444}.native-answer .answer-slots{height:100%;min-height:0;justify-content:center;align-items:center;padding:0;flex-wrap:nowrap;gap:4px;line-height:1}.native-answer .letter-slot{font-size:inherit;min-width:0;width:.72em;line-height:1.1;padding:0 0 3px;border-width:1.5px;flex:none}.native-answer .letter-slot.fixed{width:.4em}.native-answer .letter-slot.prefilled{opacity:.45}.native-answer .letter-slot.next-letter{border-color:var(--ink);animation:slot-caret 1s steps(2) infinite}.native-answer .spelling-input{font-size:16px;z-index:2}.native-answer:focus-within{outline:none}
+ .native-playback{display:flex;gap:8px}.native-button,.native-primary,.native-playback select{min-height:44px;padding:8px 12px;font-size:16px;font-weight:600;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);display:flex;align-items:center;justify-content:center;gap:8px;text-align:center}.native-primary{background:var(--button);color:var(--button-text);border-color:var(--button);border-radius:10px;position:relative}.native-primary kbd{display:none}.native-button:active,.native-primary:active{opacity:.75}.native-playback>.native-button:first-child{flex:1}.native-playback .playback-rate{position:relative;flex:0 0 88px;width:88px;display:block}.native-playback .playback-rate select{appearance:none;-webkit-appearance:none;display:block;width:100%;height:44px;min-width:88px;padding:8px 26px 8px 10px;font-size:15px;line-height:26px;text-align:left;white-space:nowrap;font-variant-numeric:tabular-nums}.playback-rate>span{position:absolute;right:10px;top:50%;transform:translateY(-55%);pointer-events:none;font-size:17px}.native-playback>.native-primary{flex:1}.native-primary:disabled{cursor:default;opacity:1}.native-unavailable{padding:24px 8px;font-size:14px;color:var(--muted)}
+@@ -74,7 +73,7 @@ body[data-practice=true] .app-tabs{position:absolute}
+ @media(hover:hover) and (pointer:fine) and (min-width:700px){
+  .native-practice{max-width:560px}
+  .native-answer-footer{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 8px}
+- .native-answer-footer>.answer-feedback,.native-answer-footer>.native-answer{grid-column:1/-1}
++ .native-answer-footer>.native-answer{grid-column:1/-1}
+  .native-answer-footer>.native-primary{min-width:88px}
+  .sentence-footer .sentence-actions{gap:6px}
+  .sentence-footer .sentence-actions>button{padding-inline:10px;flex:none}
+@@ -127,7 +126,7 @@ body[data-practice=true] .app-tabs{position:absolute}
+  .practice-deck-lane{height:20px}
+  .module-tabs,.module-tabs>button{height:36px;min-height:36px}
+  .native-answer-footer{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 6px}
+- .native-answer-footer>.answer-feedback,.native-answer-footer>.native-answer{grid-column:1/-1}
++ .native-answer-footer>.native-answer{grid-column:1/-1}
+  .native-answer-footer>.native-primary{min-width:70px;padding-inline:10px;font-size:14px}
+  .native-playback>.native-button{font-size:12px;gap:4px;padding-inline:6px}
+  .sentence-footer .sentence-actions{gap:4px}
+@@ -145,8 +144,7 @@ body[data-practice=true] .toast button{pointer-events:auto}
+  .native-practice:has(>.virtual-keyboard)>.module-tabs{grid-column:2;grid-row:1}
+  .native-practice:has(>.virtual-keyboard)>.native-body{grid-column:1;grid-row:2/4;height:100%}
+  .native-practice:has(>.virtual-keyboard)>.native-answer-footer{grid-column:2;grid-row:2;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 6px}
+- .native-practice:has(>.virtual-keyboard)>.native-answer-footer>.native-answer,
+- .native-practice:has(>.virtual-keyboard)>.native-answer-footer>.answer-feedback{grid-column:1/-1}
++ .native-practice:has(>.virtual-keyboard)>.native-answer-footer>.native-answer{grid-column:1/-1}
+  .native-practice:has(>.virtual-keyboard)>.virtual-keyboard{grid-column:2;grid-row:3;align-self:end}
+  .native-practice:has(>.virtual-keyboard) .native-button,.native-practice:has(>.virtual-keyboard) .native-primary{font-size:13px;padding-inline:6px}
+ }
+@@ -254,7 +252,7 @@ html[data-practice-compact=true] .native-header,html[data-practice-compact=true]
+ html[data-practice-compact=true] .practice-deck-lane{height:20px}
+ html[data-practice-compact=true] .module-tabs,html[data-practice-compact=true] .module-tabs>button{height:36px;min-height:36px}
+ html[data-practice-compact=true] .native-answer-footer{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 6px}
+-html[data-practice-compact=true] .native-answer-footer>.answer-feedback,html[data-practice-compact=true] .native-answer-footer>.native-answer{grid-column:1/-1}
++html[data-practice-compact=true] .native-answer-footer>.native-answer{grid-column:1/-1}
+ html[data-practice-compact=true] .native-answer-footer>.native-primary{min-width:70px;padding-inline:10px;font-size:14px}
+ html[data-practice-compact=true] .native-playback>.native-button{font-size:12px;gap:4px;padding-inline:6px}
+ html[data-practice-compact=true] .sentence-footer .sentence-actions{gap:4px}
+diff --git a/tests/browser/desktop-fit.spec.ts b/tests/browser/desktop-fit.spec.ts
+index 91cc3ff..5eb1b52 100644
+--- a/tests/browser/desktop-fit.spec.ts
++++ b/tests/browser/desktop-fit.spec.ts
+@@ -20,7 +20,7 @@ test('desktop preserves full photograph and fits answer, rate and keyboard witho
+    expect(geometry.keyboard.bottom).toBeLessThanOrEqual(geometry.tabs.top);expect(geometry.rate.bottom).toBeLessThanOrEqual(geometry.keyboard.top);expect(geometry.available).toBeGreaterThan(geometry.text);
+    await page.getByLabel('播放速度',{exact:true}).selectOption('1.15');await expect(page.getByLabel('播放速度',{exact:true})).toHaveValue('1.15');await page.getByLabel('播放速度',{exact:true}).selectOption('1');
+    if(mode==='spelling'){
+-    await fillEnglish(page.getByRole('textbox',{name:'输入英文',exact:true}),'z');await expect(page.locator('.native-answer')).toHaveClass(/wrong/);await expect(page.locator('.answer-feedback')).toHaveText('');
++    await fillEnglish(page.getByRole('textbox',{name:'输入英文',exact:true}),'z');await expect(page.locator('.native-answer')).toHaveClass(/wrong/);await expect(page.locator('.answer-feedback')).toHaveCount(0);
+     await expect.poll(()=>page.locator('.native-practice').evaluate(n=>n.scrollHeight-n.clientHeight)).toBeLessThanOrEqual(1);
+     await page.getByRole('button',{name:'退格',exact:true}).click();
+    }
+diff --git a/tests/browser/interaction-audit.spec.ts b/tests/browser/interaction-audit.spec.ts
+index 64bd8de..6647a82 100644
+--- a/tests/browser/interaction-audit.spec.ts
++++ b/tests/browser/interaction-audit.spec.ts
+@@ -55,5 +55,5 @@ test('reading keeps partial matches, closes its microphone on completion and con
+  await page.evaluate(()=>(window as any).__readers[0].onresult({results:[[{transcript:'in bed'}]]}));await expect(page.locator('.reading-sentence .matched')).toHaveCount(5);expect(await page.evaluate(()=>(window as any).__readers[0].aborted)).toBe(true);
+  await expect.poll(()=>page.evaluate(()=>(window as any).__readers.length)).toBe(2);await expect(page.getByRole('tab',{name:'练口语',exact:true})).toHaveAttribute('aria-selected','true');
+  await page.getByRole('tab',{name:'拼单词',exact:true}).click();expect(await page.evaluate(()=>(window as any).__readers.every((r:any)=>r.aborted))).toBe(true);
+- await expect(page.locator('.answer-feedback')).toHaveText('');
++ await expect(page.locator('.answer-feedback')).toHaveCount(0);
+ });
+diff --git a/tests/browser/learning.spec.ts b/tests/browser/learning.spec.ts
+index c8ef7a0..5d080c8 100644
+--- a/tests/browser/learning.spec.ts
++++ b/tests/browser/learning.spec.ts
+@@ -15,7 +15,7 @@ test('a visitor can complete a scene, resume after refresh, and restart without
+  await page.getByLabel('选择照片卡组文件').setInputFiles(path.resolve('tests/fixtures/demo/decks/cafe.piclexdeck'));
+  await expect(page.getByRole('heading',{name:'牛角包',exact:true})).toBeVisible();
+  const input=page.getByRole('textbox',{name:'输入英文'});
+- await fillSpelling(page,'crx');await expect(page.locator('.native-answer')).toHaveClass(/wrong/);await expect(page.locator('.answer-feedback')).toHaveText('');await fillSpelling(page,'cr');await expect(page.locator('.native-answer')).not.toHaveClass(/wrong/);
++ await fillSpelling(page,'crx');await expect(page.locator('.native-answer')).toHaveClass(/wrong/);await expect(page.locator('.answer-feedback')).toHaveCount(0);await fillSpelling(page,'cr');await expect(page.locator('.native-answer')).not.toHaveClass(/wrong/);
+  await page.reload();await expect(input).toHaveValue('cr');
+  await page.screenshot({path:`test-results/practice-${testInfo.project.name}.png`,fullPage:true});
+  for(const [i,word] of words.entries()){
+@@ -125,7 +125,7 @@ test('sentence fill checks automatically; failed order can be corrected and assi
+  await fillEnglish(page.getByRole('textbox',{name:'听写句子'}),'i am still in bed');
+  await expect(page.getByRole('textbox',{name:'听写句子'})).toHaveValue(''); // auto-advance to next sentence
+  await page.getByRole('button',{name:'当前卡组，学习设置'}).click();await expect(page.getByRole('dialog',{name:'选择卡组',exact:true})).toBeVisible();await page.getByRole('button',{name:'关闭',exact:true}).click();
+- await page.getByRole('tab',{name:'拼单词'}).click();await expect(page.locator('.answer-feedback')).toHaveText('');
++ await page.getByRole('tab',{name:'拼单词'}).click();await expect(page.locator('.answer-feedback')).toHaveCount(0);
+ });
+ 
+ test('guided dictation, listening controls, compact height and reduced-motion remain usable',async({page})=>{
+diff --git a/tests/browser/spelling-feedback.spec.ts b/tests/browser/spelling-feedback.spec.ts
+index 835cf00..1b19837 100644
+--- a/tests/browser/spelling-feedback.spec.ts
++++ b/tests/browser/spelling-feedback.spec.ts
+@@ -47,9 +47,10 @@ for(const colorScheme of ['light','dark'] as const)test(`spelling progress stays
+  await page.emulateMedia({reducedMotion:'reduce'});await page.locator('.playback-button').click();await expect(bar).toHaveCount(0);await page.evaluate(()=>(window as any).__feedbackSpeech.onstart());await expect(segment).toHaveCount(0);await expect(fill).toHaveCSS('transition-duration','0s');await expect.poll(async()=>Number(await bar.getAttribute('aria-valuenow'))).toBeGreaterThan(0);
+ });
+ 
+-// The App marks a mismatch with a red board only; a visible hint line used to
+-// grow the footer and push the photo, playback and keyboard around on phones.
+-for(const colorScheme of ['light','dark'] as const)test(`wrong letters keep answer, photo, playback and keyboard in place without hint text: ${colorScheme}`,async({page},info)=>{
++// The App marks a mismatch with a red board only. The removed result line used
++// to grow the footer and push the photo, playback and keyboard around on phones;
++// the answer itself stays in the input line for errors, success and reveal.
++for(const colorScheme of ['light','dark'] as const)test(`no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: ${colorScheme}`,async({page},info)=>{
+  await page.emulateMedia({colorScheme});await open(page);
+  const keyboard=page.getByRole('region',{name:'虚拟键盘'}),answer=page.locator('.native-answer'),feedback=page.locator('.answer-feedback'),field=page.getByRole('textbox',{name:'输入英文',exact:true});
+  // Tap/click the key's own coordinates: locator.tap() scrolls the practice
+@@ -85,13 +86,25 @@ for(const colorScheme of ['light','dark'] as const)test(`wrong letters keep answ
+    expect(after.height,`${label} ${key} height`).toBeCloseTo(before.height,0);
+   }
+  };
+- const recovered=async()=>{await expect(answer).not.toHaveClass(/wrong/);await expect(feedback).toHaveText('');await expect(feedback).toBeHidden();expect((await border()).color).not.toBe('rgb(198, 68, 68)');};
++ const recovered=async()=>{await expect(answer).not.toHaveClass(/wrong/);await expect(feedback).toHaveCount(0);expect((await border()).color).not.toBe('rgb(198, 68, 68)');};
+  await press('C');await press('R');await press('X');
+- await expect(field).toHaveValue('crx');await expect(answer).toHaveClass(/wrong/);await expect(feedback).toHaveText('');await expect(feedback).toBeHidden();await expect(page.getByText('请删除错误字母后继续输入')).toHaveCount(0);
++ await expect(field).toHaveValue('crx');await expect(answer).toHaveClass(/wrong/);await expect(feedback).toHaveCount(0);await expect(page.getByText('请删除错误字母后继续输入')).toHaveCount(0);
+  const error=await border();expect(error.color).toBe('rgb(198, 68, 68)');expect(['1px','2px']).toContain(error.width);
+  await stable('first error');await page.screenshot({path:info.outputPath(`spelling-error-${colorScheme}.png`)});
+  await press('BACKSPACE');await expect(field).toHaveValue('cr');await recovered();await stable('deleted back to the correct prefix');
+- await press('X');await expect(field).toHaveValue('crx');await expect(answer).toHaveClass(/wrong/);await expect(feedback).toHaveText('');await stable('second error');
++ await press('X');await expect(field).toHaveValue('crx');await expect(answer).toHaveClass(/wrong/);await expect(feedback).toHaveCount(0);await stable('second error');
+  await press('BACKSPACE');await press('O');await expect(field).toHaveValue('cro');await recovered();await stable('correct prefix after the second error');
+  await page.screenshot({path:info.outputPath(`spelling-recovered-${colorScheme}.png`)});
++ // Freeze the 300ms auto-advance so the transient completion states can be
++ // measured without racing the next word. Earlier errors make this first word
++ // a correction; the next two words cover plain success and reveal.
++ await page.clock.install();await page.clock.pauseAt(await page.evaluate(()=>Date.now()+1000));
++ for(const key of ['I','S','S','A','N','T'] as const)await press(key);
++ await expect(field).toHaveValue('croissant');await expect(answer).not.toHaveClass(/wrong/);await expect(feedback).toHaveCount(0);await stable('corrected answer');
++ await page.clock.runFor(400);await expect(field).toHaveValue('');await expect(page.locator('.native-hint h1')).toHaveText('勺子');
++ for(const key of ['S','P','O','O','N'] as const)await press(key);
++ await expect(field).toHaveValue('spoon');await expect(answer).not.toHaveClass(/wrong/);await expect(feedback).toHaveCount(0);await stable('correct answer');
++ await page.clock.runFor(400);await expect(field).toHaveValue('');await expect(page.locator('.native-hint h1')).toHaveText('叉子');
++ await page.getByRole('button',{name:/^不认识/}).click();
++ await expect(field).toHaveValue('fork');await expect(answer).not.toHaveClass(/wrong/);await expect(feedback).toHaveCount(0);await stable('revealed answer');
+ });

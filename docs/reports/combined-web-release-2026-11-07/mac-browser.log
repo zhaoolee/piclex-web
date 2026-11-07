@@ -1,0 +1,117 @@
+npm notice run piclex-web@0.1.0 npx
+npm notice run 'playwright' test tests/browser/audio-unlock.spec.ts tests/browser/audio-unlock-speech.spec.ts tests/browser/spelling-feedback.spec.ts tests/browser/spelling-letter-color.spec.ts tests/browser/deck-subscriptions.spec.ts tests/browser/parity-subscriptions.spec.ts tests/browser/parity-state.spec.ts tests/browser/parity-speaking.spec.ts tests/browser/desktop-fit.spec.ts tests/browser/playback-parity.spec.ts tests/browser/deck-picker-audio.spec.ts --reporter=line
+[WebServer] npm notice run piclex-web@0.1.0 preview
+
+[WebServer] npm notice run vite preview --host 127.0.0.1 --port 18120
+
+
+Running 106 tests using 2 workers
+
+[1/106] [desktop] › tests/browser/audio-unlock-speech.spec.ts:42:1 › a later denied TTS word retries only that word, not the clip that already finished
+[2/106] [desktop] › tests/browser/audio-unlock-speech.spec.ts:19:1 › speech policy denial keeps one retryable request, ignores stale callbacks and only hides on real start
+[3/106] [desktop] › tests/browser/deck-picker-audio.spec.ts:7:1 › learning settings switches public and personal decks directly and restores each draft
+[4/106] [desktop] › tests/browser/deck-picker-audio.spec.ts:16:1 › song clips decode, respect rate, precede word TTS and stop on mode or deck changes
+[5/106] [desktop] › tests/browser/deck-picker-audio.spec.ts:30:1 › original listening audio seeks by time and resumes from its paused position
+[6/106] [desktop] › tests/browser/deck-picker-audio.spec.ts:41:1 › advancing original audio clears preparation even when playing notification is lost; buffered stalls retain Pause
+[7/106] [desktop] › tests/browser/deck-subscriptions.spec.ts:16:1 › links collapse, copy feedback, confirmation and persistent cancellation preserve downloaded bytes and draft
+[8/106] [desktop] › tests/browser/deck-subscriptions.spec.ts:28:1 › failed clipboard and storage writes do not falsely confirm or remove a subscription
+[9/106] [desktop] › tests/browser/desktop-fit.spec.ts:5:1 › desktop preserves full photograph and fits answer, rate and keyboard without scrolling
+[10/106] [desktop] › tests/browser/parity-speaking.spec.ts:10:1 › F02 dialogue alternates learner A and machine B without grading labels or machine lines
+[11/106] [desktop] › tests/browser/parity-speaking.spec.ts:16:1 › F02 skipping learner A never grants its words
+[12/106] [desktop] › tests/browser/parity-speaking.spec.ts:18:1 › ordinary speaking still advances and continues through consecutive sentences
+[13/106] [desktop] › tests/browser/parity-speaking.spec.ts:24:1 › F02 bundled programmer dialogue advances without speaking labels and fits the existing page
+[14/106] [desktop] › tests/browser/parity-state.spec.ts:33:1 › a warm Learning entry is one-shot and never overrides an explicit listening link
+[15/106] [desktop] › tests/browser/parity-state.spec.ts:65:1 › finished dictation offers challenge, another round and word learning without losing spelling drafts
+[16/106] [desktop] › tests/browser/parity-state.spec.ts:101:1 › another dictation round preserves reward dedupe identity and spelling history
+[17/106] [desktop] › tests/browser/parity-state.spec.ts:125:1 › F05 selecting the completed photo opens an editable fresh dictation
+[18/106] [desktop] › tests/browser/parity-subscriptions.spec.ts:8:1 › F17 stable version updates preserve card IDs and draft; cancelled subscription keeps content
+[19/106] [desktop] › tests/browser/playback-parity.spec.ts:19:1 › App replay button keeps its geometry and fills in place across sentence, word, replay and rate change
+[20/106] [desktop] › tests/browser/playback-parity.spec.ts:45:1 › errors, mode changes and leaving the page clear progress and reject old callbacks
+[21/106] [desktop] › tests/browser/playback-parity.spec.ts:71:1 › speech without boundary events animates continuously, freezes on pause and resumes without jumping
+[22/106] [desktop] › tests/browser/playback-parity.spec.ts:82:1 › sparse speech boundaries calibrate the continuous fill without a visible jump
+[23/106] [desktop] › tests/browser/playback-parity.spec.ts:88:1 › reduced motion retains estimated speech progress and only the real end completes it
+[24/106] [desktop] › tests/browser/playback-parity.spec.ts:97:1 › original audio fills the button from its clock even without timeupdate and stops advancing while paused
+[25/106] [desktop] › tests/browser/spelling-feedback.spec.ts:9:1 › hardware input survives replay focus, protected IME keys, and keeps dialogs isolated
+[26/106] [desktop] › tests/browser/spelling-feedback.spec.ts:22:52 › spelling progress stays below glyphs and playback grows from a fixed left edge: light
+[27/106] [desktop] › tests/browser/spelling-feedback.spec.ts:22:52 › spelling progress stays below glyphs and playback grows from a fixed left edge: dark
+[28/106] [desktop] › tests/browser/spelling-feedback.spec.ts:53:52 › no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: light
+[29/106] [desktop] › tests/browser/spelling-feedback.spec.ts:53:52 › no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: dark
+[30/106] [desktop] › tests/browser/spelling-letter-color.spec.ts:25:52 › only the wrong letter is red and edits clear it: light
+[31/106] [desktop] › tests/browser/spelling-letter-color.spec.ts:25:52 › only the wrong letter is red and edits clear it: dark
+[32/106] [desktop] › tests/browser/spelling-letter-color.spec.ts:55:52 › glyph animations never outlive their letter across edits and answers: light
+[33/106] [desktop] › tests/browser/spelling-letter-color.spec.ts:55:52 › glyph animations never outlive their letter across edits and answers: dark
+[34/106] [desktop] › tests/browser/audio-unlock.spec.ts:41:1 › real original audio: first load is blocked, the photo icon unlocks exactly that clip and disappears
+[35/106] [desktop] › tests/browser/audio-unlock.spec.ts:55:1 › a hardware letter unlocks without losing the first letter and later keys do not restart playback
+[36/106] [desktop] › tests/browser/audio-unlock.spec.ts:70:1 › one real tap on the virtual F unlocks, keeps f, and a second tap never replays the blocked clip
+[37/106] [desktop] › tests/browser/audio-unlock.spec.ts:84:1 › changing module grants interaction permission, hides the icon and never replays stale audio
+[38/106] [mobile] › tests/browser/audio-unlock-speech.spec.ts:19:1 › speech policy denial keeps one retryable request, ignores stale callbacks and only hides on real start
+[39/106] [mobile] › tests/browser/audio-unlock-speech.spec.ts:42:1 › a later denied TTS word retries only that word, not the clip that already finished
+[40/106] [mobile] › tests/browser/deck-picker-audio.spec.ts:7:1 › learning settings switches public and personal decks directly and restores each draft
+[41/106] [mobile] › tests/browser/deck-picker-audio.spec.ts:16:1 › song clips decode, respect rate, precede word TTS and stop on mode or deck changes
+[42/106] [mobile] › tests/browser/deck-picker-audio.spec.ts:30:1 › original listening audio seeks by time and resumes from its paused position
+[43/106] [mobile] › tests/browser/deck-picker-audio.spec.ts:41:1 › advancing original audio clears preparation even when playing notification is lost; buffered stalls retain Pause
+[44/106] [mobile] › tests/browser/deck-subscriptions.spec.ts:16:1 › links collapse, copy feedback, confirmation and persistent cancellation preserve downloaded bytes and draft
+[45/106] [mobile] › tests/browser/deck-subscriptions.spec.ts:28:1 › failed clipboard and storage writes do not falsely confirm or remove a subscription
+[46/106] [mobile] › tests/browser/desktop-fit.spec.ts:5:1 › desktop preserves full photograph and fits answer, rate and keyboard without scrolling
+[47/106] [mobile] › tests/browser/parity-speaking.spec.ts:10:1 › F02 dialogue alternates learner A and machine B without grading labels or machine lines
+[48/106] [mobile] › tests/browser/parity-speaking.spec.ts:16:1 › F02 skipping learner A never grants its words
+[49/106] [mobile] › tests/browser/parity-speaking.spec.ts:18:1 › ordinary speaking still advances and continues through consecutive sentences
+[50/106] [mobile] › tests/browser/parity-speaking.spec.ts:24:1 › F02 bundled programmer dialogue advances without speaking labels and fits the existing page
+[51/106] [mobile] › tests/browser/parity-state.spec.ts:33:1 › a warm Learning entry is one-shot and never overrides an explicit listening link
+[52/106] [mobile] › tests/browser/parity-state.spec.ts:65:1 › finished dictation offers challenge, another round and word learning without losing spelling drafts
+[53/106] [mobile] › tests/browser/parity-state.spec.ts:101:1 › another dictation round preserves reward dedupe identity and spelling history
+[54/106] [mobile] › tests/browser/parity-state.spec.ts:125:1 › F05 selecting the completed photo opens an editable fresh dictation
+[55/106] [mobile] › tests/browser/parity-subscriptions.spec.ts:8:1 › F17 stable version updates preserve card IDs and draft; cancelled subscription keeps content
+[56/106] [mobile] › tests/browser/playback-parity.spec.ts:19:1 › App replay button keeps its geometry and fills in place across sentence, word, replay and rate change
+[57/106] [mobile] › tests/browser/playback-parity.spec.ts:45:1 › errors, mode changes and leaving the page clear progress and reject old callbacks
+[58/106] [mobile] › tests/browser/playback-parity.spec.ts:71:1 › speech without boundary events animates continuously, freezes on pause and resumes without jumping
+[59/106] [mobile] › tests/browser/playback-parity.spec.ts:82:1 › sparse speech boundaries calibrate the continuous fill without a visible jump
+[60/106] [mobile] › tests/browser/playback-parity.spec.ts:88:1 › reduced motion retains estimated speech progress and only the real end completes it
+[61/106] [mobile] › tests/browser/playback-parity.spec.ts:97:1 › original audio fills the button from its clock even without timeupdate and stops advancing while paused
+[62/106] [mobile] › tests/browser/spelling-feedback.spec.ts:9:1 › hardware input survives replay focus, protected IME keys, and keeps dialogs isolated
+[63/106] [mobile] › tests/browser/spelling-feedback.spec.ts:22:52 › spelling progress stays below glyphs and playback grows from a fixed left edge: light
+[64/106] [mobile] › tests/browser/spelling-feedback.spec.ts:22:52 › spelling progress stays below glyphs and playback grows from a fixed left edge: dark
+[65/106] [mobile] › tests/browser/spelling-feedback.spec.ts:53:52 › no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: light
+[66/106] [mobile] › tests/browser/spelling-feedback.spec.ts:53:52 › no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: dark
+[67/106] [mobile] › tests/browser/spelling-letter-color.spec.ts:25:52 › only the wrong letter is red and edits clear it: light
+[68/106] [mobile] › tests/browser/spelling-letter-color.spec.ts:25:52 › only the wrong letter is red and edits clear it: dark
+[69/106] [mobile] › tests/browser/spelling-letter-color.spec.ts:55:52 › glyph animations never outlive their letter across edits and answers: light
+[70/106] [mobile] › tests/browser/spelling-letter-color.spec.ts:55:52 › glyph animations never outlive their letter across edits and answers: dark
+[71/106] [mobile] › tests/browser/audio-unlock.spec.ts:41:1 › real original audio: first load is blocked, the photo icon unlocks exactly that clip and disappears
+[72/106] [mobile] › tests/browser/audio-unlock.spec.ts:55:1 › a hardware letter unlocks without losing the first letter and later keys do not restart playback
+[73/106] [mobile] › tests/browser/audio-unlock.spec.ts:70:1 › one real tap on the virtual F unlocks, keeps f, and a second tap never replays the blocked clip
+[74/106] [mobile] › tests/browser/audio-unlock.spec.ts:84:1 › changing module grants interaction permission, hides the icon and never replays stale audio
+[75/106] [mobile-webkit] › tests/browser/audio-unlock-speech.spec.ts:19:1 › speech policy denial keeps one retryable request, ignores stale callbacks and only hides on real start
+[76/106] [mobile-webkit] › tests/browser/audio-unlock-speech.spec.ts:42:1 › a later denied TTS word retries only that word, not the clip that already finished
+[77/106] [mobile-webkit] › tests/browser/deck-picker-audio.spec.ts:7:1 › learning settings switches public and personal decks directly and restores each draft
+[78/106] [mobile-webkit] › tests/browser/deck-picker-audio.spec.ts:16:1 › song clips decode, respect rate, precede word TTS and stop on mode or deck changes
+[79/106] [mobile-webkit] › tests/browser/deck-picker-audio.spec.ts:30:1 › original listening audio seeks by time and resumes from its paused position
+[80/106] [mobile-webkit] › tests/browser/deck-picker-audio.spec.ts:41:1 › advancing original audio clears preparation even when playing notification is lost; buffered stalls retain Pause
+[81/106] [mobile-webkit] › tests/browser/deck-subscriptions.spec.ts:16:1 › links collapse, copy feedback, confirmation and persistent cancellation preserve downloaded bytes and draft
+[82/106] [mobile-webkit] › tests/browser/deck-subscriptions.spec.ts:28:1 › failed clipboard and storage writes do not falsely confirm or remove a subscription
+[83/106] [mobile-webkit] › tests/browser/parity-speaking.spec.ts:10:1 › F02 dialogue alternates learner A and machine B without grading labels or machine lines
+[84/106] [mobile-webkit] › tests/browser/parity-speaking.spec.ts:16:1 › F02 skipping learner A never grants its words
+[85/106] [mobile-webkit] › tests/browser/parity-speaking.spec.ts:18:1 › ordinary speaking still advances and continues through consecutive sentences
+[86/106] [mobile-webkit] › tests/browser/parity-speaking.spec.ts:24:1 › F02 bundled programmer dialogue advances without speaking labels and fits the existing page
+[87/106] [mobile-webkit] › tests/browser/parity-state.spec.ts:33:1 › a warm Learning entry is one-shot and never overrides an explicit listening link
+[88/106] [mobile-webkit] › tests/browser/parity-state.spec.ts:65:1 › finished dictation offers challenge, another round and word learning without losing spelling drafts
+[89/106] [mobile-webkit] › tests/browser/parity-state.spec.ts:101:1 › another dictation round preserves reward dedupe identity and spelling history
+[90/106] [mobile-webkit] › tests/browser/parity-state.spec.ts:125:1 › F05 selecting the completed photo opens an editable fresh dictation
+[91/106] [mobile-webkit] › tests/browser/parity-subscriptions.spec.ts:8:1 › F17 stable version updates preserve card IDs and draft; cancelled subscription keeps content
+[92/106] [mobile-webkit] › tests/browser/playback-parity.spec.ts:19:1 › App replay button keeps its geometry and fills in place across sentence, word, replay and rate change
+[93/106] [mobile-webkit] › tests/browser/playback-parity.spec.ts:45:1 › errors, mode changes and leaving the page clear progress and reject old callbacks
+[94/106] [mobile-webkit] › tests/browser/playback-parity.spec.ts:71:1 › speech without boundary events animates continuously, freezes on pause and resumes without jumping
+[95/106] [mobile-webkit] › tests/browser/playback-parity.spec.ts:82:1 › sparse speech boundaries calibrate the continuous fill without a visible jump
+[96/106] [mobile-webkit] › tests/browser/playback-parity.spec.ts:88:1 › reduced motion retains estimated speech progress and only the real end completes it
+[97/106] [mobile-webkit] › tests/browser/playback-parity.spec.ts:97:1 › original audio fills the button from its clock even without timeupdate and stops advancing while paused
+[98/106] [mobile-webkit] › tests/browser/spelling-feedback.spec.ts:9:1 › hardware input survives replay focus, protected IME keys, and keeps dialogs isolated
+[99/106] [mobile-webkit] › tests/browser/spelling-feedback.spec.ts:22:52 › spelling progress stays below glyphs and playback grows from a fixed left edge: light
+[100/106] [mobile-webkit] › tests/browser/spelling-feedback.spec.ts:22:52 › spelling progress stays below glyphs and playback grows from a fixed left edge: dark
+[101/106] [mobile-webkit] › tests/browser/spelling-feedback.spec.ts:53:52 › no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: light
+[102/106] [mobile-webkit] › tests/browser/spelling-feedback.spec.ts:53:52 › no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: dark
+[103/106] [mobile-webkit] › tests/browser/spelling-letter-color.spec.ts:25:52 › only the wrong letter is red and edits clear it: light
+[104/106] [mobile-webkit] › tests/browser/spelling-letter-color.spec.ts:25:52 › only the wrong letter is red and edits clear it: dark
+[105/106] [mobile-webkit] › tests/browser/spelling-letter-color.spec.ts:55:52 › glyph animations never outlive their letter across edits and answers: light
+[106/106] [mobile-webkit] › tests/browser/spelling-letter-color.spec.ts:55:52 › glyph animations never outlive their letter across edits and answers: dark
+  1 skipped
+  105 passed (2.5m)

@@ -1,0 +1,16 @@
+{
+  "before": {
+    "input": "",
+    "speech": [],
+    "clips": [],
+    "activated": false,
+    "button": "播放句子和单词"
+  },
+  "after": {
+    "input": "w",
+    "speech": [],
+    "clips": [],
+    "activated": true,
+    "button": "播放句子和单词"
+  }
+}

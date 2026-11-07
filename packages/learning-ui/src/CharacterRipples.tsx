@@ -10,8 +10,26 @@ export default function CharacterRipples({ scope, expected, entered, quickIndice
   const ledger = useRef(new CharacterRippleLedger());
   const shocks = useRef<Shock[]>([]), frame = useRef(0);
   const [reduced, setReduced] = useState(() => matchMedia('(prefers-reduced-motion: reduce)').matches);
+  // Glyph nodes are replaced whenever a letter, its correctness or the answer scope changes,
+  // so every animation we start must be ours to finish: a handle may never outlive its glyph.
+  const glyphs = useRef(new Map<Element, Animation>());
+  const animatedScope = useRef(scope);
+  const forget = (glyph: Element, animation: Animation) => { if (glyphs.current.get(glyph) === animation) glyphs.current.delete(glyph); };
+  // Keep animations that can still paint, drop finished ones and ones whose glyph left the DOM.
+  const prune = () => {
+    for (const [glyph, animation] of glyphs.current) {
+      const state = animation.playState;
+      if (glyph.isConnected && state !== 'finished' && state !== 'idle') continue;
+      animation.cancel(); glyphs.current.delete(glyph);
+    }
+  };
+  const cancelGlyphs = () => {
+    for (const animation of glyphs.current.values()) animation.cancel();
+    glyphs.current.clear();
+  };
   const stop = () => {
     cancelAnimationFrame(frame.current); frame.current = 0; shocks.current = [];
+    cancelGlyphs();
     const node = canvas.current; node?.getContext('2d')?.clearRect(0, 0, node.width, node.height);
   };
   useEffect(() => {
@@ -24,6 +42,9 @@ export default function CharacterRipples({ scope, expected, entered, quickIndice
       window.removeEventListener('pagehide', stop); window.removeEventListener('resize', stop); };
   }, []);
   useLayoutEffect(() => {
+    // A new answer never inherits the previous answer's glyph animations.
+    if (animatedScope.current !== scope) { animatedScope.current = scope; cancelGlyphs(); }
+    else prune();
     const enabled = active && !reduced && !document.hidden;
     const indices = ledger.current.update({ scope, expected, entered, quickIndices, revealed, active: enabled });
     if (!enabled || revealed) { stop(); return; }
@@ -38,9 +59,13 @@ export default function CharacterRipples({ scope, expected, entered, quickIndice
       const glyph = node.parentElement?.querySelector(`[data-letter-index="${index}"] .letter-glyph`);
       const rect = glyph?.getBoundingClientRect();
       // Never substitute the underline or slot when character geometry is absent.
-      if (!rect?.width || !rect.height || shocks.current.length >= 64) continue;
+      if (!glyph || !rect?.width || !rect.height || shocks.current.length >= 64) continue;
       origins.push(rect);
-      glyph?.animate([{opacity:0,transform:"scale(.84)"},{opacity:1,transform:"scale(1)"}],{duration:180,easing:"ease-out"});
+      glyphs.current.get(glyph)?.cancel();
+      const animation = glyph.animate([{opacity:0,transform:"scale(.84)"},{opacity:1,transform:"scale(1)"}],{duration:180,easing:"ease-out"});
+      glyphs.current.set(glyph, animation);
+      animation.onfinish = () => forget(glyph, animation);
+      animation.oncancel = () => forget(glyph, animation);
       shocks.current.push({ x: rect.x + rect.width / 2 - bounds.x, y: rect.y + rect.height / 2 - bounds.y,
         rotation: index * 2.399, started });
     }

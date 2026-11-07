@@ -55,5 +55,5 @@ test('reading keeps partial matches, closes its microphone on completion and con
  await page.evaluate(()=>(window as any).__readers[0].onresult({results:[[{transcript:'in bed'}]]}));await expect(page.locator('.reading-sentence .matched')).toHaveCount(5);expect(await page.evaluate(()=>(window as any).__readers[0].aborted)).toBe(true);
  await expect.poll(()=>page.evaluate(()=>(window as any).__readers.length)).toBe(2);await expect(page.getByRole('tab',{name:'练口语',exact:true})).toHaveAttribute('aria-selected','true');
  await page.getByRole('tab',{name:'拼单词',exact:true}).click();expect(await page.evaluate(()=>(window as any).__readers.every((r:any)=>r.aborted))).toBe(true);
- await expect(page.locator('.answer-feedback')).toHaveText('');
+ await expect(page.locator('.answer-feedback')).toHaveCount(0);
 });

@@ -295,6 +295,7 @@
     "previewStopped": true,
     "temporaryBuildsAndBrowserResultsRemoved": true,
     "sharedDependenciesAndContentPreserved": true,
-    "releaseCheckout": "Retained only until documentation push is confirmed, then removed."
-  }
+    "releaseCheckout": "Removed after remote record confirmation."
+  },
+  "recordCommit": "3b2ac3b7ed29a7d200be8fdcba1fac4b25e14979"
 }

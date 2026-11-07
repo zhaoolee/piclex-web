@@ -1,0 +1,142 @@
+[
+  {
+    "name": "chrome",
+    "before": {
+      ".photo-browse": {
+        "x": 16,
+        "y": 117,
+        "width": 408,
+        "height": 163
+      },
+      ".native-answer": {
+        "x": 16,
+        "y": 376,
+        "width": 408,
+        "height": 50
+      },
+      ".native-playback": {
+        "x": 16,
+        "y": 434,
+        "width": 408,
+        "height": 44
+      },
+      ".virtual-keyboard": {
+        "x": 12,
+        "y": 538,
+        "width": 416,
+        "height": 120
+      },
+      ".app-tabs": {
+        "x": 20,
+        "y": 678,
+        "width": 400,
+        "height": 64
+      }
+    },
+    "after": {
+      ".photo-browse": {
+        "x": 16,
+        "y": 117,
+        "width": 408,
+        "height": 163
+      },
+      ".native-answer": {
+        "x": 16,
+        "y": 376,
+        "width": 408,
+        "height": 50
+      },
+      ".native-playback": {
+        "x": 16,
+        "y": 434,
+        "width": 408,
+        "height": 44
+      },
+      ".virtual-keyboard": {
+        "x": 12,
+        "y": 538,
+        "width": 416,
+        "height": 120
+      },
+      ".app-tabs": {
+        "x": 20,
+        "y": 678,
+        "width": 400,
+        "height": 64
+      }
+    },
+    "feedback": [],
+    "word": "croissant",
+    "nextInput": "s"
+  },
+  {
+    "name": "webkit",
+    "before": {
+      ".photo-browse": {
+        "x": 16,
+        "y": 117,
+        "width": 408,
+        "height": 163
+      },
+      ".native-answer": {
+        "x": 16,
+        "y": 376,
+        "width": 408,
+        "height": 50
+      },
+      ".native-playback": {
+        "x": 16,
+        "y": 434,
+        "width": 408,
+        "height": 44
+      },
+      ".virtual-keyboard": {
+        "x": 12,
+        "y": 538,
+        "width": 416,
+        "height": 120
+      },
+      ".app-tabs": {
+        "x": 20,
+        "y": 678,
+        "width": 400,
+        "height": 64
+      }
+    },
+    "after": {
+      ".photo-browse": {
+        "x": 16,
+        "y": 117,
+        "width": 408,
+        "height": 163
+      },
+      ".native-answer": {
+        "x": 16,
+        "y": 376,
+        "width": 408,
+        "height": 50
+      },
+      ".native-playback": {
+        "x": 16,
+        "y": 434,
+        "width": 408,
+        "height": 44
+      },
+      ".virtual-keyboard": {
+        "x": 12,
+        "y": 538,
+        "width": 416,
+        "height": 120
+      },
+      ".app-tabs": {
+        "x": 20,
+        "y": 678,
+        "width": 400,
+        "height": 64
+      }
+    },
+    "feedback": [],
+    "word": "croissant",
+    "nextInput": "s"
+  }
+]

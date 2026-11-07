@@ -1,0 +1,42 @@
+{
+  "before": {
+    "events": [
+      {
+        "event": "request",
+        "text": "I am still in bed."
+      },
+      {
+        "event": "error",
+        "text": "I am still in bed.",
+        "error": "not-allowed"
+      }
+    ],
+    "icon": true,
+    "input": "",
+    "active": false
+  },
+  "after": {
+    "events": [
+      {
+        "event": "request",
+        "text": "I am still in bed."
+      },
+      {
+        "event": "error",
+        "text": "I am still in bed.",
+        "error": "not-allowed"
+      },
+      {
+        "event": "request",
+        "text": "I am still in bed."
+      },
+      {
+        "event": "start",
+        "text": "I am still in bed."
+      }
+    ],
+    "icon": false,
+    "input": "b",
+    "active": true
+  }
+}

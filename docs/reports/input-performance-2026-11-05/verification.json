@@ -1,0 +1,194 @@
+{
+  "date": "2026-11-05",
+  "status": "local source and production build verified; not deployed or committed by this task",
+  "cause": {
+    "ordering": "Spelling alignment inserts fixed separators, but keyboard restored the pre-alignment caret. glassp becomes glass p while caret remains at 6 instead of 7.",
+    "latency": "Each input deep-cloned all study drafts, rebuilt all prompts, scanned completion records and synchronously serialized/persisted the study."
+  },
+  "changes": [
+    "Map insertion and deletion caret through accepted spelling alignment; retain selection for rejected edits.",
+    "Structural sharing for spelling/dictation and reuse prepared prompts; award/portable-save scans only at question or outcome transitions.",
+    "Coalesce typing persistence at 180 ms with 1000 ms maximum wait; flush checkpoints, pagehide, hidden document and unmount.",
+    "Memoize unchanged photo and sentence calculations; read ripple color once per animation frame."
+  ],
+  "animationContract": "No effect count, appearance, duration, radius, easing, particle, glow or audio parameter changed. Six accepted letters still produce six glyph animations and rendered ripple arcs.",
+  "baselineWebKit": {
+    "scenario": "glass + p",
+    "expectedCaret": 7,
+    "observedCaret": 6,
+    "sixLetterBurstStudyClonesInDevelopmentStrictMode": 12
+  },
+  "reducerBenchmark": {
+    "syntheticWords": 1000,
+    "syntheticSentenceDrafts": 1000,
+    "runs": 100,
+    "before": {
+      "medianMs": 5.451791999999955,
+      "p95Ms": 6.886624999999981
+    },
+    "after": {
+      "medianMs": 0.20795800000007603,
+      "p95Ms": 0.4254999999999427
+    },
+    "differentialActions": 400
+  },
+  "benchmarkScope": "Mac Node.js reducer only, 100 runs over synthetic 1000 words and 1000 sentence drafts; excludes painting, disk writes and real iPhone latency. 400 mixed actions compared against original reducer.",
+  "unitTests": {
+    "passed": 237
+  },
+  "browserDevelopment": {
+    "stats": {
+      "startTime": "2026-11-05T05:30:02.300Z",
+      "duration": 66804.89099999999,
+      "expected": 41,
+      "skipped": 1,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "inputWork": [
+      {
+        "project": "desktop",
+        "sixLetterBurst": {
+          "clones": 0,
+          "segments": 0,
+          "writes": 0,
+          "glyphs": 6,
+          "ripples": 88,
+          "durations": [
+            11.299999952316284,
+            8.899999856948853,
+            11.300000190734863,
+            10.699999809265137,
+            8.800000190734863,
+            8.899999856948853
+          ]
+        }
+      },
+      {
+        "project": "mobile",
+        "sixLetterBurst": {
+          "clones": 0,
+          "segments": 0,
+          "writes": 0,
+          "glyphs": 6,
+          "ripples": 68,
+          "durations": [
+            11.200000047683716,
+            13,
+            9,
+            9.399999856948853,
+            8.5,
+            8.600000143051147
+          ]
+        }
+      },
+      {
+        "project": "mobile-webkit",
+        "sixLetterBurst": {
+          "clones": 0,
+          "segments": 0,
+          "writes": 0,
+          "glyphs": 6,
+          "ripples": 72,
+          "durations": [
+            6,
+            4,
+            3,
+            3,
+            2,
+            3
+          ]
+        }
+      }
+    ]
+  },
+  "browserProduction": {
+    "stats": {
+      "startTime": "2026-11-05T05:31:45.768Z",
+      "duration": 12286.399,
+      "expected": 9,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "inputWork": [
+      {
+        "project": "desktop",
+        "sixLetterBurst": {
+          "clones": 0,
+          "segments": 0,
+          "writes": 0,
+          "glyphs": 6,
+          "ripples": 152,
+          "durations": [
+            4.5,
+            1.8999998569488525,
+            1.2000000476837158,
+            1.2000000476837158,
+            1.0999999046325684,
+            1.4000000953674316
+          ]
+        }
+      },
+      {
+        "project": "mobile",
+        "sixLetterBurst": {
+          "clones": 0,
+          "segments": 0,
+          "writes": 0,
+          "glyphs": 6,
+          "ripples": 120,
+          "durations": [
+            2.799999952316284,
+            1,
+            1.0999999046325684,
+            1,
+            1.1000001430511475,
+            1
+          ]
+        }
+      },
+      {
+        "project": "mobile-webkit",
+        "sixLetterBurst": {
+          "clones": 0,
+          "segments": 0,
+          "writes": 1,
+          "glyphs": 6,
+          "ripples": 96,
+          "durations": [
+            5,
+            2,
+            2,
+            2,
+            2,
+            2
+          ]
+        }
+      }
+    ]
+  },
+  "validation": [
+    "TypeScript in isolated and actual workspace passed",
+    "Vite production build passed",
+    "Source patch whitespace check passed",
+    "WebKit screenshot visually inspected",
+    "All affected production source files match the tested isolated snapshot"
+  ],
+  "sourceSHA256": {
+    "apps/public/src/NativePractice.tsx": "9d73b16c39f061b67c09e09accaa68d4956c493f5cb791081cb7d6fb34b4785f",
+    "apps/public/src/useStudyPersistence.ts": "51137bc8acfba450a992efd2de998df69a4d408d948d3a220c24b7f830b05fc6",
+    "packages/practice/src/study.mjs": "cb581a6a5190053fafe538c4a930103f27c5cf7104485bb7f8a2374a8bfdd228",
+    "packages/practice/src/buffered-save.mjs": "d177d85eda5cd3fb24e0ea016c248b97b0cad5bdcd6598f07f4da78441d52ee5",
+    "packages/learning-ui/src/spelling-edit.mjs": "4cb822ae41f1151c2c3a2274c76c68b41d1d4608bd7bef73995d1d9312ecc596",
+    "packages/learning-ui/src/CharacterRipples.tsx": "69d7ce925eb09c44447517fb04ba693ddcb36b776576b004ee98d1959e0d8f06",
+    "tests/spelling-input.test.mjs": "03d700a06a5c8f0e1f3bc78d44f311f46451999100803ace8a82e7500208533e",
+    "tests/buffered-save.test.mjs": "8b0bf10e386374ffd3c353b3ecf7917232e9db016904b5ab8dde5744193ac0ab",
+    "tests/browser/input-performance.spec.ts": "2ec074b4d2a4e60897d90729759d6c31c853abe7f6f667bfb4edd0d81860ed93"
+  },
+  "limitations": [
+    "No real iPhone Safari acceptance; Mac WebKit touch emulation used.",
+    "No production deployment or App changes."
+  ],
+  "cleanup": "Task preview stopped; temporary snapshots/builds/test outputs removed after evidence was retained; original recording and shared dependencies preserved."
+}

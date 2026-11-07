@@ -1,0 +1,1795 @@
+npm notice run piclex-web@0.1.0 test
+npm notice run node --test tests/*.test.mjs
+TAP version 13
+# Subtest: all shipped examples satisfy archive checks and source protocol hashes
+ok 1 - all shipped examples satisfy archive checks and source protocol hashes
+  ---
+  duration_ms: 58.59575
+  type: 'test'
+  ...
+# Subtest: tampered photo and metadata fail before an import can be committed
+ok 2 - tampered photo and metadata fail before an import can be committed
+  ---
+  duration_ms: 72.686542
+  type: 'test'
+  ...
+# Subtest: malformed packages, unsafe paths, excessive expansion, wrong versions and duplicate IDs are rejected
+ok 3 - malformed packages, unsafe paths, excessive expansion, wrong versions and duplicate IDs are rejected
+  ---
+  duration_ms: 167.826041
+  type: 'test'
+  ...
+# Subtest: production Swift fixture round-trips with native digest and retains absent optional fields
+ok 4 - production Swift fixture round-trips with native digest and retains absent optional fields
+  ---
+  duration_ms: 7.200125
+  type: 'test'
+  ...
+# Subtest: restore is idempotent and local conflicts only accept strictly newer progress
+ok 5 - restore is idempotent and local conflicts only accept strictly newer progress
+  ---
+  duration_ms: 3.603
+  type: 'test'
+  ...
+# Subtest: tampering, invalid counts, duplicate identity and unknown versions fail before writes
+ok 6 - tampering, invalid counts, duplicate identity and unknown versions fail before writes
+  ---
+  duration_ms: 3.192333
+  type: 'test'
+  ...
+# Subtest: web spelling receipt IDs are deterministic and logs use native deferred-to-Date reference epoch
+ok 7 - web spelling receipt IDs are deterministic and logs use native deferred-to-Date reference epoch
+  ---
+  duration_ms: 2.448875
+  type: 'test'
+  ...
+# Subtest: full photo archives retain trash, IDs, bytes and raw annotation metadata
+ok 8 - full photo archives retain trash, IDs, bytes and raw annotation metadata
+  ---
+  duration_ms: 89.289041
+  type: 'test'
+  ...
+# Subtest: HTTPS configuration keeps App PicLex folder convention and rejects credential URLs
+ok 9 - HTTPS configuration keeps App PicLex folder convention and rejects credential URLs
+  ---
+  duration_ms: 0.487209
+  type: 'test'
+  ...
+# Subtest: FSRS cards and manual logs are retained byte for byte while invalid scheduling fields fail
+ok 10 - FSRS cards and manual logs are retained byte for byte while invalid scheduling fields fail
+  ---
+  duration_ms: 7.535083
+  type: 'test'
+  ...
+# Subtest: native fractional dates and FSRS bytes survive canonical checksums
+ok 11 - native fractional dates and FSRS bytes survive canonical checksums
+  ---
+  duration_ms: 0.78725
+  type: 'test'
+  ...
+# Subtest: uppercase native UUIDs use lowercase archive paths required by App
+ok 12 - uppercase native UUIDs use lowercase archive paths required by App
+  ---
+  duration_ms: 25.982875
+  type: 'test'
+  ...
+# Subtest: every authenticated WebDAV request explicitly rejects redirects and omits browser cookies
+ok 13 - every authenticated WebDAV request explicitly rejects redirects and omits browser cookies
+  ---
+  duration_ms: 1.183625
+  type: 'test'
+  ...
+# Subtest: backup limits equal App: 20 GiB archive/expanded data, independent 64 MiB progress limit
+ok 14 - backup limits equal App: 20 GiB archive/expanded data, independent 64 MiB progress limit
+  ---
+  duration_ms: 0.298792
+  type: 'test'
+  ...
+# Subtest: ZIP64 streams round-trip without whole-file ArrayBuffer reads and preserve CRC validation
+ok 15 - ZIP64 streams round-trip without whole-file ArrayBuffer reads and preserve CRC validation
+  ---
+  duration_ms: 2.735916
+  type: 'test'
+  ...
+# Subtest: metadata decompression stops before accepting a chunk beyond its limit
+ok 16 - metadata decompression stops before accepting a chunk beyond its limit
+  ---
+  duration_ms: 0.931792
+  type: 'test'
+  ...
+# Subtest: default ZIP output uses ZIP64 descriptors before offsets cross 4 GiB for ZIPFoundation compatibility
+ok 17 - default ZIP output uses ZIP64 descriptors before offsets cross 4 GiB for ZIPFoundation compatibility
+  ---
+  duration_ms: 1.475542
+  type: 'test'
+  ...
+# Subtest: complete ZIP allows progress above 8 MiB while preserving its independent 64 MiB cap
+ok 18 - complete ZIP allows progress above 8 MiB while preserving its independent 64 MiB cap
+  ---
+  duration_ms: 48.399958
+  type: 'test'
+  ...
+# Subtest: local ZIP export rejects progress above App 64 MiB before packaging
+ok 19 - local ZIP export rejects progress above App 64 MiB before packaging
+  ---
+  duration_ms: 33.713208
+  type: 'test'
+  ...
+# Subtest: a burst saves only the newest snapshot and explicit exit flush cancels delayed writes
+ok 20 - a burst saves only the newest snapshot and explicit exit flush cancels delayed writes
+  ---
+  duration_ms: 0.920625
+  type: 'test'
+  ...
+# Subtest: continuous typing has a bounded save delay
+ok 21 - continuous typing has a bounded save delay
+  ---
+  duration_ms: 0.155542
+  type: 'test'
+  ...
+# Subtest: failed saves retain the latest pending snapshot and retry without overwriting another writer
+ok 22 - failed saves retain the latest pending snapshot and retry without overwriting another writer
+  ---
+  duration_ms: 0.080167
+  type: 'test'
+  ...
+# Subtest: AI deck preserves native focus coordinates, examples, phonetics and quotation through export/import
+ok 23 - AI deck preserves native focus coordinates, examples, phonetics and quotation through export/import
+  ---
+  duration_ms: 35.1545
+  type: 'test'
+  ...
+# Subtest: contextual words and invalid positions never invent focus boxes
+ok 24 - contextual words and invalid positions never invent focus boxes
+  ---
+  duration_ms: 45.172084
+  type: 'test'
+  ...
+# Subtest: AI fractional coordinates export as native integers without creating collapsed boxes
+ok 25 - AI fractional coordinates export as native integers without creating collapsed boxes
+  ---
+  duration_ms: 12.298708
+  type: 'test'
+  ...
+# Subtest: three independently saved photos form one ordered deck without changing the originals
+ok 26 - three independently saved photos form one ordered deck without changing the originals
+  ---
+  duration_ms: 1.076875
+  type: 'test'
+  ...
+# Subtest: legacy drafts, mistakes and completed answers from every photo survive, with the original reward IDs
+ok 27 - legacy drafts, mistakes and completed answers from every photo survive, with the original reward IDs
+  ---
+  duration_ms: 22.437958
+  type: 'test'
+  ...
+# Subtest: adding photos retains a partial answer and resumes a finished deck at the first new photo
+ok 28 - adding photos retains a partial answer and resumes a finished deck at the first new photo
+  ---
+  duration_ms: 1.521666
+  type: 'test'
+  ...
+# Subtest: photo removal remaps the cursor by word ID and keeps surviving drafts
+ok 29 - photo removal remaps the cursor by word ID and keeps surviving drafts
+  ---
+  duration_ms: 4.964959
+  type: 'test'
+  ...
+# Subtest: identical sentences in different photos retain separate drafts and original award keys
+ok 30 - identical sentences in different photos retain separate drafts and original award keys
+  ---
+  duration_ms: 3.959542
+  type: 'test'
+  ...
+# Subtest: finished listening stays finished on reload and opens appended sentences
+ok 31 - finished listening stays finished on reload and opens appended sentences
+  ---
+  duration_ms: 0.332208
+  type: 'test'
+  ...
+# Subtest: native glass keeps distinct fixed hues and white text readable over a white photograph
+ok 32 - native glass keeps distinct fixed hues and white text readable over a white photograph
+  ---
+  duration_ms: 3.765792
+  type: 'test'
+  ...
+# Subtest: callouts avoid clustered object anchors, remain inside the image and connect from label edges
+ok 33 - callouts avoid clustered object anchors, remain inside the image and connect from label edges
+  ---
+  duration_ms: 10.721
+  type: 'test'
+  ...
+# Subtest: each newly correct letter fires once, including pasted and final letters; errors and retyping cannot replay
+ok 34 - each newly correct letter fires once, including pasted and final letters; errors and retyping cannot replay
+  ---
+  duration_ms: 0.92425
+  type: 'test'
+  ...
+# Subtest: quick spelling maps repeated letters to requested original slots; supplied letters and separators earn no wave
+ok 35 - quick spelling maps repeated letters to requested original slots; supplied letters and separators earn no wave
+  ---
+  duration_ms: 0.195083
+  type: 'test'
+  ...
+# Subtest: restoration, a new scope, reveal and input while inactive do not manufacture or defer waves
+ok 36 - restoration, a new scope, reveal and input while inactive do not manufacture or defer waves
+  ---
+  duration_ms: 1.79525
+  type: 'test'
+  ...
+# Subtest: the impact stays local, has no initial flash, and expires at 700ms
+ok 37 - the impact stays local, has no initial flash, and expires at 700ms
+  ---
+  duration_ms: 0.180541
+  type: 'test'
+  ...
+# Subtest: CI-only changes run verification without republishing; product changes still publish
+ok 38 - CI-only changes run verification without republishing; product changes still publish
+  ---
+  duration_ms: 0.536792
+  type: 'test'
+  ...
+# Verified 1 files for aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa; image reuses exact Pages bytes
+# Subtest: verified image context preserves exact artifact bytes and minimal runtime inputs
+ok 39 - verified image context preserves exact artifact bytes and minimal runtime inputs
+  ---
+  duration_ms: 114.248542
+  type: 'test'
+  ...
+# Subtest: different source revisions and tampered bytes are rejected before packaging
+ok 40 - different source revisions and tampered bytes are rejected before packaging
+  ---
+  duration_ms: 45.201125
+  type: 'test'
+  ...
+# Subtest: unexpected files cannot enter the image context
+ok 41 - unexpected files cannot enter the image context
+  ---
+  duration_ms: 7.422833
+  type: 'test'
+  ...
+# Subtest: independent covers keep photo count, learning identity and old progress intact
+ok 42 - independent covers keep photo count, learning identity and old progress intact
+  ---
+  duration_ms: 97.387334
+  type: 'test'
+  ...
+# Subtest: invalid, oversized, mismatched and executable cover content is rejected
+ok 43 - invalid, oversized, mismatched and executable cover content is rejected
+  ---
+  duration_ms: 8.715084
+  type: 'test'
+  ...
+# Subtest: audio validation accepts canonical clips and rejects tampered, oversized or foreign data
+ok 44 - audio validation accepts canonical clips and rejects tampered, oversized or foreign data
+  ---
+  duration_ms: 3.4835
+  type: 'test'
+  ...
+# Subtest: archive keeps per-occurrence audio without resetting existing learning identity
+ok 45 - archive keeps per-occurrence audio without resetting existing learning identity
+  ---
+  duration_ms: 58.659666
+  type: 'test'
+  ...
+# Subtest: public audio accepts only bounded same-origin asset paths without inline payloads
+ok 46 - public audio accepts only bounded same-origin asset paths without inline payloads
+  ---
+  duration_ms: 8.37025
+  type: 'test'
+  ...
+# Subtest: dialogue strips labels and quotes, merges adjacent same roles
+ok 47 - dialogue strips labels and quotes, merges adjacent same roles
+  ---
+  duration_ms: 3.945625
+  type: 'test'
+  ...
+# Subtest: native supported labels, inline A/B, escaped newline, machine first
+ok 48 - native supported labels, inline A/B, escaped newline, machine first
+  ---
+  duration_ms: 0.713666
+  type: 'test'
+  ...
+# Subtest: ordinary text and unknown or single speakers stay ordinary
+ok 49 - ordinary text and unknown or single speakers stay ordinary
+  ---
+  duration_ms: 0.102083
+  type: 'test'
+  ...
+# Subtest: complete learner text passes without reading speaker labels or B lines
+ok 50 - complete learner text passes without reading speaker labels or B lines
+  ---
+  duration_ms: 0.450959
+  type: 'test'
+  ...
+# Subtest: scores are coverage based, incomplete dialogue cannot show 100
+ok 51 - scores are coverage based, incomplete dialogue cannot show 100
+  ---
+  duration_ms: 0.145833
+  type: 'test'
+  ...
+# Subtest: download reports real chunk progress and preserves every byte
+ok 52 - download reports real chunk progress and preserves every byte
+  ---
+  duration_ms: 24.700625
+  type: 'test'
+  ...
+# Subtest: compressed and unknown lengths never claim an invented percentage
+ok 53 - compressed and unknown lengths never claim an invented percentage
+  ---
+  duration_ms: 0.517959
+  type: 'test'
+  ...
+# Subtest: download limits cancel the response instead of buffering oversized data
+ok 54 - download limits cancel the response instead of buffering oversized data
+  ---
+  duration_ms: 0.642792
+  type: 'test'
+  ...
+# Subtest: cancellation cannot publish a completed or stale download
+ok 55 - cancellation cannot publish a completed or stale download
+  ---
+  duration_ms: 0.261291
+  type: 'test'
+  ...
+# Subtest: level thresholds exactly match the existing native laboratory
+ok 56 - level thresholds exactly match the existing native laboratory
+  ---
+  duration_ms: 0.989125
+  type: 'test'
+  ...
+# Subtest: one correctly spelled attempt earns one, reveal earns none; duplicate receipts do not mint credit
+ok 57 - one correctly spelled attempt earns one, reveal earns none; duplicate receipts do not mint credit
+  ---
+  duration_ms: 0.146708
+  type: 'test'
+  ...
+# Subtest: sentence credit caps at 3–6 and partial reading only tops up
+ok 58 - sentence credit caps at 3–6 and partial reading only tops up
+  ---
+  duration_ms: 0.104541
+  type: 'test'
+  ...
+# Subtest: game spends/rewards share the account, reject overdrafts and duplicate spends
+ok 59 - game spends/rewards share the account, reject overdrafts and duplicate spends
+  ---
+  duration_ms: 0.14475
+  type: 'test'
+  ...
+# Subtest: native particle route starts at the glyph, stays finite, and converges to the live meter
+ok 60 - native particle route starts at the glyph, stays finite, and converges to the live meter
+  ---
+  duration_ms: 0.821292
+  type: 'test'
+  ...
+# Subtest: captured photos create a real round-trippable deck without adding cover cards
+ok 61 - captured photos create a real round-trippable deck without adding cover cards
+  ---
+  duration_ms: 19.145209
+  type: 'test'
+  ...
+# Subtest: a centered object keeps its context and stays centered
+ok 62 - a centered object keeps its context and stays centered
+  ---
+  duration_ms: 0.740167
+  type: 'test'
+  ...
+# Subtest: an object at the photo corner keeps that corner in the corner
+ok 63 - an object at the photo corner keeps that corner in the corner
+  ---
+  duration_ms: 0.1075
+  type: 'test'
+  ...
+# Subtest: a tiny object never zooms past the native 3.2 limit
+ok 64 - a tiny object never zooms past the native 3.2 limit
+  ---
+  duration_ms: 1.291875
+  type: 'test'
+  ...
+# Subtest: a hidden object shows the whole photo without a box
+ok 65 - a hidden object shows the whole photo without a box
+  ---
+  duration_ms: 0.111875
+  type: 'test'
+  ...
+# Subtest: the desktop card frames the same area as the phone card
+ok 66 - the desktop card frames the same area as the phone card
+  ---
+  duration_ms: 0.100584
+  type: 'test'
+  ...
+# Subtest: degenerate sizes return no layout
+ok 67 - degenerate sizes return no layout
+  ---
+  duration_ms: 0.062334
+  type: 'test'
+  ...
+# Subtest: sentence portrait stays complete while its object highlight follows the contained photo
+ok 68 - sentence portrait stays complete while its object highlight follows the contained photo
+  ---
+  duration_ms: 0.143417
+  type: 'test'
+  ...
+# Subtest: sentence landscape stays complete with an aligned highlight and letterboxing
+ok 69 - sentence landscape stays complete with an aligned highlight and letterboxing
+  ---
+  duration_ms: 0.062084
+  type: 'test'
+  ...
+# Subtest: virtual input replaces the active selection and reports the native caret
+ok 70 - virtual input replaces the active selection and reports the native caret
+  ---
+  duration_ms: 1.219125
+  type: 'test'
+  ...
+# Subtest: backspace and delete remove whole Unicode characters without damaging adjacent text
+ok 71 - backspace and delete remove whole Unicode characters without damaging adjacent text
+  ---
+  duration_ms: 0.176125
+  type: 'test'
+  ...
+# Subtest: navigation and shortcuts cannot become literal answer text
+ok 72 - navigation and shortcuts cannot become literal answer text
+  ---
+  duration_ms: 0.145625
+  type: 'test'
+  ...
+# Subtest: seven playable characters and eight sourced reward challenges have resolvable references
+ok 73 - seven playable characters and eight sourced reward challenges have resolvable references
+  ---
+  duration_ms: 1.341125
+  type: 'test'
+  ...
+# Subtest: 5000 picked-up materials records the Multitasker achievement once while the character stays open
+ok 74 - 5000 picked-up materials records the Multitasker achievement once while the character stays open
+  ---
+  duration_ms: 0.4965
+  type: 'test'
+  ...
+# Subtest: only a completed living wave20 awards each original character-clear reward; retries are idempotent
+ok 75 - only a completed living wave20 awards each original character-clear reward; retries are idempotent
+  ---
+  duration_ms: 2.115542
+  type: 'test'
+  ...
+# Subtest: healing unlock uses actual restored HP within one wave, excludes overheal/level growth/settlement, and cannot accumulate two waves
+ok 76 - healing unlock uses actual restored HP within one wave, excludes overheal/level growth/settlement, and cannot accumulate two waves
+  ---
+  duration_ms: 10.432334
+  type: 'test'
+  ...
+# Subtest: material progression is recorded by pickup, not harvest, spelling rebate or uncollected drops
+ok 77 - material progression is recorded by pickup, not harvest, spelling rebate or uncollected drops
+  ---
+  duration_ms: 2.4605
+  type: 'test'
+  ...
+# Subtest: locked rewards never enter shop/crate pools or direct purchase, then all tiers are eligible after unlock
+ok 78 - locked rewards never enter shop/crate pools or direct purchase, then all tiers are eligible after unlock
+  ---
+  duration_ms: 253.455542
+  type: 'test'
+  ...
+# Subtest: Multitasker has twelve slots, per-weapon penalty recalculates on buy/combine/recycle, and class bonuses cap at six
+ok 79 - Multitasker has twelve slots, per-weapon penalty recalculates on buy/combine/recycle, and class bonuses cap at six
+  ---
+  duration_ms: 0.660125
+  type: 'test'
+  ...
+# Subtest: every character can start immediately without achievement progress
+ok 80 - every character can start immediately without achievement progress
+  ---
+  duration_ms: 0.890416
+  type: 'test'
+  ...
+# Subtest: Mage starts with one Snake and Sausage, 9 HP and sourced stat modifiers
+ok 81 - Mage starts with one Snake and Sausage, 9 HP and sourced stat modifiers
+  ---
+  duration_ms: 0.471416
+  type: 'test'
+  ...
+# Subtest: Doctor has +100% net Medical attack speed, halved armor gains and doubled regeneration gains and healing
+ok 82 - Doctor has +100% net Medical attack speed, halved armor gains and doubled regeneration gains and healing
+  ---
+  duration_ms: 1.116333
+  type: 'test'
+  ...
+# Subtest: Engineer starts with a Wrench, gains extra Engineering and halves Damage gains
+ok 83 - Engineer starts with a Wrench, gains extra Engineering and halves Damage gains
+  ---
+  duration_ms: 0.22325
+  type: 'test'
+  ...
+# Subtest: Medikit adds +10 regen, +2 every5 seconds only within current wave and -10 luck
+ok 84 - Medikit adds +10 regen, +2 every5 seconds only within current wave and -10 luck
+  ---
+  duration_ms: 0.600084
+  type: 'test'
+  ...
+# Subtest: Wand+one Sausage causes3 ticks of4 burn, highest damage/duration refresh without stacking, burn cannot lifesteal
+ok 85 - Wand+one Sausage causes3 ticks of4 burn, highest damage/duration refresh without stacking, burn cannot lifesteal
+  ---
+  duration_ms: 0.780333
+  type: 'test'
+  ...
+# Subtest: Snake shares one spread budget across a chain and never ignites warning enemies
+ok 86 - Snake shares one spread budget across a chain and never ignites warning enemies
+  ---
+  duration_ms: 4.056
+  type: 'test'
+  ...
+# Subtest: Thunder Sword III/IV releases exactly2/4 elemental projectiles, and PowerFist explosion hits nearby enemies
+ok 87 - Thunder Sword III/IV releases exactly2/4 elemental projectiles, and PowerFist explosion hits nearby enemies
+  ---
+  duration_ms: 2.665541
+  type: 'test'
+  ...
+# Subtest: browser local persistence survives a module reload; native injection takes precedence and changes flush immediately
+ok 88 - browser local persistence survives a module reload; native injection takes precedence and changes flush immediately
+  ---
+  duration_ms: 0.44425
+  type: 'test'
+  ...
+# Subtest: malformed persistent input is ignored and snapshots cannot mutate live state
+ok 89 - malformed persistent input is ignored and snapshots cannot mutate live state
+  ---
+  duration_ms: 0.191875
+  type: 'test'
+  ...
+# Subtest: rows up to 20 cells fit the measured width without scrolling
+ok 90 - rows up to 20 cells fit the measured width without scrolling
+  ---
+  duration_ms: 0.793417
+  type: 'test'
+  ...
+# Subtest: the 20/21 boundary switches from shrink-to-fit to horizontal scroll
+ok 91 - the 20/21 boundary switches from shrink-to-fit to horizontal scroll
+  ---
+  duration_ms: 0.149542
+  type: 'test'
+  ...
+# Subtest: short rows keep large tiles where they fit and shrink as the word grows
+ok 92 - short rows keep large tiles where they fit and shrink as the word grows
+  ---
+  duration_ms: 0.866708
+  type: 'test'
+  ...
+# Subtest: a short row never scrolls, even when the width is very tight
+ok 93 - a short row never scrolls, even when the width is very tight
+  ---
+  duration_ms: 0.067666
+  type: 'test'
+  ...
+# Subtest: the gap tightens as the row grows and never grows again for long words
+ok 94 - the gap tightens as the row grows and never grows again for long words
+  ---
+  duration_ms: 0.072709
+  type: 'test'
+  ...
+# Subtest: both rows share the tighter tile and gap without wrapping
+ok 95 - both rows share the tighter tile and gap without wrapping
+  ---
+  duration_ms: 0.091917
+  type: 'test'
+  ...
+# Subtest: fixed separators count toward the row width so nothing overflows
+ok 96 - fixed separators count toward the row width so nothing overflows
+  ---
+  duration_ms: 0.053625
+  type: 'test'
+  ...
+# Subtest: the chosen size never grows when width shrinks, and stays usable when empty
+ok 97 - the chosen size never grows when width shrinks, and stays usable when empty
+  ---
+  duration_ms: 0.057917
+  type: 'test'
+  ...
+# Subtest: tileFontSize scales with the cell and stays legible
+ok 98 - tileFontSize scales with the cell and stays legible
+  ---
+  duration_ms: 0.290458
+  type: 'test'
+  ...
+# Subtest: every real content weapon family maps to the intended combat effect and unknown weapons stay silent
+ok 99 - every real content weapon family maps to the intended combat effect and unknown weapons stay silent
+  ---
+  duration_ms: 1.471542
+  type: 'test'
+  ...
+# Subtest: combat attack keys play only after gesture unlock, with per-kind rapid cooldowns
+ok 100 - combat attack keys play only after gesture unlock, with per-kind rapid cooldowns
+  ---
+  duration_ms: 12.01425
+  type: 'test'
+  ...
+# Subtest: combat voices are capped separately so pickup feedback still has a voice
+ok 101 - combat voices are capped separately so pickup feedback still has a voice
+  ---
+  duration_ms: 10.382833
+  type: 'test'
+  ...
+# Subtest: releasing a combat voice on ended frees its slot and clears per-kind bookkeeping
+ok 102 - releasing a combat voice on ended frees its slot and clears per-kind bookkeeping
+  ---
+  duration_ms: 1.374125
+  type: 'test'
+  ...
+# Subtest: disabling effects and backgrounding stop combat voices and clear bookkeeping
+ok 103 - disabling effects and backgrounding stop combat voices and clear bookkeeping
+  ---
+  duration_ms: 1.476792
+  type: 'test'
+  ...
+# Subtest: laser starts as a .02 second muzzle pulse and retains sourced projectile physics
+ok 104 - laser starts as a .02 second muzzle pulse and retains sourced projectile physics
+  ---
+  duration_ms: 2.782375
+  type: 'test'
+  ...
+# Subtest: Shredder keeps its actual area damage while showing .05 seconds flash and .75 seconds smoke
+ok 105 - Shredder keeps its actual area damage while showing .05 seconds flash and .75 seconds smoke
+  ---
+  duration_ms: 1.444791
+  type: 'test'
+  ...
+# Subtest: hits expose actual damage as smooth normal and critical floating numbers
+ok 106 - hits expose actual damage as smooth normal and critical floating numbers
+  ---
+  duration_ms: 0.828541
+  type: 'test'
+  ...
+# Subtest: five new monster visuals provide two normal, two elite and one boss role
+ok 107 - five new monster visuals provide two normal, two elite and one boss role
+  ---
+  duration_ms: 0.831583
+  type: 'test'
+  ...
+# Subtest: visual roles retain the imported Brotato PC 1.1.15.4 balance values
+ok 108 - visual roles retain the imported Brotato PC 1.1.15.4 balance values
+  ---
+  duration_ms: 0.258
+  type: 'test'
+  ...
+# Subtest: shared level math matches native thresholds and wave rewards total 70 per full run
+ok 109 - shared level math matches native thresholds and wave rewards total 70 per full run
+  ---
+  duration_ms: 0.9015
+  type: 'test'
+  ...
+# Subtest: browser ledger is idempotent, earns words and waves, and refuses an unaffordable skip
+ok 110 - browser ledger is idempotent, earns words and waves, and refuses an unaffordable skip
+  ---
+  duration_ms: 1.623625
+  type: 'test'
+  ...
+# Subtest: browser storage failure leaves both the visible balance and transaction pending
+ok 111 - browser storage failure leaves both the visible balance and transaction pending
+  ---
+  duration_ms: 0.134291
+  type: 'test'
+  ...
+# Subtest: native ledger posts validated signed events and applies acknowledged snapshots
+ok 112 - native ledger posts validated signed events and applies acknowledged snapshots
+  ---
+  duration_ms: 0.168
+  type: 'test'
+  ...
+# Subtest: selected photo, word, pronunciation and scene focus survive vocabulary filtering
+ok 113 - selected photo, word, pronunciation and scene focus survive vocabulary filtering
+  ---
+  duration_ms: 1.133416
+  type: 'test'
+  ...
+# Subtest: new export ignores old experience, achievements and runs; own progress resumes and other exports start clean
+ok 114 - new export ignores old experience, achievements and runs; own progress resumes and other exports start clean
+  ---
+  duration_ms: 4.054166
+  type: 'test'
+  ...
+# Subtest: injured fruit inside the existing magnet radius is attracted and heals exactly 3 on pickup
+ok 115 - injured fruit inside the existing magnet radius is attracted and heals exactly 3 on pickup
+  ---
+  duration_ms: 3.816458
+  type: 'test'
+  ...
+# Subtest: full HP fruit stays completely stationary and uncollected even when touching
+ok 116 - full HP fruit stays completely stationary and uncollected even when touching
+  ---
+  duration_ms: 1.48475
+  type: 'test'
+  ...
+# Subtest: injured fruit outside the magnet radius stays stationary
+ok 117 - injured fruit outside the magnet radius stays stationary
+  ---
+  duration_ms: 0.423125
+  type: 'test'
+  ...
+# Subtest: touching fruit clamps at max HP and is removed exactly once
+ok 118 - touching fruit clamps at max HP and is removed exactly once
+  ---
+  duration_ms: 0.455042
+  type: 'test'
+  ...
+# Subtest: the existing magnet item expansion widens fruit attraction beyond the default radius
+ok 119 - the existing magnet item expansion widens fruit attraction beyond the default radius
+  ---
+  duration_ms: 0.268167
+  type: 'test'
+  ...
+# Subtest: crate and legendary drops keep their existing touch-only behavior
+ok 120 - crate and legendary drops keep their existing touch-only behavior
+  ---
+  duration_ms: 0.4255
+  type: 'test'
+  ...
+# Subtest: repeated letters become separate one-use tiles
+ok 121 - repeated letters become separate one-use tiles
+  ---
+  duration_ms: 1.251167
+  type: 'test'
+  ...
+# Subtest: the shuffled bank keeps the letter multiset but never starts in answer order
+ok 122 - the shuffled bank keeps the letter multiset but never starts in answer order
+  ---
+  duration_ms: 0.349833
+  type: 'test'
+  ...
+# Subtest: separators are not tiles, letters display lower-case and drafts reinsert fixed punctuation
+ok 123 - separators are not tiles, letters display lower-case and drafts reinsert fixed punctuation
+  ---
+  duration_ms: 0.258459
+  type: 'test'
+  ...
+# Subtest: undo removes the last tile and clear resets the whole selection
+ok 124 - undo removes the last tile and clear resets the whole selection
+  ---
+  duration_ms: 0.095666
+  type: 'test'
+  ...
+# Subtest: a full selection produces the complete draft with automatic separators
+ok 125 - a full selection produces the complete draft with automatic separators
+  ---
+  duration_ms: 0.110958
+  type: 'test'
+  ...
+# Subtest: incomplete explicit checks never mutate coins, rewards, draft or offer state
+ok 126 - incomplete explicit checks never mutate coins, rewards, draft or offer state
+  ---
+  duration_ms: 0.885417
+  type: 'test'
+  ...
+# Subtest: explicit wrong full checks charge once, rebate correct positions and cannot retry
+ok 127 - explicit wrong full checks charge once, rebate correct positions and cannot retry
+  ---
+  duration_ms: 0.340375
+  type: 'test'
+  ...
+# Subtest: a fully wrong draft keeps no rebate and settles as one failed purchase
+ok 128 - a fully wrong draft keeps no rebate and settles as one failed purchase
+  ---
+  duration_ms: 0.243958
+  type: 'test'
+  ...
+# Subtest: closing an unsubmitted draft keeps money and a correct check settles exactly once
+ok 129 - closing an unsubmitted draft keeps money and a correct check settles exactly once
+  ---
+  duration_ms: 1.96175
+  type: 'test'
+  ...
+# Subtest: experience can skip spelling while preserving the item price and quality-scaled cost
+ok 130 - experience can skip spelling while preserving the item price and quality-scaled cost
+  ---
+  duration_ms: 0.5745
+  type: 'test'
+  ...
+# Subtest: an insufficient experience response keeps the spelling purchase open and charges nothing
+ok 131 - an insufficient experience response keeps the spelling purchase open and charges nothing
+  ---
+  duration_ms: 0.170375
+  type: 'test'
+  ...
+# Subtest: an unaffordable offer is unavailable: no charge, no rebate and the attempt is cancelled
+ok 132 - an unaffordable offer is unavailable: no charge, no rebate and the attempt is cancelled
+  ---
+  duration_ms: 0.103459
+  type: 'test'
+  ...
+# Subtest: only complete explicit submissions evaluate and reward
+ok 133 - only complete explicit submissions evaluate and reward
+  ---
+  duration_ms: 0.186125
+  type: 'test'
+  ...
+# Subtest: returning a middle letter leaves a hole and the next pick refills that exact position
+ok 134 - returning a middle letter leaves a hole and the next pick refills that exact position
+  ---
+  duration_ms: 0.114084
+  type: 'test'
+  ...
+# Subtest: repeated letters keep their exact physical identity across return and refill
+ok 135 - repeated letters keep their exact physical identity across return and refill
+  ---
+  duration_ms: 0.071375
+  type: 'test'
+  ...
+# Subtest: moving a slot stably inserts and shifts the intervening entries in both directions
+ok 136 - moving a slot stably inserts and shifts the intervening entries in both directions
+  ---
+  duration_ms: 0.076542
+  type: 'test'
+  ...
+# Subtest: moving a gap keeps the fixed length, multiset and unique tiles without duplicate consumption
+ok 137 - moving a gap keeps the fixed length, multiset and unique tiles without duplicate consumption
+  ---
+  duration_ms: 0.145167
+  type: 'test'
+  ...
+# Subtest: fullness rejects holes, duplicate tiles and unknown IDs
+ok 138 - fullness rejects holes, duplicate tiles and unknown IDs
+  ---
+  duration_ms: 0.06875
+  type: 'test'
+  ...
+# Subtest: slot drafts keep holes and fixed separators in their word positions
+ok 139 - slot drafts keep holes and fixed separators in their word positions
+  ---
+  duration_ms: 0.059875
+  type: 'test'
+  ...
+# Subtest: editing a slot draft never mutates the engine or rewards before the final check
+ok 140 - editing a slot draft never mutates the engine or rewards before the final check
+  ---
+  duration_ms: 0.244167
+  type: 'test'
+  ...
+# Subtest: materials visibly travel into the player before their value is settled
+ok 141 - materials visibly travel into the player before their value is settled
+  ---
+  duration_ms: 2.731334
+  type: 'test'
+  ...
+# Subtest: a nearby material no longer disappears at the old 22px pickup edge
+ok 142 - a nearby material no longer disappears at the old 22px pickup edge
+  ---
+  duration_ms: 2.085125
+  type: 'test'
+  ...
+# Subtest: materials stay still outside the magnet, while an attracted material keeps chasing a moving player
+ok 143 - materials stay still outside the magnet, while an attracted material keeps chasing a moving player
+  ---
+  duration_ms: 0.404834
+  type: 'test'
+  ...
+# Subtest: the magnet item still expands the material attraction radius
+ok 144 - the magnet item still expands the material attraction radius
+  ---
+  duration_ms: 0.2435
+  type: 'test'
+  ...
+# Subtest: phone arena has room in world units, preserves aspect and fits completely inside the physical canvas
+ok 145 - phone arena has room in world units, preserves aspect and fits completely inside the physical canvas
+  ---
+  duration_ms: 1.360708
+  type: 'test'
+  ...
+# Subtest: opening wave has a quiet start, 2-3 enemies per batch, spaced waves, and no mutation of imported PC data
+ok 146 - opening wave has a quiet start, 2-3 enemies per batch, spaced waves, and no mutation of imported PC data
+  ---
+  duration_ms: 4.203208
+  type: 'test'
+  ...
+# Subtest: population cap counts warnings, delays excess enemies, and keeps existing enemies instead of replacing them
+ok 147 - population cap counts warnings, delays excess enemies, and keeps existing enemies instead of replacing them
+  ---
+  duration_ms: 0.583
+  type: 'test'
+  ...
+# Subtest: random and fallback births avoid the player and leave gaps between monsters, including pending crosses
+ok 148 - random and fallback births avoid the player and leave gaps between monsters, including pending crosses
+  ---
+  duration_ms: 1.359833
+  type: 'test'
+  ...
+# Subtest: boss group retries when full rather than marking a bossless wave complete
+ok 149 - boss group retries when full rather than marking a bossless wave complete
+  ---
+  duration_ms: 0.521333
+  type: 'test'
+  ...
+# Subtest: fewer opening enemies retain pickup value for shop and XP, while later waves keep imported material value
+ok 150 - fewer opening enemies retain pickup value for shop and XP, while later waves keep imported material value
+  ---
+  duration_ms: 3.377042
+  type: 'test'
+  ...
+# Subtest: weapon turns towards a new target before firing; potato keeps its quiet body state
+ok 151 - weapon turns towards a new target before firing; potato keeps its quiet body state
+  ---
+  duration_ms: 1.023583
+  type: 'test'
+  ...
+# Subtest: photo identities and normalized focus survive word filtering, with local-only native or paired LAN routes
+ok 152 - photo identities and normalized focus survive word filtering, with local-only native or paired LAN routes
+  ---
+  duration_ms: 2.773416
+  type: 'test'
+  ...
+# Subtest: invalid bounding boxes are omitted; visible:false preserves the full scene
+ok 153 - invalid bounding boxes are omitted; visible:false preserves the full scene
+  ---
+  duration_ms: 0.198
+  type: 'test'
+  ...
+# Subtest: PC 1.1.15.4 data plus four H5 Wrench tiers, 27 reference items and seven preserved extras have valid references
+ok 154 - PC 1.1.15.4 data plus four H5 Wrench tiers, 27 reference items and seven preserved extras have valid references
+  ---
+  duration_ms: 2.075875
+  type: 'test'
+  ...
+# Subtest: damage follows published pistol and SMG scaling examples and newer knife tier data
+ok 155 - damage follows published pistol and SMG scaling examples and newer knife tier data
+  ---
+  duration_ms: 0.261458
+  type: 'test'
+  ...
+# Subtest: stored cooldown distinguishes positive and negative speed and caps at two frames
+ok 156 - stored cooldown distinguishes positive and negative speed and caps at two frames
+  ---
+  duration_ms: 0.067417
+  type: 'test'
+  ...
+# Subtest: armor matches documented 15 armor = 50%, negative 15 = 150%, with damage rounded before armor
+ok 157 - armor matches documented 15 armor = 50%, negative 15 = 150%, with damage rounded before armor
+  ---
+  duration_ms: 0.077917
+  type: 'test'
+  ...
+# Subtest: shop price and rerolls match the published SMG, Cyclops Worm, wave 5 and wave 15 examples
+ok 158 - shop price and rerolls match the published SMG, Cyclops Worm, wave 5 and wave 15 examples
+  ---
+  duration_ms: 0.165125
+  type: 'test'
+  ...
+# Subtest: seeded tier statistics match wave 8 thresholds; luck increases rarity within caps
+ok 159 - seeded tier statistics match wave 8 thresholds; luck increases rarity within caps
+  ---
+  duration_ms: 67.24325
+  type: 'test'
+  ...
+# Subtest: enemy wave 10 and 20 health, drop rates and regeneration match reference examples
+ok 160 - enemy wave 10 and 20 health, drop rates and regeneration match reference examples
+  ---
+  duration_ms: 0.172666
+  type: 'test'
+  ...
+# Subtest: fixed seed drop statistics agree with the 1% base and 2% at 100 luck rather than a single lucky roll
+ok 161 - fixed seed drop statistics agree with the 1% base and 2% at 100 luck rather than a single lucky roll
+  ---
+  duration_ms: 8.494917
+  type: 'test'
+  ...
+# Subtest: early shop guarantees, weapon tiers, stack caps, and locked price/answer/rebate survive refresh and next wave
+ok 162 - early shop guarantees, weapon tiers, stack caps, and locked price/answer/rebate survive refresh and next wave
+  ---
+  duration_ms: 4.208375
+  type: 'test'
+  ...
+# Subtest: two equal tiers combine, unequal or legendary tiers cannot; full-slot spelling buys and merges exactly once
+ok 163 - two equal tiers combine, unequal or legendary tiers cannot; full-slot spelling buys and merges exactly once
+  ---
+  duration_ms: 1.056541
+  type: 'test'
+  ...
+# Subtest: set bonuses recalculate after combine/recycle; pistol piercing and slingshot bounce are actual weapon behaviors
+ok 164 - set bonuses recalculate after combine/recycle; pistol piercing and slingshot bounce are actual weapon behaviors
+  ---
+  duration_ms: 1.940417
+  type: 'test'
+  ...
+# Subtest: healing drops once on death, stays while healthy, heals 3 with clamping; unknown does not affect pickups
+ok 165 - healing drops once on death, stays while healthy, heals 3 with clamping; unknown does not affect pickups
+  ---
+  duration_ms: 0.955208
+  type: 'test'
+  ...
+# Subtest: death cannot be rescued by a same-frame fruit pickup
+ok 166 - death cannot be rescued by a same-frame fruit pickup
+  ---
+  duration_ms: 0.588417
+  type: 'test'
+  ...
+# Subtest: materials left on the ground double next pickups; level 1 requires 16 XP and queues four choices
+ok 167 - materials left on the ground double next pickups; level 1 requires 16 XP and queues four choices
+  ---
+  duration_ms: 3.813625
+  type: 'test'
+  ...
+# Subtest: three characters retain their rules; Danger 0 has 20 scripted waves and a boss on wave 20
+ok 168 - three characters retain their rules; Danger 0 has 20 scripted waves and a boss on wave 20
+  ---
+  duration_ms: 5.864292
+  type: 'test'
+  ...
+# Subtest: spawn positions cover the arena interior and warning freezes its position until birth
+ok 169 - spawn positions cover the arena interior and warning freezes its position until birth
+  ---
+  duration_ms: 2.359458
+  type: 'test'
+  ...
+# Subtest: seeded standard 20-wave run preserves settlement and eventually wins, with bounded entities
+ok 170 - seeded standard 20-wave run preserves settlement and eventually wins, with bounded entities
+  ---
+  duration_ms: 844.531375
+  type: 'test'
+  ...
+# Subtest: invalid tiers, nonfinite cooldown and missing enemy references are rejected
+ok 171 - invalid tiers, nonfinite cooldown and missing enemy references are rejected
+  ---
+  duration_ms: 0.718625
+  type: 'test'
+  ...
+# Subtest: fatal contact cannot trigger an attack or lifesteal resurrection in the same frame
+ok 172 - fatal contact cannot trigger an attack or lifesteal resurrection in the same frame
+  ---
+  duration_ms: 0.330792
+  type: 'test'
+  ...
+# Subtest: continuing old photo-less drafts refreshes scene references without changing the puzzle or purchase
+ok 173 - continuing old photo-less drafts refreshes scene references without changing the puzzle or purchase
+  ---
+  duration_ms: 8.129
+  type: 'test'
+  ...
+# Subtest: refreshed native, LAN and export scenes survive wave retry and another checkpoint
+ok 174 - refreshed native, LAN and export scenes survive wave retry and another checkpoint
+  ---
+  duration_ms: 4.492667
+  type: 'test'
+  ...
+# Subtest: photo refresh never substitutes a different meaning or an untrusted photo URL
+ok 175 - photo refresh never substitutes a different meaning or an untrusted photo URL
+  ---
+  duration_ms: 1.723625
+  type: 'test'
+  ...
+# Subtest: battle checkpoint keeps the same wave, elapsed time, health, equipment and cooldowns and resumes paused
+ok 176 - battle checkpoint keeps the same wave, elapsed time, health, equipment and cooldowns and resumes paused
+  ---
+  duration_ms: 1.414458
+  type: 'test'
+  ...
+# Subtest: piercing hit sets and burn propagation shared budget preserve object identity
+ok 177 - piercing hit sets and burn propagation shared budget preserve object identity
+  ---
+  duration_ms: 1.050625
+  type: 'test'
+  ...
+# Subtest: shop saves draft holes, insertion order, prices and rewarded positions; settlement cannot charge twice
+ok 178 - shop saves draft holes, insertion order, prices and rewarded positions; settlement cannot charge twice
+  ---
+  duration_ms: 3.82175
+  type: 'test'
+  ...
+# Subtest: pending upgrades and loot resume their settlement instead of restarting combat
+ok 179 - pending upgrades and loot resume their settlement instead of restarting combat
+  ---
+  duration_ms: 2.619167
+  type: 'test'
+  ...
+# Subtest: wave experience survives checkpoints, including the final victory, until acknowledged
+ok 180 - wave experience survives checkpoints, including the final victory, until acknowledged
+  ---
+  duration_ms: 1.270292
+  type: 'test'
+  ...
+# Subtest: corrupt, oversized and unsupported graphs are refused without polluting prototypes
+ok 181 - corrupt, oversized and unsupported graphs are refused without polluting prototypes
+  ---
+  duration_ms: 12.377958
+  type: 'test'
+  ...
+# Subtest: browser checkpoint survives defeat and explicit abandonment clears only run state
+ok 182 - browser checkpoint survives defeat and explicit abandonment clears only run state
+  ---
+  duration_ms: 2.496125
+  type: 'test'
+  ...
+# Subtest: native bridge acknowledges ordered snapshots and reports failed saves without using ephemeral storage
+ok 183 - native bridge acknowledges ordered snapshots and reports failed saves without using ephemeral storage
+  ---
+  duration_ms: 1.546291
+  type: 'test'
+  ...
+# Subtest: storage errors leave the last valid checkpoint intact and report actionable failure
+ok 184 - storage errors leave the last valid checkpoint intact and report actionable failure
+  ---
+  duration_ms: 0.694875
+  type: 'test'
+  ...
+# Subtest: attack sounds only follow actual fire or swing; explosive hits emit the separate impact sound
+ok 185 - attack sounds only follow actual fire or swing; explosive hits emit the separate impact sound
+  ---
+  duration_ms: 4.802458
+  type: 'test'
+  ...
+# Subtest: normal exit waits for native acknowledgement and a failed clear is retried
+ok 186 - normal exit waits for native acknowledgement and a failed clear is retried
+  ---
+  duration_ms: 0.465625
+  type: 'test'
+  ...
+# Subtest: browser storage recovery permits exit after an earlier failure
+ok 187 - browser storage recovery permits exit after an earlier failure
+  ---
+  duration_ms: 0.388209
+  type: 'test'
+  ...
+# Subtest: requested numbers match PC resources and Wiki details without invented Minigun I/II
+ok 188 - requested numbers match PC resources and Wiki details without invented Minigun I/II
+  ---
+  duration_ms: 1.337584
+  type: 'test'
+  ...
+# Subtest: SMG/Minigun/Shredder timings use local recoil and match published .17/.09/1.30 seconds
+ok 189 - SMG/Minigun/Shredder timings use local recoil and match published .17/.09/1.30 seconds
+  ---
+  duration_ms: 5.906875
+  type: 'test'
+  ...
+# Subtest: melee Lightning Shiv triggers elemental projectiles and only the real tier bounce amount
+ok 190 - melee Lightning Shiv triggers elemental projectiles and only the real tier bounce amount
+  ---
+  duration_ms: 4.554125
+  type: 'test'
+  ...
+# Subtest: one legendary Shredder shell can create four area explosions without centre double damage
+ok 191 - one legendary Shredder shell can create four area explosions without centre double damage
+  ---
+  duration_ms: 1.070375
+  type: 'test'
+  ...
+# Subtest: Shredder per-impact explosion chance agrees statistically with its tier-I 50% source
+ok 192 - Shredder per-impact explosion chance agrees statistically with its tier-I 50% source
+  ---
+  duration_ms: 9.548459
+  type: 'test'
+  ...
+# Subtest: tier-IV Minigun pierces twice and loses 25% damage each time
+ok 193 - tier-IV Minigun pierces twice and loses 25% damage each time
+  ---
+  duration_ms: 0.576375
+  type: 'test'
+  ...
+# Subtest: six tier-I sticks each deal published 8 + five extra sticks times4 = 28 damage
+ok 194 - six tier-I sticks each deal published 8 + five extra sticks times4 = 28 damage
+  ---
+  duration_ms: 0.456958
+  type: 'test'
+  ...
+# Subtest: ethereal kills are per weapon and per wave; axe damage and flint speed remain after sale
+ok 195 - ethereal kills are per weapon and per wave; axe damage and flint speed remain after sale
+  ---
+  duration_ms: 0.841667
+  type: 'test'
+  ...
+# Subtest: all shop items and real weapon families have bitmap tiles and all field pickup props are mapped
+ok 196 - all shop items and real weapon families have bitmap tiles and all field pickup props are mapped
+  ---
+  duration_ms: 0.4585
+  type: 'test'
+  ...
+# Subtest: retry rolls a failed attempt back to the wave entry loadout and clears its combat and loot
+ok 197 - retry rolls a failed attempt back to the wave entry loadout and clears its combat and loot
+  ---
+  duration_ms: 5.15375
+  type: 'test'
+  ...
+# Subtest: repeated retries retain permanent achievements and do not mutate the entry checkpoint
+ok 198 - repeated retries retain permanent achievements and do not mutate the entry checkpoint
+  ---
+  duration_ms: 1.543834
+  type: 'test'
+  ...
+# Subtest: retry never resurrects acknowledged shared experience or discards a pending transaction
+ok 199 - retry never resurrects acknowledged shared experience or discards a pending transaction
+  ---
+  duration_ms: 5.792875
+  type: 'test'
+  ...
+# Subtest: first and final waves can be retried, but victories and completed shops cannot
+ok 200 - first and final waves can be retried, but victories and completed shops cannot
+  ---
+  duration_ms: 1.989792
+  type: 'test'
+  ...
+# Subtest: battle, pause, dying and defeat checkpoints preserve retry after a new webview
+ok 201 - battle, pause, dying and defeat checkpoints preserve retry after a new webview
+  ---
+  duration_ms: 23.664042
+  type: 'test'
+  ...
+# Subtest: old checkpoints still continue and gain a retry point at the next wave
+ok 202 - old checkpoints still continue and gain a retry point at the next wave
+  ---
+  duration_ms: 2.68575
+  type: 'test'
+  ...
+# Subtest: malformed, mismatched and recursively nested retry states are refused
+ok 203 - malformed, mismatched and recursively nested retry states are refused
+  ---
+  duration_ms: 8.050625
+  type: 'test'
+  ...
+# Subtest: native death saves and acknowledgements retain the retry point without browser storage
+ok 204 - native death saves and acknowledgements retain the retry point without browser storage
+  ---
+  duration_ms: 3.734291
+  type: 'test'
+  ...
+# Subtest: failed abandonment retries on the launch screen and a newer save supersedes it
+ok 205 - failed abandonment retries on the launch screen and a newer save supersedes it
+  ---
+  duration_ms: 0.939334
+  type: 'test'
+  ...
+# Subtest: every reviewed public card advances from its own source and carries prior progress
+ok 206 - every reviewed public card advances from its own source and carries prior progress
+  ---
+  duration_ms: 1.56925
+  type: 'test'
+  ...
+# Subtest: source rollback and mutable versions stop publication
+ok 207 - source rollback and mutable versions stop publication
+  ---
+  duration_ms: 0.207958
+  type: 'test'
+  ...
+# Subtest: new public cards join trusted sources but paid cards remain excluded
+ok 208 - new public cards join trusted sources but paid cards remain excluded
+  ---
+  duration_ms: 0.443459
+  type: 'test'
+  ...
+# Subtest: shared links restore each module and exact sentence part in a clean study
+ok 209 - shared links restore each module and exact sentence part in a clean study
+  ---
+  duration_ms: 24.206042
+  type: 'test'
+  ...
+# Subtest: stable word identity wins after photo reordering; missing word falls back to photo
+ok 210 - stable word identity wins after photo reordering; missing word falls back to photo
+  ---
+  duration_ms: 0.533292
+  type: 'test'
+  ...
+# Subtest: URL navigation preserves drafts, grades, history and does not accept forged progress
+ok 211 - URL navigation preserves drafts, grades, history and does not accept forged progress
+  ---
+  duration_ms: 0.762417
+  type: 'test'
+  ...
+# Subtest: a spelling link reopens a completed word without erasing the round or other drafts
+ok 212 - a spelling link reopens a completed word without erasing the round or other drafts
+  ---
+  duration_ms: 0.664917
+  type: 'test'
+  ...
+# Subtest: legacy links retain saved state; invalid or foreign destinations cannot corrupt cursors
+ok 213 - legacy links retain saved state; invalid or foreign destinations cannot corrupt cursors
+  ---
+  duration_ms: 0.219542
+  type: 'test'
+  ...
+# Subtest: completion URLs preserve locally earned completion without sharing a fabricated grade
+ok 214 - completion URLs preserve locally earned completion without sharing a fabricated grade
+  ---
+  duration_ms: 0.161625
+  type: 'test'
+  ...
+# Subtest: shared sentences preserve the active word, focus box and progress independently of prompt identity
+ok 215 - shared sentences preserve the active word, focus box and progress independently of prompt identity
+  ---
+  duration_ms: 1.001208
+  type: 'test'
+  ...
+# Subtest: one photo retains current sentence and every explicit song occurrence
+ok 216 - one photo retains current sentence and every explicit song occurrence
+  ---
+  duration_ms: 0.970209
+  type: 'test'
+  ...
+# Subtest: manual and automatic navigation wrap in both directions in the filtered list
+ok 217 - manual and automatic navigation wrap in both directions in the filtered list
+  ---
+  duration_ms: 0.135167
+  type: 'test'
+  ...
+# Subtest: jump selects exact sentence even when multiple sentences share a word
+ok 218 - jump selects exact sentence even when multiple sentences share a word
+  ---
+  duration_ms: 17.002458
+  type: 'test'
+  ...
+# Subtest: native contraction and punctuation grading preserves negation and repeated words
+ok 219 - native contraction and punctuation grading preserves negation and repeated words
+  ---
+  duration_ms: 2.948458
+  type: 'test'
+  ...
+# Subtest: native phrase partition keeps punctuation, duplicate identity, complete coverage and bounded phrase lengths
+ok 220 - native phrase partition keeps punctuation, duplicate identity, complete coverage and bounded phrase lengths
+  ---
+  duration_ms: 2.083458
+  type: 'test'
+  ...
+# Subtest: dialogue segmentation aligns only matching translations; curated sentence occurrences remain distinct
+ok 221 - dialogue segmentation aligns only matching translations; curated sentence occurrences remain distinct
+  ---
+  duration_ms: 21.783667
+  type: 'test'
+  ...
+# Subtest: chunks auto-check on fill, preserve repeated IDs, allow correction and resolve only once
+ok 222 - chunks auto-check on fill, preserve repeated IDs, allow correction and resolve only once
+  ---
+  duration_ms: 0.805959
+  type: 'test'
+  ...
+# Subtest: assistance is terminal, independent by mode and never a correct result
+ok 223 - assistance is terminal, independent by mode and never a correct result
+  ---
+  duration_ms: 0.402667
+  type: 'test'
+  ...
+# Subtest: free typing auto-completes with native equivalence; guided apostrophe handling does not weaken hard mode
+ok 224 - free typing auto-completes with native equivalence; guided apostrophe handling does not weaken hard mode
+  ---
+  duration_ms: 1.741375
+  type: 'test'
+  ...
+# Subtest: spelling blocks additions after errors, remembers quick slots and rejects delayed actions after navigation
+ok 225 - spelling blocks additions after errors, remembers quick slots and rejects delayed actions after navigation
+  ---
+  duration_ms: 2.038084
+  type: 'test'
+  ...
+# Subtest: sentence navigation begins at current word, preserves drafts and never grades spelling
+ok 226 - sentence navigation begins at current word, preserves drafts and never grades spelling
+  ---
+  duration_ms: 1.565458
+  type: 'test'
+  ...
+# Subtest: refresh validates drafts, preserves bank order and assistance, and clears automatic callbacks
+ok 227 - refresh validates drafts, preserves bank order and assistance, and clears automatic callbacks
+  ---
+  duration_ms: 0.836333
+  type: 'test'
+  ...
+# Subtest: native teaching chunks match the mobile baseline example
+ok 228 - native teaching chunks match the mobile baseline example
+  ---
+  duration_ms: 0.4275
+  type: 'test'
+  ...
+# Subtest: programming vocabulary cannot collide with Object prototype properties
+ok 229 - programming vocabulary cannot collide with Object prototype properties
+  ---
+  duration_ms: 0.138583
+  type: 'test'
+  ...
+# Subtest: quick/full conversion never invents typed letters, and glow counts only the correct prefix
+ok 230 - quick/full conversion never invents typed letters, and glow counts only the correct prefix
+  ---
+  duration_ms: 0.113584
+  type: 'test'
+  ...
+# Subtest: speaking retains earlier matched positions without crediting repeated partials twice
+ok 231 - speaking retains earlier matched positions without crediting repeated partials twice
+  ---
+  duration_ms: 0.174208
+  type: 'test'
+  ...
+# Subtest: speaking can finish the final sentence and restart in the same module without grading spelling
+ok 232 - speaking can finish the final sentence and restart in the same module without grading spelling
+  ---
+  duration_ms: 0.352709
+  type: 'test'
+  ...
+# Subtest: restarting a finished dictation clears only sentence outcomes and drafts
+ok 233 - restarting a finished dictation clears only sentence outcomes and drafts
+  ---
+  duration_ms: 13.268917
+  type: 'test'
+  ...
+# Subtest: challenge free dictation resumes the last sentence without clearing chunks
+ok 234 - challenge free dictation resumes the last sentence without clearing chunks
+  ---
+  duration_ms: 0.377375
+  type: 'test'
+  ...
+# Subtest: revisiting a finished final photo opens fresh dictation instead of disabled outcomes
+ok 235 - revisiting a finished final photo opens fresh dictation instead of disabled outcomes
+  ---
+  duration_ms: 3.13875
+  type: 'test'
+  ...
+# Subtest: freshSentence resets the selected located sentence after a finished round
+ok 236 - freshSentence resets the selected located sentence after a finished round
+  ---
+  duration_ms: 1.192916
+  type: 'test'
+  ...
+# Subtest: fresh dictation keeps the displayed chunk order through unrelated state updates
+ok 237 - fresh dictation keeps the displayed chunk order through unrelated state updates
+  ---
+  duration_ms: 0.369625
+  type: 'test'
+  ...
+# Subtest: shared in-flight downloads, bounded speculation, retry and cancellation release resources
+ok 238 - shared in-flight downloads, bounded speculation, retry and cancellation release resources
+  ---
+  duration_ms: 50.635875
+  type: 'test'
+  ...
+# Subtest: positions round trip, canonical bytes and immutable name
+ok 239 - positions round trip, canonical bytes and immutable name
+  ---
+  duration_ms: 5.345084
+  type: 'test'
+  ...
+# Subtest: last navigation wins including moving backwards; ties converge
+ok 240 - last navigation wins including moving backwards; ties converge
+  ---
+  duration_ms: 0.411458
+  type: 'test'
+  ...
+# Subtest: stable photo and word identity survives reordering; missing words do not jump
+ok 241 - stable photo and word identity survives reordering; missing words do not jump
+  ---
+  duration_ms: 0.225833
+  type: 'test'
+  ...
+# Subtest: deck isolation and portable imported photo identity
+ok 242 - deck isolation and portable imported photo identity
+  ---
+  duration_ms: 2.663333
+  type: 'test'
+  ...
+# Subtest: invalid position cannot mutate existing progress
+ok 243 - invalid position cannot mutate existing progress
+  ---
+  duration_ms: 0.352875
+  type: 'test'
+  ...
+# Subtest: XP synced before its answer does not lose practice counters or duplicate credit
+ok 244 - XP synced before its answer does not lose practice counters or duplicate credit
+  ---
+  duration_ms: 9.36875
+  type: 'test'
+  ...
+# Subtest: an imported completed answer keeps newer local progress, while new answers count
+ok 245 - an imported completed answer keeps newer local progress, while new answers count
+  ---
+  duration_ms: 3.585541
+  type: 'test'
+  ...
+# Subtest: reviewed public snapshot excludes paid entitlements and rejects duplicates or foreign origins
+ok 246 - reviewed public snapshot excludes paid entitlements and rejects duplicates or foreign origins
+  ---
+  duration_ms: 2.008334
+  type: 'test'
+  ...
+# Subtest: a reviewed mirror is bound to its deck ID, version, hash and asset name
+ok 247 - a reviewed mirror is bound to its deck ID, version, hash and asset name
+  ---
+  duration_ms: 0.613166
+  type: 'test'
+  ...
+# Subtest: catalog cannot replace local asset paths with external or traversal URLs
+ok 248 - catalog cannot replace local asset paths with external or traversal URLs
+  ---
+  duration_ms: 0.277125
+  type: 'test'
+  ...
+# Subtest: a modified public payload is rejected before the practice state is created
+ok 249 - a modified public payload is rejected before the practice state is created
+  ---
+  duration_ms: 4.592667
+  type: 'test'
+  ...
+# Subtest: wrong input must be corrected; an assisted correct answer is recorded only once
+ok 250 - wrong input must be corrected; an assisted correct answer is recorded only once
+  ---
+  duration_ms: 2.153166
+  type: 'test'
+  ...
+# Subtest: resume preserves unfinished spelling and repeated occurrences remain separate
+ok 251 - resume preserves unfinished spelling and repeated occurrences remain separate
+  ---
+  duration_ms: 0.290167
+  type: 'test'
+  ...
+# Subtest: corrupt, future or mismatched progress cannot break a new deck
+ok 252 - corrupt, future or mismatched progress cannot break a new deck
+  ---
+  duration_ms: 0.366292
+  type: 'test'
+  ...
+# Subtest: SHA-256 matches Node for WebCrypto
+ok 253 - SHA-256 matches Node for WebCrypto
+  ---
+  duration_ms: 4.114125
+  type: 'test'
+  ...
+# Subtest: SHA-256 matches Node for HTTP without subtle
+ok 254 - SHA-256 matches Node for HTTP without subtle
+  ---
+  duration_ms: 1.369375
+  type: 'test'
+  ...
+# Subtest: SHA-256 matches Node for without crypto
+ok 255 - SHA-256 matches Node for without crypto
+  ---
+  duration_ms: 1.645875
+  type: 'test'
+  ...
+# Subtest: HTTP fallback imports valid archives and still rejects tampered photos
+ok 256 - HTTP fallback imports valid archives and still rejects tampered photos
+  ---
+  duration_ms: 70.21275
+  type: 'test'
+  ...
+# Subtest: available WebCrypto failures are not silently swallowed
+ok 257 - available WebCrypto failures are not silently swallowed
+  ---
+  duration_ms: 0.615583
+  type: 'test'
+  ...
+# Subtest: speech advances between callbacks, monotonically, without completing early
+ok 258 - speech advances between callbacks, monotonically, without completing early
+  ---
+  duration_ms: 2.709709
+  type: 'test'
+  ...
+# Subtest: rate changes the pace and a new playback starts at zero
+ok 259 - rate changes the pace and a new playback starts at zero
+  ---
+  duration_ms: 0.177667
+  type: 'test'
+  ...
+# Subtest: pause time never advances the clock or causes a jump on resume
+ok 260 - pause time never advances the clock or causes a jump on resume
+  ---
+  duration_ms: 0.1
+  type: 'test'
+  ...
+# Subtest: sparse, late and out-of-order boundaries adjust smoothly without rewinding
+ok 261 - sparse, late and out-of-order boundaries adjust smoothly without rewinding
+  ---
+  duration_ms: 0.205125
+  type: 'test'
+  ...
+# Subtest: a delayed animation sample catches up gradually rather than jumping
+ok 262 - a delayed animation sample catches up gradually rather than jumping
+  ---
+  duration_ms: 0.072833
+  type: 'test'
+  ...
+# Subtest: Auto avoids alphabetically first Albert and prefers ordinary US speech
+ok 263 - Auto avoids alphabetically first Albert and prefers ordinary US speech
+  ---
+  duration_ms: 0.946916
+  type: 'test'
+  ...
+# Subtest: explicit voice survives, including an effect voice and another accent
+ok 264 - explicit voice survives, including an effect voice and another accent
+  ---
+  duration_ms: 0.177625
+  type: 'test'
+  ...
+# Subtest: natural Microsoft and enhanced installed voices precede basic voices
+ok 265 - natural Microsoft and enhanced installed voices precede basic voices
+  ---
+  duration_ms: 0.115417
+  type: 'test'
+  ...
+# Subtest: fallback honors ordinary English system default and permits other accents
+ok 266 - fallback honors ordinary English system default and permits other accents
+  ---
+  duration_ms: 0.763166
+  type: 'test'
+  ...
+# Subtest: locale variants work and unrelated languages are excluded
+ok 267 - locale variants work and unrelated languages are excluded
+  ---
+  duration_ms: 0.202417
+  type: 'test'
+  ...
+# Subtest: empty or effects-only inventories return no explicit override; input is not sorted in place
+ok 268 - empty or effects-only inventories return no explicit override; input is not sorted in place
+  ---
+  duration_ms: 0.424291
+  type: 'test'
+  ...
+# Subtest: caret follows automatic spaces, hyphens, apostrophes, leading numbers and trailing punctuation
+ok 269 - caret follows automatic spaces, hyphens, apostrophes, leading numbers and trailing punctuation
+  ---
+  duration_ms: 1.041334
+  type: 'test'
+  ...
+# Subtest: middle edits, selected replacement, repeated deletion and rejected additions preserve the caret
+ok 270 - middle edits, selected replacement, repeated deletion and rejected additions preserve the caret
+  ---
+  duration_ms: 0.507
+  type: 'test'
+  ...
+# Subtest: spelling updates only its own draft, preserves frozen history, rejects stale events and grades corrections
+ok 271 - spelling updates only its own draft, preserves frozen history, rejects stale events and grades corrections
+  ---
+  duration_ms: 15.640458
+  type: 'test'
+  ...
+# Subtest: dictation does not copy spelling history or unrelated sentence drafts
+ok 272 - dictation does not copy spelling history or unrelated sentence drafts
+  ---
+  duration_ms: 4.329625
+  type: 'test'
+  ...
+# Subtest: a link revisit keeps reopening every completed word the next action reaches
+ok 273 - a link revisit keeps reopening every completed word the next action reaches
+  ---
+  duration_ms: 16.292167
+  type: 'test'
+  ...
+# Subtest: manual next after reveal reopens the next completed word
+ok 274 - manual next after reveal reopens the next completed word
+  ---
+  duration_ms: 0.423125
+  type: 'test'
+  ...
+# Subtest: a word without a grade keeps the unfinished draft when it is reached again
+ok 275 - a word without a grade keeps the unfinished draft when it is reached again
+  ---
+  duration_ms: 0.150625
+  type: 'test'
+  ...
+# Subtest: dictation and speaking navigation never clear a spelling draft or grade
+ok 276 - dictation and speaking navigation never clear a spelling draft or grade
+  ---
+  duration_ms: 3.529667
+  type: 'test'
+  ...
+# Subtest: quick still skips mastered words and reopens a reviewed word from its mistakes
+ok 277 - quick still skips mastered words and reopens a reviewed word from its mistakes
+  ---
+  duration_ms: 0.240375
+  type: 'test'
+  ...
+# Subtest: next reopens a correct target without mutating saved history
+ok 278 - next reopens a correct target without mutating saved history
+  ---
+  duration_ms: 0.325125
+  type: 'test'
+  ...
+# Subtest: next reopens a reviewed target without mutating saved history
+ok 279 - next reopens a reviewed target without mutating saved history
+  ---
+  duration_ms: 0.133458
+  type: 'test'
+  ...
+# Subtest: next reopens a revealed target without mutating saved history
+ok 280 - next reopens a revealed target without mutating saved history
+  ---
+  duration_ms: 0.168625
+  type: 'test'
+  ...
+# Subtest: fixed punctuation and leading digits match the native input contract
+ok 281 - fixed punctuation and leading digits match the native input contract
+  ---
+  duration_ms: 0.698083
+  type: 'test'
+  ...
+# Subtest: mistakes must be deleted before adding more letters
+ok 282 - mistakes must be deleted before adding more letters
+  ---
+  duration_ms: 0.101291
+  type: 'test'
+  ...
+# Subtest: quick blanks retain their original positions including repeated letters
+ok 283 - quick blanks retain their original positions including repeated letters
+  ---
+  duration_ms: 0.138125
+  type: 'test'
+  ...
+# Subtest: immediate mismatches map to full spelling and quick-letter positions
+ok 284 - immediate mismatches map to full spelling and quick-letter positions
+  ---
+  duration_ms: 0.677333
+  type: 'test'
+  ...
+# Subtest: examples hide complete targets, including case, hyphens, apostrophes and repeated occurrences
+ok 285 - examples hide complete targets, including case, hyphens, apostrophes and repeated occurrences
+  ---
+  duration_ms: 1.277792
+  type: 'test'
+  ...
+# Subtest: display words keep the spoken word order, punctuation attached and blanks collapsed
+ok 286 - display words keep the spoken word order, punctuation attached and blanks collapsed
+  ---
+  duration_ms: 1.024209
+  type: 'test'
+  ...
+# Subtest: QR payloads are the exact existing subscription URLs
+ok 287 - QR payloads are the exact existing subscription URLs
+  ---
+  duration_ms: 0.54925
+  type: 'test'
+  ...
+# Subtest: arbitrary HTTPS publishers and query strings work without domain binding
+ok 288 - arbitrary HTTPS publishers and query strings work without domain binding
+  ---
+  duration_ms: 0.124083
+  type: 'test'
+  ...
+# Subtest: reject unsafe sources
+ok 289 - reject unsafe sources
+  ---
+  duration_ms: 0.209959
+  type: 'test'
+  ...
+# Subtest: manifest covers all shipped button icons, without duplicates
+ok 290 - manifest covers all shipped button icons, without duplicates
+  ---
+  duration_ms: 1.683792
+  type: 'test'
+  ...
+# Subtest: warmup waits for scheduling, runs once, limits concurrency and tolerates failure
+ok 291 - warmup waits for scheduling, runs once, limits concurrency and tolerates failure
+  ---
+  duration_ms: 17.120333
+  type: 'test'
+  ...
+# Subtest: five distinct photos roll forward, deduplicate URLs and stop at the end
+ok 292 - five distinct photos roll forward, deduplicate URLs and stop at the end
+  ---
+  duration_ms: 0.899333
+  type: 'test'
+  ...
+# Subtest: quick spelling skips mastered photos, speaking retains them
+ok 293 - quick spelling skips mastered photos, speaking retains them
+  ---
+  duration_ms: 0.144583
+  type: 'test'
+  ...
+# Subtest: sentence modes follow prompts, playback follows its looping playlist
+ok 294 - sentence modes follow prompts, playback follows its looping playlist
+  ---
+  duration_ms: 0.173334
+  type: 'test'
+  ...
+# Subtest: visible border closes oversized, tall and wide boxes without changing the photo
+ok 295 - visible border closes oversized, tall and wide boxes without changing the photo
+  ---
+  duration_ms: 3.26775
+  type: 'test'
+  ...
+# Subtest: an ordinary in-bounds box remains aligned, tiny borders expand before clamping
+ok 296 - an ordinary in-bounds box remains aligned, tiny borders expand before clamping
+  ---
+  duration_ms: 0.176458
+  type: 'test'
+  ...
+# Subtest: hidden, outside and invalid boxes do not create misleading borders
+ok 297 - hidden, outside and invalid boxes do not create misleading borders
+  ---
+  duration_ms: 0.096833
+  type: 'test'
+  ...
+1..297
+# tests 297
+# suites 0
+# pass 297
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1410.157375

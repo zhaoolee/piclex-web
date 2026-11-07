@@ -1,0 +1,37 @@
+
+Running 33 tests using 2 workers
+
+[1/33] [desktop] › tests/browser/spelling-feedback.spec.ts:22:52 › spelling progress stays below glyphs and playback grows from a fixed left edge: light
+[2/33] [desktop] › tests/browser/spelling-feedback.spec.ts:9:1 › hardware input survives replay focus, protected IME keys, and keeps dialogs isolated
+[3/33] [desktop] › tests/browser/spelling-feedback.spec.ts:22:52 › spelling progress stays below glyphs and playback grows from a fixed left edge: dark
+[4/33] [desktop] › tests/browser/spelling-feedback.spec.ts:53:52 › no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: light
+[5/33] [desktop] › tests/browser/spelling-feedback.spec.ts:53:52 › no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: dark
+[6/33] [desktop] › tests/browser/spelling-letter-color.spec.ts:25:52 › only the wrong letter is red and edits clear it: light
+[7/33] [desktop] › tests/browser/spelling-letter-color.spec.ts:25:52 › only the wrong letter is red and edits clear it: dark
+[8/33] [desktop] › tests/browser/spelling-letter-color.spec.ts:55:52 › glyph animations never outlive their letter across edits and answers: light
+[9/33] [desktop] › tests/browser/spelling-letter-color.spec.ts:55:52 › glyph animations never outlive their letter across edits and answers: dark
+[10/33] [desktop] › tests/browser/word-completion.spec.ts:6:1 › keyboard deletion and fresh word success match App; completion survives auto-next and restored answers stay silent
+[11/33] [desktop] › tests/browser/word-completion.spec.ts:20:1 › unavailable success audio does not block completion or the next word
+[12/33] [mobile] › tests/browser/spelling-feedback.spec.ts:9:1 › hardware input survives replay focus, protected IME keys, and keeps dialogs isolated
+[13/33] [mobile] › tests/browser/spelling-feedback.spec.ts:22:52 › spelling progress stays below glyphs and playback grows from a fixed left edge: light
+[14/33] [mobile] › tests/browser/spelling-feedback.spec.ts:22:52 › spelling progress stays below glyphs and playback grows from a fixed left edge: dark
+[15/33] [mobile] › tests/browser/spelling-feedback.spec.ts:53:52 › no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: light
+[16/33] [mobile] › tests/browser/spelling-feedback.spec.ts:53:52 › no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: dark
+[17/33] [mobile] › tests/browser/spelling-letter-color.spec.ts:25:52 › only the wrong letter is red and edits clear it: light
+[18/33] [mobile] › tests/browser/spelling-letter-color.spec.ts:25:52 › only the wrong letter is red and edits clear it: dark
+[19/33] [mobile] › tests/browser/spelling-letter-color.spec.ts:55:52 › glyph animations never outlive their letter across edits and answers: light
+[20/33] [mobile] › tests/browser/spelling-letter-color.spec.ts:55:52 › glyph animations never outlive their letter across edits and answers: dark
+[21/33] [mobile] › tests/browser/word-completion.spec.ts:6:1 › keyboard deletion and fresh word success match App; completion survives auto-next and restored answers stay silent
+[22/33] [mobile] › tests/browser/word-completion.spec.ts:20:1 › unavailable success audio does not block completion or the next word
+[23/33] [mobile-webkit] › tests/browser/spelling-feedback.spec.ts:9:1 › hardware input survives replay focus, protected IME keys, and keeps dialogs isolated
+[24/33] [mobile-webkit] › tests/browser/spelling-feedback.spec.ts:22:52 › spelling progress stays below glyphs and playback grows from a fixed left edge: dark
+[25/33] [mobile-webkit] › tests/browser/spelling-feedback.spec.ts:22:52 › spelling progress stays below glyphs and playback grows from a fixed left edge: light
+[26/33] [mobile-webkit] › tests/browser/spelling-feedback.spec.ts:53:52 › no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: light
+[27/33] [mobile-webkit] › tests/browser/spelling-feedback.spec.ts:53:52 › no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: dark
+[28/33] [mobile-webkit] › tests/browser/spelling-letter-color.spec.ts:25:52 › only the wrong letter is red and edits clear it: light
+[29/33] [mobile-webkit] › tests/browser/spelling-letter-color.spec.ts:25:52 › only the wrong letter is red and edits clear it: dark
+[30/33] [mobile-webkit] › tests/browser/spelling-letter-color.spec.ts:55:52 › glyph animations never outlive their letter across edits and answers: light
+[31/33] [mobile-webkit] › tests/browser/spelling-letter-color.spec.ts:55:52 › glyph animations never outlive their letter across edits and answers: dark
+[32/33] [mobile-webkit] › tests/browser/word-completion.spec.ts:6:1 › keyboard deletion and fresh word success match App; completion survives auto-next and restored answers stay silent
+[33/33] [mobile-webkit] › tests/browser/word-completion.spec.ts:20:1 › unavailable success audio does not block completion or the next word
+  33 passed (38.5s)

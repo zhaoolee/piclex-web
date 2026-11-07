@@ -1,0 +1,62 @@
+
+Running 57 tests using 2 workers
+
+[1/57] [desktop] › tests/browser/desktop-fit.spec.ts:5:1 › desktop preserves full photograph and fits answer, rate and keyboard without scrolling
+[2/57] [desktop] › tests/browser/interaction-audit.spec.ts:6:1 › reveal speaks the word, next speaks the next prompt, and tapping the selected tab leaves playback intact
+[3/57] [desktop] › tests/browser/interaction-audit.spec.ts:13:1 › dictation assistance speaks its answer; replay of a correct answer holds the current sentence
+[4/57] [desktop] › tests/browser/interaction-audit.spec.ts:23:1 › demonstration releases the microphone before playing and restarting reading stops the example
+[5/57] [desktop] › tests/browser/interaction-audit.spec.ts:32:1 › classic key sound works at LV0 for physical and touch input, dictation and backspace
+[6/57] [desktop] › tests/browser/interaction-audit.spec.ts:42:1 › keyboard sound mute survives settings navigation and a full reload
+[7/57] [desktop] › tests/browser/interaction-audit.spec.ts:51:1 › reading keeps partial matches, closes its microphone on completion and continues in speaking
+[8/57] [desktop] › tests/browser/learning.spec.ts:10:1 › a visitor can complete a scene, resume after refresh, and restart without a phone
+[9/57] [desktop] › tests/browser/learning.spec.ts:32:1 › local archives survive refresh; duplicate and invalid imports preserve previous progress
+[10/57] [desktop] › tests/browser/learning.spec.ts:47:1 › direct links, reveal, dark theme and unknown decks have usable states
+[11/57] [desktop] › tests/browser/learning.spec.ts:57:1 › public catalog reuses existing content and practice never downloads a whole archive
+[12/57] [desktop] › tests/browser/learning.spec.ts:77:1 › native modules preserve independent sentence drafts, shuffle order and photo navigation
+[13/57] [desktop] › tests/browser/learning.spec.ts:108:1 › sentence fill checks automatically; failed order can be corrected and assistance does not claim success
+[14/57] [desktop] › tests/browser/learning.spec.ts:131:1 › guided dictation, listening controls, compact height and reduced-motion remain usable
+[15/57] [desktop] › tests/browser/learning.spec.ts:150:1 › speaking starts only on explicit action and stops when leaving the module
+[16/57] [desktop] › tests/browser/spelling-feedback.spec.ts:9:1 › hardware input survives replay focus, protected IME keys, and keeps dialogs isolated
+[17/57] [desktop] › tests/browser/spelling-feedback.spec.ts:22:52 › spelling progress stays below glyphs and playback grows from a fixed left edge: light
+[18/57] [desktop] › tests/browser/spelling-feedback.spec.ts:22:52 › spelling progress stays below glyphs and playback grows from a fixed left edge: dark
+[19/57] [desktop] › tests/browser/spelling-feedback.spec.ts:53:52 › no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: light
+[20/57] [desktop] › tests/browser/spelling-feedback.spec.ts:53:52 › no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: dark
+[21/57] [desktop] › tests/browser/word-completion.spec.ts:6:1 › keyboard deletion and fresh word success match App; completion survives auto-next and restored answers stay silent
+[22/57] [desktop] › tests/browser/word-completion.spec.ts:20:1 › unavailable success audio does not block completion or the next word
+[23/57] [mobile] › tests/browser/desktop-fit.spec.ts:5:1 › desktop preserves full photograph and fits answer, rate and keyboard without scrolling
+[24/57] [mobile] › tests/browser/interaction-audit.spec.ts:13:1 › dictation assistance speaks its answer; replay of a correct answer holds the current sentence
+[25/57] [mobile] › tests/browser/interaction-audit.spec.ts:6:1 › reveal speaks the word, next speaks the next prompt, and tapping the selected tab leaves playback intact
+[26/57] [mobile] › tests/browser/interaction-audit.spec.ts:23:1 › demonstration releases the microphone before playing and restarting reading stops the example
+[27/57] [mobile] › tests/browser/interaction-audit.spec.ts:32:1 › classic key sound works at LV0 for physical and touch input, dictation and backspace
+[28/57] [mobile] › tests/browser/interaction-audit.spec.ts:42:1 › keyboard sound mute survives settings navigation and a full reload
+[29/57] [mobile] › tests/browser/interaction-audit.spec.ts:51:1 › reading keeps partial matches, closes its microphone on completion and continues in speaking
+[30/57] [mobile] › tests/browser/learning.spec.ts:10:1 › a visitor can complete a scene, resume after refresh, and restart without a phone
+[31/57] [mobile] › tests/browser/learning.spec.ts:32:1 › local archives survive refresh; duplicate and invalid imports preserve previous progress
+[32/57] [mobile] › tests/browser/learning.spec.ts:47:1 › direct links, reveal, dark theme and unknown decks have usable states
+[33/57] [mobile] › tests/browser/learning.spec.ts:57:1 › public catalog reuses existing content and practice never downloads a whole archive
+[34/57] [mobile] › tests/browser/learning.spec.ts:77:1 › native modules preserve independent sentence drafts, shuffle order and photo navigation
+[35/57] [mobile] › tests/browser/learning.spec.ts:108:1 › sentence fill checks automatically; failed order can be corrected and assistance does not claim success
+[36/57] [mobile] › tests/browser/learning.spec.ts:131:1 › guided dictation, listening controls, compact height and reduced-motion remain usable
+[37/57] [mobile] › tests/browser/learning.spec.ts:150:1 › speaking starts only on explicit action and stops when leaving the module
+[38/57] [mobile] › tests/browser/spelling-feedback.spec.ts:9:1 › hardware input survives replay focus, protected IME keys, and keeps dialogs isolated
+[39/57] [mobile] › tests/browser/spelling-feedback.spec.ts:22:52 › spelling progress stays below glyphs and playback grows from a fixed left edge: light
+[40/57] [mobile] › tests/browser/spelling-feedback.spec.ts:22:52 › spelling progress stays below glyphs and playback grows from a fixed left edge: dark
+[41/57] [mobile] › tests/browser/spelling-feedback.spec.ts:53:52 › no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: light
+[42/57] [mobile] › tests/browser/spelling-feedback.spec.ts:53:52 › no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: dark
+[43/57] [mobile] › tests/browser/word-completion.spec.ts:6:1 › keyboard deletion and fresh word success match App; completion survives auto-next and restored answers stay silent
+[44/57] [mobile] › tests/browser/word-completion.spec.ts:20:1 › unavailable success audio does not block completion or the next word
+[45/57] [mobile-webkit] › tests/browser/interaction-audit.spec.ts:6:1 › reveal speaks the word, next speaks the next prompt, and tapping the selected tab leaves playback intact
+[46/57] [mobile-webkit] › tests/browser/interaction-audit.spec.ts:13:1 › dictation assistance speaks its answer; replay of a correct answer holds the current sentence
+[47/57] [mobile-webkit] › tests/browser/interaction-audit.spec.ts:23:1 › demonstration releases the microphone before playing and restarting reading stops the example
+[48/57] [mobile-webkit] › tests/browser/interaction-audit.spec.ts:32:1 › classic key sound works at LV0 for physical and touch input, dictation and backspace
+[49/57] [mobile-webkit] › tests/browser/interaction-audit.spec.ts:42:1 › keyboard sound mute survives settings navigation and a full reload
+[50/57] [mobile-webkit] › tests/browser/interaction-audit.spec.ts:51:1 › reading keeps partial matches, closes its microphone on completion and continues in speaking
+[51/57] [mobile-webkit] › tests/browser/spelling-feedback.spec.ts:9:1 › hardware input survives replay focus, protected IME keys, and keeps dialogs isolated
+[52/57] [mobile-webkit] › tests/browser/spelling-feedback.spec.ts:22:52 › spelling progress stays below glyphs and playback grows from a fixed left edge: light
+[53/57] [mobile-webkit] › tests/browser/spelling-feedback.spec.ts:22:52 › spelling progress stays below glyphs and playback grows from a fixed left edge: dark
+[54/57] [mobile-webkit] › tests/browser/spelling-feedback.spec.ts:53:52 › no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: light
+[55/57] [mobile-webkit] › tests/browser/spelling-feedback.spec.ts:53:52 › no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: dark
+[56/57] [mobile-webkit] › tests/browser/word-completion.spec.ts:6:1 › keyboard deletion and fresh word success match App; completion survives auto-next and restored answers stay silent
+[57/57] [mobile-webkit] › tests/browser/word-completion.spec.ts:20:1 › unavailable success audio does not block completion or the next word
+  1 skipped
+  56 passed (1.0m)

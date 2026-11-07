@@ -1,0 +1,46 @@
+{
+  "status": "local_integrated_verified_not_published",
+  "baseline": "e2e08025fecc3eca98d4414a122211ec65e3822e",
+  "change": "Remove the separate spelling result row for every result state; retain answer slots and all existing interactions.",
+  "verification": {
+    "candidateBrowser": {
+      "passed": 56,
+      "skipped": 1,
+      "failed": 0,
+      "platform": "macOS Chrome desktop/touch and WebKit touch"
+    },
+    "integratedBrowser": {
+      "passed": 33,
+      "failed": 0,
+      "scope": "spelling feedback, letter colour/animation, completion and next word"
+    },
+    "productionBuild": "TypeScript and Vite passed",
+    "integratedTypeScript": "passed",
+    "viewport": {
+      "width": 440,
+      "height": 754
+    },
+    "revealedPhotoHeightBefore": [
+      163,
+      140
+    ],
+    "revealedPhotoHeightAfter": [
+      163,
+      163
+    ],
+    "nextWordInput": "s"
+  },
+  "limits": [
+    "No online publication or GitHub push",
+    "No Linux full release gate or iPhone device testing"
+  ],
+  "cleanup": "Owned temporary worktrees, builds, browsers, servers and helpers removed; Pi session retained per project rule.",
+  "sha256": {
+    "apps/public/src/NativePractice.tsx": "4830d5b549f6062d9d522f9a47212b15c345e4b9e9241409597ceed2b3bd18cc",
+    "apps/public/src/practice.css": "4fb5974bb7ca50874d4d49cd4cf38eddcec55b9efa3eaa65a180df4c9d1800f8",
+    "tests/browser/desktop-fit.spec.ts": "35f534891a1e7fb18c83f442d7c040812cac1c0cb3c0cce52aaadbb398cc7773",
+    "tests/browser/interaction-audit.spec.ts": "7884699d847d10f6727a6404b7cfd2c7068a3f7e67b44cd4a45243e83315b1de",
+    "tests/browser/learning.spec.ts": "25c5a308691ad9506bbe7ea06c46a2845a0ef45860b74ca7b1812cf2ba1ec55c",
+    "tests/browser/spelling-feedback.spec.ts": "11f0b0e223855ec80318fde9369fea252232fb67362219e8013cbd3835fdc5bf"
+  }
+}

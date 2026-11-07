@@ -1,0 +1,30 @@
+{
+  "date": "2026-11-05",
+  "build": "passed",
+  "browserTests": {
+    "passed": 30,
+    "projects": [
+      "desktop Chrome",
+      "touch Chrome",
+      "mobile WebKit on macOS"
+    ]
+  },
+  "visualInspection": [
+    "light",
+    "dark"
+  ],
+  "files": {
+    "apps/public/src/NativePractice.tsx": "89e12b535bbdea778d11cd97e806aa4fbaff5a4488f76b3a6ca7b08e9b057ed5",
+    "apps/public/src/practice.css": "bf7d0d3d029e4cf37a3d727b2e539cb099e95f1ae9d96d6c260124e35c3aa521",
+    "apps/public/src/useSpeech.ts": "04176abe7dbc6f7089edf29d8b1e419466220ddda4940fc14fe3b9c9f33a9074",
+    "tests/browser/playback-parity.spec.ts": "eb8b7891b7f94c0e715438125b01b00228d2f3453c82467d04d75daf9af978f0",
+    "tests/browser/spelling-feedback.spec.ts": "b238bec8453fcc431b0f3df608792842deb3c10d9b9a7fad25ff760da0259bc9"
+  },
+  "nativeReference": [
+    "SentenceDictationAudio.sampleProgress",
+    "DictationPlaybackProgressView.update",
+    "SpellingSentencePlaybackControls"
+  ],
+  "limitation": "Browser TTS has no PCM duration; character boundary progress holds when callbacks are unavailable. Original media uses currentTime/duration.",
+  "release": "Local changes only; not published; Linux full suite not run."
+}

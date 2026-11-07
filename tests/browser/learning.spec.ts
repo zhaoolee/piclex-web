@@ -15,7 +15,7 @@ test('a visitor can complete a scene, resume after refresh, and restart without 
  await page.getByLabel('选择照片卡组文件').setInputFiles(path.resolve('tests/fixtures/demo/decks/cafe.piclexdeck'));
  await expect(page.getByRole('heading',{name:'牛角包',exact:true})).toBeVisible();
  const input=page.getByRole('textbox',{name:'输入英文'});
- await fillSpelling(page,'crx');await expect(page.locator('.native-answer')).toHaveClass(/wrong/);await expect(page.locator('.answer-feedback')).toHaveText('');await fillSpelling(page,'cr');await expect(page.locator('.native-answer')).not.toHaveClass(/wrong/);
+ await fillSpelling(page,'crx');await expect(page.locator('.native-answer')).toHaveClass(/wrong/);await expect(page.locator('.answer-feedback')).toHaveCount(0);await fillSpelling(page,'cr');await expect(page.locator('.native-answer')).not.toHaveClass(/wrong/);
  await page.reload();await expect(input).toHaveValue('cr');
  await page.screenshot({path:`test-results/practice-${testInfo.project.name}.png`,fullPage:true});
  for(const [i,word] of words.entries()){
@@ -125,7 +125,7 @@ test('sentence fill checks automatically; failed order can be corrected and assi
  await fillEnglish(page.getByRole('textbox',{name:'听写句子'}),'i am still in bed');
  await expect(page.getByRole('textbox',{name:'听写句子'})).toHaveValue(''); // auto-advance to next sentence
  await page.getByRole('button',{name:'当前卡组，学习设置'}).click();await expect(page.getByRole('dialog',{name:'选择卡组',exact:true})).toBeVisible();await page.getByRole('button',{name:'关闭',exact:true}).click();
- await page.getByRole('tab',{name:'拼单词'}).click();await expect(page.locator('.answer-feedback')).toHaveText('');
+ await page.getByRole('tab',{name:'拼单词'}).click();await expect(page.locator('.answer-feedback')).toHaveCount(0);
 });
 
 test('guided dictation, listening controls, compact height and reduced-motion remain usable',async({page})=>{

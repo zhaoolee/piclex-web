@@ -22,7 +22,6 @@ body[data-practice=true] .app-tabs{position:absolute}
 .sentence-toolbar>select{min-width:0;max-width:60%;background:none;border:0;color:inherit;padding:8px 0;font-size:14px}.sentence-toolbar>select+select{margin-left:auto;font-size:12px}
 .native-example{height:44px;min-height:44px;flex:none;text-align:left;padding:0;display:flex;flex-direction:row;align-items:center;gap:12px;white-space:nowrap;overflow-x:auto;scrollbar-width:none;line-height:1.4;font-size:14px}.native-example>span{display:block;min-width:max-content;flex:none}.native-example small{flex:none;font-size:12px;color:var(--muted)}.spoken-word{background:var(--ink);color:var(--bg);border-radius:3px}
 .native-answer-footer{flex:none;display:flex;flex-direction:column;gap:8px;padding:0}
-.native-answer-footer .answer-feedback{margin:0;font-size:12px;line-height:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.native-answer-footer .answer-feedback:empty{display:none}
 .native-answer{position:relative;flex:none;height:50px;border:1px solid var(--line);border-radius:15px;background:var(--surface);padding:0 12px;cursor:text;isolation:isolate}
 .native-answer.wrong{border:2px solid #c64444}.native-answer .answer-slots{height:100%;min-height:0;justify-content:center;align-items:center;padding:0;flex-wrap:nowrap;gap:4px;line-height:1}.native-answer .letter-slot{font-size:inherit;min-width:0;width:.72em;line-height:1.1;padding:0 0 3px;border-width:1.5px;flex:none}.native-answer .letter-slot.fixed{width:.4em}.native-answer .letter-slot.prefilled{opacity:.45}.native-answer .letter-slot.next-letter{border-color:var(--ink);animation:slot-caret 1s steps(2) infinite}.native-answer .spelling-input{font-size:16px;z-index:2}.native-answer:focus-within{outline:none}
 .native-playback{display:flex;gap:8px}.native-button,.native-primary,.native-playback select{min-height:44px;padding:8px 12px;font-size:16px;font-weight:600;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);display:flex;align-items:center;justify-content:center;gap:8px;text-align:center}.native-primary{background:var(--button);color:var(--button-text);border-color:var(--button);border-radius:10px;position:relative}.native-primary kbd{display:none}.native-button:active,.native-primary:active{opacity:.75}.native-playback>.native-button:first-child{flex:1}.native-playback .playback-rate{position:relative;flex:0 0 88px;width:88px;display:block}.native-playback .playback-rate select{appearance:none;-webkit-appearance:none;display:block;width:100%;height:44px;min-width:88px;padding:8px 26px 8px 10px;font-size:15px;line-height:26px;text-align:left;white-space:nowrap;font-variant-numeric:tabular-nums}.playback-rate>span{position:absolute;right:10px;top:50%;transform:translateY(-55%);pointer-events:none;font-size:17px}.native-playback>.native-primary{flex:1}.native-primary:disabled{cursor:default;opacity:1}.native-unavailable{padding:24px 8px;font-size:14px;color:var(--muted)}
@@ -74,7 +73,7 @@ body[data-practice=true] .app-tabs{position:absolute}
 @media(hover:hover) and (pointer:fine) and (min-width:700px){
  .native-practice{max-width:560px}
  .native-answer-footer{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 8px}
- .native-answer-footer>.answer-feedback,.native-answer-footer>.native-answer{grid-column:1/-1}
+ .native-answer-footer>.native-answer{grid-column:1/-1}
  .native-answer-footer>.native-primary{min-width:88px}
  .sentence-footer .sentence-actions{gap:6px}
  .sentence-footer .sentence-actions>button{padding-inline:10px;flex:none}
@@ -127,7 +126,7 @@ body[data-practice=true] .app-tabs{position:absolute}
  .practice-deck-lane{height:20px}
  .module-tabs,.module-tabs>button{height:36px;min-height:36px}
  .native-answer-footer{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 6px}
- .native-answer-footer>.answer-feedback,.native-answer-footer>.native-answer{grid-column:1/-1}
+ .native-answer-footer>.native-answer{grid-column:1/-1}
  .native-answer-footer>.native-primary{min-width:70px;padding-inline:10px;font-size:14px}
  .native-playback>.native-button{font-size:12px;gap:4px;padding-inline:6px}
  .sentence-footer .sentence-actions{gap:4px}
@@ -145,8 +144,7 @@ body[data-practice=true] .toast button{pointer-events:auto}
  .native-practice:has(>.virtual-keyboard)>.module-tabs{grid-column:2;grid-row:1}
  .native-practice:has(>.virtual-keyboard)>.native-body{grid-column:1;grid-row:2/4;height:100%}
  .native-practice:has(>.virtual-keyboard)>.native-answer-footer{grid-column:2;grid-row:2;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 6px}
- .native-practice:has(>.virtual-keyboard)>.native-answer-footer>.native-answer,
- .native-practice:has(>.virtual-keyboard)>.native-answer-footer>.answer-feedback{grid-column:1/-1}
+ .native-practice:has(>.virtual-keyboard)>.native-answer-footer>.native-answer{grid-column:1/-1}
  .native-practice:has(>.virtual-keyboard)>.virtual-keyboard{grid-column:2;grid-row:3;align-self:end}
  .native-practice:has(>.virtual-keyboard) .native-button,.native-practice:has(>.virtual-keyboard) .native-primary{font-size:13px;padding-inline:6px}
 }
@@ -254,7 +252,7 @@ html[data-practice-compact=true] .native-header,html[data-practice-compact=true]
 html[data-practice-compact=true] .practice-deck-lane{height:20px}
 html[data-practice-compact=true] .module-tabs,html[data-practice-compact=true] .module-tabs>button{height:36px;min-height:36px}
 html[data-practice-compact=true] .native-answer-footer{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 6px}
-html[data-practice-compact=true] .native-answer-footer>.answer-feedback,html[data-practice-compact=true] .native-answer-footer>.native-answer{grid-column:1/-1}
+html[data-practice-compact=true] .native-answer-footer>.native-answer{grid-column:1/-1}
 html[data-practice-compact=true] .native-answer-footer>.native-primary{min-width:70px;padding-inline:10px;font-size:14px}
 html[data-practice-compact=true] .native-playback>.native-button{font-size:12px;gap:4px;padding-inline:6px}
 html[data-practice-compact=true] .sentence-footer .sentence-actions{gap:4px}
@@ -271,3 +269,5 @@ body[data-practice=true] .learning-dialog{position:fixed;inset:auto;top:calc(var
 .sentence-footer .playback-label{white-space:nowrap}
 
 .hard-dictation-peek{display:block}
+
+.audio-unlock{position:absolute;top:10px;right:10px;z-index:4;width:34px;height:34px;display:grid;place-items:center;padding:0;border:1px solid #ffffff4d;border-radius:50%;background:#00000073;color:#fff;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 2px 8px #0003;touch-action:manipulation}.audio-unlock svg{width:18px;height:18px}.audio-unlock:focus-visible{outline:2px solid #fff;outline-offset:2px}

@@ -16,8 +16,9 @@ test('learning settings switches public and personal decks directly and restores
 test('song clips decode, respect rate, precede word TTS and stop on mode or deck changes',async({page})=>{
  await page.addInitScript(()=>{const w=window as any,OriginalAudio=window.Audio;w.__media=[];w.__played=[];w.__spoken=[];w.Audio=class extends OriginalAudio{constructor(src?:string){super(src);this.muted=true;if(src?.endsWith('.mp3')&&src.includes('/library/')){w.__media.push(this);this.addEventListener('playing',()=>w.__played.push({src:this.currentSrc,rate:this.playbackRate}));}}};Object.defineProperty(window,'speechSynthesis',{configurable:true,value:{speak:(utterance:any)=>{w.__spoken.push(utterance.text);queueMicrotask(()=>utterance.onend?.());},cancel(){},getVoices:()=>[]}});});
  await page.goto('/piclex-web/#/deck/'+song.id);await expect(page.getByRole('heading',{name:payload.words[0].chinese,exact:true})).toBeVisible();
- await page.getByLabel('播放速度',{exact:true}).selectOption('0.75');await expect.poll(()=>page.evaluate(()=>(window as any).__played.length)).toBeGreaterThan(0);
- const played=await page.evaluate(()=>(window as any).__played[0]);expect(played.src).toContain(payload.words[0].audio.sha256+'.mp3');expect(played.rate).toBe(.75);
+ await page.getByLabel('播放速度',{exact:true}).selectOption('0.75');await expect.poll(()=>page.evaluate(()=>(window as any).__played.at(-1)?.rate)).toBe(.75);
+ // First-entry autoplay can precede this explicit rate change; inspect its newest play.
+ const played=await page.evaluate(()=>(window as any).__played.at(-1));expect(played.src).toContain(payload.words[0].audio.sha256+'.mp3');expect(played.rate).toBe(.75);
  await expect(page.getByRole('progressbar',{name:'播放进度'})).toBeVisible();await expect(page.getByRole('button',{name:'停止播放'})).toHaveCount(0);await expect.poll(async()=>Number(await page.getByRole('progressbar',{name:'播放进度'}).getAttribute('aria-valuenow'))).toBeGreaterThan(0);
  await expect.poll(()=>page.evaluate(()=>(window as any).__spoken),{timeout:15000}).toEqual([payload.words[0].english]);
  await page.getByLabel('播放速度',{exact:true}).selectOption('1.15');await expect.poll(()=>page.evaluate(()=>(window as any).__played.at(-1)?.rate)).toBe(1.15);

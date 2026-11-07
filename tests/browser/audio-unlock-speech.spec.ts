@@ -1,0 +1,62 @@
+import {test,expect,type Page} from '@playwright/test';
+import fs from 'node:fs';
+const catalog=JSON.parse(fs.readFileSync('apps/public/public/library/catalog.json','utf8'));
+const plain=catalog.find((deck:any)=>deck.id==='add03b54-d0a7-46fd-88c8-2aa0fa7f0c7f'),plainDeck=JSON.parse(fs.readFileSync('apps/public/public/'+plain.payload,'utf8'));
+const song=catalog.find((deck:any)=>deck.id==='0a1ff2e2-3db0-4bb1-889a-b27b62798cbe'),songDeck=JSON.parse(fs.readFileSync('apps/public/public/'+song.payload,'utf8'));
+async function mockSpeech(page:Page){
+ await page.addInitScript(()=>{
+  const w=window as any;w.__spoken=[];w.__all=[];w.__held=[];w.__speechAttempts=0;w.__started=0;w.__speechMode='denied';
+  class Utterance{lang='';rate=1;voice=null;text:string;onstart:any;onend:any;onerror:any;onpause:any;onresume:any;onboundary:any;constructor(text:string){this.text=text;}}
+  Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,writable:true,value:Utterance});
+  Object.defineProperty(window,'speechSynthesis',{configurable:true,value:{
+   speak(utterance:any){w.__spoken.push(utterance.text);w.__all.push(utterance);w.__speechAttempts++;const mode=w.__speechMode;
+    if(mode==='hold'){w.__held.push(utterance);return;}
+    queueMicrotask(()=>{if(mode==='denied')utterance.onerror?.({error:'not-allowed'});else{w.__started++;utterance.onstart?.();setTimeout(()=>utterance.onend?.(),60);}});},
+   cancel(){},getVoices(){return [];},get paused(){return false;}
+  }});
+ });
+}
+test('speech policy denial keeps one retryable request, ignores stale callbacks and only hides on real start',async({page})=>{
+ await mockSpeech(page);await page.goto('/piclex-web/#/deck/'+plain.id);
+ const icon=page.getByRole('button',{name:'开启声音，播放当前内容',exact:true});
+ await expect(icon).toBeVisible();await expect(page.locator('[role=alert]')).toHaveCount(0);
+ expect(await page.evaluate(()=>({attempts:(window as any).__speechAttempts,started:(window as any).__started,text:(window as any).__spoken[0]}))).toEqual({attempts:1,started:0,text:plainDeck.words[0].example});
+ // The denied utterance must not revive blocked state through a late callback.
+ await page.evaluate(()=>{const w=window as any;w.__all[0].onstart?.();w.__all[0].onend?.();});
+ await expect(icon).toBeVisible();expect(await page.evaluate(()=>(window as any).__started)).toBe(0);
+ await icon.click();
+ await expect.poll(()=>page.evaluate(()=>(window as any).__speechAttempts)).toBe(2);
+ await expect(icon).toBeVisible();expect(await page.evaluate(()=>(window as any).__started)).toBe(0);
+ await page.evaluate(()=>{(window as any).__speechMode='hold';});
+ await icon.click();
+ await expect.poll(()=>page.evaluate(()=>(window as any).__speechAttempts)).toBe(3);
+ await expect(icon).toBeVisible();expect(await page.evaluate(()=>(window as any).__started)).toBe(0);
+ // A second gesture while the retry is pending must not queue it again.
+ await icon.click();await page.waitForTimeout(120);
+ expect(await page.evaluate(()=>(window as any).__speechAttempts)).toBe(3);
+ await page.evaluate(()=>{const w=window as any,u=w.__held.shift();w.__started++;u.onstart?.();setTimeout(()=>u.onend?.(),30);});
+ await expect(icon).toHaveCount(0);
+ await expect.poll(()=>page.evaluate(()=>{const w=window as any;return w.__spoken.slice(0,3);})).toEqual([plainDeck.words[0].example,plainDeck.words[0].example,plainDeck.words[0].example]);
+ await expect(page.locator('[role=alert]')).toHaveCount(0);
+});
+test('a later denied TTS word retries only that word, not the clip that already finished',async({page})=>{
+ await mockSpeech(page);
+ await page.addInitScript(()=>{
+  const w=window as any,Original=window.Audio;
+  w.__clipPlays=0;
+  w.Audio=class extends Original{
+   constructor(src?:string){super(src);(this as any).__clip=!!src?.includes('/library/')&&src.endsWith('.mp3');}
+   play(){if((this as any).__clip){w.__clipPlays++;queueMicrotask(()=>{try{Object.defineProperty(this,'duration',{configurable:true,value:2});this.onloadedmetadata?.();this.onended?.();}catch{}});return Promise.resolve();}return super.play();}
+  };
+ });
+ await page.goto('/piclex-web/#/deck/'+song.id);
+ const icon=page.getByRole('button',{name:'开启声音，播放当前内容',exact:true});
+ await expect(icon).toBeVisible();
+ await expect.poll(()=>page.evaluate(()=>(window as any).__spoken)).toEqual([songDeck.words[0].english]);
+ expect(await page.evaluate(()=>(window as any).__clipPlays)).toBe(1);
+ await page.evaluate(()=>{(window as any).__speechMode='allowed';});
+ await icon.click();
+ await expect.poll(()=>page.evaluate(()=>(window as any).__spoken)).toEqual([songDeck.words[0].english,songDeck.words[0].english]);
+ expect(await page.evaluate(()=>(window as any).__clipPlays)).toBe(1);
+ await expect(icon).toHaveCount(0);
+});

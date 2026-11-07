@@ -1,0 +1,433 @@
+--- a/apps/public/src/NativePractice.tsx
++++ b/apps/public/src/NativePractice.tsx
+@@ -52,6 +52,7 @@
+  else if(box.top<area.top)body.scrollTop+=box.top-area.top-4;
+ }
+ function SpeakerIcon(){return <Icon name="sound"/>;}
++function MutedSpeakerIcon(){return <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 9.5v5h3.5L12 18V6L7.5 9.5H4z"/><path d="m15.5 9.5 5 5m0-5-5 5"/></svg>;}
+ function PlaybackFill({progress}:{progress:ReturnType<typeof useSpeech>['progress']}){
+  const {value,indeterminate}=useSyncExternalStore(progress.subscribe,progress.getSnapshot);
+  const fill=useRef<HTMLSpanElement>(null);
+@@ -199,6 +200,7 @@
+  const pauseListening=()=>{if(listenRun)setSeek(promptAudio?audio.readProgress():Math.max(0,audio.position));setListenRun(false);audio.stop();};
+  const pauseListeningRef=useRef(pauseListening);pauseListeningRef.current=pauseListening;
+  const navigationAudio=useRef<{module:string;from:string}|null>(null),revealAudio=useRef<string|null>(null);
++ const bootAudio=useRef(!document.hidden),playCurrentRef=useRef<()=>void>(()=>{});
+  function dispatch(action:Action){if(action.type==='preference'&&action.name==='quick')writePreference('piclex-web.quick',String(action.value));if(action.type==='restart')readingSaved.current.clear();if(['next','sentenceNext','selectWord'].includes(action.type))navigationAudio.current={module:state.module,from:state.module==='spelling'?word?.id:prompt?.key};else if(['module','pause','restart'].includes(action.type))navigationAudio.current=null;setState((s:any)=>reduceStudy(deck,s,{...action,question:key},prompts));}
+  const [urlRevision,setURLRevision]=useState(0),consumedHash=useRef(location.hash);
+  // Subscribe during commit: a fast link after Back can arrive before passive effects.
+@@ -280,6 +282,34 @@
+  const setMode=(value:string)=>{if(value===state.mode)return;setListenRun(false);setPass(0);audio.stop();flushSync(()=>dispatch({type:'mode',value}));focusAnswer();};
+  const setDifficulty=(value:string)=>{setComposing(false);setImeWarning(false);flushSync(()=>dispatch({type:'preference',name:'difficulty',value}));focusAnswer();};
+  const replay=()=>{if(!active)return;navigationAudio.current=null;if(state.module==='spelling'&&word)audio.play(word.example?[word.example,word.english]:[word.english],state.rate,undefined,0,word.example?word.audio:undefined);else if(prompt){act({type:'play',rate:state.rate});audio.play([prompt.sentence],state.rate,undefined,0,promptAudio);}};
++ // First-load sound stays inside spelling and sentence exercises. Passive
++ // listening already has transport state, and speaking has its own microphone
++ // controls; neither should start audio behind the user's back.
++ const autoAudioScope=state.module==='spelling'||state.module==='listening'&&state.mode!=='listening';
++ const playCurrent=()=>{
++  if(!active||complete||panel||!autoAudioScope)return;
++  if(state.module==='spelling'&&word)audio.play(word.example?[word.example,word.english]:[word.english],state.rate,undefined,0,word.example?word.audio:undefined);
++  else if(state.module==='listening'&&prompt&&!state.sentenceFinished)audio.play([prompt.sentence],state.rate,undefined,0,promptAudio);
++ };playCurrentRef.current=playCurrent;
++ const retryCurrent=()=>{if(!audio.retryBlocked())playCurrentRef.current();};
++ useEffect(()=>{
++  if(!bootAudio.current)return;
++  const timer=setTimeout(()=>{
++   if(!bootAudio.current)return;bootAudio.current=false;
++   if(!document.hidden)playCurrentRef.current();
++  },0);
++  return ()=>clearTimeout(timer);
++ },[]);
++ // A first real click/tap or hardware letter retries the retained segment in
++ // the same gesture scope. It never prevents the input or repeats later keys.
++ useEffect(()=>{
++  if(!audio.blocked||!active||panel||!autoAudioScope)return;
++  const excluded='.audio-unlock,.native-header,.module-tabs,.sentence-toolbar,.native-playback,.listening-transport,.listening-metadata,.reading-actions,.reading-next,.native-primary,.sentence-actions,.peek-letter,.photo-open,.native-completion,.native-example,.practice-library,[role=dialog]';
++  const click=(event:MouseEvent)=>{const target=event.target as Element|null;if(!event.isTrusted)return;if(target?.closest?.(excluded)){audio.acknowledgeGesture();return;}retryCurrent();};
++  const key=(event:KeyboardEvent)=>{if(!event.isTrusted||event.repeat||event.isComposing||event.metaKey||event.ctrlKey||event.altKey)return;if(/^[a-z]$/i.test(event.key)||/^Key[A-Z]$/.test(event.code))retryCurrent();};
++  document.addEventListener('click',click);window.addEventListener('keydown',key,true);
++  return ()=>{document.removeEventListener('click',click);window.removeEventListener('keydown',key,true);};
++ },[audio.blocked,audio.retryBlocked,active,panel,autoAudioScope,state.module,state.mode]);
+  const setRate=(rate:number)=>{if(playback&&listenRun)setSeek(promptAudio?audio.readProgress():Math.max(0,audio.position));navigationAudio.current=null;dispatch({type:'preference',name:'rate',value:rate});if(state.module==='listening'&&!playback)act({type:'play',rate});if(!playback&&word)audio.play(state.module==='spelling'?(word.example?[word.example,word.english]:[word.english]):[prompt.sentence],rate,undefined,0,state.module==='spelling'?(word.example?word.audio:undefined):promptAudio);};
+  useEffect(()=>{if(!listenRun||!active||!playback||!prompt||state.sentenceFinished)return;
+   const rate=repeat==='fastThreeSlowTwo'?(pass<3?1:.75):state.rate;
+@@ -370,7 +400,7 @@
+   {complete?<section className="native-completion"><h1>{state.module==='speaking'?'本轮口语练习完成':'本轮训练完成'}</h1>{state.module==='speaking'?<p>已到达卡组末尾。</p>:<p>拼对 {correct} 个词，复习 {reviewed} 个词。</p>}<button className="native-primary" onClick={()=>dispatch({type:'restart'})}>再来一轮</button><button className="native-button" onClick={exit}>换个卡组</button><button className="text-button" onClick={download}>下载卡组，在 App 中打开</button></section>:<>
+    <div className="native-body" onPointerDown={e=>{if(e.pointerType==='mouse'||(e.target as HTMLElement).closest('input,textarea,select,.chunk,.reading-content,.native-example'))return;swipe.current={x:e.clientX,y:e.clientY};}} onPointerUp={e=>{const start=swipe.current;swipe.current=null;if(!start||panel||held.current.size>1)return;const dx=e.clientX-start.x,dy=e.clientY-start.y;if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.4){const i=modules.findIndex(([id])=>id===state.module),target=modules[i+(dx<0?1:-1)];if(target){suppressPhoto.current=Date.now()+400;selectModule(target[0]);}}}} onPointerCancel={()=>{swipe.current=null;}}>
+     <article className="native-card"><div className="photo-browse">
+-     <StablePhotoFocus cache={photos} onImageReady={photoPalette.read} src={deck.images[word.imageIndex]} fit={desktopKeyboard||state.module==='listening'?'contain':'focus'} focus={word.focus} alt={word.focus?'训练照片，彩色框标示当前物体':'完整场景照片'} active={active} retry={photoRetry} onLoadState={setPhotoState}/><button className="photo-open" aria-label={photoState==='error'?'重新加载图片':'选择照片'} onClick={()=>{if(photoState==='error'){setPhotoRetry(n=>n+1);return;}if(Date.now()<suppressPhoto.current){suppressPhoto.current=0;return;}openPanel('gallery');}} onPointerDown={e=>{held.current.add(e.pointerId);if(held.current.size>1)openPanel('gallery');}} onPointerUp={e=>held.current.delete(e.pointerId)} onPointerCancel={()=>held.current.clear()}></button></div>
++     <StablePhotoFocus cache={photos} onImageReady={photoPalette.read} src={deck.images[word.imageIndex]} fit={desktopKeyboard||state.module==='listening'?'contain':'focus'} focus={word.focus} alt={word.focus?'训练照片，彩色框标示当前物体':'完整场景照片'} active={active} retry={photoRetry} onLoadState={setPhotoState}/>{audio.blocked&&autoAudioScope&&<button className="audio-unlock" aria-label="开启声音，播放当前内容" title="点击开启声音" onClick={e=>{e.preventDefault();e.stopPropagation();retryCurrent();}} onPointerDown={e=>e.stopPropagation()}><MutedSpeakerIcon/></button>}<button className="photo-open" aria-label={photoState==='error'?'重新加载图片':'选择照片'} onClick={()=>{if(photoState==='error'){setPhotoRetry(n=>n+1);return;}if(Date.now()<suppressPhoto.current){suppressPhoto.current=0;return;}openPanel('gallery');}} onPointerDown={e=>{held.current.add(e.pointerId);if(held.current.size>1)openPanel('gallery');}} onPointerUp={e=>held.current.delete(e.pointerId)} onPointerCancel={()=>held.current.clear()}></button></div>
+      {state.module==='spelling'?<div className="native-hint"><button aria-label={state.hiddenChinese?'显示中文提示':'隐藏中文提示'} onClick={()=>dispatch({type:'preference',name:'hiddenChinese',value:!state.hiddenChinese})}><h1>{state.hiddenChinese?'点击显示释义':word.chinese}</h1><small>{word.phonetic}</small></button>{ambienceControl}</div>:state.module==='listening'?<div className="sentence-toolbar"><select aria-label="句子练习模式" value={state.mode} onChange={e=>setMode(e.target.value)}>{modes.map(([id,title])=><option key={id} value={id}>{title}</option>)}</select>{ambienceControl}{state.mode==='free'&&<select aria-label="听写难度" value={state.difficulty} onChange={e=>setDifficulty(e.target.value)}><option value="easy">简单 · 字母数量</option><option value="medium">中等 · 单词数量</option><option value="hard">困难 · 无提示</option></select>}</div>:null}
+     </article>
+     {state.module==='spelling'&&word.example&&<SentenceLine sentence={word.example} target={word.english} translation={word.exampleChinese} hidden={state.hiddenChinese} position={audio.position} open={()=>selectModule('speaking')}/>}
+--- a/apps/public/src/useSpeech.ts
++++ b/apps/public/src/useSpeech.ts
+@@ -3,9 +3,12 @@
+ import type {AudioClip} from './NativePractice';
+ import {createPlaybackProgress} from './playback-progress';
+ import {createSpeechProgress} from './speech-progress.mjs';
++type PlayRequest={texts:string[];rate:number;onEnd?:()=>void;offset:number;clip?:AudioClip;startFraction:number};
++const policyError=(error:unknown)=>error instanceof DOMException?error.name==='NotAllowedError':(error as {name?:string})?.name==='NotAllowedError';
+ export function useSpeech(notify:(s:string)=>void){
+  const generation=useRef(0),timer=useRef<ReturnType<typeof setTimeout>|undefined>(undefined),media=useRef<HTMLAudioElement|null>(null),blob=useRef('');
+- const [playing,setPlaying]=useState(false),[preparing,setPreparing]=useState(false),[position,setPosition]=useState(-1);
++ const blockedRequest=useRef<PlayRequest|null>(null),retrying=useRef(false);
++ const [playing,setPlaying]=useState(false),[preparing,setPreparing]=useState(false),[position,setPosition]=useState(-1),[blocked,setBlocked]=useState(false);
+  const mediaClock=useRef<ReturnType<typeof setInterval>|undefined>(undefined);
+  const speechClock=useRef<ReturnType<typeof setInterval>|undefined>(undefined);
+  const [error,setError]=useState('');
+@@ -18,12 +21,22 @@
+   if(current){current.onended=null;current.onerror=null;current.ontimeupdate=null;current.onplaying=null;current.onwaiting=null;current.onstalled=null;current.onloadedmetadata=null;current.pause();current.removeAttribute('src');current.load();}
+   if(blob.current){URL.revokeObjectURL(blob.current);blob.current='';}
+  },[]);
++ const cancelPlayback=useCallback(()=>{
++  // Invalidate callbacks before cancel(): a late onstart/onend must not revive
++  // a request that was blocked or replaced.
++  generation.current++;clearTimeout(timer.current);clearInterval(speechClock.current);speechClock.current=undefined;clearMedia();window.speechSynthesis?.cancel();
++ },[clearMedia]);
+  const stop=useCallback(()=>{
+-  generation.current++;clearTimeout(timer.current);clearInterval(speechClock.current);speechClock.current=undefined;clearMedia();window.speechSynthesis?.cancel();
++  cancelPlayback();blockedRequest.current=null;retrying.current=false;
+   setPlaying(false);setPreparing(false);setPosition(-1);progress.update(0);
+- },[clearMedia,progress]);
+- const play=useCallback((texts:string[],rate=1,onEnd?:()=>void,offset=0,clip?:AudioClip,startFraction=0)=>{
+-  stop();setError('');const id=generation.current,queue=texts.filter(t=>t.trim());
++  // Blocked is a permission status, so an explicit stop keeps the icon while
++  // discarding the now-stale request. The next gesture retries current content.
++ },[cancelPlayback,progress]);
++ const start=useCallback((next:PlayRequest)=>{
++  cancelPlayback();
++  setError('');const id=generation.current,queue=next.texts.filter(text=>text.trim());
++  blockedRequest.current=next;retrying.current=true;
++  setPlaying(false);setPreparing(queue.length>0);setPosition(-1);progress.update(0);
+   const valid=()=>id===generation.current&&!document.hidden;
+   // Queue progress is weighted by text length. Original audio uses its media
+   // clock; Web Speech interpolates its estimated position between real events.
+@@ -34,22 +47,30 @@
+    const value=total?(before+(queue[i]?.length||0)*Math.min(1,Math.max(0,fraction)))/total:0;
+    progress.update(Math.max(progress.getSnapshot().value,estimated?Math.min(.99,value):value),indeterminate);
+   };
+-  const fail=(message?:string)=>{if(!valid())return;stop();if(message){setError(message);notify(message);}};
+-  const next=(i:number)=>{
++  const fail=(message?:string)=>{if(!valid())return;stop();blockedRequest.current=null;retrying.current=false;setBlocked(false);if(message){setError(message);notify(message);}};
++  // Autoplay policy retains only the segment that was actually denied. A clip
++  // that already finished must not replay when the following TTS word blocks.
++  const block=(i:number)=>{
+    if(!valid())return;
+-   if(i===queue.length){stop();onEnd?.();return;}
++   const pending={...next,texts:queue.slice(i),clip:i===0?next.clip:undefined,offset:i===0?next.offset:0,startFraction:i===0?next.startFraction:0};
++   cancelPlayback();blockedRequest.current=pending;retrying.current=false;
++   setBlocked(true);setPlaying(false);setPreparing(false);setPosition(-1);progress.update(0);
++  };
++  const nextSegment=(i:number)=>{
++   if(!valid())return;
++   if(i===queue.length){stop();next.onEnd?.();return;}
+    let finished=false;
+    const current=()=>valid()&&!finished;
+-   const started=()=>{if(current()){setPreparing(false);setPlaying(true);}};
+-   const ended=(settle=0)=>{if(!current())return;finished=true;clearInterval(speechClock.current);speechClock.current=undefined;update(i,1);setPosition(-1);timer.current=setTimeout(()=>next(i+1),i<queue.length-1?180:settle);};
++   const started=()=>{if(current()){retrying.current=false;blockedRequest.current=null;setBlocked(false);setPreparing(false);setPlaying(true);}};
++   const ended=(settle=0)=>{if(!current())return;finished=true;clearInterval(speechClock.current);speechClock.current=undefined;update(i,1);setPosition(-1);timer.current=setTimeout(()=>nextSegment(i+1),i<queue.length-1?180:settle);};
+    // Original audio belongs to this sentence occurrence only; the following word uses TTS.
+-   if(i===0&&clip){
++   if(i===0&&next.clip){
+     try{
+      let source='';
+-     if(clip.dataBase64){const bytes=Uint8Array.from(atob(clip.dataBase64),c=>c.charCodeAt(0));source=URL.createObjectURL(new Blob([bytes],{type:'audio/mpeg'}));blob.current=source;}
+-     else if(clip.path)source=new URL(import.meta.env.BASE_URL+clip.path,location.href).href;
++     if(next.clip.dataBase64){const bytes=Uint8Array.from(atob(next.clip.dataBase64),c=>c.charCodeAt(0));source=URL.createObjectURL(new Blob([bytes],{type:'audio/mpeg'}));blob.current=source;}
++     else if(next.clip.path)source=new URL(import.meta.env.BASE_URL+next.clip.path,location.href).href;
+      if(!source){fail('这张卡片的原音频暂时无法播放。');return;}
+-     const player=new Audio(source);media.current=player;player.playbackRate=rate;player.preservesPitch=true;
++     const player=new Audio(source);media.current=player;player.playbackRate=next.rate;player.preservesPitch=true;
+      const failed=()=>{if(media.current===player)fail('原音频播放失败，请检查网络并再次点击播放。');};
+      let observedTime=0;
+      const time=()=>{if(media.current!==player||!current())return;
+@@ -60,23 +81,23 @@
+      };
+      player.onplaying=()=>{if(media.current===player){started();time();}};
+      player.onwaiting=player.onstalled=()=>{if(valid()&&media.current===player&&player.readyState<3)setPreparing(true);};
+-     player.onloadedmetadata=()=>{if(!valid()||media.current!==player)return;if(Number.isFinite(player.duration)&&player.duration>0)player.currentTime=player.duration*Math.min(.999,Math.max(0,startFraction));time();};
++     player.onloadedmetadata=()=>{if(!valid()||media.current!==player)return;if(Number.isFinite(player.duration)&&player.duration>0)player.currentTime=player.duration*Math.min(.999,Math.max(0,next.startFraction));time();};
+      player.ontimeupdate=time;player.onerror=failed;
+      // Like App, sample the actual audio clock; a stall cannot advance the fill.
+      mediaClock.current=setInterval(time,33);
+      player.onended=()=>{if(!valid()||media.current!==player)return;clearMedia();ended();};
+-     void player.play().then(()=>{if(media.current===player&&current()&&!player.paused)started();}).catch(failed);
+-    }catch{fail('这张卡片的原音频暂时无法播放。');}
++     void player.play().then(()=>{if(media.current===player&&current()&&!player.paused)started();}).catch(error=>{if(media.current!==player)return;if(policyError(error))block(0);else failed();});
++    }catch(error){if(policyError(error))block(0);else fail('这张卡片的原音频暂时无法播放。');}
+     return;
+    }
+    if(!window.speechSynthesis){fail('此浏览器没有提供英文朗读功能。');return;}
+    try{
+-    const utterance=new SpeechSynthesisUtterance(queue[i]);utterance.lang='en-US';utterance.rate=rate;
++    const utterance=new SpeechSynthesisUtterance(queue[i]);utterance.lang='en-US';utterance.rate=next.rate;
+     const voice=selectedSpeechVoice();if(voice)utterance.voice=voice;
+     let clock:ReturnType<typeof createSpeechProgress>|undefined,paused=false;
+     const begin=()=>{
+      if(!current()||clock)return;
+-     started();clock=createSpeechProgress(queue[i],rate);update(i,0);
++     started();clock=createSpeechProgress(queue[i],next.rate);update(i,0);
+      speechClock.current=setInterval(()=>{
+       if(!current()||!clock)return;
+       const now=performance.now();clock.setPaused(paused||!!speechSynthesis.paused,now);
+@@ -84,18 +105,27 @@
+      },33);
+     };
+     utterance.onstart=begin;
+-    utterance.onboundary=e=>{if(current()){begin();clock?.boundary(e.charIndex,performance.now());if(i===0)setPosition(e.charIndex+offset);}};
++    utterance.onboundary=e=>{if(current()){begin();clock?.boundary(e.charIndex,performance.now());if(i===0)setPosition(e.charIndex+next.offset);}};
+     utterance.onpause=()=>{if(current()){paused=true;clock?.setPaused(true,performance.now());}};
+     utterance.onresume=()=>{if(current()){paused=false;clock?.setPaused(false,performance.now());}};
+     // Let the short completion animation finish before hiding the button's
+     // fill. The next segment still starts after the established 180 ms gap.
+     utterance.onend=()=>ended(180);
+-    utterance.onerror=e=>{if(current())fail(['interrupted','canceled'].includes(e.error)?undefined:'朗读暂时不可用，请检查浏览器的语音与播放权限。');};
++    utterance.onerror=e=>{if(!current())return;if(e.error==='not-allowed')block(i);else fail(['interrupted','canceled'].includes(e.error)?undefined:'朗读暂时不可用，请检查浏览器的语音与播放权限。');};
+     speechSynthesis.speak(utterance);
+    }catch{fail('朗读暂时不可用，请检查浏览器的语音与播放权限。');}
+   };
+-  setPreparing(queue.length>0);next(0);
+- },[stop,clearMedia,notify,progress]);
++  nextSegment(0);
++ },[cancelPlayback,stop,clearMedia,notify,progress]);
++ const play=useCallback((texts:string[],rate=1,onEnd?:()=>void,offset=0,clip?:AudioClip,startFraction=0)=>{
++  start({texts:[...texts],rate,onEnd,offset,clip,startFraction});
++ },[start]);
++ const retryBlocked=useCallback(()=>{
++  const pending=blockedRequest.current;if(!pending)return false;
++  if(retrying.current)return true;
++  start(pending);return true;
++ },[start]);
++ const acknowledgeGesture=useCallback(()=>{if(!blockedRequest.current)setBlocked(false);},[]);
+  useEffect(()=>{const hide=()=>{if(document.hidden)stop();};document.addEventListener('visibilitychange',hide);window.addEventListener('pagehide',stop);return ()=>{stop();document.removeEventListener('visibilitychange',hide);window.removeEventListener('pagehide',stop);};},[stop]);
+- return {error,playing,preparing,position,progress,readProgress,play,stop};
++ return {blocked,error,playing,preparing,position,progress,readProgress,play,retryBlocked,acknowledgeGesture,stop};
+ }
+--- a/apps/public/src/practice.css
++++ b/apps/public/src/practice.css
+@@ -65,6 +65,7 @@
+ .native-practice{position:relative}.english-input-warning{position:absolute;top:104px;left:50%;transform:translateX(-50%);z-index:30;max-width:calc(100% - 32px);padding:9px 14px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);font-size:13px;line-height:1.4;white-space:nowrap;pointer-events:none}
+ 
+ .photo-browse{position:relative}.photo-open{position:absolute;inset:0;width:100%;height:100%;background:transparent;border:0;padding:0}.photo-open:focus-visible{outline:2px solid var(--ink);outline-offset:-3px}
++.audio-unlock{position:absolute;top:10px;right:10px;z-index:4;width:34px;height:34px;display:grid;place-items:center;padding:0;border:1px solid #ffffff4d;border-radius:50%;background:#00000073;color:#fff;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 2px 8px #0003;touch-action:manipulation}.audio-unlock svg{width:18px;height:18px}.audio-unlock:focus-visible{outline:2px solid #fff;outline-offset:2px}
+ 
+ .practice-library{flex:none;width:52px;height:50px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:0}.practice-library strong{font-size:15px;font-weight:600}.practice-library small{font-size:9px;font-weight:500}
+ 
+--- a/playwright.config.ts
++++ b/playwright.config.ts
+@@ -5,7 +5,7 @@
+   projects: [
+     { name:'desktop', use:{...devices['Desktop Chrome'], channel:'chrome', launchOptions:{args:['--mute-audio']}, viewport:{width:1440,height:1000}} },
+     { name:'mobile', use:{...devices['Pixel 7'], channel:'chrome', launchOptions:{args:['--mute-audio']}, viewport:{width:390,height:844}} },
+-    { name:'mobile-webkit', testMatch:['word-peek.spec.ts','capture-grouping.spec.ts','learning-parity.spec.ts','http-crypto.spec.ts','subscription-poster.spec.ts','input-performance.spec.ts','loading.spec.ts','photo-prefetch.spec.ts','spelling-letter-color.spec.ts','spelling-feedback.spec.ts','speech-voice.spec.ts','capture-render.spec.ts','visible-focus.spec.ts','focus-ambience.spec.ts','ai-settings.spec.ts','large-backup.spec.ts','webdav-backup.spec.ts','ui-assets.spec.ts','capture-mobile-fit.spec.ts','learning-url.spec.ts','spelling-revisit.spec.ts','visual-viewport.spec.ts','deck-picker-audio.spec.ts','keyboard-viewport.spec.ts','touch-spelling.spec.ts','playback-parity.spec.ts','interaction-audit.spec.ts','camera-parity.spec.ts','camera-surface.spec.ts','glass-tabs.spec.ts','settings-parity.spec.ts','layout-audit.spec.ts','alignment-extension.spec.ts','word-completion.spec.ts'], use:{...devices['iPhone 13'],launchOptions:{args:process.platform==='darwin'?['--mute-audio']:[]},viewport:{width:390,height:844}} }
++    { name:'mobile-webkit', testMatch:['word-peek.spec.ts','capture-grouping.spec.ts','learning-parity.spec.ts','http-crypto.spec.ts','subscription-poster.spec.ts','input-performance.spec.ts','loading.spec.ts','photo-prefetch.spec.ts','spelling-letter-color.spec.ts','spelling-feedback.spec.ts','speech-voice.spec.ts','capture-render.spec.ts','visible-focus.spec.ts','focus-ambience.spec.ts','ai-settings.spec.ts','large-backup.spec.ts','webdav-backup.spec.ts','ui-assets.spec.ts','capture-mobile-fit.spec.ts','learning-url.spec.ts','spelling-revisit.spec.ts','visual-viewport.spec.ts','deck-picker-audio.spec.ts','keyboard-viewport.spec.ts','touch-spelling.spec.ts','playback-parity.spec.ts','interaction-audit.spec.ts','camera-parity.spec.ts','camera-surface.spec.ts','glass-tabs.spec.ts','settings-parity.spec.ts','layout-audit.spec.ts','alignment-extension.spec.ts','word-completion.spec.ts','audio-unlock-speech.spec.ts'], use:{...devices['iPhone 13'],launchOptions:{args:process.platform==='darwin'?['--mute-audio']:[]},viewport:{width:390,height:844}} }
+   ],
+   webServer:{command:'npm run preview',url:'http://127.0.0.1:18120',reuseExistingServer:!process.env.CI}
+ });
+--- a/tests/browser/playback-parity.spec.ts
++++ b/tests/browser/playback-parity.spec.ts
+@@ -17,7 +17,8 @@
+  await expect(page.getByRole('heading',{name:'牛角包',exact:true})).toBeVisible();
+ }
+ test('App replay button keeps its geometry and fills in place across sentence, word, replay and rate change',async({page},info)=>{
+- await open(page);await mockSpeech(page);const touch=!!info.project.use.hasTouch;
++ // Return to idle through the real module controls after first-entry autoplay.
++ await open(page);await page.getByRole('tab',{name:'练听力',exact:true}).click();await page.getByRole('tab',{name:'拼单词',exact:true}).click();await mockSpeech(page);const touch=!!info.project.use.hasTouch;
+  const button=page.locator('.playback-button'),bar=page.getByRole('progressbar',{name:'播放进度'}),row=page.locator('.native-playback');
+  await expect(button).toHaveText('播放句子和单词');const before=await row.boundingBox(),buttonBefore=await button.boundingBox();
+  await press(button,touch);await expect(button).toHaveText('准备音频…');await expect(bar).toHaveCount(0);
+@@ -103,6 +104,7 @@
+  // Give the sampler one turn to observe the final media time, then require no drift.
+  await page.waitForTimeout(70);const paused=await bar.getAttribute('aria-valuenow');await page.waitForTimeout(160);expect(await bar.getAttribute('aria-valuenow')).toBe(paused);
+  await page.screenshot({path:info.outputPath('original-audio-progress.png')});
+- await press(button,!!info.project.use.hasTouch);await expect.poll(()=>page.evaluate(()=>(window as any).__clockAudio.length)).toBe(2);await expect.poll(()=>page.evaluate(()=>(window as any).__clockAudio.at(-1).currentTime)).toBeGreaterThan(0);expect(await button.boundingBox()).toEqual(geometry);
++ const playsBeforeReplay=await page.evaluate(()=>(window as any).__clockAudio.length);
++ await press(button,!!info.project.use.hasTouch);await expect.poll(()=>page.evaluate(()=>(window as any).__clockAudio.length)).toBe(playsBeforeReplay+1);await expect.poll(()=>page.evaluate(()=>(window as any).__clockAudio.at(-1).currentTime)).toBeGreaterThan(0);expect(await button.boundingBox()).toEqual(geometry);
+  await page.getByRole('tab',{name:'练听力',exact:true}).click();await expect(bar).toHaveCount(0);expect(await page.evaluate(()=>(window as any).__clockAudio.every((a:HTMLAudioElement)=>a.paused))).toBe(true);
+ });
+--- a/tests/browser/deck-picker-audio.spec.ts
++++ b/tests/browser/deck-picker-audio.spec.ts
+@@ -16,8 +16,9 @@
+ test('song clips decode, respect rate, precede word TTS and stop on mode or deck changes',async({page})=>{
+  await page.addInitScript(()=>{const w=window as any,OriginalAudio=window.Audio;w.__media=[];w.__played=[];w.__spoken=[];w.Audio=class extends OriginalAudio{constructor(src?:string){super(src);this.muted=true;if(src?.endsWith('.mp3')&&src.includes('/library/')){w.__media.push(this);this.addEventListener('playing',()=>w.__played.push({src:this.currentSrc,rate:this.playbackRate}));}}};Object.defineProperty(window,'speechSynthesis',{configurable:true,value:{speak:(utterance:any)=>{w.__spoken.push(utterance.text);queueMicrotask(()=>utterance.onend?.());},cancel(){},getVoices:()=>[]}});});
+  await page.goto('/piclex-web/#/deck/'+song.id);await expect(page.getByRole('heading',{name:payload.words[0].chinese,exact:true})).toBeVisible();
+- await page.getByLabel('播放速度',{exact:true}).selectOption('0.75');await expect.poll(()=>page.evaluate(()=>(window as any).__played.length)).toBeGreaterThan(0);
+- const played=await page.evaluate(()=>(window as any).__played[0]);expect(played.src).toContain(payload.words[0].audio.sha256+'.mp3');expect(played.rate).toBe(.75);
++ await page.getByLabel('播放速度',{exact:true}).selectOption('0.75');await expect.poll(()=>page.evaluate(()=>(window as any).__played.at(-1)?.rate)).toBe(.75);
++ // First-entry autoplay can precede this explicit rate change; inspect its newest play.
++ const played=await page.evaluate(()=>(window as any).__played.at(-1));expect(played.src).toContain(payload.words[0].audio.sha256+'.mp3');expect(played.rate).toBe(.75);
+  await expect(page.getByRole('progressbar',{name:'播放进度'})).toBeVisible();await expect(page.getByRole('button',{name:'停止播放'})).toHaveCount(0);await expect.poll(async()=>Number(await page.getByRole('progressbar',{name:'播放进度'}).getAttribute('aria-valuenow'))).toBeGreaterThan(0);
+  await expect.poll(()=>page.evaluate(()=>(window as any).__spoken),{timeout:15000}).toEqual([payload.words[0].english]);
+  await page.getByLabel('播放速度',{exact:true}).selectOption('1.15');await expect.poll(()=>page.evaluate(()=>(window as any).__played.at(-1)?.rate)).toBe(1.15);
+--- /dev/null
++++ b/tests/browser/audio-unlock.spec.ts
+@@ -0,0 +1,102 @@
++import {test,expect,type Page} from '@playwright/test';
++import type {CDPSession} from 'playwright-core';
++import fs from 'node:fs';
++
++// Launch an isolated browser: Playwright's runner may grant activation through
++// trace snapshots or evaluation. The first policy observation uses CDP only.
++test.use({trace:'off',screenshot:'off'});
++const catalog=JSON.parse(fs.readFileSync('apps/public/public/library/catalog.json','utf8'));
++const song=catalog.find((deck:any)=>deck.id==='0a1ff2e2-3db0-4bb1-889a-b27b62798cbe'),songDeck=JSON.parse(fs.readFileSync('apps/public/public/'+song.payload,'utf8'));
++const sleep=(ms:number)=>new Promise(resolve=>setTimeout(resolve,ms));
++
++async function launchPractice(playwright:any,testInfo:any,instrument:(page:Page)=>Promise<void>,contextOptions:Record<string,unknown>={}){
++ const browser=await playwright.chromium.launch({channel:'chrome',headless:true,args:['--mute-audio','--autoplay-policy=document-user-activation-required'],ignoreDefaultArgs:['--autoplay-policy=no-user-gesture-required']});
++ const context=await browser.newContext({baseURL:testInfo.project.use.baseURL,viewport:testInfo.project.use.viewport,hasTouch:testInfo.project.use.hasTouch,isMobile:testInfo.project.use.isMobile,deviceScaleFactor:testInfo.project.use.deviceScaleFactor,...contextOptions});
++ const page=await context.newPage();await instrument(page);
++ const cdp=await context.newCDPSession(page);
++ return {browser,context,page,cdp,close:()=>browser.close()};
++}
++async function read<T>(cdp:CDPSession,expression:string){
++ const {result,exceptionDetails}=await cdp.send('Runtime.evaluate',{expression,returnByValue:true,userGesture:false,awaitPromise:true});
++ if(exceptionDetails)throw Error(exceptionDetails.exception?.description||exceptionDetails.text);
++ return result.value as T;
++}
++async function until<T>(cdp:CDPSession,expression:string,accept:(value:T)=>boolean,label:string,timeout=15000){
++ const end=Date.now()+timeout;let value:T;
++ do{value=await read<T>(cdp,expression);if(accept(value))return value;await sleep(50);}while(Date.now()<end);
++ throw Error(`Timed out waiting for ${label}: ${JSON.stringify(value)}`);
++}
++async function instrumentMedia(page:Page){
++ await page.addInitScript(()=>{
++  const w=window as any,Original=window.Audio,clip=(src:string)=>src.includes('/library/')&&src.endsWith('.mp3');
++  w.__media=[];w.__mediaAttempts=0;w.__mediaPlayed=0;w.__mediaErrors=[];w.__mediaSources=[];
++  w.Audio=class extends Original{
++   constructor(src?:string){super(src);if(src&&clip(src)){w.__media.push(this);w.__mediaSources.push(src);}}
++   play(){const promise=super.play();if(clip(this.src)){w.__mediaAttempts++;promise.then(()=>{w.__mediaPlayed++;},error=>{w.__mediaErrors.push((error as DOMException).name||'Error');});}return promise;}
++  };
++ });
++}
++async function mediaState(cdp:CDPSession){return read<{attempts:number;played:number;errors:string[];paused:boolean;icon:boolean;active:boolean}>(cdp,`(()=>({attempts:__mediaAttempts,played:__mediaPlayed,errors:__mediaErrors.slice(),paused:__media.every(a=>a.paused),icon:!!document.querySelector('.audio-unlock'),active:navigator.userActivation?.hasBeenActive}))()`);}
++
++test('real original audio: first load is blocked, the photo icon unlocks exactly that clip and disappears',async({playwright},testInfo)=>{
++ const {page,cdp,close}=await launchPractice(playwright,testInfo,instrumentMedia);
++ try{
++  await page.goto('/piclex-web/#/deck/'+song.id);
++  const blocked=await until<Awaited<ReturnType<typeof mediaState>>>(cdp,`(()=>({attempts:__mediaAttempts,played:__mediaPlayed,errors:__mediaErrors.slice(),paused:__media.every(a=>a.paused),icon:!!document.querySelector('.audio-unlock'),active:navigator.userActivation?.hasBeenActive}))()`,value=>value.icon&&value.attempts>0,'blocked first clip');
++  expect(blocked.active).toBe(false);expect(blocked.errors).toContain('NotAllowedError');expect(blocked.played).toBe(0);
++  await page.locator('.audio-unlock').click();
++  await expect(page.locator('.audio-unlock')).toHaveCount(0);
++  const played=await until<Awaited<ReturnType<typeof mediaState>>>(cdp,`(()=>({attempts:__mediaAttempts,played:__mediaPlayed,errors:__mediaErrors.slice(),paused:__media.every(a=>a.paused),icon:!!document.querySelector('.audio-unlock'),active:navigator.userActivation?.hasBeenActive}))()`,value=>value.played===1&&!value.icon,'retried original clip');
++  expect(played.attempts).toBe(2);
++  expect((await page.evaluate(()=>(window as any).__mediaSources[0]))).toContain(songDeck.words[0].audio.sha256+'.mp3');
++ }finally{await close();}
++});
++
++test('a hardware letter unlocks without losing the first letter and later keys do not restart playback',async({playwright},testInfo)=>{
++ const {page,cdp,close}=await launchPractice(playwright,testInfo,instrumentMedia);
++ try{
++  await page.goto('/piclex-web/#/deck/'+song.id);
++  await until<Awaited<ReturnType<typeof mediaState>>>(cdp,`(()=>({attempts:__mediaAttempts,played:__mediaPlayed,errors:__mediaErrors.slice(),paused:__media.every(a=>a.paused),icon:!!document.querySelector('.audio-unlock'),active:navigator.userActivation?.hasBeenActive}))()`,value=>value.icon&&value.attempts>0,'blocked before typing');
++  await page.keyboard.press('f');
++  await expect(page.getByRole('textbox',{name:'输入英文',exact:true})).toHaveValue('f');
++  const played=await until<Awaited<ReturnType<typeof mediaState>>>(cdp,`(()=>({attempts:__mediaAttempts,played:__mediaPlayed,errors:__mediaErrors.slice(),paused:__media.every(a=>a.paused),icon:!!document.querySelector('.audio-unlock'),active:navigator.userActivation?.hasBeenActive}))()`,value=>value.played===1&&!value.icon,'letter unlock');
++  await page.keyboard.press('i');
++  await expect(page.getByRole('textbox',{name:'输入英文',exact:true})).toHaveValue('fi');
++  await sleep(350);
++  const after=await mediaState(cdp);expect(after.attempts).toBe(played.attempts);expect(after.icon).toBe(false);
++ }finally{await close();}
++});
++
++test('one real tap on the virtual F unlocks, keeps f, and a second tap never replays the blocked clip',async({playwright},testInfo)=>{
++ const {page,cdp,close}=await launchPractice(playwright,testInfo,instrumentMedia,{viewport:{width:390,height:844},hasTouch:true,isMobile:true});
++ try{
++  await page.goto('/piclex-web/#/deck/'+song.id);
++  await until<Awaited<ReturnType<typeof mediaState>>>(cdp,`(()=>({attempts:__mediaAttempts,played:__mediaPlayed,errors:__mediaErrors.slice(),paused:__media.every(a=>a.paused),icon:!!document.querySelector('.audio-unlock'),active:navigator.userActivation?.hasBeenActive}))()`,value=>value.icon&&value.attempts>0,'blocked before touch key');
++  await page.getByRole('button',{name:'按键 F',exact:true}).tap();
++  await expect(page.getByRole('textbox',{name:'输入英文',exact:true})).toHaveValue('f');
++  const played=await until<Awaited<ReturnType<typeof mediaState>>>(cdp,`(()=>({attempts:__mediaAttempts,played:__mediaPlayed,errors:__mediaErrors.slice(),paused:__media.every(a=>a.paused),icon:!!document.querySelector('.audio-unlock'),active:navigator.userActivation?.hasBeenActive}))()`,value=>value.played===1&&!value.icon,'first tap unlock');
++  await page.getByRole('button',{name:'按键 I',exact:true}).tap();
++  await expect(page.getByRole('textbox',{name:'输入英文',exact:true})).toHaveValue('fi');
++  await sleep(300);const after=await mediaState(cdp);expect(after.attempts).toBe(played.attempts);expect(after.icon).toBe(false);
++ }finally{await close();}
++});
++
++test('changing module grants interaction permission, hides the icon and never replays stale audio',async({playwright},testInfo)=>{
++ const {page,cdp,close}=await launchPractice(playwright,testInfo,instrumentMedia);
++ try{
++  await page.goto('/piclex-web/#/deck/'+song.id);
++  await until<Awaited<ReturnType<typeof mediaState>>>(cdp,`(()=>({attempts:__mediaAttempts,played:__mediaPlayed,errors:__mediaErrors.slice(),paused:__media.every(a=>a.paused),icon:!!document.querySelector('.audio-unlock'),active:navigator.userActivation?.hasBeenActive}))()`,value=>value.icon&&value.attempts>0,'blocked before module change');
++  await page.getByRole('tab',{name:'练听力',exact:true}).click();
++  await expect(page.locator('.native-practice')).toHaveAttribute('data-module','listening');
++  // The navigation gesture grants interaction permission while the old
++  // spelling request is discarded; its icon must not linger.
++  await expect(page.locator('.audio-unlock')).toHaveCount(0);
++  const settled=await mediaState(cdp);await sleep(500);const later=await mediaState(cdp);
++  expect(later.attempts).toBe(settled.attempts);
++  expect(later.errors.filter(error=>!['NotAllowedError','AbortError'].includes(error))).toEqual([]);
++  expect(later.paused).toBe(true);expect(later.icon).toBe(false);
++  await page.locator('.playback-button').click();
++  const retried=await until<Awaited<ReturnType<typeof mediaState>>>(cdp,`(()=>({attempts:__mediaAttempts,played:__mediaPlayed,errors:__mediaErrors.slice(),paused:__media.every(a=>a.paused),icon:!!document.querySelector('.audio-unlock'),active:navigator.userActivation?.hasBeenActive}))()`,value=>value.played===1&&!value.icon,'fallback retries current exercise');
++  expect(retried.attempts).toBe(settled.attempts+1);
++ }finally{await close();}
++});
+--- /dev/null
++++ b/tests/browser/audio-unlock-speech.spec.ts
+@@ -0,0 +1,62 @@
++import {test,expect,type Page} from '@playwright/test';
++import fs from 'node:fs';
++const catalog=JSON.parse(fs.readFileSync('apps/public/public/library/catalog.json','utf8'));
++const plain=catalog.find((deck:any)=>deck.id==='add03b54-d0a7-46fd-88c8-2aa0fa7f0c7f'),plainDeck=JSON.parse(fs.readFileSync('apps/public/public/'+plain.payload,'utf8'));
++const song=catalog.find((deck:any)=>deck.id==='0a1ff2e2-3db0-4bb1-889a-b27b62798cbe'),songDeck=JSON.parse(fs.readFileSync('apps/public/public/'+song.payload,'utf8'));
++async function mockSpeech(page:Page){
++ await page.addInitScript(()=>{
++  const w=window as any;w.__spoken=[];w.__all=[];w.__held=[];w.__speechAttempts=0;w.__started=0;w.__speechMode='denied';
++  class Utterance{lang='';rate=1;voice=null;text:string;onstart:any;onend:any;onerror:any;onpause:any;onresume:any;onboundary:any;constructor(text:string){this.text=text;}}
++  Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,writable:true,value:Utterance});
++  Object.defineProperty(window,'speechSynthesis',{configurable:true,value:{
++   speak(utterance:any){w.__spoken.push(utterance.text);w.__all.push(utterance);w.__speechAttempts++;const mode=w.__speechMode;
++    if(mode==='hold'){w.__held.push(utterance);return;}
++    queueMicrotask(()=>{if(mode==='denied')utterance.onerror?.({error:'not-allowed'});else{w.__started++;utterance.onstart?.();setTimeout(()=>utterance.onend?.(),60);}});},
++   cancel(){},getVoices(){return [];},get paused(){return false;}
++  }});
++ });
++}
++test('speech policy denial keeps one retryable request, ignores stale callbacks and only hides on real start',async({page})=>{
++ await mockSpeech(page);await page.goto('/piclex-web/#/deck/'+plain.id);
++ const icon=page.getByRole('button',{name:'开启声音，播放当前内容',exact:true});
++ await expect(icon).toBeVisible();await expect(page.locator('[role=alert]')).toHaveCount(0);
++ expect(await page.evaluate(()=>({attempts:(window as any).__speechAttempts,started:(window as any).__started,text:(window as any).__spoken[0]}))).toEqual({attempts:1,started:0,text:plainDeck.words[0].example});
++ // The denied utterance must not revive blocked state through a late callback.
++ await page.evaluate(()=>{const w=window as any;w.__all[0].onstart?.();w.__all[0].onend?.();});
++ await expect(icon).toBeVisible();expect(await page.evaluate(()=>(window as any).__started)).toBe(0);
++ await icon.click();
++ await expect.poll(()=>page.evaluate(()=>(window as any).__speechAttempts)).toBe(2);
++ await expect(icon).toBeVisible();expect(await page.evaluate(()=>(window as any).__started)).toBe(0);
++ await page.evaluate(()=>{(window as any).__speechMode='hold';});
++ await icon.click();
++ await expect.poll(()=>page.evaluate(()=>(window as any).__speechAttempts)).toBe(3);
++ await expect(icon).toBeVisible();expect(await page.evaluate(()=>(window as any).__started)).toBe(0);
++ // A second gesture while the retry is pending must not queue it again.
++ await icon.click();await page.waitForTimeout(120);
++ expect(await page.evaluate(()=>(window as any).__speechAttempts)).toBe(3);
++ await page.evaluate(()=>{const w=window as any,u=w.__held.shift();w.__started++;u.onstart?.();setTimeout(()=>u.onend?.(),30);});
++ await expect(icon).toHaveCount(0);
++ await expect.poll(()=>page.evaluate(()=>{const w=window as any;return w.__spoken.slice(0,3);})).toEqual([plainDeck.words[0].example,plainDeck.words[0].example,plainDeck.words[0].example]);
++ await expect(page.locator('[role=alert]')).toHaveCount(0);
++});
++test('a later denied TTS word retries only that word, not the clip that already finished',async({page})=>{
++ await mockSpeech(page);
++ await page.addInitScript(()=>{
++  const w=window as any,Original=window.Audio;
++  w.__clipPlays=0;
++  w.Audio=class extends Original{
++   constructor(src?:string){super(src);(this as any).__clip=!!src?.includes('/library/')&&src.endsWith('.mp3');}
++   play(){if((this as any).__clip){w.__clipPlays++;queueMicrotask(()=>{try{Object.defineProperty(this,'duration',{configurable:true,value:2});this.onloadedmetadata?.();this.onended?.();}catch{}});return Promise.resolve();}return super.play();}
++  };
++ });
++ await page.goto('/piclex-web/#/deck/'+song.id);
++ const icon=page.getByRole('button',{name:'开启声音，播放当前内容',exact:true});
++ await expect(icon).toBeVisible();
++ await expect.poll(()=>page.evaluate(()=>(window as any).__spoken)).toEqual([songDeck.words[0].english]);
++ expect(await page.evaluate(()=>(window as any).__clipPlays)).toBe(1);
++ await page.evaluate(()=>{(window as any).__speechMode='allowed';});
++ await icon.click();
++ await expect.poll(()=>page.evaluate(()=>(window as any).__spoken)).toEqual([songDeck.words[0].english,songDeck.words[0].english]);
++ expect(await page.evaluate(()=>(window as any).__clipPlays)).toBe(1);
++ await expect(icon).toHaveCount(0);
++});

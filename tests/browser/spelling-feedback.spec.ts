@@ -47,9 +47,10 @@ for(const colorScheme of ['light','dark'] as const)test(`spelling progress stays
  await page.emulateMedia({reducedMotion:'reduce'});await page.locator('.playback-button').click();await expect(bar).toHaveCount(0);await page.evaluate(()=>(window as any).__feedbackSpeech.onstart());await expect(segment).toHaveCount(0);await expect(fill).toHaveCSS('transition-duration','0s');await expect.poll(async()=>Number(await bar.getAttribute('aria-valuenow'))).toBeGreaterThan(0);
 });
 
-// The App marks a mismatch with a red board only; a visible hint line used to
-// grow the footer and push the photo, playback and keyboard around on phones.
-for(const colorScheme of ['light','dark'] as const)test(`wrong letters keep answer, photo, playback and keyboard in place without hint text: ${colorScheme}`,async({page},info)=>{
+// The App marks a mismatch with a red board only. The removed result line used
+// to grow the footer and push the photo, playback and keyboard around on phones;
+// the answer itself stays in the input line for errors, success and reveal.
+for(const colorScheme of ['light','dark'] as const)test(`no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: ${colorScheme}`,async({page},info)=>{
  await page.emulateMedia({colorScheme});await open(page);
  const keyboard=page.getByRole('region',{name:'虚拟键盘'}),answer=page.locator('.native-answer'),feedback=page.locator('.answer-feedback'),field=page.getByRole('textbox',{name:'输入英文',exact:true});
  // Tap/click the key's own coordinates: locator.tap() scrolls the practice
@@ -85,13 +86,25 @@ for(const colorScheme of ['light','dark'] as const)test(`wrong letters keep answ
    expect(after.height,`${label} ${key} height`).toBeCloseTo(before.height,0);
   }
  };
- const recovered=async()=>{await expect(answer).not.toHaveClass(/wrong/);await expect(feedback).toHaveText('');await expect(feedback).toBeHidden();expect((await border()).color).not.toBe('rgb(198, 68, 68)');};
+ const recovered=async()=>{await expect(answer).not.toHaveClass(/wrong/);await expect(feedback).toHaveCount(0);expect((await border()).color).not.toBe('rgb(198, 68, 68)');};
  await press('C');await press('R');await press('X');
- await expect(field).toHaveValue('crx');await expect(answer).toHaveClass(/wrong/);await expect(feedback).toHaveText('');await expect(feedback).toBeHidden();await expect(page.getByText('请删除错误字母后继续输入')).toHaveCount(0);
+ await expect(field).toHaveValue('crx');await expect(answer).toHaveClass(/wrong/);await expect(feedback).toHaveCount(0);await expect(page.getByText('请删除错误字母后继续输入')).toHaveCount(0);
  const error=await border();expect(error.color).toBe('rgb(198, 68, 68)');expect(['1px','2px']).toContain(error.width);
  await stable('first error');await page.screenshot({path:info.outputPath(`spelling-error-${colorScheme}.png`)});
  await press('BACKSPACE');await expect(field).toHaveValue('cr');await recovered();await stable('deleted back to the correct prefix');
- await press('X');await expect(field).toHaveValue('crx');await expect(answer).toHaveClass(/wrong/);await expect(feedback).toHaveText('');await stable('second error');
+ await press('X');await expect(field).toHaveValue('crx');await expect(answer).toHaveClass(/wrong/);await expect(feedback).toHaveCount(0);await stable('second error');
  await press('BACKSPACE');await press('O');await expect(field).toHaveValue('cro');await recovered();await stable('correct prefix after the second error');
  await page.screenshot({path:info.outputPath(`spelling-recovered-${colorScheme}.png`)});
+ // Freeze the 300ms auto-advance so the transient completion states can be
+ // measured without racing the next word. Earlier errors make this first word
+ // a correction; the next two words cover plain success and reveal.
+ await page.clock.install();await page.clock.pauseAt(await page.evaluate(()=>Date.now()+1000));
+ for(const key of ['I','S','S','A','N','T'] as const)await press(key);
+ await expect(field).toHaveValue('croissant');await expect(answer).not.toHaveClass(/wrong/);await expect(feedback).toHaveCount(0);await stable('corrected answer');
+ await page.clock.runFor(400);await expect(field).toHaveValue('');await expect(page.locator('.native-hint h1')).toHaveText('勺子');
+ for(const key of ['S','P','O','O','N'] as const)await press(key);
+ await expect(field).toHaveValue('spoon');await expect(answer).not.toHaveClass(/wrong/);await expect(feedback).toHaveCount(0);await stable('correct answer');
+ await page.clock.runFor(400);await expect(field).toHaveValue('');await expect(page.locator('.native-hint h1')).toHaveText('叉子');
+ await page.getByRole('button',{name:/^不认识/}).click();
+ await expect(field).toHaveValue('fork');await expect(answer).not.toHaveClass(/wrong/);await expect(feedback).toHaveCount(0);await stable('revealed answer');
 });

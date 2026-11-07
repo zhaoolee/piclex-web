@@ -1,0 +1,24 @@
+npm notice run piclex-web@0.1.0 npx
+npm notice run 'playwright' test --config playwright.audio-qa.config.ts tests/browser/audio-unlock.spec.ts tests/browser/audio-unlock-speech.spec.ts --output /private/tmp/piclex-audio-gesture-recheck --reporter=line
+[WebServer] npm notice run piclex-web@0.1.0 npx
+
+[WebServer] npm notice run 'vite' preview --host 127.0.0.1 --port 18441 --strictPort
+
+
+Running 14 tests using 2 workers
+
+[1/14] [desktop] › tests/browser/audio-unlock-speech.spec.ts:42:1 › a later denied TTS word retries only that word, not the clip that already finished
+[2/14] [desktop] › tests/browser/audio-unlock-speech.spec.ts:19:1 › speech policy denial keeps one retryable request, ignores stale callbacks and only hides on real start
+[3/14] [desktop] › tests/browser/audio-unlock.spec.ts:41:1 › real original audio: first load is blocked, the photo icon unlocks exactly that clip and disappears
+[4/14] [desktop] › tests/browser/audio-unlock.spec.ts:55:1 › a hardware letter unlocks without losing the first letter and later keys do not restart playback
+[5/14] [desktop] › tests/browser/audio-unlock.spec.ts:70:1 › one real tap on the virtual F unlocks, keeps f, and a second tap never replays the blocked clip
+[6/14] [desktop] › tests/browser/audio-unlock.spec.ts:84:1 › changing module grants interaction permission, hides the icon and never replays stale audio
+[7/14] [mobile] › tests/browser/audio-unlock-speech.spec.ts:19:1 › speech policy denial keeps one retryable request, ignores stale callbacks and only hides on real start
+[8/14] [mobile] › tests/browser/audio-unlock-speech.spec.ts:42:1 › a later denied TTS word retries only that word, not the clip that already finished
+[9/14] [mobile] › tests/browser/audio-unlock.spec.ts:41:1 › real original audio: first load is blocked, the photo icon unlocks exactly that clip and disappears
+[10/14] [mobile] › tests/browser/audio-unlock.spec.ts:55:1 › a hardware letter unlocks without losing the first letter and later keys do not restart playback
+[11/14] [mobile] › tests/browser/audio-unlock.spec.ts:70:1 › one real tap on the virtual F unlocks, keeps f, and a second tap never replays the blocked clip
+[12/14] [mobile] › tests/browser/audio-unlock.spec.ts:84:1 › changing module grants interaction permission, hides the icon and never replays stale audio
+[13/14] [mobile-webkit] › tests/browser/audio-unlock-speech.spec.ts:19:1 › speech policy denial keeps one retryable request, ignores stale callbacks and only hides on real start
+[14/14] [mobile-webkit] › tests/browser/audio-unlock-speech.spec.ts:42:1 › a later denied TTS word retries only that word, not the clip that already finished
+  14 passed (21.3s)

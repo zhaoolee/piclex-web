@@ -56,6 +56,7 @@ function revealFocusedAnswer(){
  else if(box.top<area.top)body.scrollTop+=box.top-area.top-4;
 }
 function SpeakerIcon(){return <Icon name="sound"/>;}
+function MutedSpeakerIcon(){return <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 9.5v5h3.5L12 18V6L7.5 9.5H4z"/><path d="m15.5 9.5 5 5m0-5-5 5"/></svg>;}
 function PlaybackFill({progress}:{progress:ReturnType<typeof useSpeech>['progress']}){
  const {value,indeterminate}=useSyncExternalStore(progress.subscribe,progress.getSnapshot);
  const fill=useRef<HTMLSpanElement>(null);
@@ -162,6 +163,7 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,selec
  const pauseListening=()=>{if(listenRun)setSeek(promptAudio?audio.readProgress():Math.max(0,audio.position));setListenRun(false);audio.stop();};
  const pauseListeningRef=useRef(pauseListening);pauseListeningRef.current=pauseListening;
  const navigationAudio=useRef<{module:string;from:string}|null>(null),revealAudio=useRef<string|null>(null);
+ const bootAudio=useRef(!document.hidden),playCurrentRef=useRef<()=>void>(()=>{});
  function dispatch(action:Action){if(action.type==='preference'&&action.name==='quick')writePreference('piclex-web.quick',String(action.value));if(action.type==='restart')readingSaved.current.clear();if(['next','sentenceNext','selectWord'].includes(action.type))navigationAudio.current={module:state.module,from:state.module==='spelling'?word?.id:prompt?.key};else if(['module','pause','restart'].includes(action.type))navigationAudio.current=null;setState((s:any)=>reduceStudy(deck,s,{...action,question:key},prompts));}
  const [urlRevision,setURLRevision]=useState(0),consumedHash=useRef(location.hash);
  // Subscribe during commit: a fast link after Back can arrive before passive effects.
@@ -243,6 +245,34 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,selec
  const setMode=(value:string)=>{if(value===state.mode)return;setListenRun(false);setPass(0);audio.stop();flushSync(()=>dispatch({type:'mode',value}));focusAnswer();};
  const setDifficulty=(value:string)=>{setComposing(false);setImeWarning(false);flushSync(()=>dispatch({type:'preference',name:'difficulty',value}));focusAnswer();};
  const replay=()=>{if(!active)return;navigationAudio.current=null;if(state.module==='spelling'&&word)audio.play(word.example?[word.example,word.english]:[word.english],state.rate,undefined,0,word.example?word.audio:undefined);else if(prompt){act({type:'play',rate:state.rate});audio.play([prompt.sentence],state.rate,undefined,0,promptAudio);}};
+ // First-load sound stays inside spelling and sentence exercises. Passive
+ // listening already has transport state, and speaking has its own microphone
+ // controls; neither should start audio behind the user's back.
+ const autoAudioScope=state.module==='spelling'||state.module==='listening'&&state.mode!=='listening';
+ const playCurrent=()=>{
+  if(!active||complete||panel||!autoAudioScope)return;
+  if(state.module==='spelling'&&word)audio.play(word.example?[word.example,word.english]:[word.english],state.rate,undefined,0,word.example?word.audio:undefined);
+  else if(state.module==='listening'&&prompt&&!state.sentenceFinished)audio.play([prompt.sentence],state.rate,undefined,0,promptAudio);
+ };playCurrentRef.current=playCurrent;
+ const retryCurrent=()=>{if(!audio.retryBlocked())playCurrentRef.current();};
+ useEffect(()=>{
+  if(!bootAudio.current)return;
+  const timer=setTimeout(()=>{
+   if(!bootAudio.current)return;bootAudio.current=false;
+   if(!document.hidden)playCurrentRef.current();
+  },0);
+  return ()=>clearTimeout(timer);
+ },[]);
+ // A first real click/tap or hardware letter retries the retained segment in
+ // the same gesture scope. It never prevents the input or repeats later keys.
+ useEffect(()=>{
+  if(!audio.blocked||!active||panel||!autoAudioScope)return;
+  const excluded='.audio-unlock,.native-header,.module-tabs,.sentence-toolbar,.native-playback,.listening-transport,.listening-metadata,.reading-actions,.reading-next,.native-primary,.sentence-actions,.peek-letter,.photo-open,.native-completion,.native-example,.practice-library,[role=dialog]';
+  const click=(event:MouseEvent)=>{const target=event.target as Element|null;if(!event.isTrusted)return;if(target?.closest?.(excluded)){audio.acknowledgeGesture();return;}retryCurrent();};
+  const key=(event:KeyboardEvent)=>{if(!event.isTrusted||event.repeat||event.isComposing||event.metaKey||event.ctrlKey||event.altKey)return;if(/^[a-z]$/i.test(event.key)||/^Key[A-Z]$/.test(event.code))retryCurrent();};
+  document.addEventListener('click',click);window.addEventListener('keydown',key,true);
+  return ()=>{document.removeEventListener('click',click);window.removeEventListener('keydown',key,true);};
+ },[audio.blocked,audio.retryBlocked,active,panel,autoAudioScope,state.module,state.mode]);
  const setRate=(rate:number)=>{if(playback&&listenRun)setSeek(promptAudio?audio.readProgress():Math.max(0,audio.position));navigationAudio.current=null;dispatch({type:'preference',name:'rate',value:rate});if(state.module==='listening'&&!playback)act({type:'play',rate});if(!playback&&word)audio.play(state.module==='spelling'?(word.example?[word.example,word.english]:[word.english]):[prompt.sentence],rate,undefined,0,state.module==='spelling'?(word.example?word.audio:undefined):promptAudio);};
  useEffect(()=>{if(!listenRun||!active||!playback||!prompt||state.sentenceFinished)return;
   const rate=repeat==='fastThreeSlowTwo'?(pass<3?1:.75):state.rate;
@@ -333,7 +363,7 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,selec
   {complete?<section className="native-completion"><h1>{state.module==='speaking'?'本轮口语练习完成':'本轮训练完成'}</h1>{state.module==='speaking'?<p>已到达卡组末尾。</p>:<p>拼对 {correct} 个词，复习 {reviewed} 个词。</p>}<button className="native-primary" onClick={()=>dispatch({type:'restart'})}>再来一轮</button><button className="native-button" onClick={exit}>换个卡组</button><button className="text-button" onClick={download}>下载卡组，在 App 中打开</button></section>:<>
    <div className="native-body" onPointerDown={e=>{if(e.pointerType==='mouse'||(e.target as HTMLElement).closest('input,textarea,select,.chunk,.reading-content,.native-example'))return;swipe.current={x:e.clientX,y:e.clientY};}} onPointerUp={e=>{const start=swipe.current;swipe.current=null;if(!start||panel||held.current.size>1)return;const dx=e.clientX-start.x,dy=e.clientY-start.y;if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.4){const i=modules.findIndex(([id])=>id===state.module),target=modules[i+(dx<0?1:-1)];if(target){suppressPhoto.current=Date.now()+400;selectModule(target[0]);}}}} onPointerCancel={()=>{swipe.current=null;}}>
     <article className="native-card"><div className="photo-browse">
-     <StablePhotoFocus cache={photos} onImageReady={photoPalette.read} src={deck.images[word.imageIndex]} fit={desktopKeyboard||state.module==='listening'?'contain':'focus'} focus={word.focus} alt={word.focus?'训练照片，彩色框标示当前物体':'完整场景照片'} active={active} retry={photoRetry} onLoadState={setPhotoState}/><button className="photo-open" aria-label={photoState==='error'?'重新加载图片':'选择照片'} onClick={()=>{if(photoState==='error'){setPhotoRetry(n=>n+1);return;}if(Date.now()<suppressPhoto.current){suppressPhoto.current=0;return;}openPanel('gallery');}} onPointerDown={e=>{held.current.add(e.pointerId);if(held.current.size>1)openPanel('gallery');}} onPointerUp={e=>held.current.delete(e.pointerId)} onPointerCancel={()=>held.current.clear()}></button></div>
+     <StablePhotoFocus cache={photos} onImageReady={photoPalette.read} src={deck.images[word.imageIndex]} fit={desktopKeyboard||state.module==='listening'?'contain':'focus'} focus={word.focus} alt={word.focus?'训练照片，彩色框标示当前物体':'完整场景照片'} active={active} retry={photoRetry} onLoadState={setPhotoState}/>{audio.blocked&&autoAudioScope&&<button className="audio-unlock" aria-label="开启声音，播放当前内容" title="点击开启声音" onClick={e=>{e.preventDefault();e.stopPropagation();retryCurrent();}} onPointerDown={e=>e.stopPropagation()}><MutedSpeakerIcon/></button>}<button className="photo-open" aria-label={photoState==='error'?'重新加载图片':'选择照片'} onClick={()=>{if(photoState==='error'){setPhotoRetry(n=>n+1);return;}if(Date.now()<suppressPhoto.current){suppressPhoto.current=0;return;}openPanel('gallery');}} onPointerDown={e=>{held.current.add(e.pointerId);if(held.current.size>1)openPanel('gallery');}} onPointerUp={e=>held.current.delete(e.pointerId)} onPointerCancel={()=>held.current.clear()}></button></div>
      {state.module==='spelling'?<div className="native-hint"><button aria-label={state.hiddenChinese?'显示中文提示':'隐藏中文提示'} onClick={()=>dispatch({type:'preference',name:'hiddenChinese',value:!state.hiddenChinese})}><h1>{state.hiddenChinese?'点击显示释义':word.chinese}</h1><small>{word.phonetic}</small></button>{ambienceControl}</div>:state.module==='listening'?<div className="sentence-toolbar"><select aria-label="句子练习模式" value={state.mode} onChange={e=>setMode(e.target.value)}>{modes.map(([id,title])=><option key={id} value={id}>{title}</option>)}</select>{ambienceControl}{state.mode==='free'&&<select aria-label="听写难度" value={state.difficulty} onChange={e=>setDifficulty(e.target.value)}><option value="easy">简单 · 字母数量</option><option value="medium">中等 · 单词数量</option><option value="hard">困难 · 无提示</option></select>}</div>:null}
     </article>
     {state.module==='spelling'&&word.example&&<SentenceLine sentence={word.example} target={word.english} translation={word.exampleChinese} hidden={state.hiddenChinese} position={audio.position} open={()=>selectModule('speaking')}/>}
@@ -344,7 +374,7 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,selec
     </section>)}
     {state.module==='speaking'&&(word.example?<Reading key={word.id} continuation={readingContinuation} word={word} active={active} audio={audio} rate={state.rate} notify={notify} saved={readingSaved.current} reward={(matched,count)=>award({id:`reading:${studyEventScope(deck,state,word)}:${word.id}`,kind:"reading",matched,wordCount:count})} next={()=>dispatch({type:'speakingNext'})}/>:<div><p className="native-unavailable">这张卡片没有可跟读的例句。</p><button className="native-button" onClick={()=>dispatch({type:'speakingNext'})}>下一句</button></div>)}
    </div>
-   {state.module==='spelling'?<div className="native-answer-footer"><p className="answer-feedback" role="status">{draft.result==='revealed'?`正确答案：${word.english}`:draft.result?`✓ ${draft.hadMistake?'已纠正':'答对了'}，${word.english}`:''}</p>
+   {state.module==='spelling'?<div className="native-answer-footer">
     <div className={`native-answer ${wrong>=0?'wrong':''}`} onClick={()=>input.current?.focus({preventScroll:true})}><AnswerSlots expected={word.english} entered={draft.input} revealed={draft.result==='revealed'} quickIndices={draft.quickIndices} scope={key} active={active} effect={particleEffect} completed={draft.result==='correct'||draft.result==='reviewed'} perfect={draft.result==='correct'}/><SpellingGlow progress={progress} complete={draft.result==='correct'||draft.result==='reviewed'} revealed={draft.result==='revealed'} error={wrong>=0} active={active} scope={`${deck.fingerprint}:${state.round}`}/><EnglishInput key={key} ref={input} label="输入英文" className="spelling-input" onVirtualKey={virtualPress} value={draft.input} readOnly={!!draft.result} onWarning={setImeWarning} onComposing={setComposing} onValue={value=>dispatch({type:'input',value})}/></div>
     <Playback play={replay} audio={audio} rate={state.rate} setRate={setRate} label={word.example?'播放句子和单词':'播放单词'}/>
     {draft.result==='revealed'||draft.result&&!state.pending?<button className="native-primary" onClick={()=>dispatch({type:'next'})}>{state.index+1===deck.words.length?'完成本轮':'下一个'}</button>:<button className="native-primary" disabled={!!draft.result} onClick={revealWord}>不认识 <kbd>Esc</kbd></button>}

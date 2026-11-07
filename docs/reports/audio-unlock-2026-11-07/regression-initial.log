@@ -1,0 +1,122 @@
+npm notice run piclex-web@0.1.0 npx
+npm notice run 'playwright' test --config playwright.audio-qa.config.ts tests/browser/audio-unlock.spec.ts tests/browser/audio-unlock-speech.spec.ts tests/browser/playback-parity.spec.ts tests/browser/deck-picker-audio.spec.ts tests/browser/speech-voice.spec.ts --reporter=line
+[WebServer] npm notice run piclex-web@0.1.0 npx
+
+[WebServer] npm notice run 'vite' preview --host 127.0.0.1 --port 18441 --strictPort
+
+
+Running 47 tests using 2 workers
+
+[1/47] [desktop] › tests/browser/audio-unlock-speech.spec.ts:42:1 › a later denied TTS word retries only that word, not the clip that already finished
+[2/47] [desktop] › tests/browser/audio-unlock-speech.spec.ts:19:1 › speech policy denial keeps one retryable request, ignores stale callbacks and only hides on real start
+[3/47] [desktop] › tests/browser/deck-picker-audio.spec.ts:7:1 › learning settings switches public and personal decks directly and restores each draft
+[4/47] [desktop] › tests/browser/deck-picker-audio.spec.ts:16:1 › song clips decode, respect rate, precede word TTS and stop on mode or deck changes
+[5/47] [desktop] › tests/browser/deck-picker-audio.spec.ts:29:1 › original listening audio seeks by time and resumes from its paused position
+  1) [desktop] › tests/browser/deck-picker-audio.spec.ts:16:1 › song clips decode, respect rate, precede word TTS and stop on mode or deck changes 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0.75
+    Received: 1
+
+      18 |  await page.goto('/piclex-web/#/deck/'+song.id);await expect(page.getByRole('heading',{name:payload.words[0].chinese,exact:true})).toBeVisible();
+      19 |  await page.getByLabel('播放速度',{exact:true}).selectOption('0.75');await expect.poll(()=>page.evaluate(()=>(window as any).__played.length)).toBeGreaterThan(0);
+    > 20 |  const played=await page.evaluate(()=>(window as any).__played[0]);expect(played.src).toContain(payload.words[0].audio.sha256+'.mp3');expect(played.rate).toBe(.75);
+         |                                                                                                                                                           ^
+      21 |  await expect(page.getByRole('progressbar',{name:'播放进度'})).toBeVisible();await expect(page.getByRole('button',{name:'停止播放'})).toHaveCount(0);await expect.poll(async()=>Number(await page.getByRole('progressbar',{name:'播放进度'}).getAttribute('aria-valuenow'))).toBeGreaterThan(0);
+      22 |  await expect.poll(()=>page.evaluate(()=>(window as any).__spoken),{timeout:15000}).toEqual([payload.words[0].english]);
+      23 |  await page.getByLabel('播放速度',{exact:true}).selectOption('1.15');await expect.poll(()=>page.evaluate(()=>(window as any).__played.at(-1)?.rate)).toBe(1.15);
+        at /private/tmp/piclex-audio-unlock-20261107/tests/browser/deck-picker-audio.spec.ts:20:155
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../piclex-audio-final-results/deck-picker-audio-song-cli-be215-top-on-mode-or-deck-changes-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../piclex-audio-final-results/deck-picker-audio-song-cli-be215-top-on-mode-or-deck-changes-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../piclex-audio-final-results/deck-picker-audio-song-cli-be215-top-on-mode-or-deck-changes-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace ../piclex-audio-final-results/deck-picker-audio-song-cli-be215-top-on-mode-or-deck-changes-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[6/47] [desktop] › tests/browser/deck-picker-audio.spec.ts:40:1 › advancing original audio clears preparation even when playing notification is lost; buffered stalls retain Pause
+[7/47] [desktop] › tests/browser/playback-parity.spec.ts:19:1 › App replay button keeps its geometry and fills in place across sentence, word, replay and rate change
+[8/47] [desktop] › tests/browser/playback-parity.spec.ts:45:1 › errors, mode changes and leaving the page clear progress and reject old callbacks
+[9/47] [desktop] › tests/browser/playback-parity.spec.ts:71:1 › speech without boundary events animates continuously, freezes on pause and resumes without jumping
+[10/47] [desktop] › tests/browser/playback-parity.spec.ts:82:1 › sparse speech boundaries calibrate the continuous fill without a visible jump
+[11/47] [desktop] › tests/browser/playback-parity.spec.ts:88:1 › reduced motion retains estimated speech progress and only the real end completes it
+[12/47] [desktop] › tests/browser/playback-parity.spec.ts:97:1 › original audio fills the button from its clock even without timeupdate and stops advancing while paused
+[13/47] [desktop] › tests/browser/speech-voice.spec.ts:2:1 › automatic speech avoids Albert, manual choice persists, and normal pitch is retained
+[14/47] [desktop] › tests/browser/audio-unlock.spec.ts:41:1 › real original audio: first load is blocked, the photo icon unlocks exactly that clip and disappears
+[15/47] [desktop] › tests/browser/audio-unlock.spec.ts:55:1 › a hardware letter unlocks without losing the first letter and later keys do not restart playback
+[16/47] [desktop] › tests/browser/audio-unlock.spec.ts:70:1 › one real tap on the virtual F unlocks, keeps f, and a second tap never replays the blocked clip
+[17/47] [desktop] › tests/browser/audio-unlock.spec.ts:84:1 › changing module stops the blocked request and leaves no stale audio while keeping the permission status for supported exercises
+[18/47] [mobile] › tests/browser/audio-unlock-speech.spec.ts:19:1 › speech policy denial keeps one retryable request, ignores stale callbacks and only hides on real start
+[19/47] [mobile] › tests/browser/audio-unlock-speech.spec.ts:42:1 › a later denied TTS word retries only that word, not the clip that already finished
+[20/47] [mobile] › tests/browser/deck-picker-audio.spec.ts:7:1 › learning settings switches public and personal decks directly and restores each draft
+[21/47] [mobile] › tests/browser/deck-picker-audio.spec.ts:16:1 › song clips decode, respect rate, precede word TTS and stop on mode or deck changes
+  2) [mobile] › tests/browser/deck-picker-audio.spec.ts:16:1 › song clips decode, respect rate, precede word TTS and stop on mode or deck changes 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0.75
+    Received: 1
+
+      18 |  await page.goto('/piclex-web/#/deck/'+song.id);await expect(page.getByRole('heading',{name:payload.words[0].chinese,exact:true})).toBeVisible();
+      19 |  await page.getByLabel('播放速度',{exact:true}).selectOption('0.75');await expect.poll(()=>page.evaluate(()=>(window as any).__played.length)).toBeGreaterThan(0);
+    > 20 |  const played=await page.evaluate(()=>(window as any).__played[0]);expect(played.src).toContain(payload.words[0].audio.sha256+'.mp3');expect(played.rate).toBe(.75);
+         |                                                                                                                                                           ^
+      21 |  await expect(page.getByRole('progressbar',{name:'播放进度'})).toBeVisible();await expect(page.getByRole('button',{name:'停止播放'})).toHaveCount(0);await expect.poll(async()=>Number(await page.getByRole('progressbar',{name:'播放进度'}).getAttribute('aria-valuenow'))).toBeGreaterThan(0);
+      22 |  await expect.poll(()=>page.evaluate(()=>(window as any).__spoken),{timeout:15000}).toEqual([payload.words[0].english]);
+      23 |  await page.getByLabel('播放速度',{exact:true}).selectOption('1.15');await expect.poll(()=>page.evaluate(()=>(window as any).__played.at(-1)?.rate)).toBe(1.15);
+        at /private/tmp/piclex-audio-unlock-20261107/tests/browser/deck-picker-audio.spec.ts:20:155
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../piclex-audio-final-results/deck-picker-audio-song-cli-be215-top-on-mode-or-deck-changes-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../piclex-audio-final-results/deck-picker-audio-song-cli-be215-top-on-mode-or-deck-changes-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../piclex-audio-final-results/deck-picker-audio-song-cli-be215-top-on-mode-or-deck-changes-mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace ../piclex-audio-final-results/deck-picker-audio-song-cli-be215-top-on-mode-or-deck-changes-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[22/47] [mobile] › tests/browser/deck-picker-audio.spec.ts:40:1 › advancing original audio clears preparation even when playing notification is lost; buffered stalls retain Pause
+[23/47] [mobile] › tests/browser/deck-picker-audio.spec.ts:29:1 › original listening audio seeks by time and resumes from its paused position
+[24/47] [mobile] › tests/browser/playback-parity.spec.ts:19:1 › App replay button keeps its geometry and fills in place across sentence, word, replay and rate change
+[25/47] [mobile] › tests/browser/playback-parity.spec.ts:45:1 › errors, mode changes and leaving the page clear progress and reject old callbacks
+[26/47] [mobile] › tests/browser/playback-parity.spec.ts:71:1 › speech without boundary events animates continuously, freezes on pause and resumes without jumping
+[27/47] [mobile] › tests/browser/playback-parity.spec.ts:82:1 › sparse speech boundaries calibrate the continuous fill without a visible jump
+[28/47] [mobile] › tests/browser/playback-parity.spec.ts:88:1 › reduced motion retains estimated speech progress and only the real end completes it
+[29/47] [mobile] › tests/browser/playback-parity.spec.ts:97:1 › original audio fills the button from its clock even without timeupdate and stops advancing while paused
+[30/47] [mobile] › tests/browser/speech-voice.spec.ts:2:1 › automatic speech avoids Albert, manual choice persists, and normal pitch is retained
+[31/47] [mobile] › tests/browser/audio-unlock.spec.ts:41:1 › real original audio: first load is blocked, the photo icon unlocks exactly that clip and disappears
+[32/47] [mobile] › tests/browser/audio-unlock.spec.ts:55:1 › a hardware letter unlocks without losing the first letter and later keys do not restart playback
+[33/47] [mobile] › tests/browser/audio-unlock.spec.ts:70:1 › one real tap on the virtual F unlocks, keeps f, and a second tap never replays the blocked clip
+[34/47] [mobile] › tests/browser/audio-unlock.spec.ts:84:1 › changing module stops the blocked request and leaves no stale audio while keeping the permission status for supported exercises
+[35/47] [mobile-webkit] › tests/browser/audio-unlock-speech.spec.ts:19:1 › speech policy denial keeps one retryable request, ignores stale callbacks and only hides on real start
+[36/47] [mobile-webkit] › tests/browser/audio-unlock-speech.spec.ts:42:1 › a later denied TTS word retries only that word, not the clip that already finished
+[37/47] [mobile-webkit] › tests/browser/deck-picker-audio.spec.ts:7:1 › learning settings switches public and personal decks directly and restores each draft
+[38/47] [mobile-webkit] › tests/browser/deck-picker-audio.spec.ts:16:1 › song clips decode, respect rate, precede word TTS and stop on mode or deck changes
+[39/47] [mobile-webkit] › tests/browser/deck-picker-audio.spec.ts:29:1 › original listening audio seeks by time and resumes from its paused position
+[40/47] [mobile-webkit] › tests/browser/deck-picker-audio.spec.ts:40:1 › advancing original audio clears preparation even when playing notification is lost; buffered stalls retain Pause
+[41/47] [mobile-webkit] › tests/browser/playback-parity.spec.ts:19:1 › App replay button keeps its geometry and fills in place across sentence, word, replay and rate change
+[42/47] [mobile-webkit] › tests/browser/playback-parity.spec.ts:45:1 › errors, mode changes and leaving the page clear progress and reject old callbacks
+[43/47] [mobile-webkit] › tests/browser/playback-parity.spec.ts:71:1 › speech without boundary events animates continuously, freezes on pause and resumes without jumping
+[44/47] [mobile-webkit] › tests/browser/playback-parity.spec.ts:82:1 › sparse speech boundaries calibrate the continuous fill without a visible jump
+[45/47] [mobile-webkit] › tests/browser/playback-parity.spec.ts:88:1 › reduced motion retains estimated speech progress and only the real end completes it
+[46/47] [mobile-webkit] › tests/browser/playback-parity.spec.ts:97:1 › original audio fills the button from its clock even without timeupdate and stops advancing while paused
+[47/47] [mobile-webkit] › tests/browser/speech-voice.spec.ts:2:1 › automatic speech avoids Albert, manual choice persists, and normal pitch is retained
+  2 failed
+    [desktop] › tests/browser/deck-picker-audio.spec.ts:16:1 › song clips decode, respect rate, precede word TTS and stop on mode or deck changes 
+    [mobile] › tests/browser/deck-picker-audio.spec.ts:16:1 › song clips decode, respect rate, precede word TTS and stop on mode or deck changes 
+  45 passed (1.2m)

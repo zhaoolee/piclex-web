@@ -3,9 +3,12 @@ import {useCallback,useEffect,useRef,useState} from 'react';
 import type {AudioClip} from './NativePractice';
 import {createPlaybackProgress} from './playback-progress';
 import {createSpeechProgress} from './speech-progress.mjs';
+type PlayRequest={texts:string[];rate:number;onEnd?:()=>void;offset:number;clip?:AudioClip;startFraction:number};
+const policyError=(error:unknown)=>error instanceof DOMException?error.name==='NotAllowedError':(error as {name?:string})?.name==='NotAllowedError';
 export function useSpeech(notify:(s:string)=>void){
  const generation=useRef(0),timer=useRef<ReturnType<typeof setTimeout>|undefined>(undefined),media=useRef<HTMLAudioElement|null>(null),blob=useRef('');
- const [playing,setPlaying]=useState(false),[preparing,setPreparing]=useState(false),[position,setPosition]=useState(-1);
+ const blockedRequest=useRef<PlayRequest|null>(null),retrying=useRef(false);
+ const [playing,setPlaying]=useState(false),[preparing,setPreparing]=useState(false),[position,setPosition]=useState(-1),[blocked,setBlocked]=useState(false);
  const mediaClock=useRef<ReturnType<typeof setInterval>|undefined>(undefined);
  const speechClock=useRef<ReturnType<typeof setInterval>|undefined>(undefined);
  const [error,setError]=useState('');
@@ -18,12 +21,22 @@ export function useSpeech(notify:(s:string)=>void){
   if(current){current.onended=null;current.onerror=null;current.ontimeupdate=null;current.onplaying=null;current.onwaiting=null;current.onstalled=null;current.onloadedmetadata=null;current.pause();current.removeAttribute('src');current.load();}
   if(blob.current){URL.revokeObjectURL(blob.current);blob.current='';}
  },[]);
- const stop=useCallback(()=>{
+ const cancelPlayback=useCallback(()=>{
+  // Invalidate callbacks before cancel(): a late onstart/onend must not revive
+  // a request that was blocked or replaced.
   generation.current++;clearTimeout(timer.current);clearInterval(speechClock.current);speechClock.current=undefined;clearMedia();window.speechSynthesis?.cancel();
+ },[clearMedia]);
+ const stop=useCallback(()=>{
+  cancelPlayback();blockedRequest.current=null;retrying.current=false;
   setPlaying(false);setPreparing(false);setPosition(-1);progress.update(0);
- },[clearMedia,progress]);
- const play=useCallback((texts:string[],rate=1,onEnd?:()=>void,offset=0,clip?:AudioClip,startFraction=0)=>{
-  stop();setError('');const id=generation.current,queue=texts.filter(t=>t.trim());
+  // Blocked is a permission status, so an explicit stop keeps the icon while
+  // discarding the now-stale request. The next gesture retries current content.
+ },[cancelPlayback,progress]);
+ const start=useCallback((next:PlayRequest)=>{
+  cancelPlayback();
+  setError('');const id=generation.current,queue=next.texts.filter(text=>text.trim());
+  blockedRequest.current=next;retrying.current=true;
+  setPlaying(false);setPreparing(queue.length>0);setPosition(-1);progress.update(0);
   const valid=()=>id===generation.current&&!document.hidden;
   // Queue progress is weighted by text length. Original audio uses its media
   // clock; Web Speech interpolates its estimated position between real events.
@@ -34,22 +47,30 @@ export function useSpeech(notify:(s:string)=>void){
    const value=total?(before+(queue[i]?.length||0)*Math.min(1,Math.max(0,fraction)))/total:0;
    progress.update(Math.max(progress.getSnapshot().value,estimated?Math.min(.99,value):value),indeterminate);
   };
-  const fail=(message?:string)=>{if(!valid())return;stop();if(message){setError(message);notify(message);}};
-  const next=(i:number)=>{
+  const fail=(message?:string)=>{if(!valid())return;stop();blockedRequest.current=null;retrying.current=false;setBlocked(false);if(message){setError(message);notify(message);}};
+  // Autoplay policy retains only the segment that was actually denied. A clip
+  // that already finished must not replay when the following TTS word blocks.
+  const block=(i:number)=>{
    if(!valid())return;
-   if(i===queue.length){stop();onEnd?.();return;}
+   const pending={...next,texts:queue.slice(i),clip:i===0?next.clip:undefined,offset:i===0?next.offset:0,startFraction:i===0?next.startFraction:0};
+   cancelPlayback();blockedRequest.current=pending;retrying.current=false;
+   setBlocked(true);setPlaying(false);setPreparing(false);setPosition(-1);progress.update(0);
+  };
+  const nextSegment=(i:number)=>{
+   if(!valid())return;
+   if(i===queue.length){stop();next.onEnd?.();return;}
    let finished=false;
    const current=()=>valid()&&!finished;
-   const started=()=>{if(current()){setPreparing(false);setPlaying(true);}};
-   const ended=(settle=0)=>{if(!current())return;finished=true;clearInterval(speechClock.current);speechClock.current=undefined;update(i,1);setPosition(-1);timer.current=setTimeout(()=>next(i+1),i<queue.length-1?180:settle);};
+   const started=()=>{if(current()){retrying.current=false;blockedRequest.current=null;setBlocked(false);setPreparing(false);setPlaying(true);}};
+   const ended=(settle=0)=>{if(!current())return;finished=true;clearInterval(speechClock.current);speechClock.current=undefined;update(i,1);setPosition(-1);timer.current=setTimeout(()=>nextSegment(i+1),i<queue.length-1?180:settle);};
    // Original audio belongs to this sentence occurrence only; the following word uses TTS.
-   if(i===0&&clip){
+   if(i===0&&next.clip){
     try{
      let source='';
-     if(clip.dataBase64){const bytes=Uint8Array.from(atob(clip.dataBase64),c=>c.charCodeAt(0));source=URL.createObjectURL(new Blob([bytes],{type:'audio/mpeg'}));blob.current=source;}
-     else if(clip.path)source=new URL(import.meta.env.BASE_URL+clip.path,location.href).href;
+     if(next.clip.dataBase64){const bytes=Uint8Array.from(atob(next.clip.dataBase64),c=>c.charCodeAt(0));source=URL.createObjectURL(new Blob([bytes],{type:'audio/mpeg'}));blob.current=source;}
+     else if(next.clip.path)source=new URL(import.meta.env.BASE_URL+next.clip.path,location.href).href;
      if(!source){fail('这张卡片的原音频暂时无法播放。');return;}
-     const player=new Audio(source);media.current=player;player.playbackRate=rate;player.preservesPitch=true;
+     const player=new Audio(source);media.current=player;player.playbackRate=next.rate;player.preservesPitch=true;
      const failed=()=>{if(media.current===player)fail('原音频播放失败，请检查网络并再次点击播放。');};
      let observedTime=0;
      const time=()=>{if(media.current!==player||!current())return;
@@ -60,23 +81,23 @@ export function useSpeech(notify:(s:string)=>void){
      };
      player.onplaying=()=>{if(media.current===player){started();time();}};
      player.onwaiting=player.onstalled=()=>{if(valid()&&media.current===player&&player.readyState<3)setPreparing(true);};
-     player.onloadedmetadata=()=>{if(!valid()||media.current!==player)return;if(Number.isFinite(player.duration)&&player.duration>0)player.currentTime=player.duration*Math.min(.999,Math.max(0,startFraction));time();};
+     player.onloadedmetadata=()=>{if(!valid()||media.current!==player)return;if(Number.isFinite(player.duration)&&player.duration>0)player.currentTime=player.duration*Math.min(.999,Math.max(0,next.startFraction));time();};
      player.ontimeupdate=time;player.onerror=failed;
      // Like App, sample the actual audio clock; a stall cannot advance the fill.
      mediaClock.current=setInterval(time,33);
      player.onended=()=>{if(!valid()||media.current!==player)return;clearMedia();ended();};
-     void player.play().then(()=>{if(media.current===player&&current()&&!player.paused)started();}).catch(failed);
-    }catch{fail('这张卡片的原音频暂时无法播放。');}
+     void player.play().then(()=>{if(media.current===player&&current()&&!player.paused)started();}).catch(error=>{if(media.current!==player)return;if(policyError(error))block(0);else failed();});
+    }catch(error){if(policyError(error))block(0);else fail('这张卡片的原音频暂时无法播放。');}
     return;
    }
    if(!window.speechSynthesis){fail('此浏览器没有提供英文朗读功能。');return;}
    try{
-    const utterance=new SpeechSynthesisUtterance(queue[i]);utterance.lang='en-US';utterance.rate=rate;
+    const utterance=new SpeechSynthesisUtterance(queue[i]);utterance.lang='en-US';utterance.rate=next.rate;
     const voice=selectedSpeechVoice();if(voice)utterance.voice=voice;
     let clock:ReturnType<typeof createSpeechProgress>|undefined,paused=false;
     const begin=()=>{
      if(!current()||clock)return;
-     started();clock=createSpeechProgress(queue[i],rate);update(i,0);
+     started();clock=createSpeechProgress(queue[i],next.rate);update(i,0);
      speechClock.current=setInterval(()=>{
       if(!current()||!clock)return;
       const now=performance.now();clock.setPaused(paused||!!speechSynthesis.paused,now);
@@ -84,18 +105,27 @@ export function useSpeech(notify:(s:string)=>void){
      },33);
     };
     utterance.onstart=begin;
-    utterance.onboundary=e=>{if(current()){begin();clock?.boundary(e.charIndex,performance.now());if(i===0)setPosition(e.charIndex+offset);}};
+    utterance.onboundary=e=>{if(current()){begin();clock?.boundary(e.charIndex,performance.now());if(i===0)setPosition(e.charIndex+next.offset);}};
     utterance.onpause=()=>{if(current()){paused=true;clock?.setPaused(true,performance.now());}};
     utterance.onresume=()=>{if(current()){paused=false;clock?.setPaused(false,performance.now());}};
     // Let the short completion animation finish before hiding the button's
     // fill. The next segment still starts after the established 180 ms gap.
     utterance.onend=()=>ended(180);
-    utterance.onerror=e=>{if(current())fail(['interrupted','canceled'].includes(e.error)?undefined:'朗读暂时不可用，请检查浏览器的语音与播放权限。');};
+    utterance.onerror=e=>{if(!current())return;if(e.error==='not-allowed')block(i);else fail(['interrupted','canceled'].includes(e.error)?undefined:'朗读暂时不可用，请检查浏览器的语音与播放权限。');};
     speechSynthesis.speak(utterance);
    }catch{fail('朗读暂时不可用，请检查浏览器的语音与播放权限。');}
   };
-  setPreparing(queue.length>0);next(0);
- },[stop,clearMedia,notify,progress]);
+  nextSegment(0);
+ },[cancelPlayback,stop,clearMedia,notify,progress]);
+ const play=useCallback((texts:string[],rate=1,onEnd?:()=>void,offset=0,clip?:AudioClip,startFraction=0)=>{
+  start({texts:[...texts],rate,onEnd,offset,clip,startFraction});
+ },[start]);
+ const retryBlocked=useCallback(()=>{
+  const pending=blockedRequest.current;if(!pending)return false;
+  if(retrying.current)return true;
+  start(pending);return true;
+ },[start]);
+ const acknowledgeGesture=useCallback(()=>{if(!blockedRequest.current)setBlocked(false);},[]);
  useEffect(()=>{const hide=()=>{if(document.hidden)stop();};document.addEventListener('visibilitychange',hide);window.addEventListener('pagehide',stop);return ()=>{stop();document.removeEventListener('visibilitychange',hide);window.removeEventListener('pagehide',stop);};},[stop]);
- return {error,playing,preparing,position,progress,readProgress,play,stop};
+ return {blocked,error,playing,preparing,position,progress,readProgress,play,retryBlocked,acknowledgeGesture,stop};
 }

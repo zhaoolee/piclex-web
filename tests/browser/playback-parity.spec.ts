@@ -17,7 +17,8 @@ async function open(page:Page){
  await expect(page.getByRole('heading',{name:'牛角包',exact:true})).toBeVisible();
 }
 test('App replay button keeps its geometry and fills in place across sentence, word, replay and rate change',async({page},info)=>{
- await open(page);await mockSpeech(page);const touch=!!info.project.use.hasTouch;
+ // Return to idle through the real module controls after first-entry autoplay.
+ await open(page);await page.getByRole('tab',{name:'练听力',exact:true}).click();await page.getByRole('tab',{name:'拼单词',exact:true}).click();await mockSpeech(page);const touch=!!info.project.use.hasTouch;
  const button=page.locator('.playback-button'),bar=page.getByRole('progressbar',{name:'播放进度'}),row=page.locator('.native-playback');
  await expect(button).toHaveText('播放句子和单词');const before=await row.boundingBox(),buttonBefore=await button.boundingBox();
  await press(button,touch);await expect(button).toHaveText('准备音频…');await expect(bar).toHaveCount(0);
@@ -103,6 +104,7 @@ test('original audio fills the button from its clock even without timeupdate and
  // Give the sampler one turn to observe the final media time, then require no drift.
  await page.waitForTimeout(70);const paused=await bar.getAttribute('aria-valuenow');await page.waitForTimeout(160);expect(await bar.getAttribute('aria-valuenow')).toBe(paused);
  await page.screenshot({path:info.outputPath('original-audio-progress.png')});
- await press(button,!!info.project.use.hasTouch);await expect.poll(()=>page.evaluate(()=>(window as any).__clockAudio.length)).toBe(2);await expect.poll(()=>page.evaluate(()=>(window as any).__clockAudio.at(-1).currentTime)).toBeGreaterThan(0);expect(await button.boundingBox()).toEqual(geometry);
+ const playsBeforeReplay=await page.evaluate(()=>(window as any).__clockAudio.length);
+ await press(button,!!info.project.use.hasTouch);await expect.poll(()=>page.evaluate(()=>(window as any).__clockAudio.length)).toBe(playsBeforeReplay+1);await expect.poll(()=>page.evaluate(()=>(window as any).__clockAudio.at(-1).currentTime)).toBeGreaterThan(0);expect(await button.boundingBox()).toEqual(geometry);
  await page.getByRole('tab',{name:'练听力',exact:true}).click();await expect(bar).toHaveCount(0);expect(await page.evaluate(()=>(window as any).__clockAudio.every((a:HTMLAudioElement)=>a.paused))).toBe(true);
 });

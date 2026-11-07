@@ -1,0 +1,53 @@
+{
+  "date": "2026-11-07",
+  "status": "implemented locally; not committed, pushed or deployed",
+  "nodeTests": {
+    "passed": 63,
+    "failed": 0
+  },
+  "browserTests": {
+    "focusedPassed": 18,
+    "focusedFailed": 0,
+    "projects": [
+      "desktop Chrome",
+      "touch Chrome",
+      "Mac WebKit touch"
+    ],
+    "additionalFinalVisualPassed": 1
+  },
+  "checks": [
+    "TypeScript noEmit",
+    "Vite production build",
+    "git diff --check",
+    "applied source hashes"
+  ],
+  "coverage": [
+    "three uploads in one default group",
+    "camera and upload together",
+    "unchanged original archive bytes",
+    "old links",
+    "legacy draft and XP preservation",
+    "editing without duplication",
+    "background completion",
+    "queued captures",
+    "failed save retry",
+    "group export round-trip"
+  ],
+  "limits": [
+    "No Linux full CI or deployment",
+    "No iPhone hardware validation",
+    "Only isolated synthetic/public browser fixtures"
+  ],
+  "sourceSHA256": {
+    "apps/public/src/main.tsx": "71dcbda16ad92b219f255064bb0fc11a2bd82f49977bd44c6677ea56c06cb8cc",
+    "apps/public/src/NativePractice.tsx": "4246dd0722663621fdac6099fb025f5657002050ff29144cae40b7bbe92d4a45",
+    "apps/public/src/backup-store.ts": "bc5910bb6f83c2a52ada4bf037dd493db6a28ab1feef111353ef48b31c32161c",
+    "packages/practice/src/study.mjs": "b206984f78faa22a5e9a9c2b1ecf620dacafa29fad97d9310b49012f89390549",
+    "packages/practice/src/sentence.mjs": "a69f5ad1531ee0e26bde3d2f4ae19981ca3b2a2a5751ace2c1fd38bad37a72df",
+    "playwright.config.ts": "ef2b614e76587ac039132d6af718385ac7ab013fba0b871a83c805b8d86b998d",
+    "packages/practice/src/capture-group.mjs": "fcf9c646fb8302a6ded589ac58b0a8a7625d07e34f5663b725eb60c2a7469f8b",
+    "tests/capture-group.test.mjs": "3f6c49f4555addbfc1416e3d261c055df68bd9b79536b7d0aac2f9db46b9245a",
+    "tests/browser/capture-grouping.spec.ts": "99cf560df84caf67e7ff408f5dc7c8e385e049ad8c1dc78387de2a8ca0d5a970"
+  },
+  "cleanup": "Task temp directory removed; preview port 18249 closed; shared dependencies and public assets preserved."
+}
