@@ -1,0 +1,112 @@
+{
+  "status": "published and verified",
+  "sourceRevision": "89be89bdf247ecfb6fa5ae5eb16a11e18dceeca7",
+  "releaseID": "89be89bdf247-651f7c5023b0",
+  "ci": {
+    "url": "https://github.com/zhaoolee/piclex-web/actions/runs/42423777111",
+    "conclusion": "success",
+    "unitPassed": 297,
+    "deployPassed": 45,
+    "browserPassed": 566,
+    "existingPlatformSkips": 4
+  },
+  "live": {
+    "pages": {
+      "url": "https://zhaoolee.com/piclex-web/",
+      "passed": 16
+    },
+    "domestic": {
+      "url": "https://piclex.v2fy.com/piclex-web/",
+      "passed": 16
+    },
+    "resources": {
+      "pages": {
+        "sourceRevision": "89be89bdf247ecfb6fa5ae5eb16a11e18dceeca7",
+        "releaseID": "89be89bdf247-651f7c5023b0",
+        "manifestFiles": 1170,
+        "indexSHA256": "ce29c5d1e1ba698067b0d0b1b16d1714a6cb17b4840acdbbef22153157de7d5d",
+        "entryAssets": [
+          {
+            "path": "piclex-web/assets/experience-store-Cf0PUDr3.js",
+            "sha256": "017ed4d62e21388b1e46a658bbbdf2e536900d05798debe74e60263c5c4c34dd",
+            "bytes": 6764
+          },
+          {
+            "path": "piclex-web/assets/main-3r-dXlGz.js",
+            "sha256": "4d03d683a3b0aa519d92991d47d0e96d88754b31ffe5f8b17b288141583097a8",
+            "bytes": 705461
+          },
+          {
+            "path": "piclex-web/assets/main-C410xlmz.css",
+            "sha256": "4d3768f5aabd62f303a2759ada0ff713ce3e145b6a1d36347c9d05b07c3f21c4",
+            "bytes": 102789
+          },
+          {
+            "path": "piclex-web/assets/modulepreload-polyfill-B5Qt9EMX.js",
+            "sha256": "d2a32840421496e872ade591618d2fa5c33797605d1aec04301717e5a90757d0",
+            "bytes": 711
+          }
+        ]
+      },
+      "domestic": {
+        "sourceRevision": "89be89bdf247ecfb6fa5ae5eb16a11e18dceeca7",
+        "releaseID": "89be89bdf247-651f7c5023b0",
+        "manifestFiles": 1170,
+        "indexSHA256": "ce29c5d1e1ba698067b0d0b1b16d1714a6cb17b4840acdbbef22153157de7d5d",
+        "entryAssets": [
+          {
+            "path": "piclex-web/assets/experience-store-Cf0PUDr3.js",
+            "sha256": "017ed4d62e21388b1e46a658bbbdf2e536900d05798debe74e60263c5c4c34dd",
+            "bytes": 6764
+          },
+          {
+            "path": "piclex-web/assets/main-3r-dXlGz.js",
+            "sha256": "4d03d683a3b0aa519d92991d47d0e96d88754b31ffe5f8b17b288141583097a8",
+            "bytes": 705461
+          },
+          {
+            "path": "piclex-web/assets/main-C410xlmz.css",
+            "sha256": "4d3768f5aabd62f303a2759ada0ff713ce3e145b6a1d36347c9d05b07c3f21c4",
+            "bytes": 102789
+          },
+          {
+            "path": "piclex-web/assets/modulepreload-polyfill-B5Qt9EMX.js",
+            "sha256": "d2a32840421496e872ade591618d2fa5c33797605d1aec04301717e5a90757d0",
+            "bytes": 711
+          }
+        ]
+      }
+    },
+    "visualReview": "390×844 before/after: icon at photo top-right, disappears after start; photo, controls, keyboard and navigation stay in place; no new overlap",
+    "audioObservation": "Real NotAllowedError before interaction; actual media play resolves once after icon click; browser output muted and system TTS disabled during final visual check."
+  },
+  "docker": {
+    "sha-89be89b": {
+      "digest": "sha256:dbc6a2537f67f48f1022ac9e3cb0a8a3e984af4213dfeef46122e878f13c566c",
+      "platforms": [
+        "linux/amd64",
+        "linux/arm64",
+        "unknown/unknown",
+        "unknown/unknown"
+      ]
+    },
+    "latest": {
+      "digest": "sha256:dbc6a2537f67f48f1022ac9e3cb0a8a3e984af4213dfeef46122e878f13c566c",
+      "platforms": [
+        "linux/amd64",
+        "linux/arm64",
+        "unknown/unknown",
+        "unknown/unknown"
+      ]
+    }
+  },
+  "domestic": {
+    "sourceRevision": "89be89bdf247ecfb6fa5ae5eb16a11e18dceeca7",
+    "releaseID": "89be89bdf247-651f7c5023b0",
+    "managedReleases": [
+      "89be89bdf247-651f7c5023b0"
+    ],
+    "files": 1170
+  },
+  "outstanding": []
+}

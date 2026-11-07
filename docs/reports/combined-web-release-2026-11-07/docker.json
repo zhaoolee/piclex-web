@@ -1,0 +1,20 @@
+{
+  "sha-89be89b": {
+    "digest": "sha256:dbc6a2537f67f48f1022ac9e3cb0a8a3e984af4213dfeef46122e878f13c566c",
+    "platforms": [
+      "linux/amd64",
+      "linux/arm64",
+      "unknown/unknown",
+      "unknown/unknown"
+    ]
+  },
+  "latest": {
+    "digest": "sha256:dbc6a2537f67f48f1022ac9e3cb0a8a3e984af4213dfeef46122e878f13c566c",
+    "platforms": [
+      "linux/amd64",
+      "linux/arm64",
+      "unknown/unknown",
+      "unknown/unknown"
+    ]
+  }
+}

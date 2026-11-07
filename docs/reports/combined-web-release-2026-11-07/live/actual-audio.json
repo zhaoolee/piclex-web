@@ -1,0 +1,62 @@
+[
+  {
+    "name": "pages",
+    "origin": "https://zhaoolee.com",
+    "before": {
+      "icon": true,
+      "active": false,
+      "audio": {
+        "attempts": 1,
+        "started": 0,
+        "errors": [
+          "NotAllowedError"
+        ]
+      },
+      "photo": true,
+      "feedback": false
+    },
+    "after": {
+      "icon": false,
+      "active": true,
+      "audio": {
+        "attempts": 2,
+        "started": 1,
+        "errors": [
+          "NotAllowedError"
+        ]
+      },
+      "photo": true,
+      "feedback": false
+    }
+  },
+  {
+    "name": "domestic",
+    "origin": "https://piclex.v2fy.com",
+    "before": {
+      "icon": true,
+      "active": false,
+      "audio": {
+        "attempts": 1,
+        "started": 0,
+        "errors": [
+          "NotAllowedError"
+        ]
+      },
+      "photo": true,
+      "feedback": false
+    },
+    "after": {
+      "icon": false,
+      "active": true,
+      "audio": {
+        "attempts": 2,
+        "started": 1,
+        "errors": [
+          "NotAllowedError"
+        ]
+      },
+      "photo": true,
+      "feedback": false
+    }
+  }
+]
