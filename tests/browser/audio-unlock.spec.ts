@@ -10,7 +10,7 @@ const song=catalog.find((deck:any)=>deck.id==='0a1ff2e2-3db0-4bb1-889a-b27b62798
 const sleep=(ms:number)=>new Promise(resolve=>setTimeout(resolve,ms));
 
 async function launchPractice(playwright:any,testInfo:any,instrument:(page:Page)=>Promise<void>,contextOptions:Record<string,unknown>={}){
- const browser=await playwright.chromium.launch({channel:'chrome',headless:true,args:['--mute-audio','--autoplay-policy=document-user-activation-required'],ignoreDefaultArgs:['--autoplay-policy=no-user-gesture-required']});
+ const browser=await playwright.chromium.launch({channel:testInfo.project.use.channel,headless:true,args:['--mute-audio','--autoplay-policy=document-user-activation-required'],ignoreDefaultArgs:['--autoplay-policy=no-user-gesture-required']});
  const context=await browser.newContext({baseURL:testInfo.project.use.baseURL,viewport:testInfo.project.use.viewport,hasTouch:testInfo.project.use.hasTouch,isMobile:testInfo.project.use.isMobile,deviceScaleFactor:testInfo.project.use.deviceScaleFactor,...contextOptions});
  const page=await context.newPage();await instrument(page);
  const cdp=await context.newCDPSession(page);

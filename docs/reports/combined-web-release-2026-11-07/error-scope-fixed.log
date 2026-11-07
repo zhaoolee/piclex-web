@@ -1,0 +1,16 @@
+npm notice run piclex-web@0.1.0 npx
+npm notice run 'playwright' test tests/browser/audio-unlock-speech.spec.ts tests/browser/layout-audit.spec.ts --grep automatic service failure|listening loops --reporter=line
+[WebServer] npm notice run piclex-web@0.1.0 preview
+
+[WebServer] npm notice run vite preview --host 127.0.0.1 --port 18120
+
+
+Running 6 tests using 2 workers
+
+[1/6] [desktop] › tests/browser/audio-unlock-speech.spec.ts:66:1 › automatic service failure stays quiet and explicit errors belong only to the current content
+[2/6] [desktop] › tests/browser/layout-audit.spec.ts:52:1 › listening loops at end, retains position through a sheet and handles failures and fixed-rate repeat
+[3/6] [mobile] › tests/browser/audio-unlock-speech.spec.ts:66:1 › automatic service failure stays quiet and explicit errors belong only to the current content
+[4/6] [mobile] › tests/browser/layout-audit.spec.ts:52:1 › listening loops at end, retains position through a sheet and handles failures and fixed-rate repeat
+[5/6] [mobile-webkit] › tests/browser/audio-unlock-speech.spec.ts:66:1 › automatic service failure stays quiet and explicit errors belong only to the current content
+[6/6] [mobile-webkit] › tests/browser/layout-audit.spec.ts:52:1 › listening loops at end, retains position through a sheet and handles failures and fixed-rate repeat
+  6 passed (15.1s)

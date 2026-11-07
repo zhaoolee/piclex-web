@@ -1,0 +1,301 @@
+
+Running 62 tests using 2 workers
+
+[1/62] [desktop] › tests/browser/audio-unlock-speech.spec.ts:42:1 › a later denied TTS word retries only that word, not the clip that already finished
+[2/62] [desktop] › tests/browser/audio-unlock-speech.spec.ts:19:1 › speech policy denial keeps one retryable request, ignores stale callbacks and only hides on real start
+[3/62] [desktop] › tests/browser/audio-unlock-speech.spec.ts:66:1 › automatic service failure stays quiet and explicit errors belong only to the current content
+[4/62] [desktop] › tests/browser/deck-subscriptions.spec.ts:16:1 › links collapse, copy feedback, confirmation and persistent cancellation preserve downloaded bytes and draft
+[5/62] [desktop] › tests/browser/deck-subscriptions.spec.ts:28:1 › failed clipboard and storage writes do not falsely confirm or remove a subscription
+[6/62] [desktop] › tests/browser/interaction-audit.spec.ts:13:1 › reveal speaks the word, next speaks the next prompt, and tapping the selected tab leaves playback intact
+  1) [desktop] › tests/browser/audio-unlock-speech.spec.ts:66:1 › automatic service failure stays quiet and explicit errors belong only to the current content 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('button', { name: '重新准备', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('button', { name: '重新准备', exact: true }) with timeout 5000ms
+      - waiting for getByRole('button', { name: '重新准备', exact: true })
+
+
+      72 |  await page.getByRole('tab',{name:'练听力',exact:true}).click();await page.getByLabel('句子练习模式',{exact:true}).selectOption('listening');
+      73 |  await expect(page.getByRole('button',{name:'播放',exact:true})).toBeVisible();await page.getByRole('button',{name:'播放',exact:true}).click();
+    > 74 |  await expect(page.getByRole('alert')).toContainText('朗读暂时不可用');await expect(page.getByRole('button',{name:'重新准备',exact:true})).toBeVisible();
+         |                                                                                                                                 ^
+      75 |  await page.getByRole('button',{name:'下一句',exact:true}).click();await expect(page.getByRole('alert')).toHaveCount(0);await expect(page.getByRole('button',{name:'播放',exact:true})).toBeVisible();
+      76 | });
+      77 |
+        at /workspace/tests/browser/audio-unlock-speech.spec.ts:74:129
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/audio-unlock-speech-automa-e7b7d-only-to-the-current-content-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/audio-unlock-speech-automa-e7b7d-only-to-the-current-content-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/audio-unlock-speech-automa-e7b7d-only-to-the-current-content-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/audio-unlock-speech-automa-e7b7d-only-to-the-current-content-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[7/62] [desktop] › tests/browser/interaction-audit.spec.ts:30:1 › demonstration releases the microphone before playing and restarting reading stops the example
+[8/62] [desktop] › tests/browser/interaction-audit.spec.ts:20:1 › dictation assistance speaks its answer; replay of a correct answer holds the current sentence
+[9/62] [desktop] › tests/browser/interaction-audit.spec.ts:39:1 › classic key sound works at LV0 for physical and touch input, dictation and backspace
+[10/62] [desktop] › tests/browser/interaction-audit.spec.ts:49:1 › keyboard sound mute survives settings navigation and a full reload
+[11/62] [desktop] › tests/browser/interaction-audit.spec.ts:58:1 › reading keeps partial matches, closes its microphone on completion and continues in speaking
+[12/62] [desktop] › tests/browser/layout-audit.spec.ts:31:37 › native listening controls and speaking dock fit all viewports in light
+[13/62] [desktop] › tests/browser/layout-audit.spec.ts:31:37 › native listening controls and speaking dock fit all viewports in dark
+[14/62] [desktop] › tests/browser/layout-audit.spec.ts:46:1 › single-card preference lives in personalization, preserves choice on reload and filters both directions
+[15/62] [desktop] › tests/browser/layout-audit.spec.ts:52:1 › listening loops at end, retains position through a sheet and handles failures and fixed-rate repeat
+[16/62] [desktop] › tests/browser/layout-audit.spec.ts:60:1 › native ambience loops, ducks during speech, persists and stops at panels, hidden page and module changes
+[17/62] [desktop] › tests/browser/layout-audit.spec.ts:71:1 › theme navigation and editor match native compact hierarchy and preserve separate day/night selections
+[18/62] [desktop] › tests/browser/layout-audit.spec.ts:79:1 › dragging a listening seek bar commits once instead of restarting on every movement
+[19/62] [desktop] › tests/browser/audio-unlock.spec.ts:41:1 › real original audio: first load is blocked, the photo icon unlocks exactly that clip and disappears
+[20/62] [desktop] › tests/browser/audio-unlock.spec.ts:55:1 › a hardware letter unlocks without losing the first letter and later keys do not restart playback
+[21/62] [desktop] › tests/browser/audio-unlock.spec.ts:70:1 › one real tap on the virtual F unlocks, keeps f, and a second tap never replays the blocked clip
+  2) [desktop] › tests/browser/layout-audit.spec.ts:52:1 › listening loops at end, retains position through a sheet and handles failures and fixed-rate repeat 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('button', { name: '重新准备', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('button', { name: '重新准备', exact: true }) with timeout 5000ms
+      - waiting for getByRole('button', { name: '重新准备', exact: true })
+
+
+      56 |  await page.getByRole('button',{name:'当前卡组，学习设置',exact:true}).click();await page.getByRole('button',{name:'关闭',exact:true}).click();await expect(page.getByRole('button',{name:'播放',exact:true})).toBeVisible();expect(Number(await page.getByRole('slider',{name:'句子播放位置'}).inputValue())).toBeGreaterThan(0);
+      57 |  await page.getByLabel('循环方式').selectOption('fastThreeSlowTwo');await expect(page.getByLabel('播放速度',{exact:true})).toBeDisabled();await expect(page.getByLabel('播放速度',{exact:true})).toHaveValue('1');
+    > 58 |  await page.getByRole('button',{name:'播放',exact:true}).click();await page.evaluate(()=>{(window as any).__utterances.at(-1).onerror?.({error:'network'});});await expect(page.getByRole('button',{name:'重新准备',exact:true})).toBeVisible();await page.getByRole('button',{name:'重新准备',exact:true}).click();await expect(page.getByRole('button',{name:'准备中…',exact:true})).toBeVisible();
+         |                                                                                                                                                                                                                             ^
+      59 | });
+      60 | test('native ambience loops, ducks during speech, persists and stops at panels, hidden page and module changes',async({page})=>{
+      61 |  await observeAmbienceMix(page);
+        at /workspace/tests/browser/layout-audit.spec.ts:58:221
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/layout-audit-listening-loo-781a5-lures-and-fixed-rate-repeat-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/layout-audit-listening-loo-781a5-lures-and-fixed-rate-repeat-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/layout-audit-listening-loo-781a5-lures-and-fixed-rate-repeat-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/layout-audit-listening-loo-781a5-lures-and-fixed-rate-repeat-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[22/62] [desktop] › tests/browser/audio-unlock.spec.ts:84:1 › changing module grants interaction permission, hides the icon and never replays stale audio
+[23/62] [mobile] › tests/browser/audio-unlock-speech.spec.ts:19:1 › speech policy denial keeps one retryable request, ignores stale callbacks and only hides on real start
+[24/62] [mobile] › tests/browser/audio-unlock-speech.spec.ts:66:1 › automatic service failure stays quiet and explicit errors belong only to the current content
+[25/62] [mobile] › tests/browser/audio-unlock-speech.spec.ts:42:1 › a later denied TTS word retries only that word, not the clip that already finished
+[26/62] [mobile] › tests/browser/deck-subscriptions.spec.ts:16:1 › links collapse, copy feedback, confirmation and persistent cancellation preserve downloaded bytes and draft
+[27/62] [mobile] › tests/browser/deck-subscriptions.spec.ts:28:1 › failed clipboard and storage writes do not falsely confirm or remove a subscription
+  3) [mobile] › tests/browser/audio-unlock-speech.spec.ts:66:1 › automatic service failure stays quiet and explicit errors belong only to the current content 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('alert')
+    Expected substring: "朗读暂时不可用"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toContainText" getByRole('alert') with timeout 5000ms
+      - waiting for getByRole('alert')
+
+
+      72 |  await page.getByRole('tab',{name:'练听力',exact:true}).click();await page.getByLabel('句子练习模式',{exact:true}).selectOption('listening');
+      73 |  await expect(page.getByRole('button',{name:'播放',exact:true})).toBeVisible();await page.getByRole('button',{name:'播放',exact:true}).click();
+    > 74 |  await expect(page.getByRole('alert')).toContainText('朗读暂时不可用');await expect(page.getByRole('button',{name:'重新准备',exact:true})).toBeVisible();
+         |                                        ^
+      75 |  await page.getByRole('button',{name:'下一句',exact:true}).click();await expect(page.getByRole('alert')).toHaveCount(0);await expect(page.getByRole('button',{name:'播放',exact:true})).toBeVisible();
+      76 | });
+      77 |
+        at /workspace/tests/browser/audio-unlock-speech.spec.ts:74:40
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/audio-unlock-speech-automa-e7b7d-only-to-the-current-content-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/audio-unlock-speech-automa-e7b7d-only-to-the-current-content-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/audio-unlock-speech-automa-e7b7d-only-to-the-current-content-mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/audio-unlock-speech-automa-e7b7d-only-to-the-current-content-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[28/62] [mobile] › tests/browser/interaction-audit.spec.ts:20:1 › dictation assistance speaks its answer; replay of a correct answer holds the current sentence
+[29/62] [mobile] › tests/browser/interaction-audit.spec.ts:13:1 › reveal speaks the word, next speaks the next prompt, and tapping the selected tab leaves playback intact
+[30/62] [mobile] › tests/browser/interaction-audit.spec.ts:30:1 › demonstration releases the microphone before playing and restarting reading stops the example
+[31/62] [mobile] › tests/browser/interaction-audit.spec.ts:39:1 › classic key sound works at LV0 for physical and touch input, dictation and backspace
+[32/62] [mobile] › tests/browser/interaction-audit.spec.ts:49:1 › keyboard sound mute survives settings navigation and a full reload
+[33/62] [mobile] › tests/browser/interaction-audit.spec.ts:58:1 › reading keeps partial matches, closes its microphone on completion and continues in speaking
+[34/62] [mobile] › tests/browser/layout-audit.spec.ts:31:37 › native listening controls and speaking dock fit all viewports in light
+[35/62] [mobile] › tests/browser/layout-audit.spec.ts:31:37 › native listening controls and speaking dock fit all viewports in dark
+[36/62] [mobile] › tests/browser/layout-audit.spec.ts:46:1 › single-card preference lives in personalization, preserves choice on reload and filters both directions
+[37/62] [mobile] › tests/browser/layout-audit.spec.ts:52:1 › listening loops at end, retains position through a sheet and handles failures and fixed-rate repeat
+[38/62] [mobile] › tests/browser/layout-audit.spec.ts:60:1 › native ambience loops, ducks during speech, persists and stops at panels, hidden page and module changes
+[39/62] [mobile] › tests/browser/layout-audit.spec.ts:71:1 › theme navigation and editor match native compact hierarchy and preserve separate day/night selections
+[40/62] [mobile] › tests/browser/layout-audit.spec.ts:79:1 › dragging a listening seek bar commits once instead of restarting on every movement
+[41/62] [mobile] › tests/browser/audio-unlock.spec.ts:41:1 › real original audio: first load is blocked, the photo icon unlocks exactly that clip and disappears
+[42/62] [mobile] › tests/browser/audio-unlock.spec.ts:55:1 › a hardware letter unlocks without losing the first letter and later keys do not restart playback
+[43/62] [mobile] › tests/browser/audio-unlock.spec.ts:70:1 › one real tap on the virtual F unlocks, keeps f, and a second tap never replays the blocked clip
+[44/62] [mobile] › tests/browser/audio-unlock.spec.ts:84:1 › changing module grants interaction permission, hides the icon and never replays stale audio
+  4) [mobile] › tests/browser/layout-audit.spec.ts:52:1 › listening loops at end, retains position through a sheet and handles failures and fixed-rate repeat 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('button', { name: '重新准备', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('button', { name: '重新准备', exact: true }) with timeout 5000ms
+      - waiting for getByRole('button', { name: '重新准备', exact: true })
+
+
+      56 |  await page.getByRole('button',{name:'当前卡组，学习设置',exact:true}).click();await page.getByRole('button',{name:'关闭',exact:true}).click();await expect(page.getByRole('button',{name:'播放',exact:true})).toBeVisible();expect(Number(await page.getByRole('slider',{name:'句子播放位置'}).inputValue())).toBeGreaterThan(0);
+      57 |  await page.getByLabel('循环方式').selectOption('fastThreeSlowTwo');await expect(page.getByLabel('播放速度',{exact:true})).toBeDisabled();await expect(page.getByLabel('播放速度',{exact:true})).toHaveValue('1');
+    > 58 |  await page.getByRole('button',{name:'播放',exact:true}).click();await page.evaluate(()=>{(window as any).__utterances.at(-1).onerror?.({error:'network'});});await expect(page.getByRole('button',{name:'重新准备',exact:true})).toBeVisible();await page.getByRole('button',{name:'重新准备',exact:true}).click();await expect(page.getByRole('button',{name:'准备中…',exact:true})).toBeVisible();
+         |                                                                                                                                                                                                                             ^
+      59 | });
+      60 | test('native ambience loops, ducks during speech, persists and stops at panels, hidden page and module changes',async({page})=>{
+      61 |  await observeAmbienceMix(page);
+        at /workspace/tests/browser/layout-audit.spec.ts:58:221
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/layout-audit-listening-loo-781a5-lures-and-fixed-rate-repeat-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/layout-audit-listening-loo-781a5-lures-and-fixed-rate-repeat-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/layout-audit-listening-loo-781a5-lures-and-fixed-rate-repeat-mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/layout-audit-listening-loo-781a5-lures-and-fixed-rate-repeat-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[45/62] [mobile-webkit] › tests/browser/audio-unlock-speech.spec.ts:19:1 › speech policy denial keeps one retryable request, ignores stale callbacks and only hides on real start
+[46/62] [mobile-webkit] › tests/browser/audio-unlock-speech.spec.ts:42:1 › a later denied TTS word retries only that word, not the clip that already finished
+[47/62] [mobile-webkit] › tests/browser/audio-unlock-speech.spec.ts:66:1 › automatic service failure stays quiet and explicit errors belong only to the current content
+[48/62] [mobile-webkit] › tests/browser/deck-subscriptions.spec.ts:16:1 › links collapse, copy feedback, confirmation and persistent cancellation preserve downloaded bytes and draft
+  5) [mobile-webkit] › tests/browser/audio-unlock-speech.spec.ts:66:1 › automatic service failure stays quiet and explicit errors belong only to the current content 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('alert')
+    Expected substring: "朗读暂时不可用"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toContainText" getByRole('alert') with timeout 5000ms
+      - waiting for getByRole('alert')
+
+
+      72 |  await page.getByRole('tab',{name:'练听力',exact:true}).click();await page.getByLabel('句子练习模式',{exact:true}).selectOption('listening');
+      73 |  await expect(page.getByRole('button',{name:'播放',exact:true})).toBeVisible();await page.getByRole('button',{name:'播放',exact:true}).click();
+    > 74 |  await expect(page.getByRole('alert')).toContainText('朗读暂时不可用');await expect(page.getByRole('button',{name:'重新准备',exact:true})).toBeVisible();
+         |                                        ^
+      75 |  await page.getByRole('button',{name:'下一句',exact:true}).click();await expect(page.getByRole('alert')).toHaveCount(0);await expect(page.getByRole('button',{name:'播放',exact:true})).toBeVisible();
+      76 | });
+      77 |
+        at /workspace/tests/browser/audio-unlock-speech.spec.ts:74:40
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/audio-unlock-speech-automa-e7b7d-only-to-the-current-content-mobile-webkit/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/audio-unlock-speech-automa-e7b7d-only-to-the-current-content-mobile-webkit/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/audio-unlock-speech-automa-e7b7d-only-to-the-current-content-mobile-webkit/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/audio-unlock-speech-automa-e7b7d-only-to-the-current-content-mobile-webkit/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[49/62] [mobile-webkit] › tests/browser/deck-subscriptions.spec.ts:28:1 › failed clipboard and storage writes do not falsely confirm or remove a subscription
+[50/62] [mobile-webkit] › tests/browser/interaction-audit.spec.ts:13:1 › reveal speaks the word, next speaks the next prompt, and tapping the selected tab leaves playback intact
+[51/62] [mobile-webkit] › tests/browser/interaction-audit.spec.ts:20:1 › dictation assistance speaks its answer; replay of a correct answer holds the current sentence
+[52/62] [mobile-webkit] › tests/browser/interaction-audit.spec.ts:30:1 › demonstration releases the microphone before playing and restarting reading stops the example
+[53/62] [mobile-webkit] › tests/browser/interaction-audit.spec.ts:39:1 › classic key sound works at LV0 for physical and touch input, dictation and backspace
+[54/62] [mobile-webkit] › tests/browser/interaction-audit.spec.ts:49:1 › keyboard sound mute survives settings navigation and a full reload
+[55/62] [mobile-webkit] › tests/browser/interaction-audit.spec.ts:58:1 › reading keeps partial matches, closes its microphone on completion and continues in speaking
+[56/62] [mobile-webkit] › tests/browser/layout-audit.spec.ts:31:37 › native listening controls and speaking dock fit all viewports in light
+[57/62] [mobile-webkit] › tests/browser/layout-audit.spec.ts:31:37 › native listening controls and speaking dock fit all viewports in dark
+[58/62] [mobile-webkit] › tests/browser/layout-audit.spec.ts:46:1 › single-card preference lives in personalization, preserves choice on reload and filters both directions
+[59/62] [mobile-webkit] › tests/browser/layout-audit.spec.ts:52:1 › listening loops at end, retains position through a sheet and handles failures and fixed-rate repeat
+[60/62] [mobile-webkit] › tests/browser/layout-audit.spec.ts:60:1 › native ambience loops, ducks during speech, persists and stops at panels, hidden page and module changes
+  6) [mobile-webkit] › tests/browser/layout-audit.spec.ts:52:1 › listening loops at end, retains position through a sheet and handles failures and fixed-rate repeat 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('button', { name: '重新准备', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('button', { name: '重新准备', exact: true }) with timeout 5000ms
+      - waiting for getByRole('button', { name: '重新准备', exact: true })
+
+
+      56 |  await page.getByRole('button',{name:'当前卡组，学习设置',exact:true}).click();await page.getByRole('button',{name:'关闭',exact:true}).click();await expect(page.getByRole('button',{name:'播放',exact:true})).toBeVisible();expect(Number(await page.getByRole('slider',{name:'句子播放位置'}).inputValue())).toBeGreaterThan(0);
+      57 |  await page.getByLabel('循环方式').selectOption('fastThreeSlowTwo');await expect(page.getByLabel('播放速度',{exact:true})).toBeDisabled();await expect(page.getByLabel('播放速度',{exact:true})).toHaveValue('1');
+    > 58 |  await page.getByRole('button',{name:'播放',exact:true}).click();await page.evaluate(()=>{(window as any).__utterances.at(-1).onerror?.({error:'network'});});await expect(page.getByRole('button',{name:'重新准备',exact:true})).toBeVisible();await page.getByRole('button',{name:'重新准备',exact:true}).click();await expect(page.getByRole('button',{name:'准备中…',exact:true})).toBeVisible();
+         |                                                                                                                                                                                                                             ^
+      59 | });
+      60 | test('native ambience loops, ducks during speech, persists and stops at panels, hidden page and module changes',async({page})=>{
+      61 |  await observeAmbienceMix(page);
+        at /workspace/tests/browser/layout-audit.spec.ts:58:221
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/layout-audit-listening-loo-781a5-lures-and-fixed-rate-repeat-mobile-webkit/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/layout-audit-listening-loo-781a5-lures-and-fixed-rate-repeat-mobile-webkit/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/layout-audit-listening-loo-781a5-lures-and-fixed-rate-repeat-mobile-webkit/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/layout-audit-listening-loo-781a5-lures-and-fixed-rate-repeat-mobile-webkit/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[61/62] [mobile-webkit] › tests/browser/layout-audit.spec.ts:71:1 › theme navigation and editor match native compact hierarchy and preserve separate day/night selections
+[62/62] [mobile-webkit] › tests/browser/layout-audit.spec.ts:79:1 › dragging a listening seek bar commits once instead of restarting on every movement
+  6 failed
+    [desktop] › tests/browser/audio-unlock-speech.spec.ts:66:1 › automatic service failure stays quiet and explicit errors belong only to the current content 
+    [desktop] › tests/browser/layout-audit.spec.ts:52:1 › listening loops at end, retains position through a sheet and handles failures and fixed-rate repeat 
+    [mobile] › tests/browser/audio-unlock-speech.spec.ts:66:1 › automatic service failure stays quiet and explicit errors belong only to the current content 
+    [mobile] › tests/browser/layout-audit.spec.ts:52:1 › listening loops at end, retains position through a sheet and handles failures and fixed-rate repeat 
+    [mobile-webkit] › tests/browser/audio-unlock-speech.spec.ts:66:1 › automatic service failure stays quiet and explicit errors belong only to the current content 
+    [mobile-webkit] › tests/browser/layout-audit.spec.ts:52:1 › listening loops at end, retains position through a sheet and handles failures and fixed-rate repeat 
+  56 passed (2.1m)

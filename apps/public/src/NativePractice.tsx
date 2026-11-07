@@ -163,7 +163,7 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,selec
  const pauseListening=()=>{if(listenRun)setSeek(promptAudio?audio.readProgress():Math.max(0,audio.position));setListenRun(false);audio.stop();};
  const pauseListeningRef=useRef(pauseListening);pauseListeningRef.current=pauseListening;
  const navigationAudio=useRef<{module:string;from:string}|null>(null),revealAudio=useRef<string|null>(null);
- const bootAudio=useRef(!document.hidden),playCurrentRef=useRef<()=>void>(()=>{});
+ const bootAudio=useRef(!document.hidden),playCurrentRef=useRef<(automatic?:boolean)=>void>(()=>{});
  function dispatch(action:Action){if(action.type==='preference'&&action.name==='quick')writePreference('piclex-web.quick',String(action.value));if(action.type==='restart')readingSaved.current.clear();if(['next','sentenceNext','selectWord'].includes(action.type))navigationAudio.current={module:state.module,from:state.module==='spelling'?word?.id:prompt?.key};else if(['module','pause','restart'].includes(action.type))navigationAudio.current=null;setState((s:any)=>reduceStudy(deck,s,{...action,question:key},prompts));}
  const [urlRevision,setURLRevision]=useState(0),consumedHash=useRef(location.hash);
  // Subscribe during commit: a fast link after Back can arrive before passive effects.
@@ -222,7 +222,7 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,selec
   const target=fields.find(node=>node===document.activeElement)||fields.find(node=>!node.value)||fields[0];
   if(target&&target!==document.activeElement){target.focus({preventScroll:true});target.setSelectionRange(target.value.length,target.value.length);}
  };
- useEffect(()=>{audio.stop();setImeWarning(false);setComposing(false);if(active&&!complete)focusAnswer();},[key,panel]);
+ useEffect(()=>{audio.stop();audio.clearError();setImeWarning(false);setComposing(false);if(active&&!complete)focusAnswer();},[key,panel]);
  useEffect(()=>{setSeek(0);setPass(0);},[prompt?.key,state.module,state.mode]);
  useEffect(()=>{if(audio.error)setListenRun(false);},[audio.error]);
  useLayoutEffect(()=>{if(active&&!complete&&(state.module==='spelling'||!state.sentenceFinished))focusAnswer();},[key,panel,state.difficulty,active]);
@@ -249,17 +249,17 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,selec
  // listening already has transport state, and speaking has its own microphone
  // controls; neither should start audio behind the user's back.
  const autoAudioScope=state.module==='spelling'||state.module==='listening'&&state.mode!=='listening';
- const playCurrent=()=>{
+ const playCurrent=(automatic=false)=>{
   if(!active||complete||panel||!autoAudioScope)return;
-  if(state.module==='spelling'&&word)audio.play(word.example?[word.example,word.english]:[word.english],state.rate,undefined,0,word.example?word.audio:undefined);
-  else if(state.module==='listening'&&prompt&&!state.sentenceFinished)audio.play([prompt.sentence],state.rate,undefined,0,promptAudio);
+  if(state.module==='spelling'&&word)audio.play(word.example?[word.example,word.english]:[word.english],state.rate,undefined,0,word.example?word.audio:undefined,0,automatic);
+  else if(state.module==='listening'&&prompt&&!state.sentenceFinished)audio.play([prompt.sentence],state.rate,undefined,0,promptAudio,0,automatic);
  };playCurrentRef.current=playCurrent;
  const retryCurrent=()=>{if(!audio.retryBlocked())playCurrentRef.current();};
  useEffect(()=>{
   if(!bootAudio.current)return;
   const timer=setTimeout(()=>{
    if(!bootAudio.current)return;bootAudio.current=false;
-   if(!document.hidden)playCurrentRef.current();
+   if(!document.hidden)playCurrentRef.current(true);
   },0);
   return ()=>clearTimeout(timer);
  },[]);

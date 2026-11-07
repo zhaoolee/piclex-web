@@ -3,18 +3,18 @@ import fs from 'node:fs';
 const catalog=JSON.parse(fs.readFileSync('apps/public/public/library/catalog.json','utf8'));
 const plain=catalog.find((deck:any)=>deck.id==='add03b54-d0a7-46fd-88c8-2aa0fa7f0c7f'),plainDeck=JSON.parse(fs.readFileSync('apps/public/public/'+plain.payload,'utf8'));
 const song=catalog.find((deck:any)=>deck.id==='0a1ff2e2-3db0-4bb1-889a-b27b62798cbe'),songDeck=JSON.parse(fs.readFileSync('apps/public/public/'+song.payload,'utf8'));
-async function mockSpeech(page:Page){
- await page.addInitScript(()=>{
-  const w=window as any;w.__spoken=[];w.__all=[];w.__held=[];w.__speechAttempts=0;w.__started=0;w.__speechMode='denied';
+async function mockSpeech(page:Page,initial='denied'){
+ await page.addInitScript(initial=>{
+  const w=window as any;w.__spoken=[];w.__all=[];w.__held=[];w.__speechAttempts=0;w.__started=0;w.__speechMode=initial;
   class Utterance{lang='';rate=1;voice=null;text:string;onstart:any;onend:any;onerror:any;onpause:any;onresume:any;onboundary:any;constructor(text:string){this.text=text;}}
   Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,writable:true,value:Utterance});
   Object.defineProperty(window,'speechSynthesis',{configurable:true,value:{
    speak(utterance:any){w.__spoken.push(utterance.text);w.__all.push(utterance);w.__speechAttempts++;const mode=w.__speechMode;
     if(mode==='hold'){w.__held.push(utterance);return;}
-    queueMicrotask(()=>{if(mode==='denied')utterance.onerror?.({error:'not-allowed'});else{w.__started++;utterance.onstart?.();setTimeout(()=>utterance.onend?.(),60);}});},
+    queueMicrotask(()=>{if(mode==='denied'||mode==='failed')utterance.onerror?.({error:mode==='denied'?'not-allowed':'synthesis-failed'});else{w.__started++;utterance.onstart?.();setTimeout(()=>utterance.onend?.(),60);}});},
    cancel(){},getVoices(){return [];},get paused(){return false;}
   }});
- });
+ },initial);
 }
 test('speech policy denial keeps one retryable request, ignores stale callbacks and only hides on real start',async({page})=>{
  await mockSpeech(page);await page.goto('/piclex-web/#/deck/'+plain.id);
@@ -59,4 +59,18 @@ test('a later denied TTS word retries only that word, not the clip that already 
  await expect.poll(()=>page.evaluate(()=>(window as any).__spoken)).toEqual([songDeck.words[0].english,songDeck.words[0].english]);
  expect(await page.evaluate(()=>(window as any).__clipPlays)).toBe(1);
  await expect(icon).toHaveCount(0);
+});
+
+// A missing speech service must not cover navigation with a startup toast or
+// carry a stale error into another exercise. Explicit playback still reports it.
+test('automatic service failure stays quiet and explicit errors belong only to the current content',async({page})=>{
+ await mockSpeech(page,'failed');
+ await page.goto('/piclex-web/#/deck/'+plain.id);
+ await expect.poll(()=>page.evaluate(()=>(window as any).__speechAttempts)).toBe(1);
+ await expect(page.getByText('朗读暂时不可用，请检查浏览器的语音与播放权限。',{exact:true})).toHaveCount(0);
+ await page.getByRole('button',{name:'下载第三方卡组',exact:true}).click();await expect(page.getByRole('dialog')).toBeVisible();await page.getByRole('button',{name:'关闭',exact:true}).click();
+ await page.getByRole('tab',{name:'练听力',exact:true}).click();await page.getByLabel('句子练习模式',{exact:true}).selectOption('listening');
+ await expect(page.getByRole('button',{name:'播放',exact:true})).toBeVisible();await page.getByRole('button',{name:'播放',exact:true}).click();
+ await expect(page.getByRole('alert')).toContainText('朗读暂时不可用');await expect(page.getByRole('button',{name:'重新准备',exact:true})).toBeVisible();
+ await page.getByRole('button',{name:'下一句',exact:true}).click();await expect(page.getByRole('alert')).toHaveCount(0);await expect(page.getByRole('button',{name:'播放',exact:true})).toBeVisible();
 });

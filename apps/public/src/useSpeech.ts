@@ -3,7 +3,7 @@ import {useCallback,useEffect,useRef,useState} from 'react';
 import type {AudioClip} from './NativePractice';
 import {createPlaybackProgress} from './playback-progress';
 import {createSpeechProgress} from './speech-progress.mjs';
-type PlayRequest={texts:string[];rate:number;onEnd?:()=>void;offset:number;clip?:AudioClip;startFraction:number};
+type PlayRequest={texts:string[];rate:number;onEnd?:()=>void;offset:number;clip?:AudioClip;startFraction:number;automatic?:boolean};
 const policyError=(error:unknown)=>error instanceof DOMException?error.name==='NotAllowedError':(error as {name?:string})?.name==='NotAllowedError';
 export function useSpeech(notify:(s:string)=>void){
  const generation=useRef(0),timer=useRef<ReturnType<typeof setTimeout>|undefined>(undefined),media=useRef<HTMLAudioElement|null>(null),blob=useRef('');
@@ -47,7 +47,7 @@ export function useSpeech(notify:(s:string)=>void){
    const value=total?(before+(queue[i]?.length||0)*Math.min(1,Math.max(0,fraction)))/total:0;
    progress.update(Math.max(progress.getSnapshot().value,estimated?Math.min(.99,value):value),indeterminate);
   };
-  const fail=(message?:string)=>{if(!valid())return;stop();blockedRequest.current=null;retrying.current=false;setBlocked(false);if(message){setError(message);notify(message);}};
+  const fail=(message?:string)=>{if(!valid())return;stop();blockedRequest.current=null;retrying.current=false;setBlocked(false);if(message&&!next.automatic){setError(message);notify(message);}};
   // Autoplay policy retains only the segment that was actually denied. A clip
   // that already finished must not replay when the following TTS word blocks.
   const block=(i:number)=>{
@@ -117,15 +117,16 @@ export function useSpeech(notify:(s:string)=>void){
   };
   nextSegment(0);
  },[cancelPlayback,stop,clearMedia,notify,progress]);
- const play=useCallback((texts:string[],rate=1,onEnd?:()=>void,offset=0,clip?:AudioClip,startFraction=0)=>{
-  start({texts:[...texts],rate,onEnd,offset,clip,startFraction});
+ const play=useCallback((texts:string[],rate=1,onEnd?:()=>void,offset=0,clip?:AudioClip,startFraction=0,automatic=false)=>{
+  start({texts:[...texts],rate,onEnd,offset,clip,startFraction,automatic});
  },[start]);
  const retryBlocked=useCallback(()=>{
   const pending=blockedRequest.current;if(!pending)return false;
   if(retrying.current)return true;
-  start(pending);return true;
+  start({...pending,automatic:false});return true;
  },[start]);
+ const clearError=useCallback(()=>setError(''),[]);
  const acknowledgeGesture=useCallback(()=>{if(!blockedRequest.current)setBlocked(false);},[]);
  useEffect(()=>{const hide=()=>{if(document.hidden)stop();};document.addEventListener('visibilitychange',hide);window.addEventListener('pagehide',stop);return ()=>{stop();document.removeEventListener('visibilitychange',hide);window.removeEventListener('pagehide',stop);};},[stop]);
- return {blocked,error,playing,preparing,position,progress,readProgress,play,retryBlocked,acknowledgeGesture,stop};
+ return {blocked,error,clearError,playing,preparing,position,progress,readProgress,play,retryBlocked,acknowledgeGesture,stop};
 }

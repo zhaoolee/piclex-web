@@ -4,7 +4,7 @@ import {execFileSync} from 'node:child_process';
 import {chromium,webkit,expect} from '@playwright/test';
 import {startWebDAV} from './webdav-server.mjs';
 
-const [browserName,baseURL,output]=process.argv.slice(2);
+const [browserName,baseURL,output,channel='chrome']=process.argv.slice(2);
 if(!['chromium','webkit'].includes(browserName)||!baseURL||!output)throw Error('Expected browser, URL and test output directory');
 const mib=Number(process.env.PICLEX_LARGE_TEST_MIB||128),root=path.join(output,'server'),profile=path.join(output,'profile'),cert=path.join(output,'tls');
 fs.mkdirSync(path.join(root,'PicLex'),{recursive:true});
@@ -12,7 +12,7 @@ execFileSync('python3',['tests/support/make-large-backup.py',path.join(root,'Pic
 const fixture=JSON.parse(fs.readFileSync(path.join(root,'PicLex/fixture.json'),'utf8'));fs.unlinkSync(path.join(root,'PicLex/fixture.json'));
 execFileSync('openssl',['req','-x509','-newkey','rsa:2048','-nodes','-keyout',cert+'.key','-out',cert+'.crt','-subj','/CN=127.0.0.1','-addext','subjectAltName=IP:127.0.0.1','-days','1'],{stdio:'ignore'});
 const remote=await startWebDAV(root,cert);
-const context=await (browserName==='webkit'?webkit:chromium).launchPersistentContext(profile,{...(browserName==='chromium'?{channel:'chrome'}:{}),headless:true,args:browserName==='chromium'||process.platform==='darwin'?['--mute-audio']:[],ignoreHTTPSErrors:true,viewport:{width:390,height:844}});
+const context=await (browserName==='webkit'?webkit:chromium).launchPersistentContext(profile,{...(browserName==='chromium'&&channel!=='chromium'?{channel}:{}),headless:true,args:browserName==='chromium'||process.platform==='darwin'?['--mute-audio']:[],ignoreHTTPSErrors:true,viewport:{width:390,height:844}});
 const page=await context.newPage(),errors=[],observations=[];page.on('pageerror',e=>errors.push(e.message));
 // This is a data/transport stress test. Native mouse/touch activation is covered
 // separately by webdav-backup.spec.ts; use DOM button activation here so input

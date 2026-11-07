@@ -1,0 +1,75 @@
+
+Running 8 tests using 2 workers
+
+[1/8] [mobile-webkit] › tests/browser/audio-unlock-speech.spec.ts:19:1 › speech policy denial keeps one retryable request, ignores stale callbacks and only hides on real start
+[2/8] [mobile-webkit] › tests/browser/audio-unlock-speech.spec.ts:42:1 › a later denied TTS word retries only that word, not the clip that already finished
+  1) [mobile-webkit] › tests/browser/audio-unlock-speech.spec.ts:42:1 › a later denied TTS word retries only that word, not the clip that already finished 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('button', { name: '开启声音，播放当前内容', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('button', { name: '开启声音，播放当前内容', exact: true }) with timeout 5000ms
+      - waiting for getByRole('button', { name: '开启声音，播放当前内容', exact: true })
+
+
+      52 |  await page.goto('/piclex-web/#/deck/'+song.id);
+      53 |  const icon=page.getByRole('button',{name:'开启声音，播放当前内容',exact:true});
+    > 54 |  await expect(icon).toBeVisible();
+         |                     ^
+      55 |  await expect.poll(()=>page.evaluate(()=>(window as any).__spoken)).toEqual([songDeck.words[0].english]);
+      56 |  expect(await page.evaluate(()=>(window as any).__clipPlays)).toBe(1);
+      57 |  await page.evaluate(()=>{(window as any).__speechMode='allowed';});
+        at /workspace/tests/browser/audio-unlock-speech.spec.ts:54:21
+
+    Error Context: test-results/audio-unlock-speech-a-late-3a8fc--clip-that-already-finished-mobile-webkit/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/audio-unlock-speech-a-late-3a8fc--clip-that-already-finished-mobile-webkit/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/audio-unlock-speech-a-late-3a8fc--clip-that-already-finished-mobile-webkit/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[3/8] [mobile-webkit] › tests/browser/deck-subscriptions.spec.ts:16:1 › links collapse, copy feedback, confirmation and persistent cancellation preserve downloaded bytes and draft
+  2) [mobile-webkit] › tests/browser/audio-unlock-speech.spec.ts:19:1 › speech policy denial keeps one retryable request, ignores stale callbacks and only hides on real start 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('button', { name: '开启声音，播放当前内容', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('button', { name: '开启声音，播放当前内容', exact: true }) with timeout 5000ms
+      - waiting for getByRole('button', { name: '开启声音，播放当前内容', exact: true })
+
+
+      20 |  await mockSpeech(page);await page.goto('/piclex-web/#/deck/'+plain.id);
+      21 |  const icon=page.getByRole('button',{name:'开启声音，播放当前内容',exact:true});
+    > 22 |  await expect(icon).toBeVisible();await expect(page.locator('[role=alert]')).toHaveCount(0);
+         |                     ^
+      23 |  expect(await page.evaluate(()=>({attempts:(window as any).__speechAttempts,started:(window as any).__started,text:(window as any).__spoken[0]}))).toEqual({attempts:1,started:0,text:plainDeck.words[0].example});
+      24 |  // The denied utterance must not revive blocked state through a late callback.
+      25 |  await page.evaluate(()=>{const w=window as any;w.__all[0].onstart?.();w.__all[0].onend?.();});
+        at /workspace/tests/browser/audio-unlock-speech.spec.ts:22:21
+
+    Error Context: test-results/audio-unlock-speech-speech-ac8b2-nd-only-hides-on-real-start-mobile-webkit/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/audio-unlock-speech-speech-ac8b2-nd-only-hides-on-real-start-mobile-webkit/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/audio-unlock-speech-speech-ac8b2-nd-only-hides-on-real-start-mobile-webkit/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[4/8] [mobile-webkit] › tests/browser/deck-subscriptions.spec.ts:28:1 › failed clipboard and storage writes do not falsely confirm or remove a subscription

@@ -1,0 +1,46 @@
+
+Running 2 tests using 2 workers
+
+[1/2] [desktop] › tests/browser/large-backup.spec.ts:5:1 › real HTTPS WebDAV large upload, readback and restore preserve every photo
+[2/2] [desktop] › tests/browser/settings-parity.spec.ts:45:1 › keyboard settings use the native samples and eight voices; preview, mute and route cleanup work
+[desktop] › tests/browser/large-backup.spec.ts:5:1 › real HTTPS WebDAV large upload, readback and restore preserve every photo
+LARGE_FIXTURE {
+  count: 33,
+  imageBytes: 4178361,
+  imageSHA256: '931ecd97cf0801a909992cb422d87ea02ad8ec096da6a7b0b2fa88e9833d884d',
+  archiveBytes: 137926307,
+  firstID: '55555555-5555-4555-8555-000000000000'
+}
+LARGE_UPLOAD {
+  photoCount: 33,
+  imageSHA256: '931ecd97cf0801a909992cb422d87ea02ad8ec096da6a7b0b2fa88e9833d884d',
+  zip64: false,
+  archiveBytes: 137931665
+}
+LARGE_PASSED {
+  mib: 128,
+  fixture: {
+    count: 33,
+    imageBytes: 4178361,
+    imageSHA256: '931ecd97cf0801a909992cb422d87ea02ad8ec096da6a7b0b2fa88e9833d884d',
+    archiveBytes: 137926307,
+    firstID: '55555555-5555-4555-8555-000000000000'
+  },
+  result: {
+    photoCount: 33,
+    imageSHA256: '931ecd97cf0801a909992cb422d87ea02ad8ec096da6a7b0b2fa88e9833d884d',
+    zip64: false,
+    archiveBytes: 137931665
+  },
+  records: { count: 33, referenced: 33, files: 33 },
+  observations: [
+    { phase: 'restore', ms: 7423 },
+    { phase: 'upload-and-readback', ms: 10389 }
+  ],
+  received: 137934049,
+  sent: 413795113,
+  browser: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.12 Safari/537.36'
+}
+
+
+  2 passed (27.2s)

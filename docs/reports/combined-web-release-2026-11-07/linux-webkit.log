@@ -1,0 +1,15 @@
+[WebServer] file:///workspace/node_modules/vite/dist/node/chunks/config.js:7238
+[WebServer] const init = WebAssembly.compile(E()).then(WebAssembly.instantiate).then((({ exports: A$1 }) => {
+[WebServer]              ^
+[WebServer] 
+[WebServer] ReferenceError: WebAssembly is not defined
+[WebServer]     at file:///workspace/node_modules/vite/dist/node/chunks/config.js:7238:14
+[WebServer]     at ModuleJob.run (node:internal/modules/esm/module_job:561:25)
+[WebServer]     at async node:internal/modules/esm/loader:647:26
+[WebServer]     at async CAC.<anonymous> (file:///workspace/node_modules/vite/dist/node/cli.js:667:22)
+
+[WebServer] 
+[WebServer] Node.js v24.20.0
+
+Error: Process from config.webServer was not able to start. Exit code: 1
+

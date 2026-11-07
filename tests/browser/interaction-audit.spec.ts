@@ -2,7 +2,14 @@ import {test,expect,type Page} from '@playwright/test';
 import fs from 'node:fs';
 import {fillEnglish} from './helpers/spelling';
 const catalog=JSON.parse(fs.readFileSync('apps/public/public/library/catalog.json','utf8'));
-async function open(page:Page){await page.goto('/piclex-web/#/deck/'+catalog[0].id);await expect(page.getByRole('textbox',{name:'输入英文',exact:true})).toBeVisible();await page.evaluate(()=>{const w=window as any;w.__spoken=[];w.__cancels=0;Object.defineProperty(window,'speechSynthesis',{configurable:true,value:{speak:(u:any)=>w.__spoken.push(u),cancel:()=>w.__cancels++,getVoices:()=>[]}});});}
+async function open(page:Page){
+ await page.addInitScript(()=>{const w=window as any;w.__spoken=[];w.__cancels=0;Object.defineProperty(window,'speechSynthesis',{configurable:true,value:{speak:(u:any)=>w.__spoken.push(u),cancel:()=>w.__cancels++,getVoices:()=>[]}});});
+ await page.goto('/piclex-web/#/deck/'+catalog[0].id);await expect(page.getByRole('textbox',{name:'输入英文',exact:true})).toBeVisible();
+ // Establish successful first-load audio before measuring each user action.
+ // Host speech availability must not inject a blocked-gesture retry into this fixture.
+ await expect.poll(()=>page.evaluate(()=>(window as any).__spoken.length)).toBe(1);
+ await page.evaluate(()=>{const w=window as any;w.__spoken[0].onstart?.();w.__spoken=[];w.__cancels=0;});
+}
 test('reveal speaks the word, next speaks the next prompt, and tapping the selected tab leaves playback intact',async({page})=>{
  await open(page);await page.getByRole('button',{name:'不认识',exact:true}).click();await expect.poll(()=>page.evaluate(()=>(window as any).__spoken.at(-1)?.text)).toBe('bed');
  await page.getByRole('button',{name:'下一个',exact:true}).click();await expect.poll(()=>page.evaluate(()=>(window as any).__spoken.length)).toBe(2);

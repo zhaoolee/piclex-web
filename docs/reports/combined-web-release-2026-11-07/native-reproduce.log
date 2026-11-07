@@ -1,0 +1,150 @@
+
+Running 9 tests using 2 workers
+
+[1/9] [mobile] › tests/browser/deck-subscriptions.spec.ts:16:1 › links collapse, copy feedback, confirmation and persistent cancellation preserve downloaded bytes and draft
+[2/9] [mobile] › tests/browser/deck-subscriptions.spec.ts:28:1 › failed clipboard and storage writes do not falsely confirm or remove a subscription
+[3/9] [mobile] › tests/browser/layout-audit.spec.ts:31:37 › native listening controls and speaking dock fit all viewports in light
+[4/9] [mobile] › tests/browser/layout-audit.spec.ts:31:37 › native listening controls and speaking dock fit all viewports in dark
+[5/9] [mobile] › tests/browser/layout-audit.spec.ts:46:1 › single-card preference lives in personalization, preserves choice on reload and filters both directions
+[6/9] [mobile] › tests/browser/layout-audit.spec.ts:52:1 › listening loops at end, retains position through a sheet and handles failures and fixed-rate repeat
+  1) [mobile] › tests/browser/deck-subscriptions.spec.ts:16:1 › links collapse, copy feedback, confirmation and persistent cancellation preserve downloaded bytes and draft 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: '测试照片卡组 恢复订阅', exact: true })
+
+
+      23 |  await row.getByRole('button',{name:'取消订阅',exact:true}).click();await page.keyboard.press('Escape');await expect(confirm).toHaveCount(0);await expect(row).toBeVisible();
+      24 |  await row.getByRole('button',{name:'取消订阅',exact:true}).click();await page.screenshot({path:info.outputPath('unsubscribe-confirmation.png'),fullPage:true});await confirm.getByRole('button',{name:'取消订阅',exact:true}).click();await expect(row).toHaveCount(0);expect(await storedSnapshot(page)).toEqual(before);await page.getByRole('button',{name:'关闭',exact:true}).click();await expect(page.getByRole('textbox',{name:'输入英文',exact:true})).toHaveValue(draft);
+    > 25 |  await page.reload();await open(page);await expect(page.getByText('暂无订阅',{exact:true})).toBeVisible();expect(await storedSnapshot(page)).toEqual(before);await page.getByRole('textbox',{name:'粘贴卡组 URL'}).fill(source);await page.getByRole('button',{name:'下载卡组',exact:true}).click();await page.getByRole('button',{name:'测试照片卡组 恢复订阅',exact:true}).click();await expect(row).toBeVisible();expect(await storedSnapshot(page)).toEqual(before);
+         |                                                                                                                                                                                                                                                                                                                                                        ^
+      26 | });
+      27 |
+      28 | test('failed clipboard and storage writes do not falsely confirm or remove a subscription',async({page})=>{
+        at /workspace/tests/browser/deck-subscriptions.spec.ts:25:344
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/deck-subscriptions-links-c-63103--downloaded-bytes-and-draft-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/deck-subscriptions-links-c-63103--downloaded-bytes-and-draft-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/deck-subscriptions-links-c-63103--downloaded-bytes-and-draft-mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/deck-subscriptions-links-c-63103--downloaded-bytes-and-draft-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[7/9] [mobile] › tests/browser/layout-audit.spec.ts:60:1 › native ambience loops, ducks during speech, persists and stops at panels, hidden page and module changes
+  2) [mobile] › tests/browser/layout-audit.spec.ts:52:1 › listening loops at end, retains position through a sheet and handles failures and fixed-rate repeat 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: '播放', exact: true })
+
+
+      52 | test('listening loops at end, retains position through a sheet and handles failures and fixed-rate repeat',async({page})=>{
+      53 |  await open(page);await speech(page);await listen(page);await page.getByRole('button',{name:'上一句',exact:true}).click();const last=await page.getByLabel('播放列表位置').innerText();expect(last.split('/')[0]).toBe(last.split('/')[1]);
+    > 54 |  await page.getByRole('button',{name:'播放',exact:true}).click();await expect.poll(()=>page.evaluate(()=>(window as any).__utterances.length)).toBe(1);await end(page);await expect(page.getByLabel('播放列表位置')).toHaveText(/^1\//);
+         |                                                        ^
+      55 |  await expect.poll(()=>page.evaluate(()=>(window as any).__utterances.length)).toBe(2);await page.evaluate(()=>{const u=(window as any).__utterances.at(-1);u.onstart?.();u.onboundary?.({charIndex:10});});
+      56 |  await page.getByRole('button',{name:'当前卡组，学习设置',exact:true}).click();await page.getByRole('button',{name:'关闭',exact:true}).click();await expect(page.getByRole('button',{name:'播放',exact:true})).toBeVisible();expect(Number(await page.getByRole('slider',{name:'句子播放位置'}).inputValue())).toBeGreaterThan(0);
+      57 |  await page.getByLabel('循环方式').selectOption('fastThreeSlowTwo');await expect(page.getByLabel('播放速度',{exact:true})).toBeDisabled();await expect(page.getByLabel('播放速度',{exact:true})).toHaveValue('1');
+        at /workspace/tests/browser/layout-audit.spec.ts:54:56
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/layout-audit-listening-loo-781a5-lures-and-fixed-rate-repeat-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/layout-audit-listening-loo-781a5-lures-and-fixed-rate-repeat-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/layout-audit-listening-loo-781a5-lures-and-fixed-rate-repeat-mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/layout-audit-listening-loo-781a5-lures-and-fixed-rate-repeat-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[8/9] [mobile] › tests/browser/layout-audit.spec.ts:71:1 › theme navigation and editor match native compact hierarchy and preserve separate day/night selections
+[9/9] [mobile] › tests/browser/layout-audit.spec.ts:79:1 › dragging a listening seek bar commits once instead of restarting on every movement
+  3) [mobile] › tests/browser/layout-audit.spec.ts:60:1 › native ambience loops, ducks during speech, persists and stops at panels, hidden page and module changes 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: '播放', exact: true })
+
+
+      63 |  await open(page);await speech(page);await listen(page);await page.locator('.sentence-ambience summary').click();await page.getByRole('button',{name:'咖啡厅',exact:true}).click();
+      64 |  await expect.poll(()=>page.evaluate(()=>(window as any).__ambiences.at(-1)?.paused)).toBe(false);expect(await page.evaluate(()=>(window as any).__ambiences.at(-1).loop)).toBe(true);
+    > 65 |  await page.getByRole('button',{name:'播放',exact:true}).click();await page.evaluate(()=>{(window as any).__utterances.at(-1).onstart?.();});await expect.poll(()=>ambienceGain(page)).toBeCloseTo(.28*.22*.22,3);
+         |                                                        ^
+      66 |  await page.getByRole('button',{name:'当前卡组，学习设置',exact:true}).click();expect(await page.evaluate(()=>(window as any).__ambiences.every((a:HTMLAudioElement)=>a.paused))).toBe(true);await page.getByRole('button',{name:'关闭',exact:true}).click();expect(await page.evaluate(()=>(window as any).__ambiences.every((a:HTMLAudioElement)=>a.paused))).toBe(true);
+      67 |  await page.locator('.sentence-ambience summary').click();await page.getByRole('button',{name:'咖啡厅',exact:true}).click();await expect.poll(()=>page.evaluate(()=>(window as any).__ambiences.at(-1).paused)).toBe(false);
+      68 |  await page.evaluate(()=>window.dispatchEvent(new Event('pagehide')));expect(await page.evaluate(()=>(window as any).__ambiences.every((a:HTMLAudioElement)=>a.paused))).toBe(true);await page.getByRole('tab',{name:'练口语',exact:true}).click();expect(await page.evaluate(()=>(window as any).__ambiences.every((a:HTMLAudioElement)=>a.paused&&!a.getAttribute('src')))).toBe(true);
+        at /workspace/tests/browser/layout-audit.spec.ts:65:56
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/layout-audit-native-ambien-03346-den-page-and-module-changes-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/layout-audit-native-ambien-03346-den-page-and-module-changes-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/layout-audit-native-ambien-03346-den-page-and-module-changes-mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/layout-audit-native-ambien-03346-den-page-and-module-changes-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+  4) [mobile] › tests/browser/layout-audit.spec.ts:79:1 › dragging a listening seek bar commits once instead of restarting on every movement 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: '播放', exact: true })
+
+
+      78 | });
+      79 | test('dragging a listening seek bar commits once instead of restarting on every movement',async({page})=>{
+    > 80 |  await open(page);await speech(page);await listen(page);await page.getByRole('button',{name:'播放',exact:true}).click();await page.evaluate(()=>(window as any).__utterances.at(-1).onstart?.());
+         |                                                                                                               ^
+      81 |  const slider=page.getByRole('slider',{name:'句子播放位置'}),b=(await slider.boundingBox())!;
+      82 |  await page.mouse.move(b.x+b.width*.2,b.y+b.height/2);await page.mouse.down();await page.mouse.move(b.x+b.width*.8,b.y+b.height/2,{steps:8});expect(await page.evaluate(()=>(window as any).__utterances.length)).toBe(1);await page.mouse.up();await expect.poll(()=>page.evaluate(()=>(window as any).__utterances.length)).toBe(2);
+      83 | });
+        at /workspace/tests/browser/layout-audit.spec.ts:80:111
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/layout-audit-dragging-a-li-bf3a5-estarting-on-every-movement-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/layout-audit-dragging-a-li-bf3a5-estarting-on-every-movement-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/layout-audit-dragging-a-li-bf3a5-estarting-on-every-movement-mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/layout-audit-dragging-a-li-bf3a5-estarting-on-every-movement-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+  4 failed
+    [mobile] › tests/browser/deck-subscriptions.spec.ts:16:1 › links collapse, copy feedback, confirmation and persistent cancellation preserve downloaded bytes and draft 
+    [mobile] › tests/browser/layout-audit.spec.ts:52:1 › listening loops at end, retains position through a sheet and handles failures and fixed-rate repeat 
+    [mobile] › tests/browser/layout-audit.spec.ts:60:1 › native ambience loops, ducks during speech, persists and stops at panels, hidden page and module changes 
+    [mobile] › tests/browser/layout-audit.spec.ts:79:1 › dragging a listening seek bar commits once instead of restarting on every movement 
+  5 passed (1.4m)
