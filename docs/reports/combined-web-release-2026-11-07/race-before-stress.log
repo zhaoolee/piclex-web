@@ -1,0 +1,87 @@
+
+Running 10 tests using 2 workers
+
+[1/10] [mobile] › tests/browser/audio-unlock.spec.ts:55:1 › a hardware letter unlocks without losing the first letter and later keys do not restart playback
+[2/10] [mobile] › tests/browser/audio-unlock.spec.ts:55:1 › a hardware letter unlocks without losing the first letter and later keys do not restart playback
+[3/10] [mobile] › tests/browser/audio-unlock.spec.ts:55:1 › a hardware letter unlocks without losing the first letter and later keys do not restart playback
+[4/10] [mobile] › tests/browser/audio-unlock.spec.ts:55:1 › a hardware letter unlocks without losing the first letter and later keys do not restart playback
+  1) [mobile] › tests/browser/audio-unlock.spec.ts:55:1 › a hardware letter unlocks without losing the first letter and later keys do not restart playback 
+
+    Error: Timed out waiting for letter unlock: {"attempts":1,"played":0,"errors":["NotAllowedError"],"paused":true,"icon":true,"active":true}
+
+      25 |  const end=Date.now()+timeout;let value:T;
+      26 |  do{value=await read<T>(cdp,expression);if(accept(value))return value;await sleep(50);}while(Date.now()<end);
+    > 27 |  throw Error(`Timed out waiting for ${label}: ${JSON.stringify(value)}`);
+         |        ^
+      28 | }
+      29 | async function instrumentMedia(page:Page){
+      30 |  await page.addInitScript(()=>{
+        at until (/work/tests/browser/audio-unlock.spec.ts:27:8)
+        at /work/tests/browser/audio-unlock.spec.ts:66:16
+
+    Error Context: test-results/audio-unlock-a-hardware-le-8dc43-eys-do-not-restart-playback-mobile-repeat3/error-context.md
+
+
+  2) [mobile] › tests/browser/audio-unlock.spec.ts:55:1 › a hardware letter unlocks without losing the first letter and later keys do not restart playback 
+
+    Error: Timed out waiting for letter unlock: {"attempts":1,"played":0,"errors":["NotAllowedError"],"paused":true,"icon":true,"active":true}
+
+      25 |  const end=Date.now()+timeout;let value:T;
+      26 |  do{value=await read<T>(cdp,expression);if(accept(value))return value;await sleep(50);}while(Date.now()<end);
+    > 27 |  throw Error(`Timed out waiting for ${label}: ${JSON.stringify(value)}`);
+         |        ^
+      28 | }
+      29 | async function instrumentMedia(page:Page){
+      30 |  await page.addInitScript(()=>{
+        at until (/work/tests/browser/audio-unlock.spec.ts:27:8)
+        at /work/tests/browser/audio-unlock.spec.ts:66:16
+
+    Error Context: test-results/audio-unlock-a-hardware-le-8dc43-eys-do-not-restart-playback-mobile-repeat2/error-context.md
+
+
+[5/10] [mobile] › tests/browser/audio-unlock.spec.ts:55:1 › a hardware letter unlocks without losing the first letter and later keys do not restart playback
+[6/10] [mobile] › tests/browser/audio-unlock.spec.ts:55:1 › a hardware letter unlocks without losing the first letter and later keys do not restart playback
+[7/10] [mobile] › tests/browser/audio-unlock.spec.ts:55:1 › a hardware letter unlocks without losing the first letter and later keys do not restart playback
+[8/10] [mobile] › tests/browser/audio-unlock.spec.ts:55:1 › a hardware letter unlocks without losing the first letter and later keys do not restart playback
+[9/10] [mobile] › tests/browser/audio-unlock.spec.ts:55:1 › a hardware letter unlocks without losing the first letter and later keys do not restart playback
+[10/10] [mobile] › tests/browser/audio-unlock.spec.ts:55:1 › a hardware letter unlocks without losing the first letter and later keys do not restart playback
+  3) [mobile] › tests/browser/audio-unlock.spec.ts:55:1 › a hardware letter unlocks without losing the first letter and later keys do not restart playback 
+
+    Error: Timed out waiting for letter unlock: {"attempts":1,"played":0,"errors":["NotAllowedError"],"paused":true,"icon":true,"active":true}
+
+      25 |  const end=Date.now()+timeout;let value:T;
+      26 |  do{value=await read<T>(cdp,expression);if(accept(value))return value;await sleep(50);}while(Date.now()<end);
+    > 27 |  throw Error(`Timed out waiting for ${label}: ${JSON.stringify(value)}`);
+         |        ^
+      28 | }
+      29 | async function instrumentMedia(page:Page){
+      30 |  await page.addInitScript(()=>{
+        at until (/work/tests/browser/audio-unlock.spec.ts:27:8)
+        at /work/tests/browser/audio-unlock.spec.ts:66:16
+
+    Error Context: test-results/audio-unlock-a-hardware-le-8dc43-eys-do-not-restart-playback-mobile-repeat8/error-context.md
+
+
+  4) [mobile] › tests/browser/audio-unlock.spec.ts:55:1 › a hardware letter unlocks without losing the first letter and later keys do not restart playback 
+
+    Error: Timed out waiting for letter unlock: {"attempts":1,"played":0,"errors":["NotAllowedError"],"paused":true,"icon":true,"active":true}
+
+      25 |  const end=Date.now()+timeout;let value:T;
+      26 |  do{value=await read<T>(cdp,expression);if(accept(value))return value;await sleep(50);}while(Date.now()<end);
+    > 27 |  throw Error(`Timed out waiting for ${label}: ${JSON.stringify(value)}`);
+         |        ^
+      28 | }
+      29 | async function instrumentMedia(page:Page){
+      30 |  await page.addInitScript(()=>{
+        at until (/work/tests/browser/audio-unlock.spec.ts:27:8)
+        at /work/tests/browser/audio-unlock.spec.ts:66:16
+
+    Error Context: test-results/audio-unlock-a-hardware-le-8dc43-eys-do-not-restart-playback-mobile-repeat9/error-context.md
+
+
+  4 failed
+    [mobile] › tests/browser/audio-unlock.spec.ts:55:1 › a hardware letter unlocks without losing the first letter and later keys do not restart playback 
+    [mobile] › tests/browser/audio-unlock.spec.ts:55:1 › a hardware letter unlocks without losing the first letter and later keys do not restart playback 
+    [mobile] › tests/browser/audio-unlock.spec.ts:55:1 › a hardware letter unlocks without losing the first letter and later keys do not restart playback 
+    [mobile] › tests/browser/audio-unlock.spec.ts:55:1 › a hardware letter unlocks without losing the first letter and later keys do not restart playback 
+  6 passed (40.9s)

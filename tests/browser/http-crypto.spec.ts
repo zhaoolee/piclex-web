@@ -31,7 +31,7 @@ test('HTTP local import works and corrupt archives cannot replace it',async({pag
  const files=unzipSync(fixture),photo=Object.keys(files).find(p=>p.endsWith('.jpg'))!;files[photo][42]^=1;
  await page.goto(origin+'/piclex-web/#/decks');
  await page.getByLabel('选择照片卡组文件').setInputFiles({name:'broken.piclexdeck',mimeType:'application/octet-stream',buffer:Buffer.from(zipSync(files))});
- await expect(page.getByRole('status')).toContainText('照片内容校验失败');
+ await expect(page.locator('.toast[role="status"]')).toContainText('照片内容校验失败');
  await page.goto(origin+'/piclex-web/#/learn');
  await expect(page.getByRole('heading',{name:'牛角包',exact:true})).toBeVisible();
 });

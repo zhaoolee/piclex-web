@@ -1,0 +1,7 @@
+
+Running 3 tests using 2 workers
+
+[1/3] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:59:1 › quota and native 20 GiB limit failures leave existing data intact and clean temporary files
+[2/3] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:59:1 › quota and native 20 GiB limit failures leave existing data intact and clean temporary files
+[3/3] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:59:1 › quota and native 20 GiB limit failures leave existing data intact and clean temporary files
+  3 passed (12.7s)

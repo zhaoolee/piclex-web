@@ -1,0 +1,44 @@
+
+Running 1 test using 1 worker
+
+[1/1] [desktop] › tests/browser/spelling-letter-color.spec.ts:55:52 › glyph animations never outlive their letter across edits and answers: light
+  1) [desktop] › tests/browser/spelling-letter-color.spec.ts:55:52 › glyph animations never outlive their letter across edits and answers: light 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 2
+    + Received  + 2
+
+      Object {
+    -   "connected": false,
+    -   "state": "idle",
+    +   "connected": true,
+    +   "state": "paused",
+      }
+
+      78 |  const duringError=await tracked();
+      79 |  expect(duringError[0]).toEqual({state:'paused',connected:true});
+    > 80 |  expect(duringError[1]).toEqual({state:'idle',connected:false});
+         |                         ^
+      81 |  const wrongGlyph=page.locator('.letter-glyph').nth(1);
+      82 |  expect(await wrongGlyph.evaluate(node=>node.getAnimations().length)).toBe(0);
+      83 |  await expect(wrongGlyph).toHaveCSS('color',RED);await expect(wrongGlyph).toHaveCSS('opacity','1');
+        at /private/tmp/piclex-red-letter-20261107/tests/browser/spelling-letter-color.spec.ts:80:25
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results-baseline/spelling-letter-color-glyp-e299a-oss-edits-and-answers-light-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results-baseline/spelling-letter-color-glyp-e299a-oss-edits-and-answers-light-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results-baseline/spelling-letter-color-glyp-e299a-oss-edits-and-answers-light-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results-baseline/spelling-letter-color-glyp-e299a-oss-edits-and-answers-light-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+  1 failed
+    [desktop] › tests/browser/spelling-letter-color.spec.ts:55:52 › glyph animations never outlive their letter across edits and answers: light 

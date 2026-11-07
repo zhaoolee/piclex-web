@@ -1,0 +1,435 @@
+npm notice run piclex-web@0.1.0 npx
+npm notice run 'playwright' test tests/browser/audio-unlock.spec.ts tests/browser/learning.spec.ts tests/browser/deck-picker-audio.spec.ts --reporter=line --workers=1
+[WebServer] npm notice run piclex-web@0.1.0 preview
+
+[WebServer] npm notice run vite preview --host 127.0.0.1 --port 18120
+
+
+Running 36 tests using 1 worker
+
+[1/36] [desktop] › tests/browser/audio-unlock.spec.ts:41:1 › real original audio: first load is blocked, the photo icon unlocks exactly that clip and disappears
+[2/36] [desktop] › tests/browser/audio-unlock.spec.ts:55:1 › a hardware letter unlocks without losing the first letter and later keys do not restart playback
+[3/36] [desktop] › tests/browser/audio-unlock.spec.ts:74:1 › one real tap on the virtual F unlocks, keeps f, and a second tap never replays the blocked clip
+[4/36] [desktop] › tests/browser/audio-unlock.spec.ts:88:1 › changing module grants interaction permission, hides the icon and never replays stale audio
+[5/36] [desktop] › tests/browser/deck-picker-audio.spec.ts:7:1 › learning settings switches public and personal decks directly and restores each draft
+[6/36] [desktop] › tests/browser/deck-picker-audio.spec.ts:16:1 › song clips decode, respect rate, precede word TTS and stop on mode or deck changes
+[7/36] [desktop] › tests/browser/deck-picker-audio.spec.ts:30:1 › original listening audio seeks by time and resumes from its paused position
+  1) [desktop] › tests/browser/deck-picker-audio.spec.ts:30:1 › original listening audio seeks by time and resumes from its paused position 
+
+    Error: expect(received).toBeGreaterThan(expected)
+
+    Expected: > 0.1
+    Received:   0
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      31 |  await page.addInitScript(()=>{const w=window as any,Original=window.Audio;w.__listening=[];w.Audio=class extends Original{constructor(src?:string){super(src);this.muted=true;if(src?.endsWith('.mp3'))w.__listening.push(this);}};});
+      32 |  await page.goto('/piclex-web/#/deck/'+song.id);await page.getByRole('tab',{name:'练听力',exact:true}).click();await page.getByLabel('句子练习模式',{exact:true}).selectOption('listening');await page.getByRole('button',{name:'播放',exact:true}).click();
+    > 33 |  await expect.poll(()=>page.evaluate(()=>(window as any).__listening.at(-1)?.currentTime||0)).toBeGreaterThan(.1);
+         |                                                                                               ^
+      34 |  // Seek and pause in one event turn, before a timeupdate can refresh the displayed progress.
+      35 |  await page.evaluate(()=>{const a=(window as any).__listening.at(-1) as HTMLAudioElement;a.ontimeupdate=null;a.onplaying=null;a.pause();a.currentTime=a.duration*.25;(document.querySelector('.listening-transport>button:nth-child(2)') as HTMLButtonElement).click();});
+      36 |  const slider=page.getByRole('slider',{name:'句子播放位置'});await expect(slider).toHaveAttribute('max','1000');expect(Number(await slider.inputValue())).toBeCloseTo(250,0);
+        at /private/tmp/piclex-web-combined-release-20261107/tests/browser/deck-picker-audio.spec.ts:33:95
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/deck-picker-audio-original-845f9-es-from-its-paused-position-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/deck-picker-audio-original-845f9-es-from-its-paused-position-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/deck-picker-audio-original-845f9-es-from-its-paused-position-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/deck-picker-audio-original-845f9-es-from-its-paused-position-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[8/36] [desktop] › tests/browser/deck-picker-audio.spec.ts:41:1 › advancing original audio clears preparation even when playing notification is lost; buffered stalls retain Pause
+[9/36] [desktop] › tests/browser/learning.spec.ts:10:1 › a visitor can complete a scene, resume after refresh, and restart without a phone
+  2) [desktop] › tests/browser/learning.spec.ts:10:1 › a visitor can complete a scene, resume after refresh, and restart without a phone 
+
+    Error: expect(locator).toHaveValue(expected) failed
+
+    Locator:  getByRole('textbox', { name: '输入英文' })
+    Expected: ""
+    Received: "croissant"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveValue" getByRole('textbox', { name: '输入英文' }) with timeout 5000ms
+      - waiting for getByRole('textbox', { name: '输入英文' })
+        5 × locator resolved to <input readonly lang="en" inputmode="none" aria-label="输入英文" autocorrect="off" value="croissant" autocomplete="off" spellcheck="false" autocapitalize="none" class="spelling-input"/>
+          - unexpected value "croissant"
+
+
+      21 |  for(const [i,word] of words.entries()){
+      22 |    await fillSpelling(page,word);
+    > 23 |    if(i<words.length-1) await expect(input).toHaveValue('');
+         |                                             ^
+      24 |  }
+      25 |  await expect(page.getByRole('heading',{name:'本轮训练完成'})).toBeVisible();
+      26 |  await expect(page.getByText('拼对 5 个词，复习 1 个词。')).toBeVisible();
+        at /private/tmp/piclex-web-combined-release-20261107/tests/browser/learning.spec.ts:23:45
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/learning-a-visitor-can-com-2de27-and-restart-without-a-phone-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/learning-a-visitor-can-com-2de27-and-restart-without-a-phone-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/learning-a-visitor-can-com-2de27-and-restart-without-a-phone-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/learning-a-visitor-can-com-2de27-and-restart-without-a-phone-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[10/36] [desktop] › tests/browser/learning.spec.ts:32:1 › local archives survive refresh; duplicate and invalid imports preserve previous progress
+[11/36] [desktop] › tests/browser/learning.spec.ts:47:1 › direct links, reveal, dark theme and unknown decks have usable states
+[12/36] [desktop] › tests/browser/learning.spec.ts:57:1 › public catalog reuses existing content and practice never downloads a whole archive
+  3) [desktop] › tests/browser/learning.spec.ts:57:1 › public catalog reuses existing content and practice never downloads a whole archive 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 5
+    + Received  + 0
+
+      Array [
+    -   "/piclex-web/library/add03b54-d0a7-46fd-88c8-2aa0fa7f0c7f/v7-44149174eaed929e/photos/05b3f297-db83-4f75-bb2c-f06ae442b48c.jpg",
+    -   "/piclex-web/library/add03b54-d0a7-46fd-88c8-2aa0fa7f0c7f/v7-44149174eaed929e/photos/53d92ee0-b1d2-42a0-8a1a-771ae1ba2268.jpg",
+    -   "/piclex-web/library/add03b54-d0a7-46fd-88c8-2aa0fa7f0c7f/v7-44149174eaed929e/photos/6a00ed50-3ceb-441e-979b-ea7752cdea33.jpg",
+    -   "/piclex-web/library/add03b54-d0a7-46fd-88c8-2aa0fa7f0c7f/v7-44149174eaed929e/photos/9e5d5ef4-38a2-400f-8885-c8ed7bfbb47a.jpg",
+    -   "/piclex-web/library/add03b54-d0a7-46fd-88c8-2aa0fa7f0c7f/v7-44149174eaed929e/photos/aa8a7f44-7a54-47d0-8850-532aea933878.jpg",
+        "/piclex-web/library/add03b54-d0a7-46fd-88c8-2aa0fa7f0c7f/v7-44149174eaed929e/photos/d779515d-c223-4139-87b6-f97d8d3bcde8.jpg",
+      ]
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      66 |  // Wait for the bounded current + five-photo window; exact paths also reject duplicate downloads.
+      67 |  const expectedPhotos=publicDeck.photos.slice(0,6).map((photo:{path:string})=>'/piclex-web/'+photo.path).sort();
+    > 68 |  await expect.poll(()=>requests.filter(url=>url.includes('/photos/')).sort()).toEqual(expectedPhotos);
+         |                                                                               ^
+      69 |  expect(requests.some(url=>url.endsWith('.piclexdeck'))).toBe(false);
+      70 |  await fillSpelling(page,publicDeck.words[0].english);
+      71 |  await expect(page.getByRole('heading',{name:publicDeck.words[1].chinese,exact:true})).toBeVisible();
+        at /private/tmp/piclex-web-combined-release-20261107/tests/browser/learning.spec.ts:68:79
+
+    Error Context: test-results/learning-public-catalog-re-36938-r-downloads-a-whole-archive-desktop/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/learning-public-catalog-re-36938-r-downloads-a-whole-archive-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/learning-public-catalog-re-36938-r-downloads-a-whole-archive-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[13/36] [desktop] › tests/browser/learning.spec.ts:77:1 › native modules preserve independent sentence drafts, shuffle order and photo navigation
+[14/36] [desktop] › tests/browser/learning.spec.ts:108:1 › sentence fill checks automatically; failed order can be corrected and assistance does not claim success
+  4) [desktop] › tests/browser/learning.spec.ts:108:1 › sentence fill checks automatically; failed order can be corrected and assistance does not claim success 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: expect(locator).toHaveValue(expected) failed
+
+    Locator:  getByRole('textbox', { name: '听写句子' })
+    Expected: ""
+    Received: "i am still in bed"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveValue" getByRole('textbox', { name: '听写句子' }) with timeout 5000ms
+      - waiting for getByRole('textbox', { name: '听写句子' })
+        6 × locator resolved to <textarea readonly lang="en" maxlength="2000" inputmode="none" aria-label="听写句子" autocorrect="off" autocomplete="off" spellcheck="false" autocapitalize="none" class="dictation-input" placeholder="听一句，写下听到的英文">i am still in bed</textarea>
+          - unexpected value "i am still in bed"
+
+
+      124 |  await page.getByRole('button',{name:'重新拼写',exact:true}).click();await expect(page.getByRole('textbox',{name:'听写句子'})).toHaveValue('');
+      125 |  await fillEnglish(page.getByRole('textbox',{name:'听写句子'}),'i am still in bed');
+    > 126 |  await expect(page.getByRole('textbox',{name:'听写句子'})).toHaveValue(''); // auto-advance to next sentence
+          |                                                        ^
+      127 |  await page.getByRole('button',{name:'当前卡组，学习设置'}).click();await expect(page.getByRole('dialog',{name:'选择卡组',exact:true})).toBeVisible();await page.getByRole('button',{name:'关闭',exact:true}).click();
+      128 |  await page.getByRole('tab',{name:'拼单词'}).click();await expect(page.locator('.answer-feedback')).toHaveCount(0);
+      129 | });
+        at /private/tmp/piclex-web-combined-release-20261107/tests/browser/learning.spec.ts:126:56
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/learning-sentence-fill-che-8d8e9-ance-does-not-claim-success-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/learning-sentence-fill-che-8d8e9-ance-does-not-claim-success-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/learning-sentence-fill-che-8d8e9-ance-does-not-claim-success-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/learning-sentence-fill-che-8d8e9-ance-does-not-claim-success-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[15/36] [desktop] › tests/browser/learning.spec.ts:131:1 › guided dictation, listening controls, compact height and reduced-motion remain usable
+[16/36] [desktop] › tests/browser/learning.spec.ts:150:1 › speaking starts only on explicit action and stops when leaving the module
+[17/36] [mobile] › tests/browser/audio-unlock.spec.ts:41:1 › real original audio: first load is blocked, the photo icon unlocks exactly that clip and disappears
+[18/36] [mobile] › tests/browser/audio-unlock.spec.ts:55:1 › a hardware letter unlocks without losing the first letter and later keys do not restart playback
+[19/36] [mobile] › tests/browser/audio-unlock.spec.ts:74:1 › one real tap on the virtual F unlocks, keeps f, and a second tap never replays the blocked clip
+[20/36] [mobile] › tests/browser/audio-unlock.spec.ts:88:1 › changing module grants interaction permission, hides the icon and never replays stale audio
+[21/36] [mobile] › tests/browser/deck-picker-audio.spec.ts:7:1 › learning settings switches public and personal decks directly and restores each draft
+[22/36] [mobile] › tests/browser/deck-picker-audio.spec.ts:16:1 › song clips decode, respect rate, precede word TTS and stop on mode or deck changes
+[23/36] [mobile] › tests/browser/deck-picker-audio.spec.ts:30:1 › original listening audio seeks by time and resumes from its paused position
+[24/36] [mobile] › tests/browser/deck-picker-audio.spec.ts:41:1 › advancing original audio clears preparation even when playing notification is lost; buffered stalls retain Pause
+[25/36] [mobile] › tests/browser/learning.spec.ts:10:1 › a visitor can complete a scene, resume after refresh, and restart without a phone
+  5) [mobile] › tests/browser/learning.spec.ts:10:1 › a visitor can complete a scene, resume after refresh, and restart without a phone 
+
+    Error: expect(locator).toHaveValue(expected) failed
+
+    Locator:  getByRole('textbox', { name: '输入英文' })
+    Expected: ""
+    Received: "croissant"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveValue" getByRole('textbox', { name: '输入英文' }) with timeout 5000ms
+      - waiting for getByRole('textbox', { name: '输入英文' })
+        5 × locator resolved to <input readonly lang="en" inputmode="none" aria-label="输入英文" autocorrect="off" value="croissant" autocomplete="off" spellcheck="false" autocapitalize="none" class="spelling-input"/>
+          - unexpected value "croissant"
+
+
+      21 |  for(const [i,word] of words.entries()){
+      22 |    await fillSpelling(page,word);
+    > 23 |    if(i<words.length-1) await expect(input).toHaveValue('');
+         |                                             ^
+      24 |  }
+      25 |  await expect(page.getByRole('heading',{name:'本轮训练完成'})).toBeVisible();
+      26 |  await expect(page.getByText('拼对 5 个词，复习 1 个词。')).toBeVisible();
+        at /private/tmp/piclex-web-combined-release-20261107/tests/browser/learning.spec.ts:23:45
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/learning-a-visitor-can-com-2de27-and-restart-without-a-phone-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/learning-a-visitor-can-com-2de27-and-restart-without-a-phone-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/learning-a-visitor-can-com-2de27-and-restart-without-a-phone-mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/learning-a-visitor-can-com-2de27-and-restart-without-a-phone-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[26/36] [mobile] › tests/browser/learning.spec.ts:32:1 › local archives survive refresh; duplicate and invalid imports preserve previous progress
+[27/36] [mobile] › tests/browser/learning.spec.ts:47:1 › direct links, reveal, dark theme and unknown decks have usable states
+[28/36] [mobile] › tests/browser/learning.spec.ts:57:1 › public catalog reuses existing content and practice never downloads a whole archive
+  6) [mobile] › tests/browser/learning.spec.ts:57:1 › public catalog reuses existing content and practice never downloads a whole archive 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 5
+    + Received  + 0
+
+      Array [
+    -   "/piclex-web/library/add03b54-d0a7-46fd-88c8-2aa0fa7f0c7f/v7-44149174eaed929e/photos/05b3f297-db83-4f75-bb2c-f06ae442b48c.jpg",
+    -   "/piclex-web/library/add03b54-d0a7-46fd-88c8-2aa0fa7f0c7f/v7-44149174eaed929e/photos/53d92ee0-b1d2-42a0-8a1a-771ae1ba2268.jpg",
+    -   "/piclex-web/library/add03b54-d0a7-46fd-88c8-2aa0fa7f0c7f/v7-44149174eaed929e/photos/6a00ed50-3ceb-441e-979b-ea7752cdea33.jpg",
+    -   "/piclex-web/library/add03b54-d0a7-46fd-88c8-2aa0fa7f0c7f/v7-44149174eaed929e/photos/9e5d5ef4-38a2-400f-8885-c8ed7bfbb47a.jpg",
+    -   "/piclex-web/library/add03b54-d0a7-46fd-88c8-2aa0fa7f0c7f/v7-44149174eaed929e/photos/aa8a7f44-7a54-47d0-8850-532aea933878.jpg",
+        "/piclex-web/library/add03b54-d0a7-46fd-88c8-2aa0fa7f0c7f/v7-44149174eaed929e/photos/d779515d-c223-4139-87b6-f97d8d3bcde8.jpg",
+      ]
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      66 |  // Wait for the bounded current + five-photo window; exact paths also reject duplicate downloads.
+      67 |  const expectedPhotos=publicDeck.photos.slice(0,6).map((photo:{path:string})=>'/piclex-web/'+photo.path).sort();
+    > 68 |  await expect.poll(()=>requests.filter(url=>url.includes('/photos/')).sort()).toEqual(expectedPhotos);
+         |                                                                               ^
+      69 |  expect(requests.some(url=>url.endsWith('.piclexdeck'))).toBe(false);
+      70 |  await fillSpelling(page,publicDeck.words[0].english);
+      71 |  await expect(page.getByRole('heading',{name:publicDeck.words[1].chinese,exact:true})).toBeVisible();
+        at /private/tmp/piclex-web-combined-release-20261107/tests/browser/learning.spec.ts:68:79
+
+    Error Context: test-results/learning-public-catalog-re-36938-r-downloads-a-whole-archive-mobile/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/learning-public-catalog-re-36938-r-downloads-a-whole-archive-mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/learning-public-catalog-re-36938-r-downloads-a-whole-archive-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[29/36] [mobile] › tests/browser/learning.spec.ts:77:1 › native modules preserve independent sentence drafts, shuffle order and photo navigation
+[30/36] [mobile] › tests/browser/learning.spec.ts:108:1 › sentence fill checks automatically; failed order can be corrected and assistance does not claim success
+  7) [mobile] › tests/browser/learning.spec.ts:108:1 › sentence fill checks automatically; failed order can be corrected and assistance does not claim success 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: expect(locator).toHaveValue(expected) failed
+
+    Locator:  getByRole('textbox', { name: '听写句子' })
+    Expected: ""
+    Received: "i am still in bed"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveValue" getByRole('textbox', { name: '听写句子' }) with timeout 5000ms
+      - waiting for getByRole('textbox', { name: '听写句子' })
+        6 × locator resolved to <textarea readonly lang="en" maxlength="2000" inputmode="none" aria-label="听写句子" autocorrect="off" autocomplete="off" spellcheck="false" autocapitalize="none" class="dictation-input" placeholder="听一句，写下听到的英文">i am still in bed</textarea>
+          - unexpected value "i am still in bed"
+
+
+      124 |  await page.getByRole('button',{name:'重新拼写',exact:true}).click();await expect(page.getByRole('textbox',{name:'听写句子'})).toHaveValue('');
+      125 |  await fillEnglish(page.getByRole('textbox',{name:'听写句子'}),'i am still in bed');
+    > 126 |  await expect(page.getByRole('textbox',{name:'听写句子'})).toHaveValue(''); // auto-advance to next sentence
+          |                                                        ^
+      127 |  await page.getByRole('button',{name:'当前卡组，学习设置'}).click();await expect(page.getByRole('dialog',{name:'选择卡组',exact:true})).toBeVisible();await page.getByRole('button',{name:'关闭',exact:true}).click();
+      128 |  await page.getByRole('tab',{name:'拼单词'}).click();await expect(page.locator('.answer-feedback')).toHaveCount(0);
+      129 | });
+        at /private/tmp/piclex-web-combined-release-20261107/tests/browser/learning.spec.ts:126:56
+
+    Error Context: test-results/learning-sentence-fill-che-8d8e9-ance-does-not-claim-success-mobile/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/learning-sentence-fill-che-8d8e9-ance-does-not-claim-success-mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/learning-sentence-fill-che-8d8e9-ance-does-not-claim-success-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[31/36] [mobile] › tests/browser/learning.spec.ts:131:1 › guided dictation, listening controls, compact height and reduced-motion remain usable
+[32/36] [mobile] › tests/browser/learning.spec.ts:150:1 › speaking starts only on explicit action and stops when leaving the module
+[33/36] [mobile-webkit] › tests/browser/deck-picker-audio.spec.ts:7:1 › learning settings switches public and personal decks directly and restores each draft
+[34/36] [mobile-webkit] › tests/browser/deck-picker-audio.spec.ts:16:1 › song clips decode, respect rate, precede word TTS and stop on mode or deck changes
+  8) [mobile-webkit] › tests/browser/deck-picker-audio.spec.ts:16:1 › song clips decode, respect rate, precede word TTS and stop on mode or deck changes 
+
+    Error: expect(received).toBeGreaterThan(expected)
+
+    Expected: > 0
+    Received:   0
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      20 |  // First-entry autoplay can precede this explicit rate change; inspect its newest play.
+      21 |  const played=await page.evaluate(()=>(window as any).__played.at(-1));expect(played.src).toContain(payload.words[0].audio.sha256+'.mp3');expect(played.rate).toBe(.75);
+    > 22 |  await expect(page.getByRole('progressbar',{name:'播放进度'})).toBeVisible();await expect(page.getByRole('button',{name:'停止播放'})).toHaveCount(0);await expect.poll(async()=>Number(await page.getByRole('progressbar',{name:'播放进度'}).getAttribute('aria-valuenow'))).toBeGreaterThan(0);
+         |                                                                                                                                                                                                                                                                  ^
+      23 |  await expect.poll(()=>page.evaluate(()=>(window as any).__spoken),{timeout:15000}).toEqual([payload.words[0].english]);
+      24 |  await page.getByLabel('播放速度',{exact:true}).selectOption('1.15');await expect.poll(()=>page.evaluate(()=>(window as any).__played.at(-1)?.rate)).toBe(1.15);
+      25 |  await page.getByRole('tab',{name:'练听力',exact:true}).click();expect(await page.evaluate(()=>(window as any).__media.every((a:HTMLAudioElement)=>a.paused&&!a.getAttribute('src')))).toBe(true);
+        at /private/tmp/piclex-web-combined-release-20261107/tests/browser/deck-picker-audio.spec.ts:22:258
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/deck-picker-audio-song-cli-be215-top-on-mode-or-deck-changes-mobile-webkit/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/deck-picker-audio-song-cli-be215-top-on-mode-or-deck-changes-mobile-webkit/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/deck-picker-audio-song-cli-be215-top-on-mode-or-deck-changes-mobile-webkit/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/deck-picker-audio-song-cli-be215-top-on-mode-or-deck-changes-mobile-webkit/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[35/36] [mobile-webkit] › tests/browser/deck-picker-audio.spec.ts:30:1 › original listening audio seeks by time and resumes from its paused position
+  9) [mobile-webkit] › tests/browser/deck-picker-audio.spec.ts:30:1 › original listening audio seeks by time and resumes from its paused position 
+
+    Error: expect(received).toBeGreaterThan(expected)
+
+    Expected: > 0.1
+    Received:   0
+
+    Call Log:
+    - Timeout 5000ms exceeded while waiting on the predicate
+
+      31 |  await page.addInitScript(()=>{const w=window as any,Original=window.Audio;w.__listening=[];w.Audio=class extends Original{constructor(src?:string){super(src);this.muted=true;if(src?.endsWith('.mp3'))w.__listening.push(this);}};});
+      32 |  await page.goto('/piclex-web/#/deck/'+song.id);await page.getByRole('tab',{name:'练听力',exact:true}).click();await page.getByLabel('句子练习模式',{exact:true}).selectOption('listening');await page.getByRole('button',{name:'播放',exact:true}).click();
+    > 33 |  await expect.poll(()=>page.evaluate(()=>(window as any).__listening.at(-1)?.currentTime||0)).toBeGreaterThan(.1);
+         |                                                                                               ^
+      34 |  // Seek and pause in one event turn, before a timeupdate can refresh the displayed progress.
+      35 |  await page.evaluate(()=>{const a=(window as any).__listening.at(-1) as HTMLAudioElement;a.ontimeupdate=null;a.onplaying=null;a.pause();a.currentTime=a.duration*.25;(document.querySelector('.listening-transport>button:nth-child(2)') as HTMLButtonElement).click();});
+      36 |  const slider=page.getByRole('slider',{name:'句子播放位置'});await expect(slider).toHaveAttribute('max','1000');expect(Number(await slider.inputValue())).toBeCloseTo(250,0);
+        at /private/tmp/piclex-web-combined-release-20261107/tests/browser/deck-picker-audio.spec.ts:33:95
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/deck-picker-audio-original-845f9-es-from-its-paused-position-mobile-webkit/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/deck-picker-audio-original-845f9-es-from-its-paused-position-mobile-webkit/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/deck-picker-audio-original-845f9-es-from-its-paused-position-mobile-webkit/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/deck-picker-audio-original-845f9-es-from-its-paused-position-mobile-webkit/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[36/36] [mobile-webkit] › tests/browser/deck-picker-audio.spec.ts:41:1 › advancing original audio clears preparation even when playing notification is lost; buffered stalls retain Pause
+  10) [mobile-webkit] › tests/browser/deck-picker-audio.spec.ts:41:1 › advancing original audio clears preparation even when playing notification is lost; buffered stalls retain Pause 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByRole('button', { name: '暂停', exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" getByRole('button', { name: '暂停', exact: true }) with timeout 5000ms
+      - waiting for getByRole('button', { name: '暂停', exact: true })
+
+
+      42 |  await page.addInitScript(()=>{const Original=window.Audio,w=window as any;w.__advancing=[];w.Audio=class extends Original{constructor(src?:string){super(src);this.muted=true;if(!src?.endsWith('.mp3'))return;w.__advancing.push(this);this.addEventListener('playing',e=>e.stopImmediatePropagation(),true);const play=this.play.bind(this);this.play=()=>play().then(()=>new Promise<void>(()=>{}));}};});
+      43 |  await page.goto('/piclex-web/#/deck/'+song.id+'?module=listening&mode=listening&photo=1');await page.getByLabel('循环方式').selectOption('single');await page.getByRole('button',{name:'播放',exact:true}).click();
+    > 44 |  await expect(page.getByRole('button',{name:'暂停',exact:true})).toBeVisible();
+         |                                                                ^
+      45 |  await expect.poll(()=>page.evaluate(()=>{const a=(window as any).__advancing.at(-1);return a?.currentTime>0&&a?.readyState>=2&&!a?.paused&&!a?.seeking;})).toBe(true);
+      46 |  // Explicitly test a buffered stall; Linux WebKit may report only CURRENT_DATA during normal playback.
+      47 |  await page.evaluate(()=>{const a=(window as any).__advancing.at(-1);Object.defineProperty(a,'readyState',{configurable:true,value:3});a.dispatchEvent(new Event('stalled'));delete a.readyState;});await expect(page.getByRole('button',{name:'暂停',exact:true})).toBeVisible();
+        at /private/tmp/piclex-web-combined-release-20261107/tests/browser/deck-picker-audio.spec.ts:44:64
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/deck-picker-audio-advancin-82137-uffered-stalls-retain-Pause-mobile-webkit/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/deck-picker-audio-advancin-82137-uffered-stalls-retain-Pause-mobile-webkit/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/deck-picker-audio-advancin-82137-uffered-stalls-retain-Pause-mobile-webkit/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/deck-picker-audio-advancin-82137-uffered-stalls-retain-Pause-mobile-webkit/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+  10 failed
+    [desktop] › tests/browser/deck-picker-audio.spec.ts:30:1 › original listening audio seeks by time and resumes from its paused position 
+    [desktop] › tests/browser/learning.spec.ts:10:1 › a visitor can complete a scene, resume after refresh, and restart without a phone 
+    [desktop] › tests/browser/learning.spec.ts:57:1 › public catalog reuses existing content and practice never downloads a whole archive 
+    [desktop] › tests/browser/learning.spec.ts:108:1 › sentence fill checks automatically; failed order can be corrected and assistance does not claim success 
+    [mobile] › tests/browser/learning.spec.ts:10:1 › a visitor can complete a scene, resume after refresh, and restart without a phone 
+    [mobile] › tests/browser/learning.spec.ts:57:1 › public catalog reuses existing content and practice never downloads a whole archive 
+    [mobile] › tests/browser/learning.spec.ts:108:1 › sentence fill checks automatically; failed order can be corrected and assistance does not claim success 
+    [mobile-webkit] › tests/browser/deck-picker-audio.spec.ts:16:1 › song clips decode, respect rate, precede word TTS and stop on mode or deck changes 
+    [mobile-webkit] › tests/browser/deck-picker-audio.spec.ts:30:1 › original listening audio seeks by time and resumes from its paused position 
+    [mobile-webkit] › tests/browser/deck-picker-audio.spec.ts:41:1 › advancing original audio clears preparation even when playing notification is lost; buffered stalls retain Pause 
+  26 passed (35.8m)

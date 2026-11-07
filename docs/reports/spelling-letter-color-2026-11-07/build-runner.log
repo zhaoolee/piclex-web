@@ -1,0 +1,30 @@
+vite v7.3.6 building client environment for production...
+transforming...
+
+/piclex-web/lab/assets/hero.png referenced in /piclex-web/lab/assets/hero.png didn't resolve at build time, it will remain unchanged to be resolved at runtime
+
+/piclex-web/lab/assets/items.png referenced in /piclex-web/lab/assets/items.png didn't resolve at build time, it will remain unchanged to be resolved at runtime
+
+/piclex-web/lab/assets/coin.png referenced in /piclex-web/lab/assets/coin.png didn't resolve at build time, it will remain unchanged to be resolved at runtime
+✓ 294 modules transformed.
+rendering chunks...
+computing gzip size...
+../../dist/subscribe/index.html                           3.24 kB │ gzip:     1.68 kB
+../../dist/lab/index.html                                 6.67 kB │ gzip:     2.81 kB
+../../dist/index.html                                    13.44 kB │ gzip:     3.15 kB
+../../dist/assets/camera-soft-dunes-BP4g9rUR.webp        21.07 kB
+../../dist/assets/subscribe-CgjdP79_.css                  2.16 kB │ gzip:     0.95 kB
+../../dist/assets/lab-r_hvwpDT.css                       58.66 kB │ gzip:    12.38 kB
+../../dist/assets/main-BVKCGbL3.css                     100.67 kB │ gzip:    19.84 kB
+../../dist/assets/modulepreload-polyfill-B5Qt9EMX.js      0.71 kB │ gzip:     0.40 kB
+../../dist/assets/lab-C8Nqr4Kh.js                         2.71 kB │ gzip:     1.39 kB
+../../dist/assets/experience-store-Cf0PUDr3.js            6.76 kB │ gzip:     2.95 kB
+../../dist/assets/subscribe-D3VMIW3x.js                  32.52 kB │ gzip:    13.37 kB
+../../dist/assets/main-B9WJ-nzW.js                      699.57 kB │ gzip:   253.80 kB
+../../dist/assets/main-Dd5u6t2U.js                    2,805.64 kB │ gzip: 1,811.17 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 2.27s

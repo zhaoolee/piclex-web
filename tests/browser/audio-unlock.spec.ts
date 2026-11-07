@@ -55,8 +55,12 @@ test('real original audio: first load is blocked, the photo icon unlocks exactly
 test('a hardware letter unlocks without losing the first letter and later keys do not restart playback',async({playwright},testInfo)=>{
  const {page,cdp,close}=await launchPractice(playwright,testInfo,instrumentMedia);
  try{
+  // A busy device may receive its first key before React paints the blocked
+  // state or flushes passive effects. Start on the real policy rejection.
+  await cdp.send('Emulation.setCPUThrottlingRate',{rate:4});
   await page.goto('/piclex-web/#/deck/'+song.id);
-  await until<Awaited<ReturnType<typeof mediaState>>>(cdp,`(()=>({attempts:__mediaAttempts,played:__mediaPlayed,errors:__mediaErrors.slice(),paused:__media.every(a=>a.paused),icon:!!document.querySelector('.audio-unlock'),active:navigator.userActivation?.hasBeenActive}))()`,value=>value.icon&&value.attempts>0,'blocked before typing');
+  const blocked=await until<Awaited<ReturnType<typeof mediaState>>>(cdp,`(()=>({attempts:__mediaAttempts,played:__mediaPlayed,errors:__mediaErrors.slice(),paused:__media.every(a=>a.paused),icon:!!document.querySelector('.audio-unlock'),active:navigator.userActivation?.hasBeenActive}))()`,value=>value.errors.includes('NotAllowedError')&&value.attempts>0,'blocked before typing');
+  expect(blocked.active).toBe(false);expect(blocked.played).toBe(0);
   await page.keyboard.press('f');
   await expect(page.getByRole('textbox',{name:'输入英文',exact:true})).toHaveValue('f');
   const played=await until<Awaited<ReturnType<typeof mediaState>>>(cdp,`(()=>({attempts:__mediaAttempts,played:__mediaPlayed,errors:__mediaErrors.slice(),paused:__media.every(a=>a.paused),icon:!!document.querySelector('.audio-unlock'),active:navigator.userActivation?.hasBeenActive}))()`,value=>value.played===1&&!value.icon,'letter unlock');

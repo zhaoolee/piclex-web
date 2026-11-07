@@ -265,11 +265,15 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,selec
  },[]);
  // A first real click/tap or hardware letter retries the retained segment in
  // the same gesture scope. It never prevents the input or repeats later keys.
- useEffect(()=>{
-  if(!audio.blocked||!active||panel||!autoAudioScope)return;
+ useLayoutEffect(()=>{
+  if(!active||panel||!autoAudioScope)return;
+  // Listen before the page can accept input, including the interval between a
+  // denied play() and its blocked-state render. The request ref is immediate;
+  // ordinary later gestures have no pending request and must not replay.
+  const retryGesture=()=>{if(!audio.retryBlocked()&&audio.blocked)playCurrentRef.current();};
   const excluded='.audio-unlock,.native-header,.module-tabs,.sentence-toolbar,.native-playback,.listening-transport,.listening-metadata,.reading-actions,.reading-next,.native-primary,.sentence-actions,.peek-letter,.photo-open,.native-completion,.native-example,.practice-library,[role=dialog]';
-  const click=(event:MouseEvent)=>{const target=event.target as Element|null;if(!event.isTrusted)return;if(target?.closest?.(excluded)){audio.acknowledgeGesture();return;}retryCurrent();};
-  const key=(event:KeyboardEvent)=>{if(!event.isTrusted||event.repeat||event.isComposing||event.metaKey||event.ctrlKey||event.altKey)return;if(/^[a-z]$/i.test(event.key)||/^Key[A-Z]$/.test(event.code))retryCurrent();};
+  const click=(event:MouseEvent)=>{const target=event.target as Element|null;if(!event.isTrusted)return;if(target?.closest?.(excluded)){audio.acknowledgeGesture();return;}retryGesture();};
+  const key=(event:KeyboardEvent)=>{if(!event.isTrusted||event.repeat||event.isComposing||event.metaKey||event.ctrlKey||event.altKey)return;if(/^[a-z]$/i.test(event.key)||/^Key[A-Z]$/.test(event.code))retryGesture();};
   document.addEventListener('click',click);window.addEventListener('keydown',key,true);
   return ()=>{document.removeEventListener('click',click);window.removeEventListener('keydown',key,true);};
  },[audio.blocked,audio.retryBlocked,active,panel,autoAudioScope,state.module,state.mode]);

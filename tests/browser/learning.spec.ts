@@ -38,7 +38,7 @@ test('local archives survive refresh; duplicate and invalid imports preserve pre
  await expect(page.getByRole('textbox',{name:'输入英文'})).toHaveValue('pass');
  await page.goto('/piclex-web/#/decks');
  await chooser.setInputFiles({name:'bad.piclexdeck',mimeType:'application/zip',buffer:Buffer.from('bad')});
- await expect(page.getByRole('status')).toContainText('损坏');
+ await expect(page.locator('.toast[role="status"]')).toContainText('损坏');
  await chooser.setInputFiles(path.resolve('tests/fixtures/demo/decks/travel.piclexdeck'));
  await expect(page.getByRole('textbox',{name:'输入英文'})).toHaveValue('pass');
  await page.goto('/piclex-web/#/decks');

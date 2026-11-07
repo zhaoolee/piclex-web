@@ -1,0 +1,53 @@
+{
+  "date": "2026-11-07",
+  "baseline": "3444af7edfafc9f9c570050e1a0b7e19fe74df7e",
+  "originalScreenshot": {
+    "input": "lapt",
+    "expected": "laptop",
+    "glyphRedRGB": [
+      198,
+      68,
+      68
+    ],
+    "glyphSolidRedPixels": 276,
+    "redGlyphWithBlackUnderline": true
+  },
+  "liveReadOnlyInspection": {
+    "input": "lapt",
+    "answerWrong": false,
+    "wrongSlots": [],
+    "glyphColors": [
+      "rgb(9, 9, 9)",
+      "rgb(9, 9, 9)",
+      "rgb(9, 9, 9)",
+      "rgb(9, 9, 9)",
+      "rgb(9, 9, 9)",
+      "rgb(9, 9, 9)"
+    ],
+    "laterScreenshotShowsBlack": true,
+    "userInputModified": false
+  },
+  "isolatedChrome": {
+    "origin": "http://127.0.0.1:18358",
+    "viewport": [
+      722,
+      945
+    ],
+    "deviceScaleFactor": 2,
+    "theme": "light",
+    "actions": [
+      "l",
+      "Backspace",
+      "x"
+    ],
+    "input": "x",
+    "inheritedGlyphAnimation": {
+      "state": "running",
+      "currentTimeMs": 50.40300000295961,
+      "targetText": "x",
+      "durationMs": 180,
+      "originalTargetText": "l"
+    }
+  },
+  "status": "Old correct-letter animation reused by an incorrect replacement reproduced; original persistent red l not reproduced. No claim that the original root cause is proven."
+}

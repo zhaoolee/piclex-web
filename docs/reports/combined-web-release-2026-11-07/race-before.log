@@ -1,0 +1,34 @@
+
+Running 30 tests using 2 workers
+
+[1/30] [mobile] › tests/browser/audio-unlock.spec.ts:55:1 › a hardware letter unlocks without losing the first letter and later keys do not restart playback
+[2/30] [mobile] › tests/browser/audio-unlock.spec.ts:55:1 › a hardware letter unlocks without losing the first letter and later keys do not restart playback
+[3/30] [mobile] › tests/browser/audio-unlock.spec.ts:55:1 › a hardware letter unlocks without losing the first letter and later keys do not restart playback
+[4/30] [mobile] › tests/browser/audio-unlock.spec.ts:55:1 › a hardware letter unlocks without losing the first letter and later keys do not restart playback
+[5/30] [mobile] › tests/browser/audio-unlock.spec.ts:55:1 › a hardware letter unlocks without losing the first letter and later keys do not restart playback
+[6/30] [mobile] › tests/browser/audio-unlock.spec.ts:55:1 › a hardware letter unlocks without losing the first letter and later keys do not restart playback
+[7/30] [mobile] › tests/browser/audio-unlock.spec.ts:55:1 › a hardware letter unlocks without losing the first letter and later keys do not restart playback
+[8/30] [mobile] › tests/browser/audio-unlock.spec.ts:55:1 › a hardware letter unlocks without losing the first letter and later keys do not restart playback
+[9/30] [mobile] › tests/browser/audio-unlock.spec.ts:55:1 › a hardware letter unlocks without losing the first letter and later keys do not restart playback
+[10/30] [mobile] › tests/browser/audio-unlock.spec.ts:55:1 › a hardware letter unlocks without losing the first letter and later keys do not restart playback
+[11/30] [mobile] › tests/browser/http-crypto.spec.ts:27:1 › HTTP local import works and corrupt archives cannot replace it
+[12/30] [mobile] › tests/browser/http-crypto.spec.ts:27:1 › HTTP local import works and corrupt archives cannot replace it
+[13/30] [mobile] › tests/browser/http-crypto.spec.ts:27:1 › HTTP local import works and corrupt archives cannot replace it
+[14/30] [mobile] › tests/browser/http-crypto.spec.ts:27:1 › HTTP local import works and corrupt archives cannot replace it
+[15/30] [mobile] › tests/browser/http-crypto.spec.ts:27:1 › HTTP local import works and corrupt archives cannot replace it
+[16/30] [mobile] › tests/browser/http-crypto.spec.ts:27:1 › HTTP local import works and corrupt archives cannot replace it
+[17/30] [mobile] › tests/browser/http-crypto.spec.ts:27:1 › HTTP local import works and corrupt archives cannot replace it
+[18/30] [mobile] › tests/browser/http-crypto.spec.ts:27:1 › HTTP local import works and corrupt archives cannot replace it
+[19/30] [mobile] › tests/browser/http-crypto.spec.ts:27:1 › HTTP local import works and corrupt archives cannot replace it
+[20/30] [mobile] › tests/browser/http-crypto.spec.ts:27:1 › HTTP local import works and corrupt archives cannot replace it
+[21/30] [mobile-webkit] › tests/browser/http-crypto.spec.ts:27:1 › HTTP local import works and corrupt archives cannot replace it
+[22/30] [mobile-webkit] › tests/browser/http-crypto.spec.ts:27:1 › HTTP local import works and corrupt archives cannot replace it
+[23/30] [mobile-webkit] › tests/browser/http-crypto.spec.ts:27:1 › HTTP local import works and corrupt archives cannot replace it
+[24/30] [mobile-webkit] › tests/browser/http-crypto.spec.ts:27:1 › HTTP local import works and corrupt archives cannot replace it
+[25/30] [mobile-webkit] › tests/browser/http-crypto.spec.ts:27:1 › HTTP local import works and corrupt archives cannot replace it
+[26/30] [mobile-webkit] › tests/browser/http-crypto.spec.ts:27:1 › HTTP local import works and corrupt archives cannot replace it
+[27/30] [mobile-webkit] › tests/browser/http-crypto.spec.ts:27:1 › HTTP local import works and corrupt archives cannot replace it
+[28/30] [mobile-webkit] › tests/browser/http-crypto.spec.ts:27:1 › HTTP local import works and corrupt archives cannot replace it
+[29/30] [mobile-webkit] › tests/browser/http-crypto.spec.ts:27:1 › HTTP local import works and corrupt archives cannot replace it
+[30/30] [mobile-webkit] › tests/browser/http-crypto.spec.ts:27:1 › HTTP local import works and corrupt archives cannot replace it
+  30 passed (26.7s)

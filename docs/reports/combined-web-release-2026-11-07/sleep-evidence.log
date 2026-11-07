@@ -1,0 +1,20 @@
+2026-11-08 01:26:17 +0800 Sleep               	Entering Sleep state due to 'Dark Wake Thermal Emergency':TCPKeepAlive=active Using AC (Charge:100%) 980 secs  
+2026-11-08 01:42:37 +0800 DarkWake            	DarkWake from Deep Idle [CDNPB] : due to NUB.SPMISw3IRQ nub-spmi0.0x02 rtc/SleepService Using AC (Charge:100%)           
+2026-11-08 01:45:10 +0800 Sleep               	Entering Sleep state due to 'Sleep Service Back to Sleep':TCPKeepAlive=active Using AC (Charge:100%) 931 secs  
+2026-11-08 02:00:41 +0800 DarkWake            	DarkWake from Deep Idle [CDNPB] : due to NUB.SPMISw3IRQ nub-spmi0.0x02 rtc/SleepService Using AC (Charge:100%)           
+2026-11-08 02:01:43 +0800 Sleep               	Entering Sleep state due to 'Sleep Service Back to Sleep':TCPKeepAlive=active Using AC (Charge:100%) 1028 secs 
+2026-11-08 02:18:51 +0800 DarkWake            	DarkWake from Deep Idle [CDNPB] : due to NUB.SPMISw3IRQ nub-spmi0.0x02 rtc/SleepService Using AC (Charge:100%) 45 secs   
+2026-11-08 02:19:36 +0800 Sleep               	Entering Sleep state due to 'Sleep Service Back to Sleep':TCPKeepAlive=active Using AC (Charge:100%) 975 secs  
+2026-11-08 02:35:51 +0800 DarkWake            	DarkWake from Deep Idle [CDNPB] : due to NUB.SPMISw3IRQ nub-spmi0.0x02 rtc/SleepService Using AC (Charge:100%) 44 secs   
+2026-11-08 02:36:35 +0800 Sleep               	Entering Sleep state due to 'Sleep Service Back to Sleep':TCPKeepAlive=active Using AC (Charge:100%) 904 secs  
+2026-11-08 02:51:39 +0800 DarkWake            	DarkWake from Deep Idle [CDNPB] : due to NUB.SPMISw3IRQ nub-spmi0.0x02 rtc/Maintenance Using AC (Charge:100%) 45 secs   
+2026-11-08 02:52:24 +0800 Sleep               	Entering Sleep state due to 'Maintenance Sleep':TCPKeepAlive=active Using AC (Charge:100%) 913 secs  
+2026-11-08 06:06:51 +0800 DarkWake            	DarkWake from Deep Idle [CDNPB] : due to NUB.SPMISw3IRQ nub-spmi0.0x02 rtc/SleepService Using AC (Charge:100%) 62 secs   
+2026-11-08 06:07:53 +0800 Sleep               	Entering Sleep state due to 'Sleep Service Back to Sleep':TCPKeepAlive=active Using AC (Charge:100%) 985 secs  
+2026-11-08 06:24:18 +0800 DarkWake            	DarkWake from Deep Idle [CDNPB] : due to NUB.SPMISw3IRQ nub-spmi0.0x02 rtc/Maintenance Using AC (Charge:100%) 45 secs   
+2026-11-08 06:25:03 +0800 Sleep               	Entering Sleep state due to 'Maintenance Sleep':TCPKeepAlive=active Using AC (Charge:100%) 994 secs  
+2026-11-08 06:41:37 +0800 DarkWake            	DarkWake from Deep Idle [CDNPB] : due to NUB.SPMISw3IRQ nub-spmi0.0x02 rtc/Maintenance Using AC (Charge:100%) 45 secs   
+2026-11-08 06:42:22 +0800 Sleep               	Entering Sleep state due to 'Maintenance Sleep':TCPKeepAlive=active Using AC (Charge:100%) 502 secs  
+2026-11-08 06:50:44 +0800 DarkWake            	DarkWake from Deep Idle [CDNPB] : due to NUB.SPMISw3IRQ nub-spmi0.0x02 rtc/Maintenance Using AC (Charge:100%) 45 secs   
+2026-11-08 06:51:29 +0800 Sleep               	Entering Sleep state due to 'Maintenance Sleep':TCPKeepAlive=active Using AC (Charge:100%) 536 secs  
+2026-11-08 07:00:25 +0800 Wake                	Wake from Deep Idle [CDNVA] : due to smc.sysState.Wake(0x70070000) lid SMC.OutboxNotEmpty/UserActivity Assertion Using AC (Charge:100%)           

@@ -1,0 +1,29 @@
+{
+  "status": "candidate_verified_not_published",
+  "baseline": "3444af7edfafc9f9c570050e1a0b7e19fe74df7e",
+  "browserRegression": {
+    "passed": 33,
+    "failed": 0,
+    "platform": "macOS Chrome desktop/touch and WebKit touch"
+  },
+  "baselineRegression": "fails on old glyph animation surviving replacement; same assertion passes on candidate",
+  "build": "TypeScript and Vite production build passed; runner config loader avoids writing shared dependency cache",
+  "originalRedGlyph": "not reproduced; observed live DOM later correct; no claim of complete root-cause proof",
+  "files": {
+    "packages/learning-ui/src/AnswerSlots.tsx": "fd15552af2d112c83d51796d6c915f75873a023c7d6f7611a1615209487b23f9",
+    "packages/learning-ui/src/CharacterRipples.tsx": "d0b7b0d835c38f75ba12aa703e7b494850e6aab66f1c762a111764c516c40068",
+    "tests/browser/spelling-letter-color.spec.ts": "60eef4d1760a36126d00448ade0d3048e5904cd0ff342e1090eb4c257a6fefe1"
+  },
+  "published": false,
+  "userProductionDataChanged": false,
+  "manualProductionChecks": {
+    "word": "laptop",
+    "correctPrefix": "lapt",
+    "expectedColor": "rgb(9, 9, 9)",
+    "automaticNextWord": "reproduce",
+    "nextDraft": "re",
+    "moduleRoundTrip": "listening then spelling retains re with no wrong slots",
+    "fullPageScreenshotReviewed": true
+  },
+  "cleanup": "Both task preview servers stopped; generated build, Vite cache and temporary test outputs removed; candidate source and Pi statistical session retained for unresolved original intermittent symptom."
+}
