@@ -1,0 +1,40 @@
+{
+  "status": "released-and-verified",
+  "sourceRevision": "543a8090a17dc2a910203867b921d5e683fcae6f",
+  "releaseID": "543a8090a17d-3a0972ec9f25",
+  "candidateRun": "https://github.com/zhaoolee/piclex-web/actions/runs/42468004170",
+  "releaseRun": "https://github.com/zhaoolee/piclex-web/actions/runs/42468958021",
+  "sites": [
+    "https://zhaoolee.com/piclex-web/",
+    "https://piclex.v2fy.com/piclex-web/"
+  ],
+  "unitTests": 327,
+  "browserTests": {
+    "passed": 671,
+    "existingPlatformSkips": 4,
+    "retries": 0
+  },
+  "performance": {
+    "passedRounds": 24,
+    "sameCandidate": true
+  },
+  "liveChecks": {
+    "perSite": [
+      "gold glyph and underline sweep",
+      "audio retry across refresh and next word (controlled speech callbacks)",
+      "deck progress pixels, header geometry and module traversal",
+      "quick preference, mixed round and restart on missed characters"
+    ],
+    "verifiedAssetsPerSite": 14,
+    "initialHarnessFailure": "An extra --disable-speech-api flag removed the utterance constructor used by the visual test stub; its error toast covered the progress lane. After restoring the standard isolated-Linux capabilities, the original pixel assertion passed. Product code and assertions unchanged."
+  },
+  "image": {
+    "sourceRevision": "543a8090a17dc2a910203867b921d5e683fcae6f",
+    "image": "zhaoolee/piclex-web",
+    "digest": "sha256:dc43df9ced8a72a7fa12152d1685633b26cfeea3aab46f9540534104b8797e4e"
+  },
+  "finishedAt": "2026-11-08T09:58:57.323624+00:00",
+  "releaseToVerificationSeconds": 434.091,
+  "twoMinuteTargetMet": false,
+  "cleanup": "Own Linux container and dependency volume removed; no simulator, device or user-data operations."
+}
