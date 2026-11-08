@@ -11,6 +11,9 @@ on:
       performance-verified:
         type: boolean
         default: false
+      candidate-only:
+        type: boolean
+        default: false
       publish:
         type: boolean
         default: true
@@ -96,10 +99,11 @@ jobs:
           images: ${{ secrets.DOCKERHUB_USERNAME }}/piclex-web
           flavor: latest=false
           tags: |
-            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' && !inputs.candidate-only }}
             type=ref,event=tag
             type=sha,prefix=sha-
       - name: Publish AMD64 and ARM64
+        id: image
         if: ${{ !inputs.verified-artifact || inputs.publish }}
         uses: docker/build-push-action@v6
         with:
@@ -110,3 +114,15 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+      - name: Record the immutable verified image
+        if: ${{ inputs.candidate-only && inputs.publish }}
+        env:
+          IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/piclex-web
+          DIGEST: ${{ steps.image.outputs.digest }}
+        run: node -e 'require("fs").writeFileSync("verified-image.json", JSON.stringify({sourceRevision:process.env.GITHUB_SHA,image:process.env.IMAGE,digest:process.env.DIGEST}))'
+      - uses: actions/upload-artifact@v4
+        if: ${{ inputs.candidate-only && inputs.publish }}
+        with:
+          name: verified-image
+          path: verified-image.json
+          retention-days: 7
