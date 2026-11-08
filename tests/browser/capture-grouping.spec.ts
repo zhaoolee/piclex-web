@@ -51,7 +51,7 @@ async function seed(page:Page,records:{id:string;title:string;addedAt:number;byt
 
 test.beforeEach(async({page})=>{await page.addInitScript(()=>localStorage.setItem('piclex-web.import-animation','false'));});
 
-test('three imported photos become one default deck and survive photo navigation and reload',async({page},info)=>{
+async function threeImportedPhotos(page:Page){
  let uploads=0;
  await page.route(api,route=>route.fulfill({status:200,headers:{'Access-Control-Allow-Origin':'*'},json:{labels:[labels[uploads++]],quote:null,quota}}));
  await page.goto('/piclex-web/#/capture');
@@ -61,14 +61,24 @@ test('three imported photos become one default deck and survive photo navigation
  }
  await page.getByRole('button',{name:'开练',exact:true}).click();
  await expect(page.getByRole('textbox',{name:'输入英文',exact:true})).toBeVisible();
- expect(await stored(page)).toHaveLength(3);
- expect((await stored(page)).every(record=>record.id.startsWith('local-capture-'))).toBe(true);
+}
+
+// Keep independent user journeys within the unchanged 30-second budget.
+test('three imported photos become one default deck in learning settings',async({page},info)=>{
+ await threeImportedPhotos(page);
+ const records=await stored(page);expect(records).toHaveLength(3);
+ expect(records.every(record=>record.id.startsWith('local-capture-'))).toBe(true);
  await page.getByRole('button',{name:'当前卡组，学习设置'}).click();
  const picker=page.getByRole('group',{name:'切换卡组'}),group=picker.locator(`[data-deck-id="${defaultID}"]`);
  await expect(group).toHaveCount(1);await expect(group).toHaveAccessibleName('我的照片卡组');
  await expect(picker.getByRole('button',{name:'我的照片卡组',exact:true})).toHaveCount(1);
  await group.scrollIntoViewIfNeeded();await page.screenshot({path:info.outputPath('one-default-group.png')});
  await page.getByRole('button',{name:'关闭',exact:true}).click();
+ await expect(page.getByRole('textbox',{name:'输入英文',exact:true})).toBeVisible();
+});
+
+test('an imported photo group exports all photos and keeps navigation after reload',async({page},info)=>{
+ await threeImportedPhotos(page);
  await page.getByRole('button',{name:'选择照片',exact:true}).click();
  const gallery=page.getByRole('dialog',{name:'选择照片'});
  await expect(gallery.getByRole('button',{name:/^照片 \d+$/})).toHaveCount(3);
