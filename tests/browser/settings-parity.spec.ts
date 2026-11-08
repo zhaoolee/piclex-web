@@ -6,6 +6,20 @@ const packageBytes=fs.readFileSync('tests/fixtures/demo/decks/cafe.piclexdeck');
 const fixture={deckID:'11111111-1111-4111-8111-111111111111',title:'测试照片卡组',author:'Fixture publisher',version:1,photoCount:1,wordCount:6,packageURL:'https://decks.example.test/deck.piclexdeck',packageBytes:packageBytes.length,packageSHA256:createHash('sha256').update(packageBytes).digest('hex'),access:'public'};
 async function mockQuota(page:any){await page.route('**/v1/web/quota',route=>route.fulfill({json:{quota:{remaining:7,daily_limit:10,used:3,resets_at:0}}}));}
 
+test('settings navigation before the first hash subscription leaves the old restore page',async({page})=>{
+ await page.addInitScript(()=>{
+  const add=window.addEventListener.bind(window);let moved=false;
+  window.addEventListener=((type:string,listener:any,options:any)=>{
+   if(type==='hashchange'&&!moved){moved=true;const oldURL=location.href;history.replaceState(null,'','#/settings/data');window.dispatchEvent(new HashChangeEvent('hashchange',{oldURL,newURL:location.href}));}
+   add(type,listener,options);
+  }) as typeof window.addEventListener;
+ });
+ await page.goto('/piclex-web/#/settings/data/webdav/restore');
+ await expect(page).toHaveURL(/#\/settings\/data$/);
+ await expect(page.getByRole('heading',{name:'照片数据',exact:true})).toBeVisible();
+ await expect(page.getByRole('button',{name:'已拍照片 0',exact:true})).toBeVisible();
+});
+
 test('settings matches native hierarchy, pins the level card and retains theme and native subpages',async({page},info)=>{
  await mockQuota(page);await page.setViewportSize({width:390,height:844});await page.goto('/piclex-web/#/settings');
  await expect(page.locator('.settings-home-rows > .settings-row')).toHaveText(['AI配置官方模型','照片卡组','照片数据','外观与主题','个性化设置','关于']);

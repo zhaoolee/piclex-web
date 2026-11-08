@@ -3,6 +3,18 @@ import fs from 'node:fs';
 import {fillSpelling} from './helpers/spelling';
 const catalog=JSON.parse(fs.readFileSync('apps/public/public/library/catalog.json','utf8')),card=catalog[0],deck=JSON.parse(fs.readFileSync('apps/public/public/'+card.payload,'utf8'));
 const parameters=(url:string)=>new URLSearchParams(url.split('?').at(-1));
+test('startup navigation before the first hash subscription is not lost',async({page})=>{
+ await page.addInitScript(()=>{
+  const add=window.addEventListener.bind(window);let moved=false;
+  window.addEventListener=((type:string,listener:any,options:any)=>{
+   if(type==='hashchange'&&!moved){moved=true;const oldURL=location.href;history.replaceState(null,'','#/settings/about');window.dispatchEvent(new HashChangeEvent('hashchange',{oldURL,newURL:location.href}));}
+   add(type,listener,options);
+  }) as typeof window.addEventListener;
+ });
+ await page.goto('/piclex-web/#/decks');
+ await expect(page).toHaveURL(/#\/settings\/about$/);
+ await expect(page.getByRole('heading',{name:'关于',exact:true})).toBeVisible();
+});
 async function photoHash(page:Page){await expect(page.locator('.photo-browse img')).toBeVisible();return page.locator('.photo-browse img').evaluate(async(image)=>{const data=await (await fetch((image as HTMLImageElement).src)).arrayBuffer();return Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',data))).map(n=>n.toString(16).padStart(2,'0')).join('');});}
 test('share restores module, photo and sentence in a fresh browser without sender progress',async({page,browser})=>{
  await page.addInitScript(()=>Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async(text:string)=>{(window as any).__shared=text;}}}));

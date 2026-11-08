@@ -54,7 +54,7 @@ function OfficialDeckCarousel({cards,cover,openDeck}:{cards:Card[];cover:(card:C
 }
 export default function Settings(props:Props){const {cards,ready,error,theme,setTheme,importFile,exportDeck,openDeck,openGame,gameBusy,gameDeckID,setGameDeckID,notify}=props;
  const aiModelLabel=useAIModelLabel();
- const [path,setPath]=useState(()=>location.hash.split('/').slice(2).join('/')||'');useEffect(()=>{const update=()=>setPath(location.hash.split('/').slice(2).join('/')||'');window.addEventListener('hashchange',update);return()=>window.removeEventListener('hashchange',update);},[]);
+ const [path,setPath]=useState(()=>location.hash.split('/').slice(2).join('/')||'');useEffect(()=>{const update=()=>setPath(location.hash.split('/').slice(2).join('/')||'');window.addEventListener('hashchange',update);update();return()=>window.removeEventListener('hashchange',update);},[]);
  const [deckFilter,setDeckFilter]=useState<'official'|'personal'>('personal');const xp=useExperience();const [effect,setEffect]=useState(()=>readPreference('piclex-web.particle-effect')||'socialCode');
  const [onePhoto,setOnePhoto]=useState(()=>readPreference('piclex-web.listening.single-photo')==='true');
  const [quick,setQuick]=useState(()=>readPreference('piclex-web.quick')==='true'),[importAnimation,setImportAnimation]=useState(()=>readPreference('piclex-web.import-animation')!=='false');

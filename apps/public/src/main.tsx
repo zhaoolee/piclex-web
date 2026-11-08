@@ -127,7 +127,14 @@ function App() {
   useEffect(()=>{const media=matchMedia('(prefers-color-scheme: dark)');const update=()=>setSystemDark(media.matches);media.addEventListener('change',update);return()=>media.removeEventListener('change',update);},[]);
   const file = useRef<HTMLInputElement>(null);
   useEffect(() => { document.documentElement.dataset.theme = dark ? 'dark' : 'light'; writePreference('piclex-web.theme',theme); }, [dark,theme]);
-  useEffect(() => { const update = () => { stopSpeaking(); setSelected(route()); setPage(screen()); setShowLibrary(location.hash==='#/decks'); setError(''); }; window.addEventListener('hashchange', update); return () => window.removeEventListener('hashchange', update); }, []);
+  useEffect(() => {
+    const update = () => { stopSpeaking(); setSelected(route()); setPage(screen()); setShowLibrary(location.hash==='#/decks'); setError(''); };
+    window.addEventListener('hashchange', update);
+    // A link can arrive after the initial render but before this subscription.
+    // Reconcile the live URL after subscribing so that navigation is never lost.
+    if(route()!==selected||screen()!==page||(location.hash==='#/decks')!==showLibrary)update();
+    return () => window.removeEventListener('hashchange', update);
+  }, []);
   useEffect(() => { const hide = () => { if (document.hidden) stopSpeaking(); }; document.addEventListener('visibilitychange', hide); window.addEventListener('pagehide', stopSpeaking); return () => { document.removeEventListener('visibilitychange', hide); window.removeEventListener('pagehide', stopSpeaking); }; }, []);
   useEffect(() => { if (!notice) return; const timer = setTimeout(() => setNotice(''), 6500); return () => clearTimeout(timer); }, [notice]);
   useEffect(() => {
