@@ -1,0 +1,7 @@
+{
+  "activate.py": "5e2eec21f35e16d30d5a970aa559a5cfb90cd17b3425dc16a593f3fa00ae5190",
+  "auto-update-public.py": "20aab6769cfc206c999a8adcd3b4bf028429026d280b3d93ebd39da54648bb41",
+  "check-mirror.py": "1faef9aabc91185c5bb4adff68c470193d1f94f2dc60f801ed556e149601808d",
+  "release_lifecycle.py": "7fec3272cdadc23d625e50dedebba644b955e5ec3f86aebad9661630bb572062",
+  "release_state.py": "8ee468fb5aa47a5d93a59de1e7346cbd8e88b7d50904bf047be0db7e4eaa5633"
+}

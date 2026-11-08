@@ -1,0 +1,9 @@
+[Unit]
+Description=Allow the existing deploy user to request the fixed PicLex updater
+
+[Path]
+PathChanged=/run/piclex-public-updater/request
+Unit=piclex-public-updater.service
+
+[Install]
+WantedBy=multi-user.target

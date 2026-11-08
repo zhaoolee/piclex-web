@@ -1,0 +1,21 @@
+[Unit]
+Description=Activate the verified PicLex public Web release
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=root
+Group=root
+WorkingDirectory=/
+Environment=PATH=/usr/sbin:/usr/bin:/sbin:/bin
+Environment=PYTHONNOUSERSITE=1
+Environment=PYTHONPATH=
+ExecStart=/usr/bin/python3 -B /home/hermes/piclex-web/deploy/auto-update-public.py
+BindReadOnlyPaths=/usr/local/lib/piclex-public-updater:/home/hermes/piclex-web/deploy
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/home/hermes/piclex-web /run/lock
+PrivateTmp=true
+NoNewPrivileges=true
+TimeoutStartSec=10min
