@@ -1,0 +1,55 @@
+
+Running 51 tests using 2 workers
+
+[1/51] [desktop] › tests/browser/app-shell.spec.ts:14:1 › capture creates a real local deck and retains an unsaved photo when changing tabs
+[2/51] [desktop] › tests/browser/app-shell.spec.ts:9:1 › three App tabs keep the current deck and draft; earned experience survives reload without duplication
+[3/51] [desktop] › tests/browser/app-shell.spec.ts:20:1 › new correct letters render particles, restored answers do not, and reduced motion suppresses them
+[4/51] [desktop] › tests/browser/app-shell.spec.ts:23:1 › two tabs award a completed word only once and keep low-level rewards locked
+[5/51] [desktop] › tests/browser/app-shell.spec.ts:26:1 › the native game loads local assets, pauses, saves before changing tabs, and resumes
+[6/51] [desktop] › tests/browser/app-shell.spec.ts:32:1 › one App shell adapts at 320, 390, 768 and 1440px without hiding navigation or controls
+[7/51] [desktop] › tests/browser/app-shell.spec.ts:52:1 › spelling keyboard mirrors hardware keys on desktop and suppresses the OS keyboard on touch devices
+[8/51] [desktop] › tests/browser/app-shell.spec.ts:64:1 › dictation keyboard follows App modes, focuses all difficulty inputs and preserves drafts
+[9/51] [desktop] › tests/browser/app-shell.spec.ts:86:1 › dictation keeps its keyboard after assistance and Enter continues without losing focus
+[10/51] [desktop] › tests/browser/lab-loading.spec.ts:4:1 › game program delay shows loading immediately and navigation remains usable
+[11/51] [desktop] › tests/browser/lab-loading.spec.ts:9:1 › artwork reports real partial progress then reveals a playable game
+[12/51] [desktop] › tests/browser/lab-loading.spec.ts:14:1 › failed game resources show retry and preserve an existing adventure
+[13/51] [desktop] › tests/browser/lab-loading.spec.ts:18:1 › failed game program has a recovery action instead of a blank canvas
+[14/51] [desktop] › tests/browser/lab-loading.spec.ts:23:1 › a half-downloaded game program shows measured byte progress, not a black screen
+[15/51] [desktop] › tests/browser/lab-loading.spec.ts:30:1 › a slow artwork transfer beyond 45 seconds stays loading and can finish
+[16/51] [desktop] › tests/browser/learning-parity.spec.ts:6:1 › guided word blanks show readable underlines and preserve typing, reveal and difficulty changes
+[17/51] [desktop] › tests/browser/learning-parity.spec.ts:50:1 › long guided words wrap without covering the next word or reserving an icon row
+[18/51] [desktop] › tests/browser/learning-parity.spec.ts:76:1 › avatar level sheet enters the real game with the current deck and returns to the same listening draft
+[19/51] [desktop] › tests/browser/learning-parity.spec.ts:101:1 › settings level entry offers game loading recovery back to the level page
+[20/51] [desktop] › tests/browser/learning-parity.spec.ts:111:1 › rewards have real details, learning and settings routes, and saved milestones remain visible after spending
+[21/51] [desktop] › tests/browser/learning-parity.spec.ts:126:37 › light listening answer trays remain distinct from the page and selected chips have a visible outline
+[22/51] [desktop] › tests/browser/learning-parity.spec.ts:126:37 › dark listening answer trays remain distinct from the page and selected chips have a visible outline
+[23/51] [mobile] › tests/browser/app-shell.spec.ts:9:1 › three App tabs keep the current deck and draft; earned experience survives reload without duplication
+[24/51] [mobile] › tests/browser/app-shell.spec.ts:14:1 › capture creates a real local deck and retains an unsaved photo when changing tabs
+[25/51] [mobile] › tests/browser/app-shell.spec.ts:20:1 › new correct letters render particles, restored answers do not, and reduced motion suppresses them
+[26/51] [mobile] › tests/browser/app-shell.spec.ts:23:1 › two tabs award a completed word only once and keep low-level rewards locked
+[27/51] [mobile] › tests/browser/app-shell.spec.ts:26:1 › the native game loads local assets, pauses, saves before changing tabs, and resumes
+[28/51] [mobile] › tests/browser/app-shell.spec.ts:32:1 › one App shell adapts at 320, 390, 768 and 1440px without hiding navigation or controls
+[29/51] [mobile] › tests/browser/app-shell.spec.ts:52:1 › spelling keyboard mirrors hardware keys on desktop and suppresses the OS keyboard on touch devices
+[30/51] [mobile] › tests/browser/app-shell.spec.ts:64:1 › dictation keyboard follows App modes, focuses all difficulty inputs and preserves drafts
+[31/51] [mobile] › tests/browser/app-shell.spec.ts:86:1 › dictation keeps its keyboard after assistance and Enter continues without losing focus
+[32/51] [mobile] › tests/browser/lab-loading.spec.ts:4:1 › game program delay shows loading immediately and navigation remains usable
+[33/51] [mobile] › tests/browser/lab-loading.spec.ts:9:1 › artwork reports real partial progress then reveals a playable game
+[34/51] [mobile] › tests/browser/lab-loading.spec.ts:14:1 › failed game resources show retry and preserve an existing adventure
+[35/51] [mobile] › tests/browser/lab-loading.spec.ts:18:1 › failed game program has a recovery action instead of a blank canvas
+[36/51] [mobile] › tests/browser/lab-loading.spec.ts:23:1 › a half-downloaded game program shows measured byte progress, not a black screen
+[37/51] [mobile] › tests/browser/lab-loading.spec.ts:30:1 › a slow artwork transfer beyond 45 seconds stays loading and can finish
+[38/51] [mobile] › tests/browser/learning-parity.spec.ts:6:1 › guided word blanks show readable underlines and preserve typing, reveal and difficulty changes
+[39/51] [mobile] › tests/browser/learning-parity.spec.ts:50:1 › long guided words wrap without covering the next word or reserving an icon row
+[40/51] [mobile] › tests/browser/learning-parity.spec.ts:76:1 › avatar level sheet enters the real game with the current deck and returns to the same listening draft
+[41/51] [mobile] › tests/browser/learning-parity.spec.ts:101:1 › settings level entry offers game loading recovery back to the level page
+[42/51] [mobile] › tests/browser/learning-parity.spec.ts:111:1 › rewards have real details, learning and settings routes, and saved milestones remain visible after spending
+[43/51] [mobile] › tests/browser/learning-parity.spec.ts:126:37 › light listening answer trays remain distinct from the page and selected chips have a visible outline
+[44/51] [mobile] › tests/browser/learning-parity.spec.ts:126:37 › dark listening answer trays remain distinct from the page and selected chips have a visible outline
+[45/51] [mobile-webkit] › tests/browser/learning-parity.spec.ts:6:1 › guided word blanks show readable underlines and preserve typing, reveal and difficulty changes
+[46/51] [mobile-webkit] › tests/browser/learning-parity.spec.ts:50:1 › long guided words wrap without covering the next word or reserving an icon row
+[47/51] [mobile-webkit] › tests/browser/learning-parity.spec.ts:76:1 › avatar level sheet enters the real game with the current deck and returns to the same listening draft
+[48/51] [mobile-webkit] › tests/browser/learning-parity.spec.ts:101:1 › settings level entry offers game loading recovery back to the level page
+[49/51] [mobile-webkit] › tests/browser/learning-parity.spec.ts:111:1 › rewards have real details, learning and settings routes, and saved milestones remain visible after spending
+[50/51] [mobile-webkit] › tests/browser/learning-parity.spec.ts:126:37 › light listening answer trays remain distinct from the page and selected chips have a visible outline
+[51/51] [mobile-webkit] › tests/browser/learning-parity.spec.ts:126:37 › dark listening answer trays remain distinct from the page and selected chips have a visible outline
+  51 passed (1.3m)

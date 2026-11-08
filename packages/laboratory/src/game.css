@@ -254,8 +254,11 @@ button,select{touch-action:manipulation}
   .screen.achievements-screen{overflow:hidden;padding:6px}
   .review-list{max-height:none;overflow:hidden;margin:0}
 
-  /* ---- ready cover: two columns, usable down to 568x320 ---- */
-  .ready-cover{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;gap:10px;width:100%;height:100%;max-width:none;margin:0;text-align:left}
+  /* ---- ready cover: centered two columns, usable down to 568x320 ----
+     Keep the left-title/right-actions split, but cap the composition so wide
+     landscape viewports get side breathing room instead of edge-to-edge copy.
+     Padding and gap scale with the viewport without affecting button widths. */
+  .ready-cover{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;gap:clamp(12px,4vw,48px);width:100%;height:100%;max-width:min(760px,100%);margin:0 auto;padding-inline:clamp(12px,4vw,44px);text-align:left}
   .ready-intro{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:3px;min-width:0;min-height:0}
   .ready-intro .eyebrow{font-size:10px;letter-spacing:2px;margin:0}
   .ready-intro .potato-art,.ready-intro .hero-art{width:clamp(38px,10dvh,60px);height:clamp(38px,10dvh,60px);margin:0 0 2px}
