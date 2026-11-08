@@ -1,0 +1,44 @@
+{
+  "runId": 42448844930,
+  "sourceRevision": "45849785af755f093bcc02bfb679bc4c108be257",
+  "status": "failed; publication blocked",
+  "jobs": [
+    {
+      "name": "Browser desktop 1/2",
+      "jobID": 128633698808,
+      "conclusion": "success",
+      "testSeconds": 228.0
+    },
+    {
+      "name": "Browser mobile-webkit 2/2",
+      "jobID": 128633698813,
+      "conclusion": "failure",
+      "testSeconds": 239.0
+    },
+    {
+      "name": "Browser mobile 2/2",
+      "jobID": 128633698819,
+      "conclusion": "failure",
+      "testSeconds": 209.0
+    },
+    {
+      "name": "Browser desktop 2/2",
+      "jobID": 128633698840,
+      "conclusion": "failure",
+      "testSeconds": 224.0
+    },
+    {
+      "name": "Browser mobile 1/2",
+      "jobID": 128633698855,
+      "conclusion": "success",
+      "testSeconds": 244.0
+    },
+    {
+      "name": "Browser mobile-webkit 1/2",
+      "jobID": 128633698883,
+      "conclusion": "success",
+      "testSeconds": 365.0
+    }
+  ],
+  "regression": "legacy completion word is web-history instead of camera on all 3 browser projects; assertions unchanged"
+}

@@ -1,0 +1,78 @@
+{
+  "runURL": "https://github.com/zhaoolee/piclex-web/actions/runs/42443644183",
+  "createdAt": "2026-11-08T03:39:38Z",
+  "finishedAt": "2026-11-08T03:57:09Z",
+  "totalSeconds": 1051,
+  "jobs": [
+    {
+      "name": "build",
+      "startedAt": "2026-11-08T03:39:41Z",
+      "completedAt": "2026-11-08T03:40:40Z",
+      "seconds": 59,
+      "steps": []
+    },
+    {
+      "name": "Browser shard 1/3",
+      "startedAt": "2026-11-08T03:40:41Z",
+      "completedAt": "2026-11-08T03:48:27Z",
+      "seconds": 466,
+      "steps": [
+        {
+          "name": "Run npx playwright install --with-deps chrome webkit",
+          "seconds": 59
+        },
+        {
+          "name": "Run npm run test:browser -- --shard=1/3 --reporter=line,blob",
+          "seconds": 379
+        }
+      ]
+    },
+    {
+      "name": "Browser shard 2/3",
+      "startedAt": "2026-11-08T03:40:41Z",
+      "completedAt": "2026-11-08T03:47:24Z",
+      "seconds": 403,
+      "steps": [
+        {
+          "name": "Run npx playwright install --with-deps chrome webkit",
+          "seconds": 53
+        },
+        {
+          "name": "Run npm run test:browser -- --shard=2/3 --reporter=line,blob",
+          "seconds": 318
+        }
+      ]
+    },
+    {
+      "name": "Browser shard 3/3",
+      "startedAt": "2026-11-08T03:40:42Z",
+      "completedAt": "2026-11-08T03:52:57Z",
+      "seconds": 735,
+      "steps": [
+        {
+          "name": "Run npx playwright install --with-deps chrome webkit",
+          "seconds": 73
+        },
+        {
+          "name": "Run npm run test:browser -- --shard=3/3 --reporter=line,blob",
+          "seconds": 623
+        }
+      ]
+    },
+    {
+      "name": "deploy",
+      "startedAt": "2026-11-08T03:53:00Z",
+      "completedAt": "2026-11-08T03:53:23Z",
+      "seconds": 23,
+      "steps": []
+    },
+    {
+      "name": "docker / publish",
+      "startedAt": "2026-11-08T03:52:59Z",
+      "completedAt": "2026-11-08T03:57:09Z",
+      "seconds": 250,
+      "steps": []
+    }
+  ],
+  "comparisonLimit": "Previous run had 615 browser cases and no independent 24-round performance gate. New run has 618 cases plus the full gate; elapsed comparisons are observed end-to-end timings, not an identical-workload benchmark."
+}

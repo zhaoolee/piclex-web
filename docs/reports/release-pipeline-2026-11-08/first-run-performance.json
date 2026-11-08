@@ -1,0 +1,268 @@
+{
+  "sourceRevision": "45849785af755f093bcc02bfb679bc4c108be257",
+  "status": "failed",
+  "rounds": 24,
+  "failures": [
+    "desktop/sync/1: main-thread task reached 33ms",
+    "desktop/sync/1: long task or long animation frame",
+    "desktop/sync/2: main-thread task reached 33ms",
+    "desktop/sync/2: animation frame gap reached 50ms",
+    "desktop/sync/2: long task or long animation frame",
+    "desktop/sync/3: main-thread task reached 33ms",
+    "desktop/sync/3: animation frame gap reached 50ms",
+    "desktop/sync/3: long task or long animation frame",
+    "touch/sync/1: main-thread task reached 33ms",
+    "touch/sync/1: animation frame gap reached 50ms",
+    "touch/sync/1: long task or long animation frame",
+    "touch/sync/2: main-thread task reached 33ms",
+    "touch/sync/2: animation frame gap reached 50ms",
+    "touch/sync/2: long task or long animation frame",
+    "touch/sync/2: input event reached 100ms",
+    "touch/sync/3: main-thread task reached 33ms",
+    "touch/sync/3: long task or long animation frame",
+    "touch/sync/3: input event reached 100ms"
+  ],
+  "samples": [
+    {
+      "viewport": "desktop",
+      "scenario": "spelling",
+      "round": 1,
+      "failures": [],
+      "maxTaskMs": 11.158,
+      "maxFrameMs": 16.80000000000109,
+      "maxEventMs": 32
+    },
+    {
+      "viewport": "desktop",
+      "scenario": "spelling",
+      "round": 2,
+      "failures": [],
+      "maxTaskMs": 11.323,
+      "maxFrameMs": 16.80000000000109,
+      "maxEventMs": 40
+    },
+    {
+      "viewport": "desktop",
+      "scenario": "spelling",
+      "round": 3,
+      "failures": [],
+      "maxTaskMs": 11.469,
+      "maxFrameMs": 16.80000000000109,
+      "maxEventMs": 32
+    },
+    {
+      "viewport": "desktop",
+      "scenario": "dictation",
+      "round": 1,
+      "failures": [],
+      "maxTaskMs": 8.99,
+      "maxFrameMs": 16.80000000000109,
+      "maxEventMs": 48
+    },
+    {
+      "viewport": "desktop",
+      "scenario": "dictation",
+      "round": 2,
+      "failures": [],
+      "maxTaskMs": 9.437,
+      "maxFrameMs": 16.80000000000109,
+      "maxEventMs": 32
+    },
+    {
+      "viewport": "desktop",
+      "scenario": "dictation",
+      "round": 3,
+      "failures": [],
+      "maxTaskMs": 9.031,
+      "maxFrameMs": 16.80000000000109,
+      "maxEventMs": 40
+    },
+    {
+      "viewport": "desktop",
+      "scenario": "modules",
+      "round": 1,
+      "failures": [],
+      "maxTaskMs": 11.533,
+      "maxFrameMs": 16.80000000000109,
+      "maxEventMs": 48
+    },
+    {
+      "viewport": "desktop",
+      "scenario": "modules",
+      "round": 2,
+      "failures": [],
+      "maxTaskMs": 11.201,
+      "maxFrameMs": 16.80000000000109,
+      "maxEventMs": 48
+    },
+    {
+      "viewport": "desktop",
+      "scenario": "modules",
+      "round": 3,
+      "failures": [],
+      "maxTaskMs": 11.056,
+      "maxFrameMs": 16.80000000000109,
+      "maxEventMs": 48
+    },
+    {
+      "viewport": "desktop",
+      "scenario": "sync",
+      "round": 1,
+      "failures": [
+        "main-thread task reached 33ms",
+        "long task or long animation frame"
+      ],
+      "maxTaskMs": 49.66,
+      "maxFrameMs": 33.400000000001455,
+      "maxEventMs": 48
+    },
+    {
+      "viewport": "desktop",
+      "scenario": "sync",
+      "round": 2,
+      "failures": [
+        "main-thread task reached 33ms",
+        "animation frame gap reached 50ms",
+        "long task or long animation frame"
+      ],
+      "maxTaskMs": 60.669,
+      "maxFrameMs": 50,
+      "maxEventMs": 56
+    },
+    {
+      "viewport": "desktop",
+      "scenario": "sync",
+      "round": 3,
+      "failures": [
+        "main-thread task reached 33ms",
+        "animation frame gap reached 50ms",
+        "long task or long animation frame"
+      ],
+      "maxTaskMs": 50.711,
+      "maxFrameMs": 50,
+      "maxEventMs": 48
+    },
+    {
+      "viewport": "touch",
+      "scenario": "spelling",
+      "round": 1,
+      "failures": [],
+      "maxTaskMs": 12.265,
+      "maxFrameMs": 16.80000000000109,
+      "maxEventMs": 80
+    },
+    {
+      "viewport": "touch",
+      "scenario": "spelling",
+      "round": 2,
+      "failures": [],
+      "maxTaskMs": 12.802,
+      "maxFrameMs": 16.80000000000109,
+      "maxEventMs": 64
+    },
+    {
+      "viewport": "touch",
+      "scenario": "spelling",
+      "round": 3,
+      "failures": [],
+      "maxTaskMs": 13.06,
+      "maxFrameMs": 16.80000000000109,
+      "maxEventMs": 72
+    },
+    {
+      "viewport": "touch",
+      "scenario": "dictation",
+      "round": 1,
+      "failures": [],
+      "maxTaskMs": 9.397,
+      "maxFrameMs": 16.80000000000291,
+      "maxEventMs": 80
+    },
+    {
+      "viewport": "touch",
+      "scenario": "dictation",
+      "round": 2,
+      "failures": [],
+      "maxTaskMs": 8.607,
+      "maxFrameMs": 16.80000000000291,
+      "maxEventMs": 64
+    },
+    {
+      "viewport": "touch",
+      "scenario": "dictation",
+      "round": 3,
+      "failures": [],
+      "maxTaskMs": 9.127,
+      "maxFrameMs": 16.80000000000291,
+      "maxEventMs": 80
+    },
+    {
+      "viewport": "touch",
+      "scenario": "modules",
+      "round": 1,
+      "failures": [],
+      "maxTaskMs": 17.988,
+      "maxFrameMs": 16.80000000000109,
+      "maxEventMs": 32
+    },
+    {
+      "viewport": "touch",
+      "scenario": "modules",
+      "round": 2,
+      "failures": [],
+      "maxTaskMs": 12.053,
+      "maxFrameMs": 16.80000000000109,
+      "maxEventMs": 48
+    },
+    {
+      "viewport": "touch",
+      "scenario": "modules",
+      "round": 3,
+      "failures": [],
+      "maxTaskMs": 12.451,
+      "maxFrameMs": 16.80000000000109,
+      "maxEventMs": 48
+    },
+    {
+      "viewport": "touch",
+      "scenario": "sync",
+      "round": 1,
+      "failures": [
+        "main-thread task reached 33ms",
+        "animation frame gap reached 50ms",
+        "long task or long animation frame"
+      ],
+      "maxTaskMs": 53.817,
+      "maxFrameMs": 50,
+      "maxEventMs": 80
+    },
+    {
+      "viewport": "touch",
+      "scenario": "sync",
+      "round": 2,
+      "failures": [
+        "main-thread task reached 33ms",
+        "animation frame gap reached 50ms",
+        "long task or long animation frame",
+        "input event reached 100ms"
+      ],
+      "maxTaskMs": 56.554,
+      "maxFrameMs": 50,
+      "maxEventMs": 112
+    },
+    {
+      "viewport": "touch",
+      "scenario": "sync",
+      "round": 3,
+      "failures": [
+        "main-thread task reached 33ms",
+        "long task or long animation frame",
+        "input event reached 100ms"
+      ],
+      "maxTaskMs": 50.571,
+      "maxFrameMs": 33.400000000000546,
+      "maxEventMs": 104
+    }
+  ],
+  "rawEvidence": "/Users/zhaoolee/github/PicLex/output/release-pipeline-2026-11-08/performance"
+}
