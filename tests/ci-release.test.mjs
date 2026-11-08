@@ -8,6 +8,7 @@ import {changesProduct} from '../scripts/ci-release-scope.mjs';
 import {prepareVerifiedImage} from '../scripts/prepare-verified-image.mjs';
 const hash=data=>createHash('sha256').update(data).digest('hex'),revision='a'.repeat(40);
 test('CI-only changes run verification without republishing; product changes still publish',()=>{
+ assert.equal(changesProduct(['deploy/verify-remote-release.py','deploy/test_remote_release.py']),false);
  assert.equal(changesProduct(['.github/workflows/pages.yml','scripts/prepare-verified-image.mjs','scripts/ci-release-scope.mjs','docker/Dockerfile.verified','tests/ci-release.test.mjs','memory/2026-11-06.md']),false);
  for(const path of ['apps/public/index.html','packages/learning-ui/src/LoadProgress.tsx','content/snapshot.json','Dockerfile','docker/nginx.conf','package-lock.json','scripts/build-public-content.mjs'])assert.equal(changesProduct(['.github/workflows/pages.yml',path]),true,path);
 });

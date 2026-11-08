@@ -1,0 +1,59 @@
+{
+  "sourceRevision": "1b15b60aba6fe87f4f8055660eea3e4546ac808d",
+  "candidateRun": 42481950501,
+  "releaseRun": 42482659965,
+  "candidatePreparationSeconds": 493.0,
+  "releaseIncludingBothSitesDockerAndLiveChecksSeconds": 122.138,
+  "within120Seconds": false,
+  "candidateStartToFinalVerificationSeconds": 681.639259,
+  "performance": {
+    "rounds": 24,
+    "independentRunners": 8,
+    "maxTaskMs": 24.483,
+    "maxFrameMs": 33.400000000001455,
+    "status": "passed"
+  },
+  "browserCoverage": {
+    "mode": "reuse",
+    "files": [],
+    "modules": [],
+    "reason": "Cumulative diff from verified browser baseline",
+    "baseline": {
+      "repository": "zhaoolee/piclex-web",
+      "revision": "7a9d5b0a8dbdd36a4ceba7c33b9f0fc04d98fb47",
+      "run": 42479218892
+    },
+    "revision": "1b15b60aba6fe87f4f8055660eea3e4546ac808d"
+  },
+  "pages": {
+    "site": "https://zhaoolee.com/piclex-web/",
+    "sourceRevision": "1b15b60aba6fe87f4f8055660eea3e4546ac808d",
+    "assets": 14,
+    "elapsedSeconds": 6.078,
+    "flows": [
+      "real deck import",
+      "listening and spelling navigation",
+      "reload preserves deck"
+    ],
+    "audio": "isolated Linux + media mute + system TTS stub"
+  },
+  "domestic": {
+    "site": "https://piclex.v2fy.com/piclex-web/",
+    "sourceRevision": "1b15b60aba6fe87f4f8055660eea3e4546ac808d",
+    "assets": 14,
+    "elapsedSeconds": 21.467,
+    "flows": [
+      "real deck import",
+      "listening and spelling navigation",
+      "reload preserves deck"
+    ],
+    "audio": "isolated Linux + media mute + system TTS stub"
+  },
+  "followupIdentityCheck": {
+    "sourceRevision": "1b15b60aba6fe87f4f8055660eea3e4546ac808d",
+    "releaseID": "1b15b60aba6f-30ca999444a3",
+    "manifestSHA256": "a522d9cfab78ae05419efd796ccba6548e07c85b2fc89951cfe6201214e1fdc8",
+    "elapsedSeconds": 0.7294828750018496
+  },
+  "note": "Follow-up complete-manifest digest check is verified separately; 122.138 seconds remains the only measured new-release result. No unchanged release rerun to claim 120 seconds."
+}

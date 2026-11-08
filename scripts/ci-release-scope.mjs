@@ -3,7 +3,7 @@ import {readFileSync,appendFileSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 export function changesProduct(paths){
-  const tooling=new Set(['README.md','ASSET_LICENSES.md','AGENTS.md','deploy/README.md','docker/Dockerfile.verified','scripts/prepare-verified-image.mjs','scripts/ci-release-scope.mjs','scripts/browser-test-scope.mjs']);
+  const tooling=new Set(['deploy/verify-remote-release.py','deploy/test_remote_release.py','README.md','ASSET_LICENSES.md','AGENTS.md','deploy/README.md','docker/Dockerfile.verified','scripts/prepare-verified-image.mjs','scripts/ci-release-scope.mjs','scripts/browser-test-scope.mjs']);
   return paths.some(path=>!tooling.has(path)&&! /^(\.github|docs|memory|tests)\//.test(path));
 }
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){
