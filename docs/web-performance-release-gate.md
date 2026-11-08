@@ -12,7 +12,7 @@ npm run test:performance -- --dist dist --source "$RELEASE_SHA" --output perform
 npm run test:performance -- --url https://zhaoolee.com/piclex-web/ --source "$RELEASE_SHA" --output live-performance --channel chrome
 ```
 
-目录必须不存在，不覆盖旧失败证据。测量前要求整个Linux环境连续5秒CPU使用低于35%；最多等10分钟，仍繁忙则阻塞。每轮记录环境CPU占用，达到85%或缺失环境证据不能放行；这不豁免任何应用性能阈值。`dist/release.json`、实际 HTML 和入口 JS/CSS 的 SHA256 必须与目标源码版本一致。CI 复用功能浏览器测试使用的同一个构建产物；不会为性能测试另建简化页面。
+目录必须不存在，不覆盖旧失败证据。测量前要求整个Linux环境连续5秒CPU使用低于35%、系统负载低于CPU核数的80%；最多等10分钟，仍繁忙则阻塞。每轮记录环境CPU占用，达到85%或缺失环境证据不能放行；这不豁免任何应用性能阈值。`dist/release.json`、实际 HTML 和入口 JS/CSS 的 SHA256 必须与目标源码版本一致。CI 复用功能浏览器测试使用的同一个构建产物；不会为性能测试另建简化页面。
 
 ## 场景及判定
 
