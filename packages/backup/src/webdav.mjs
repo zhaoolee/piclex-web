@@ -56,16 +56,24 @@ export class WebDAV {
   const rows=await this.properties(child(this.settings.root,'progress/'),'1',true);
   return (rows||[]).filter(r=>!r.collection&&/^PicLex-progress-v1-[a-f0-9]{20}\.json$/.test(r.name)).sort((a,b)=>a.name.localeCompare(b.name));
  }
- async readProgress(name){
+ async readProgressBytes(name){
   if(!/^PicLex-progress-v1-[a-f0-9]{20}\.json$/.test(name))throw Error('学习进度文件名无效。');
   const response=await this.request('GET',child(child(this.settings.root,'progress/'),name),{limit:MAX_PROGRESS_BYTES,progressJSON:true});
-  const content=await decodeProgress(response.bytes),envelope=await encodeProgress(content);
+  return response.bytes;
+ }
+ async readProgress(name){
+  const content=await decodeProgress(await this.readProgressBytes(name)),envelope=await encodeProgress(content);
   if(name!==`PicLex-progress-v1-${envelope.contentSHA256.slice(0,20)}.json`)throw Error('学习进度文件名与内容校验不一致。');
   return content;
  }
  async uploadProgress(content){
   const envelope=await encodeProgress(content),name=`PicLex-progress-v1-${envelope.contentSHA256.slice(0,20)}.json`;
-  const bytes=new TextEncoder().encode(JSON.stringify(envelope));checkSize(bytes.length,MAX_PROGRESS_BYTES);
+  const bytes=new TextEncoder().encode(JSON.stringify(envelope));
+  return this.uploadProgressBytes(name,bytes,async saved=>{const checked=await encodeProgress(await decodeProgress(saved));if(checked.contentSHA256!==envelope.contentSHA256)throw Error('学习进度校验失败，请重试。');});
+ }
+ async uploadProgressBytes(name,bytes,verify){
+  if(!/^PicLex-progress-v1-[a-f0-9]{20}\.json$/.test(name)||!(bytes instanceof Uint8Array)||typeof verify!=='function')throw Error('学习进度上传参数无效。');
+  checkSize(bytes.length,MAX_PROGRESS_BYTES);await verify(bytes);
   const folder=child(this.settings.root,'progress/');await this.mkdir(this.settings.root,true);await this.mkdir(folder,true);
   // Same immutable names as iOS: concurrent writers never replace each other.
   // getRandomValues remains available on LAN HTTP, unlike randomUUID.
@@ -75,8 +83,7 @@ export class WebDAV {
   try{
    created=true;await this.request('PUT',stage,{data:bytes,headers:{'Content-Type':'application/json','If-None-Match':'*'},allow:[200,201,204],limit:1024*1024});
    await this.request('MOVE',stage,{headers:{Destination:target,Overwrite:'F'},allow:[201,204,412],limit:1024*1024});
-   const saved=await encodeProgress(await this.readProgress(name));
-   if(saved.contentSHA256!==envelope.contentSHA256)throw Error('学习进度校验失败，请重试。');
+   await verify(await this.readProgressBytes(name));
    return name;
   }finally{if(created){try{const cleanup=new WebDAV({address:this.settings.directory,username:this.settings.username,password:this.settings.password});await cleanup.request('DELETE',stage,{allow:[200,204,404],limit:1024*1024});}catch{/* Only this run's unique temporary file can remain. */}}}
  }

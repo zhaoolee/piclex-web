@@ -5,22 +5,23 @@ import {readPhotos,writePhotos} from '../../../packages/backup/src/photos.mjs';
 import {hashBlob,bytesOf,checkSize,MAX_MANIFEST_BYTES,MAX_PROGRESS_BYTES} from '../../../packages/backup/src/streaming.mjs';
 import {experienceEvents,mergeBackupExperience} from '../../../packages/practice/src/experience-store.mjs';
 export type CompleteFiles=Record<string,Blob|Uint8Array>;
-export async function currentProgress(){
+export async function currentProgress(studies?:string[]){
  const state=await backupState(false);
- return mergeProgress(state.content,await experienceContent([],state.content));
+ return mergeProgress(state.content,await experienceContent([],state.content,studies));
 }
 export async function mergeSyncedProgress(remote:any){
  await mergePortableProgress(remote);
  await restoreExperience((await backupState(false)).content);
- window.dispatchEvent(new Event('piclex-progress-imported'));
+ globalThis.dispatchEvent(new Event('piclex-progress-imported'));
 }
-async function experienceContent(photos:BackupPhoto[],existing:any){
+function legacyStudies(){const values:string[]=[];for(let i=0;i<localStorage.length;i++){const key=localStorage.key(i)!;if(key.startsWith('piclex-web.study.v2.'))values.push(localStorage.getItem(key)!);}return values;}
+async function experienceContent(photos:BackupPhoto[],existing:any,studies=legacyStudies()){
  const rows=(await experienceEvents() as any[]).sort((a,b)=>a.at-b.at),content:any=emptyProgress(),words=new Map<string,any>(),drafts=new Map<string,any>(),histories=new Map<string,any>();
  content.readingEvents=[];content.laboratoryExperienceEvents=[];
  for(const p of photos)for(const [index,label] of p.meta.labels.entries())words.set(`${p.meta.id}:${index}`,{english:label.english,occurrenceID:label.learning?.occurrenceID});
  // Older Web versions retained terminal drafts and XP dates, but no portable records.
  // Recover those records without assigning a new practice date to old answers.
- for(let i=0;i<localStorage.length;i++){const key=localStorage.key(i)!;if(!key.startsWith('piclex-web.study.v2.'))continue;let state;try{state=JSON.parse(localStorage.getItem(key)!);}catch{continue;}if(state?.version!==2)continue;
+ for(const raw of studies){let state;try{state=JSON.parse(raw);}catch{continue;}if(state?.version!==2)continue;
   for(const [id,d] of Object.entries(state.words||{}) as [string,any][]){drafts.set(`spell:${state.fingerprint}:${state.round}:${id}`,d);if(!words.has(id)&&d.result&&typeof d.input==='string'&&d.input.trim()&&!d.quickIndices?.length)words.set(id,{english:d.input});}
   for(const [id,h] of Object.entries(state.history||{}))histories.set(id,h);
  }

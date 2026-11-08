@@ -80,17 +80,45 @@ jobs:
           path: |
             test-results/
             blob-report/
+  performance:
+    name: Performance release gate
+    needs: build
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:v1.63.0-noble
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm ci
+      - uses: actions/download-artifact@v4
+        with:
+          name: github-pages
+          path: /tmp/pages-artifact
+      - name: Restore the exact candidate
+        run: |
+          mkdir dist
+          tar -xf /tmp/pages-artifact/artifact.tar -C dist
+      - run: npx playwright install chrome
+      - name: Measure continuous learning and automatic backup
+        run: npm run test:performance -- --dist dist --source "$GITHUB_SHA" --output performance-results --channel chrome
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: performance-results
+          path: performance-results/
   docker:
-    needs: [build, browser]
+    needs: [build, browser, performance]
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     uses: ./.github/workflows/docker-publish.yml
     with:
       verified-artifact: true
+      performance-verified: true
       publish: ${{ needs.build.outputs.publish == 'true' }}
     secrets: inherit
   deploy:
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && needs.build.outputs.publish == 'true'
-    needs: [build, browser]
+    needs: [build, browser, performance]
     runs-on: ubuntu-latest
     permissions:
       pages: write

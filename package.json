@@ -16,7 +16,8 @@
     "decks:build": "node scripts/build-demo-decks.mjs",
     "mirror:build": "node scripts/build-mirror.mjs",
     "test:deploy": "python3 -B -m unittest discover -s deploy -p \"test_*.py\"",
-    "content:build": "node scripts/build-public-content.mjs"
+    "content:build": "node scripts/build-public-content.mjs",
+    "test:performance": "node scripts/run-web-performance.mjs"
   },
   "dependencies": {
     "@noble/hashes": "2.4.0",

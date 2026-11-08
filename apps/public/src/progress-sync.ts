@@ -2,8 +2,7 @@ import {positions,mergeStoredPositions} from './position-store';
 import {mergePositions,encodePositions,positionName} from '../../../packages/backup/src/positions.mjs';
 import {sha256} from '../../../packages/deck-format/src/archive.mjs';
 import {WebDAV,configuration} from '../../../packages/backup/src/webdav.mjs';
-import {encodeProgress,mergeProgress} from '../../../packages/backup/src/progress.mjs';
-import {currentProgress,mergeSyncedProgress} from './backup-service';
+import {ProgressWork} from './progress-work';
 import {readPreference} from './storage';
 import {progressSyncReceipts} from './backup-store';
 
@@ -25,6 +24,7 @@ export async function syncProgress(){
  if(running||!enabled()||!navigator.onLine||Date.now()<retryAt)return;
  const settings=savedWebDAV();if(!settings.address)return;
  running=true;controller=new AbortController();const runGeneration=generation;
+ let work:ProgressWork|undefined;
  const captured=JSON.stringify(settings),valid=()=>{
   controller?.signal.throwIfAborted();
   if(!enabled()||JSON.stringify(savedWebDAV())!==captured)throw Error('同步配置已变化，下次将使用新配置。');
@@ -37,20 +37,19 @@ export async function syncProgress(){
    valid();const client=new WebDAV(settings,{signal:controller!.signal});
    const seen=new Set(await progressSyncReceipts(destination));
    const files=await client.listProgress();
-   let content=await currentProgress();
+   work=new ProgressWork(controller!.signal);await work.collect();valid();
    for(const file of files)if(!seen.has(file.name)){
-    const incoming=await client.readProgress(file.name);valid();
-    content=mergeProgress(content,incoming);
+    const bytes=await client.readProgressBytes(file.name);valid();
+    await work.call('merge',{bytes,name:file.name});valid();
    }
    valid();applying=true;
-   try{await mergeSyncedProgress(content);}finally{applying=false;}
+   try{await work.call('apply');valid();window.dispatchEvent(new Event('piclex-experience'));window.dispatchEvent(new Event('piclex-progress-imported'));}finally{applying=false;}
    // Reread after the transaction: answers written during the download survive.
-   content=await currentProgress();valid();
-   const envelope=await encodeProgress(content),name=`PicLex-progress-v1-${envelope.contentSHA256.slice(0,20)}.json`;
-   if(Object.values(content).some((rows:any)=>rows.length)){
+   const prepared=await work.collect('prepare');valid();const {name,bytes,hash}=prepared;
+   if(prepared.hasRows){
     // A listed file only proves presence. Verify content before skipping a PUT.
-    if(files.some(f=>f.name===name))await client.readProgress(name);
-    else await client.uploadProgress(content);
+    if(files.some(f=>f.name===name))await work.verify(await client.readProgressBytes(name),name,hash);
+    else await client.uploadProgressBytes(name,bytes,(saved:Uint8Array)=>work!.verify(saved,name,hash));
    }
    valid();const positionFiles=await client.listPositions();let combined=positions();
    for(const file of positionFiles){combined=mergePositions(combined,await client.readPositions(file.name));valid();}
@@ -62,7 +61,7 @@ export async function syncProgress(){
   if(navigator.locks)await navigator.locks.request('piclex-progress-'+destination,execute);else await execute();
   failures=0;retryAt=0;report({message:'等级与学习进度已自动同步',lastSuccess:Date.now()});
  }catch(e){if(runGeneration!==generation)return;failures++;retryAt=Date.now()+Math.min(15*60_000,30_000*2**Math.min(failures-1,5));report({...status,message:(e as Error).message,error:true});}
- finally{running=false;controller=undefined;}
+ finally{work?.close();running=false;controller=undefined;}
 }
 function queue(){if(!enabled()||timer||applying)return;timer=setTimeout(()=>{timer=undefined;void syncProgress();},10_000);}
 export function startProgressSync(){

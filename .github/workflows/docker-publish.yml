@@ -8,6 +8,9 @@ on:
       verified-artifact:
         type: boolean
         default: false
+      performance-verified:
+        type: boolean
+        default: false
       publish:
         type: boolean
         default: true
@@ -22,6 +25,11 @@ jobs:
     env:
       IMAGE_CONTEXT: .
     steps:
+      - name: Require the performance-tested candidate
+        if: ${{ !inputs.verified-artifact || !inputs.performance-verified }}
+        run: |
+          echo 'Publishing requires Check and publish to verify the exact artifact, including the performance gate.'
+          exit 1
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
