@@ -1,4 +1,5 @@
 """Post-cutover verification and bounded retention for immutable Web releases."""
+from concurrent.futures import ThreadPoolExecutor
 import hashlib
 import json
 import os
@@ -44,15 +45,26 @@ def verify_live_release(release, manifest):
                 if path not in manifest['files']:
                     raise ValueError(f'Entry references an unlisted asset: {path}')
                 paths.add(path)
+    ordered_paths = sorted(paths)
+    channels = (('originHTTPS', True), ('publicHTTPS', False))
     verified = {}
-    for channel, origin in (('originHTTPS', True), ('publicHTTPS', False)):
-        for path in sorted(paths):
-            data = fetch_live('/' + path, origin)
-            if hashlib.sha256(data).hexdigest() != manifest['files'][path]['sha256']:
+    # Each channel/path request is independent. Submit them all first so a slow
+    # endpoint cannot serialize the rest, then evaluate in the original order so
+    # failures and their messages stay deterministic; shutdown waits for threads.
+    with ThreadPoolExecutor(max_workers=6) as pool:
+        jobs = []
+        for channel, origin in channels:
+            for path in ordered_paths:
+                jobs.append((channel, path, pool.submit(fetch_live, '/' + path, origin)))
+            jobs.append((channel, None, pool.submit(fetch_live, '/healthz', origin)))
+        for channel, path, future in jobs:
+            data = future.result()
+            if path is None:
+                if json.loads(data).get('status') != 'ok':
+                    raise ValueError(f'{channel} health check failed')
+                verified[channel] = list(ordered_paths)
+            elif hashlib.sha256(data).hexdigest() != manifest['files'][path]['sha256']:
                 raise ValueError(f'{channel} checksum mismatch: {path}')
-        if json.loads(fetch_live('/healthz', origin)).get('status') != 'ok':
-            raise ValueError(f'{channel} health check failed')
-        verified[channel] = sorted(paths)
     return verified
 
 

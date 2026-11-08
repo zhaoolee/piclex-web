@@ -2,7 +2,9 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import subprocess
 import tempfile
+import threading
 import time
 import unittest
 from contextlib import ExitStack
@@ -175,6 +177,88 @@ class ReleaseLifecycleTests(ReleaseFixture):
         with patch.object(lifecycle, 'fetch_live', side_effect=fetch):
             with self.assertRaisesRegex(ValueError, 'health check failed'):
                 lifecycle.verify_live_release(self.new, activate.verify_release(self.new))
+
+    LIVE_PATHS = ['piclex-web/assets/main.js', 'piclex-web/assets/style.css',
+                  'piclex-web/index.html', 'piclex-web/library/catalog.json',
+                  'piclex-web/source.json', 'piclex-web/subscribe/index.html']
+
+    def live_calls(self):
+        calls = []
+        lock = threading.Lock()
+        def record(path, origin):
+            with lock:
+                calls.append((path, origin))
+        return calls, record
+
+    def test_every_selected_path_is_fetched_over_both_channels(self):
+        calls, record = self.live_calls()
+        def fetch(path, origin):
+            record(path, origin)
+            return self.fetch(path, origin)
+        with patch.object(lifecycle, 'fetch_live', side_effect=fetch):
+            report = lifecycle.verify_live_release(self.new, activate.verify_release(self.new))
+        expected = {(f'/{path}', origin) for path in self.LIVE_PATHS for origin in (True, False)}
+        expected |= {('/healthz', origin) for origin in (True, False)}
+        self.assertEqual(len(calls), len(expected))
+        self.assertEqual(set(calls), expected)
+        self.assertEqual(report, {'originHTTPS': self.LIVE_PATHS, 'publicHTTPS': self.LIVE_PATHS})
+
+    def test_damaged_resource_on_either_channel_is_rejected_after_all_requests_finish(self):
+        for channel, damaged_origin in (('originHTTPS', True), ('publicHTTPS', False)):
+            with self.subTest(channel=channel):
+                calls, record = self.live_calls()
+                def fetch(path, origin, damaged_origin=damaged_origin):
+                    record(path, origin)
+                    if origin == damaged_origin and path == '/piclex-web/library/catalog.json':
+                        return b'corrupted'
+                    return self.fetch(path, origin)
+                with patch.object(lifecycle, 'fetch_live', side_effect=fetch):
+                    with self.assertRaisesRegex(ValueError, f'{channel} checksum mismatch: piclex-web/library/catalog.json'):
+                        lifecycle.verify_live_release(self.new, activate.verify_release(self.new))
+                self.assertEqual(len(calls), 14)
+
+    def test_health_failure_on_either_channel_is_rejected_after_all_requests_finish(self):
+        for channel, unhealthy_origin in (('originHTTPS', True), ('publicHTTPS', False)):
+            with self.subTest(channel=channel):
+                calls, record = self.live_calls()
+                def fetch(path, origin, unhealthy_origin=unhealthy_origin):
+                    record(path, origin)
+                    if origin == unhealthy_origin and path == '/healthz':
+                        return b'{"status":"unhealthy"}'
+                    return self.fetch(path, origin)
+                with patch.object(lifecycle, 'fetch_live', side_effect=fetch):
+                    with self.assertRaisesRegex(ValueError, f'{channel} health check failed'):
+                        lifecycle.verify_live_release(self.new, activate.verify_release(self.new))
+                self.assertEqual(len(calls), 14)
+
+    def test_transport_error_propagates_and_waits_for_all_requests(self):
+        calls, record = self.live_calls()
+        def fetch(path, origin):
+            record(path, origin)
+            if origin and path == '/piclex-web/index.html':
+                raise subprocess.CalledProcessError(22, ['curl'])
+            time.sleep(0.05)
+            return self.fetch(path, origin)
+        with patch.object(lifecycle, 'fetch_live', side_effect=fetch):
+            with self.assertRaises(subprocess.CalledProcessError):
+                lifecycle.verify_live_release(self.new, activate.verify_release(self.new))
+        self.assertEqual(len(calls), 14)
+
+    def test_requests_run_in_bounded_parallelism(self):
+        lock = threading.Lock()
+        state = {'active': 0, 'peak': 0}
+        def fetch(path, origin):
+            with lock:
+                state['active'] += 1
+                state['peak'] = max(state['peak'], state['active'])
+            time.sleep(0.05)
+            with lock:
+                state['active'] -= 1
+            return self.fetch(path, origin)
+        with patch.object(lifecycle, 'fetch_live', side_effect=fetch):
+            lifecycle.verify_live_release(self.new, activate.verify_release(self.new))
+        self.assertLessEqual(state['peak'], 6)
+        self.assertGreater(state['peak'], 1)
 
     def test_publish_validates_before_deleting_and_only_then_reports_success(self):
         (self.root / 'current').unlink()

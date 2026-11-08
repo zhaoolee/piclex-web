@@ -42,6 +42,8 @@ npm run test:performance -- --url https://zhaoolee.com/piclex-web/ --source "$RE
 
 每轮 `*.trace.json.gz` 是原始 Chrome trace；`*.json` 保存逐帧间隔、Event Timing、长任务、真实动作与效果覆盖。`report.json` 汇总版本、资源哈希、环境和每轮结果。非零退出表示不能发布；失败证据必须保留，诊断修复后对新候选测量。
 
+CI 将桌面/触屏 × 四场景分配到八个独立 GitHub runner，每个 runner 仍顺序执行三轮；不在同一测量环境并发浏览器。`--shard desktop/spelling` 等参数只生成 `shard-passed` 部分回执，不能直接发布。汇总 `Performance release gate` 要求八组作业都成功，核对源码、产物资源、浏览器版本、夹具及采样器哈希，逐个读取24份原始trace复算主线程任务与Paint，并用原完整规则再次检查每轮及覆盖。任一缺项、重复、错版本、峰值超标或诊断样本都阻止发布；独立运行不传 `--shard` 时仍执行原24轮。
+
 `Performance release gate` 与完整浏览器检查一起作为 Pages 和 Docker 的依赖。Docker 仅接收完整 `Check and publish` 验证的产物；独立 tag／手工入口先查找同一提交已成功的全部分片与性能检查，复用其未过期构建；找不到则阻止发布，不关闭这些入口，也不能绕过门禁。门禁自身的反例测试通过 `npm test` 执行，包括单个峰值、无效数值、空采样、少操作、关闭特效、缺同步、重复和缺失轮次。
 
 触摸驱动延迟回归：在独立Linux中运行 `node scripts/check-performance-touch.mjs`。脚本直接执行发布采样器中的tap函数，只给按下指令增加35ms传输延迟，验证三次真实可信触摸/点击和每次不少于40ms的原有按压要求；不修改浏览器事件时间戳或性能阈值。可传入旧版runner文件作失败对照。

@@ -57,26 +57,21 @@ jobs:
           fi
       - uses: actions/download-artifact@v4
         with:
-          name: github-pages
+          name: release-manifest
           path: candidate
           github-token: ${{ github.token }}
           run-id: ${{ needs.ready.outputs.run-id }}
-      - name: Verify the exact candidate bytes without rebuilding
-        env:
-          REVISION: ${{ inputs.revision }}
-        run: |
-          mkdir dist
-          tar -xf candidate/artifact.tar -C dist
-          node scripts/prepare-verified-image.mjs dist "$RUNNER_TEMP/verified-context" "$REVISION"
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist
-      - uses: actions/deploy-pages@v4
+      - name: Deploy the immutable verified Pages artifact
         id: deployment
+        run: node scripts/deploy-verified-pages.mjs
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          RELEASE_REVISION: ${{ inputs.revision }}
+          VERIFIED_RUN_ID: ${{ needs.ready.outputs.run-id }}
       - name: Verify the live release and application assets
         env:
           REVISION: ${{ inputs.revision }}
-        run: node scripts/verify-live-release.mjs https://zhaoolee.com/piclex-web/ "$REVISION" dist/release.json --smoke
+        run: node scripts/verify-live-release.mjs https://zhaoolee.com/piclex-web/ "$REVISION" candidate/release.json --smoke
   docker:
     needs: ready
     runs-on: ubuntu-latest

@@ -56,6 +56,11 @@ jobs:
           PICLEX_CONTENT_CACHE: .cache/piclex-content
       - run: npm run build
       - run: node scripts/write-public-release-manifest.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-manifest
+          path: dist/release.json
+          retention-days: 7
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
@@ -107,12 +112,17 @@ jobs:
           path: |
             test-results/
             blob-report/
-  performance:
-    name: Performance release gate
+  performance-shards:
+    name: Measure ${{ matrix.viewport }} ${{ matrix.scenario }}
     needs: build
     if: needs.build.outputs.performance == 'true'
     runs-on: ubuntu-latest
     container: mcr.microsoft.com/playwright:v1.63.0-noble
+    strategy:
+      fail-fast: false
+      matrix:
+        viewport: [desktop, touch]
+        scenario: [spelling, dictation, modules, sync]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -129,7 +139,36 @@ jobs:
           tar -xf /tmp/pages-artifact/artifact.tar -C dist
       - run: npx playwright install chrome
       - name: Measure continuous learning and automatic backup
-        run: npm run test:performance -- --dist dist --source "$GITHUB_SHA" --output performance-results --channel chrome
+        run: npm run test:performance -- --dist dist --source "$GITHUB_SHA" --output performance-results --channel chrome --shard ${{ matrix.viewport }}/${{ matrix.scenario }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: performance-${{ matrix.viewport }}-${{ matrix.scenario }}
+          path: performance-results/
+  performance:
+    name: Performance release gate
+    needs: [build, performance-shards]
+    if: always() && needs.build.outputs.performance == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require every independent measurement
+        env:
+          RESULT: ${{ needs.performance-shards.result }}
+        run: test "$RESULT" = success
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: performance-*
+          path: shards
+      - uses: actions/download-artifact@v4
+        with:
+          name: release-manifest
+          path: candidate
+      - name: Verify complete same-version coverage from raw traces
+        run: node scripts/performance-shards.mjs shards performance-results "$GITHUB_SHA" candidate/release.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:

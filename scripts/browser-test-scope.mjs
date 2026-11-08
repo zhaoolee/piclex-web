@@ -8,14 +8,14 @@ import {createHash} from 'node:crypto';
 // until another full browser run is reviewed; always diff cumulatively from it.
 export const baseline = {
   repository: 'zhaoolee/piclex-web',
-  revision: '2e2cc76ba0973b8f81673c8bef4b00f4b80199a2',
-  run: 42452360890,
+  revision: '7a9d5b0a8dbdd36a4ceba7c33b9f0fc04d98fb47',
+  run: 42479218892,
 };
 export const browserJobs = ['desktop', 'mobile', 'mobile-webkit'].flatMap(
   project => [1, 2].map(shard => `Browser ${project} ${shard}/2`));
 // This one reviewed workflow change only wires selection into the existing six
 // shards. Any subsequent workflow edit invalidates reuse until reviewed again.
-export const reviewedWorkflowHash = '68382257cb95dd8732595912bb7d7eb3f764f883179e928580a84256c4adc7e9';
+export const reviewedWorkflowHash = '4861b632edd8f68b2e68b394a6cc8c50da5a54ed770e58079875bfc77a82a49b';
 const specs = names => names.trim().split(/\s+/).map(name => `${name}.spec.ts`);
 const learning = specs(`app-shell alignment-extension audio-unlock audio-unlock-speech
   capture capture-grouping deck-picker-audio desktop-fit focus-ambience guided-no-eyes
@@ -23,7 +23,8 @@ const learning = specs(`app-shell alignment-extension audio-unlock audio-unlock-
   learning-keyboard-shortcuts learning-parity learning-url learning listening-layout layout-audit
   loading native-style parity-speaking parity-state parity-subscriptions deck-subscriptions photo-prefetch playback-parity
   settings-parity speech-voice spelling-feedback spelling-letter-color spelling-revisit
-  touch-spelling visible-focus visual-viewport word-completion word-peek`);
+  touch-spelling visible-focus visual-viewport word-completion word-peek
+  deck-progress-background spelling-completion-quick spelling-gold-sweep`);
 const capture = specs(`ai-settings alignment-extension app-shell camera-parity camera-surface
   capture capture-grouping capture-mobile-fit capture-render learning-parity loading
   native-style photo-prefetch settings-parity webdav-backup`);
@@ -33,7 +34,7 @@ const game = specs('lab-loading learning-parity alignment-extension app-shell');
 // inputs and unclassified source files use all tests. Mixed specs run in full.
 const rules = [
   {name: 'learning', match: /^apps\/public\/src\/(NativePractice\.tsx|EnglishInput\.tsx|Reading\.tsx|WordPeek\.tsx|word-definitions\.ts|practice\.css|reading\.css|useSpeech\.ts|speech-voice\.ts|speech-voice-choice\.mjs|speech-progress\.mjs|playback-progress\.ts|SentenceAmbience\.tsx|ambience-mixer\.ts)$/, tests: learning},
-  {name: 'learning-effects', match: /^packages\/learning-ui\/src\/(SpellingGlow\.tsx|AnswerSlots\.tsx|VirtualKeyboard\.tsx|spelling\.mjs|spelling-edit\.mjs|dictation-edit\.mjs|keyboard-edit\.mjs|CharacterRipples\.tsx|character-ripples\.mjs)$/, tests: learning},
+  {name: 'learning-effects', match: /^packages\/learning-ui\/src\/(SpellingGlow\.tsx|AnswerSlots\.tsx|VirtualKeyboard\.tsx|spelling\.mjs|spelling-edit\.mjs|gold-sweep\.css|dictation-edit\.mjs|keyboard-edit\.mjs|CharacterRipples\.tsx|character-ripples\.mjs)$/, tests: learning},
   {name: 'capture', match: /^apps\/public\/src\/(Capture\.tsx|capture\.css|PolaroidPrint\.tsx|RecognitionHalo\.tsx|FlowingSand\.tsx)$/, tests: capture},
   {name: 'game', match: /^(packages\/laboratory\/|apps\/public\/src\/(Laboratory\.tsx|lab-entry\.ts)$)/, tests: game},
   // Experience is used by practice, settings AND the game entry, not game alone.
@@ -41,7 +42,8 @@ const rules = [
 ];
 const tooling = new Set([
   'scripts/browser-test-scope.mjs', 'scripts/ci-release-scope.mjs',
-  'scripts/run-web-performance.mjs', 'scripts/web-performance-policy.mjs',
+  'deploy/release_lifecycle.py', 'deploy/test_release_lifecycle.py',
+  'scripts/deploy-verified-pages.mjs', 'scripts/performance-shards.mjs', 'scripts/run-web-performance.mjs', 'scripts/web-performance-policy.mjs',
   'scripts/find-performance-artifact.mjs', 'scripts/prepare-verified-image.mjs',
   'scripts/promote-verified-image.mjs', 'scripts/verify-live-release.mjs',
   '.github/workflows/release.yml', '.github/workflows/docker-publish.yml',

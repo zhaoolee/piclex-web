@@ -2,9 +2,11 @@
 // Standalone, real-page release measurement. Transport fixtures never replace app processing.
 import fs from 'node:fs/promises';import os from 'node:os';import path from 'node:path';import http from 'node:http';import {createHash} from 'node:crypto';import {gzipSync} from 'node:zlib';import {parseArgs} from 'node:util';
 import {chromium,expect} from '@playwright/test';import {createPhotoDeck} from '../packages/deck-format/src/create.mjs';import {emptyProgress,spellingEvent,decodeProgress} from '../packages/backup/src/progress.mjs';import {limits,scenarios,assessSample,assessSuite} from './web-performance-policy.mjs';
-const {values:args}=parseArgs({options:{url:{type:'string'},dist:{type:'string'},manifest:{type:'string'},output:{type:'string'},source:{type:'string'},channel:{type:'string'},'diagnostic-scenario':{type:'string'},help:{type:'boolean'}}});
-if(args.help){console.log('node scripts/run-web-performance.mjs (--dist dist | --url https://host/piclex-web/) --source <40-char SHA> --output <new directory> [--channel chrome] [--manifest server-release.json]\nRuns 24 rounds, retains raw traces, exits nonzero on any missing coverage or performance failure. Run only in an audio-isolated Linux environment.');process.exit(0);}
+import {shards,shardFailures} from './performance-shards.mjs';
+const {values:args}=parseArgs({options:{url:{type:'string'},dist:{type:'string'},manifest:{type:'string'},output:{type:'string'},source:{type:'string'},channel:{type:'string'},'diagnostic-scenario':{type:'string'},shard:{type:'string'},help:{type:'boolean'}}});
+if(args.help){console.log('node scripts/run-web-performance.mjs (--dist dist | --url https://host/piclex-web/) --source <40-char SHA> --output <new directory> [--channel chrome] [--manifest server-release.json]\nRuns 24 rounds (or --shard desktop/spelling for three partial rounds), retains raw traces, exits nonzero on any missing coverage or performance failure. Run only in an audio-isolated Linux environment.');process.exit(0);}
 if(process.platform!=='linux'||!args.output||!args.source||!((!!args.url)!=(!!args.dist)))throw Error('Require isolated Linux, source/output, and exactly one of --url/--dist');
+if(args.shard&&(!shards.includes(args.shard)||args['diagnostic-scenario']))throw Error('Invalid shard or diagnostic/shard combination');
 if(args['diagnostic-scenario']&&!scenarios.includes(args['diagnostic-scenario']))throw Error('Unknown diagnostic scenario');
 if(!/^[a-f0-9]{40}$/.test(args.source))throw Error('Invalid source revision');
 // Refuse host audio passthrough; --mute-audio alone cannot isolate system speech.
@@ -17,7 +19,8 @@ const busy=(a,b)=>100*(1-(b.idle-a.idle)/(b.total-a.total));
 async function waitForIdle(){const observations=[];let previous=await cpu(),quiet=0;for(let i=0;i<600;i++){await new Promise(r=>setTimeout(r,1000));const next=await cpu(),percent=busy(previous,next);previous=next;observations.push({at:new Date().toISOString(),cpuBusyPercent:percent,load:os.loadavg()[0]});quiet=percent<35&&os.loadavg()[0]<os.cpus().length*.8?quiet+1:0;if(quiet>=5)return observations;if(i%10===0)console.log(`Waiting for an idle measurement environment: CPU ${percent.toFixed(1)}%`);}report.environment.idleObservations=observations;throw Error('Environment remained busy; no performance certificate created');}
 
 try{
- report.harness={runnerSHA256:sha(await fs.readFile(new URL(import.meta.url))),policySHA256:sha(await fs.readFile(new URL('./web-performance-policy.mjs',import.meta.url))),diagnosticScenario:args['diagnostic-scenario']||null};
+ report.shard=args.shard||null;
+ report.harness={shardsSHA256:sha(await fs.readFile(new URL('./performance-shards.mjs',import.meta.url))),runnerSHA256:sha(await fs.readFile(new URL(import.meta.url))),policySHA256:sha(await fs.readFile(new URL('./web-performance-policy.mjs',import.meta.url))),diagnosticScenario:args['diagnostic-scenario']||null};
  let base=args.url;
  if(args.dist){const root=path.resolve(args.dist);server=http.createServer(async(req,res)=>{try{const rel=decodeURIComponent(new URL(req.url,'http://localhost').pathname).replace(/^\/piclex-web\//,''),file=path.resolve(root,rel||'index.html');if(!file.startsWith(root+path.sep))throw Error('path');const data=await fs.readFile(file);res.setHeader('Content-Type',({'.html':'text/html','.js':'text/javascript','.css':'text/css','.json':'application/json','.png':'image/png','.svg':'image/svg+xml','.jpg':'image/jpeg','.webp':'image/webp','.mp3':'audio/mpeg','.wav':'audio/wav'})[path.extname(file)]||'application/octet-stream');res.end(data);}catch{res.statusCode=404;res.end();}});await new Promise(r=>server.listen(0,'127.0.0.1',r));base=`http://127.0.0.1:${server.address().port}/piclex-web/`;}
  base=base.endsWith('/')?base:base+'/';
@@ -32,6 +35,7 @@ try{
  report.environment.idleObservations=await waitForIdle();report.environment.cpus=os.cpus().length;
  browser=await chromium.launch({headless:true,channel:args.channel,args:['--mute-audio']});report.environment.browser=browser.version();
  for(const viewport of ['desktop','touch'])for(const scenario of args['diagnostic-scenario']?[args['diagnostic-scenario']]:scenarios)for(let round=1;round<=limits.rounds;round++){
+  if(args.shard&&args.shard!==`${viewport}/${scenario}`)continue;
   const id=`${viewport}-${scenario}-${round}`,sample={viewport,scenario,round,actions:{letters:0,completed:0,modules:{spelling:0,listening:0,speaking:0},syncUploads:0,syncedRows:0}},context=await browser.newContext({viewport:viewport==='desktop'?{width:1440,height:1000}:{width:390,height:844},hasTouch:viewport==='touch',isMobile:viewport==='touch',reducedMotion:'no-preference'});let cdp,traceStarted=false,cpuStart;
   try{
    const page=await context.newPage(),files=new Map(),folders=new Set(['/dav/','/dav/PicLex/','/dav/PicLex/progress/','/dav/PicLex/positions/']);
@@ -99,6 +103,6 @@ try{
    sample.environment=cpuStart?{cpuBusyPercent:busy(cpuStart,await cpu()),load:os.loadavg()[0]}:null;sample.failures=sample.error?[sample.error]:assessSample(sample);report.samples.push(sample);await fs.writeFile(path.join(output,id+'.json'),JSON.stringify(sample,null,2));await save();await context.close();console.log(id+': '+(sample.failures.length?'FAIL '+sample.failures.map(s=>s.split('\n')[0]).join('; '):'PASS')+` [max task ${Math.max(0,...(sample.trace?.tasks||[])).toFixed(1)}ms, frame ${Math.max(0,...(sample.raw?.frames||[])).toFixed(1)}ms]`);
   }
  }
- if(sha(await read(base))!==sha(html))throw Error('Release HTML changed during measurement');if(!args.manifest){const finalManifest=JSON.parse((await read(base+'release.json')).toString());if(finalManifest.releaseID!==manifest.releaseID)throw Error('Release changed during measurement; report cannot certify either version');}report.failures=assessSuite(report);report.status=report.failures.length?'failed':'passed';report.finishedAt=new Date().toISOString();await save();if(report.failures.length)process.exitCode=1;
+ if(sha(await read(base))!==sha(html))throw Error('Release HTML changed during measurement');if(!args.manifest){const finalManifest=JSON.parse((await read(base+'release.json')).toString());if(finalManifest.releaseID!==manifest.releaseID)throw Error('Release changed during measurement; report cannot certify either version');}report.failures=args.shard?shardFailures(report,args.shard):assessSuite(report);report.status=report.failures.length?'failed':args.shard?'shard-passed':'passed';report.finishedAt=new Date().toISOString();await save();if(report.failures.length)process.exitCode=1;
 }catch(e){report.status='error';report.error=e.stack||String(e);await save();console.error(e);process.exitCode=1;}
 finally{await browser?.close();if(server)await new Promise(r=>server.close(r));}
