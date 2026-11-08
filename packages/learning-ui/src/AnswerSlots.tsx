@@ -3,10 +3,11 @@ import { fixed, board, boardMismatch } from './spelling.mjs';
 import CharacterRipples from './CharacterRipples';
 import './gold-sweep.css';
 
-// Mirrors PracticeGoldSweepStyle, fitted to the 300ms spelling auto-advance so
-// the fresh answer shows the whole crossing instead of being cut off by the
-// next word. The advance itself is untouched.
-const SWEEP_MS = 230, FADE_MS = 50, TAIL_MS = 10;
+// Reuses the native PracticeGoldSweepStyle cadence: a 900ms crossing, then a
+// 120ms fade and a 20ms cleanup, i.e. the same 140ms teardown after the sweep
+// ends. Switching to the next word auto-cancels any sweep still in flight, so
+// the 300ms spelling auto-advance is untouched and never waited on.
+const SWEEP_MS = 900, FADE_MS = 120, TAIL_MS = 20;
 
 type SweepState = { scope: string; completed: boolean; seen: boolean };
 

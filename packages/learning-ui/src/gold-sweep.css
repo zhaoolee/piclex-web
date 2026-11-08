@@ -14,7 +14,7 @@
  /* PracticeGoldSweepStyle.innerGlow radius 4, outerGlow radius 10. */
  filter:drop-shadow(0 0 4px rgba(255,201,71,.78)) drop-shadow(0 0 10px rgba(224,122,26,.58));
  pointer-events:none;
- animation:letter-gold-sweep 230ms cubic-bezier(.18,.7,.22,1) both,letter-gold-fade 50ms ease-out 230ms both;
+ animation:letter-gold-sweep 900ms cubic-bezier(.18,.7,.22,1) both,letter-gold-fade 120ms ease-out 900ms both;
 }
 /* The capsule under each letter is part of the native gold layer, but was never a gradient target. */
 .answer-slots.gold-sweep .letter-slot:not(.fixed)::after{
@@ -24,7 +24,7 @@
  background-position:calc(var(--gold-word,0px) * -1.32 - var(--gold-offset,0px)) 0;
  filter:drop-shadow(0 0 4px rgba(255,201,71,.78)) drop-shadow(0 0 10px rgba(224,122,26,.58));
  pointer-events:none;
- animation:letter-gold-sweep 230ms cubic-bezier(.18,.7,.22,1) both,letter-gold-fade 50ms ease-out 230ms both;
+ animation:letter-gold-sweep 900ms cubic-bezier(.18,.7,.22,1) both,letter-gold-fade 120ms ease-out 900ms both;
 }
 @keyframes letter-gold-sweep{
  from{background-position:calc(var(--gold-word,0px) * -1.32 - var(--gold-offset,0px)) 0}

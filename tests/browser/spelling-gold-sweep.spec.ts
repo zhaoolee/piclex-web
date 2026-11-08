@@ -31,6 +31,31 @@ const paint=(page:Page)=>page.evaluate(()=>{
   underlineContent:line.content,underlineBackground:line.backgroundImage,underlineHeight:line.height,underlineFilter:line.filter};
 });
 
+test('the gold band visibly covers the answer during the native cadence',async({page})=>{
+ await open(page);await freeze(page);await fillSpelling(page,'croissant');
+ await expect(board(page)).toHaveClass(/gold-sweep/);
+ // Sample the actual rendered gold at 180ms, while the original 300ms advance
+ // is still pending. Seeking CSS animations makes this pixel assertion stable;
+ // unpaused screencasts separately verify the real-time visibility window.
+ const region=await board(page).evaluate(root=>{
+  for(const animation of root.getAnimations({subtree:true})){animation.pause();animation.currentTime=180;}
+  const bounds=root.getBoundingClientRect(),glyphs=[...root.querySelectorAll('.letter-glyph')].map(el=>el.getBoundingClientRect());
+  return {width:bounds.width,height:bounds.height,left:Math.min(...glyphs.map(r=>r.left))-bounds.left,right:Math.max(...glyphs.map(r=>r.right))-bounds.left,top:Math.min(...glyphs.map(r=>r.top))-bounds.top,bottom:Math.max(...glyphs.map(r=>r.bottom))-bounds.top};
+ });
+ const png=await board(page).screenshot({animations:'allow'});
+ const colored=await page.evaluate(async({png,region})=>{
+  const image=new Image();image.src='data:image/png;base64,'+png;await image.decode();
+  const canvas=document.createElement('canvas');canvas.width=image.width;canvas.height=image.height;const ctx=canvas.getContext('2d')!;ctx.drawImage(image,0,0);
+  const sx=image.width/region.width,sy=image.height/region.height,x=Math.ceil(region.left*sx),y=Math.ceil(region.top*sy),width=Math.floor((region.right-region.left)*sx),height=Math.floor((region.bottom-region.top)*sy),pixels=ctx.getImageData(x,y,width,height).data;
+  let gold=0;for(let i=0;i<pixels.length;i+=4)if(pixels[i]>100&&pixels[i]>pixels[i+2]+30&&pixels[i+1]>pixels[i+2]+15)gold++;
+  return gold/(width*height);
+ },{png:png.toString('base64'),region});
+ expect(colored,'visible gold inside the actual letter shapes at 180ms').toBeGreaterThan(.04);
+ await page.clock.runFor(400);
+ await expect(page.getByRole('heading',{name:'勺子',exact:true})).toBeVisible();
+ await expect(board(page)).not.toHaveClass(/gold-sweep/);
+});
+
 test('a fresh correct answer sweeps the real glyphs and underlines once',async({page})=>{
  const field=await open(page);
  await freeze(page);
