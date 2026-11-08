@@ -19,6 +19,8 @@ body[data-practice=true] .app-tabs{position:absolute}
 .native-hint,.sentence-toolbar{height:48px;min-height:48px;display:flex;align-items:center;gap:8px;padding:0 14px;background:var(--photo-background,#fff);color:var(--photo-ink,#000)}
 .native-hint>button:first-child{flex:1;min-width:0;text-align:left;white-space:nowrap;overflow-x:auto;display:flex;align-items:baseline;gap:10px;scrollbar-width:none;padding:8px 0}
 .native-hint h1{font-size:18px;font-weight:600;display:inline;margin:0;flex:none}.native-hint small{font-size:13px;flex:none}.hint-speaker{width:32px;min-height:32px;display:grid;place-items:center;flex:none}.native-hint>span{font-size:13px}
+.native-hint-word-text{display:inline;filter:blur(0);transition:filter .2s ease}
+.native-hint-word[data-hidden=true] .native-hint-word-text{filter:blur(6px)}
 .sentence-toolbar>select{min-width:0;max-width:60%;background:none;border:0;color:inherit;padding:8px 0;font-size:14px}.sentence-toolbar>select+select{margin-left:auto;font-size:12px}
 .native-example{height:44px;min-height:44px;flex:none;text-align:left;padding:0;display:flex;flex-direction:row;align-items:center;gap:12px;white-space:nowrap;overflow-x:auto;scrollbar-width:none;line-height:1.4;font-size:14px}.native-example>span{display:block;min-width:max-content;flex:none}.native-example small{flex:none;font-size:12px;color:var(--muted)}.spoken-word{background:var(--ink);color:var(--bg);border-radius:3px}
 .native-answer-footer{flex:none;display:flex;flex-direction:column;gap:8px;padding:0}

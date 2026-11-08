@@ -1,8 +1,16 @@
 import {test,expect} from '@playwright/test';
 import path from 'node:path';
-async function open(page:any){
+import fs from 'node:fs';
+import {createHash} from 'node:crypto';
+import {unzipSync,zipSync,strFromU8,strToU8} from 'fflate';
+async function open(page:any,withPronunciation=false){
  await page.goto('/piclex-web/#/decks',{waitUntil:'domcontentloaded'});
- await page.getByLabel('选择照片卡组文件').setInputFiles(path.resolve('tests/fixtures/demo/decks/cafe.piclexdeck'));
+ const file=path.resolve('tests/fixtures/demo/decks/cafe.piclexdeck');
+ if(withPronunciation){
+  const files=unzipSync(fs.readFileSync(file)),manifest=JSON.parse(strFromU8(files['manifest.json'])),entry=manifest.photos[0],photo=JSON.parse(strFromU8(files[entry.jsonPath]));
+  photo.labels[0].phoneticUS='/krəˈsɑːnt/';files[entry.jsonPath]=strToU8(JSON.stringify(photo));entry.jsonSHA256=createHash('sha256').update(files[entry.jsonPath]).digest('hex');files['manifest.json']=strToU8(JSON.stringify(manifest));
+  await page.getByLabel('选择照片卡组文件').setInputFiles({name:'hint-pronunciation.piclexdeck',mimeType:'application/octet-stream',buffer:Buffer.from(zipSync(files,{level:0}))});
+ }else await page.getByLabel('选择照片卡组文件').setInputFiles(file);
  await expect(page.getByRole('textbox',{name:'输入英文',exact:true})).toBeVisible();
  await page.evaluate(()=>Object.defineProperty(window,'speechSynthesis',{configurable:true,value:{speak:(u:any)=>{(window as any).__feedbackSpeech=u;},cancel:()=>{},getVoices:()=>[]}}));
 }
@@ -107,4 +115,37 @@ for(const colorScheme of ['light','dark'] as const)test(`no result line moves an
  await page.clock.runFor(400);await expect(field).toHaveValue('');await expect(page.locator('.native-hint h1')).toHaveText('叉子');
  await page.getByRole('button',{name:/^不认识/}).click();
  await expect(field).toHaveValue('fork');await expect(answer).not.toHaveClass(/wrong/);await expect(feedback).toHaveCount(0);await stable('revealed answer');
+});
+
+for(const colorScheme of ['light','dark'] as const)test(`Chinese hint toggles real blur without replacing text or moving pronunciation: ${colorScheme}`,async({page},info)=>{
+ await page.emulateMedia({colorScheme});await open(page,true);await page.getByRole('button',{name:'关闭提示',exact:true}).click();
+ const row=page.locator('.native-hint'),heading=row.locator('h1'),phonetic=row.locator('small'),field=page.getByRole('textbox',{name:'输入英文',exact:true});
+ const chinese=await heading.textContent(),pronunciation=await phonetic.textContent();expect(pronunciation).toBe('/krəˈsɑːnt/');
+ const geometry=()=>row.evaluate(n=>[n,n.querySelector('h1')!,n.querySelector('small')!,document.querySelector('.native-answer')!].map(el=>{const r=el.getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height};}));
+ await expect(page.locator('.focus-image')).toBeVisible();
+ let stable='';await expect.poll(async()=>{const current=JSON.stringify(await geometry()),same=current===stable;stable=current;return same;}).toBe(true);
+ const before=await geometry(),clear=await heading.screenshot();
+ await page.screenshot({path:info.outputPath(`chinese-${colorScheme}-clear.png`),fullPage:true});
+ const toggle=page.getByRole('button',{name:'隐藏中文提示',exact:true});
+ if(info.project.use.hasTouch)await toggle.tap();else await toggle.click();
+ await expect(heading).toHaveText(chinese!);
+ await expect(page.getByText('点击显示释义',{exact:true})).toHaveCount(0);
+ await expect(heading.locator('span')).toHaveCSS('filter','blur(6px)');
+ await expect(heading.locator('span')).toHaveAttribute('aria-hidden','true');
+ await expect(page.getByRole('button',{name:'显示中文提示',exact:true})).toHaveAttribute('aria-pressed','true');
+ expect(await geometry()).toEqual(before);await expect(phonetic).toHaveText(pronunciation!);await expect(phonetic).toHaveCSS('filter','none');
+ const blurred=await heading.screenshot();
+ const sharpness=await page.evaluate(async(images)=>{
+  const results=[];for(const png of images){const image=new Image();image.src='data:image/png;base64,'+png;await image.decode();const canvas=document.createElement('canvas');canvas.width=image.width;canvas.height=image.height;const ctx=canvas.getContext('2d')!;ctx.drawImage(image,0,0);const {data}=ctx.getImageData(0,0,canvas.width,canvas.height);let energy=0;for(let y=1;y<canvas.height;y++)for(let x=1;x<canvas.width;x++){const i=(y*canvas.width+x)*4;for(let c=0;c<3;c++)energy+=Math.abs(data[i+c]-data[i-4+c])+Math.abs(data[i+c]-data[i-canvas.width*4+c]);}results.push(energy);}return results;
+ },[clear.toString('base64'),blurred.toString('base64')]);
+ expect(sharpness[0]).toBeGreaterThan(0);expect(sharpness[1],'rendered glyph edges are blurred, not merely flagged as hidden').toBeLessThan(sharpness[0]*.5);
+ await page.screenshot({path:info.outputPath(`chinese-${colorScheme}-blurred.png`),fullPage:true});
+ await field.press('c');await expect(field).toHaveValue('c');
+ await page.getByRole('button',{name:'显示中文提示',exact:true}).click();await expect(heading.locator('span')).toHaveCSS('filter','blur(0px)');expect(await geometry()).toEqual(before);await expect(field).toHaveValue('c');
+ await page.screenshot({path:info.outputPath(`chinese-${colorScheme}-restored.png`),fullPage:true});
+ await page.getByRole('button',{name:'隐藏中文提示',exact:true}).click();
+ await page.reload();await expect(heading).toHaveText(chinese!);await expect(heading.locator('span')).toHaveCSS('filter','blur(6px)');await expect(field).toHaveValue('c');
+ await page.getByRole('tab',{name:'练听力',exact:true}).click();await page.getByRole('tab',{name:'拼单词',exact:true}).click();await expect(heading.locator('span')).toHaveCSS('filter','blur(6px)');
+ await page.getByRole('button',{name:/^不认识/}).click();await page.getByRole('button',{name:'下一个',exact:true}).click();await expect(heading).not.toHaveText(chinese!);await expect(heading.locator('span')).toHaveCSS('filter','blur(6px)');
+ await page.emulateMedia({reducedMotion:'reduce'});await page.getByRole('button',{name:'显示中文提示',exact:true}).click();await expect(heading.locator('span')).toHaveCSS('filter','blur(0px)');await expect(heading.locator('span')).toHaveCSS('transition-duration','0s');
 });
