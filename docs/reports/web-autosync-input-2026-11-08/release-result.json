@@ -1,0 +1,73 @@
+{
+  "sourceRevision": "9e22eb2fced397468ae32f131a9aa815519a6512",
+  "releaseID": "9e22eb2fced3-cbc7478b59d5",
+  "published": true,
+  "authorization": "User explicitly requested 先上线 after desktop performance failures were disclosed.",
+  "performanceGatePassed": false,
+  "workflow": "https://github.com/zhaoolee/piclex-web/actions/runs/42462470676",
+  "sites": [
+    {
+      "origin": "https://zhaoolee.com",
+      "sourceRevision": "9e22eb2fced397468ae32f131a9aa815519a6512",
+      "releaseID": "9e22eb2fced3-cbc7478b59d5",
+      "checked": [
+        "piclex-web/assets/experience-store-B_mwPK_h.js",
+        "piclex-web/assets/lab-BIjv1P6V.css",
+        "piclex-web/assets/lab-CW8S-fcb.js",
+        "piclex-web/assets/main-9Jkr-zjC.js",
+        "piclex-web/assets/main-BdxGuby5.js",
+        "piclex-web/assets/main-D6YtTART.css",
+        "piclex-web/assets/modulepreload-polyfill-B5Qt9EMX.js",
+        "piclex-web/assets/progress-worker-DJDuh4qR.js",
+        "piclex-web/assets/subscribe-CgjdP79_.css",
+        "piclex-web/assets/subscribe-D3VMIW3x.js",
+        "piclex-web/credits.html",
+        "piclex-web/index.html",
+        "piclex-web/lab/index.html",
+        "piclex-web/subscribe/index.html"
+      ]
+    },
+    {
+      "origin": "https://piclex.v2fy.com",
+      "sourceRevision": "9e22eb2fced397468ae32f131a9aa815519a6512",
+      "releaseID": "9e22eb2fced3-cbc7478b59d5",
+      "checked": [
+        "piclex-web/assets/experience-store-B_mwPK_h.js",
+        "piclex-web/assets/lab-BIjv1P6V.css",
+        "piclex-web/assets/lab-CW8S-fcb.js",
+        "piclex-web/assets/main-9Jkr-zjC.js",
+        "piclex-web/assets/main-BdxGuby5.js",
+        "piclex-web/assets/main-D6YtTART.css",
+        "piclex-web/assets/modulepreload-polyfill-B5Qt9EMX.js",
+        "piclex-web/assets/progress-worker-DJDuh4qR.js",
+        "piclex-web/assets/subscribe-CgjdP79_.css",
+        "piclex-web/assets/subscribe-D3VMIW3x.js",
+        "piclex-web/credits.html",
+        "piclex-web/index.html",
+        "piclex-web/lab/index.html",
+        "piclex-web/subscribe/index.html"
+      ]
+    }
+  ],
+  "liveBrowserChecks": {
+    "pages": {
+      "passed": 3
+    },
+    "domestic": {
+      "passed": 3
+    },
+    "coverage": [
+      "continuous input delays sync; pause resumes; current answer unchanged",
+      "offline/native receipts merge once and failed upload retries",
+      "remote deck position does not interrupt typing"
+    ]
+  },
+  "docker": {
+    "sourceRevision": "9e22eb2fced397468ae32f131a9aa815519a6512",
+    "image": "zhaoolee/piclex-web",
+    "digest": "sha256:408ddfd1ba9d8f7ae1e6ad9de0a26f6a49c56860e60a4ad4a000f5e4b9392731"
+  },
+  "temporaryWorkflowRemoved": true,
+  "testEnvironment": "Isolated Linux, mute-audio, no host audio/device mounts; local-network permission granted only to new test contexts after initial fixture-only permission denial.",
+  "rawEvidence": "/Users/zhaoolee/github/PicLex/output/web-autosync-input-2026-11-08/live"
+}

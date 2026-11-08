@@ -1,6 +1,6 @@
 {
   "candidate": "9e22eb2fced397468ae32f131a9aa815519a6512",
-  "status": "Modified; sync functional checks pass; desktop performance acceptance incomplete; not published",
+  "status": "Published at explicit user request; desktop performance remains incomplete, not passed",
   "browserChecks": {
     "chromiumDesktop": 7,
     "chromiumTouchProfile": 7,
@@ -193,5 +193,6 @@
     "Worker-only six-round failures retained in worker-only.",
     "Initial 14 Chromium checks could not launch: requested Chrome unavailable. Corrected isolated config to installed Chromium; all 14 passed. WebKit 7 passed on first run.",
     "Existing full release gate was not run. Scoped diagnostic cannot authorize publication."
-  ]
+  ],
+  "publication": "release-result.json"
 }
