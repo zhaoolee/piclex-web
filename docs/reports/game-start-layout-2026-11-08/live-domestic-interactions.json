@@ -1,0 +1,54 @@
+[
+  {
+    "browser": "chromium",
+    "viewport": {
+      "width": 844,
+      "height": 610
+    },
+    "characters": 7,
+    "achievements": true,
+    "startPauseResume": true,
+    "savedRunReload": true,
+    "exit": true,
+    "errors": []
+  },
+  {
+    "browser": "chromium",
+    "viewport": {
+      "width": 667,
+      "height": 375
+    },
+    "characters": 7,
+    "achievements": true,
+    "startPauseResume": true,
+    "savedRunReload": true,
+    "exit": true,
+    "errors": []
+  },
+  {
+    "browser": "webkit",
+    "viewport": {
+      "width": 844,
+      "height": 610
+    },
+    "characters": 7,
+    "achievements": true,
+    "startPauseResume": true,
+    "savedRunReload": true,
+    "exit": true,
+    "errors": []
+  },
+  {
+    "browser": "webkit",
+    "viewport": {
+      "width": 667,
+      "height": 375
+    },
+    "characters": 7,
+    "achievements": true,
+    "startPauseResume": true,
+    "savedRunReload": true,
+    "exit": true,
+    "errors": []
+  }
+]

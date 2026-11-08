@@ -1,0 +1,104 @@
+{
+  "pages": {
+    "sourceRevision": "a8c8e09436e36f35e772e869f736851949017164",
+    "releaseID": "a8c8e09436e3-896a363e2f8b",
+    "verified": [
+      {
+        "path": "piclex-web/index.html",
+        "sha256": "34e0da01395bab373971f8aa69a335a6f09b524b7b251dd8922f62d17b23e857",
+        "bytes": 13438
+      },
+      {
+        "path": "piclex-web/assets/main-ob3RuJLD.js",
+        "sha256": "37881978f1c1076d3ffce9e35faf4a3436acf92f76470ba913ae647ff82513f9",
+        "bytes": 709552
+      },
+      {
+        "path": "piclex-web/assets/modulepreload-polyfill-B5Qt9EMX.js",
+        "sha256": "d2a32840421496e872ade591618d2fa5c33797605d1aec04301717e5a90757d0",
+        "bytes": 711
+      },
+      {
+        "path": "piclex-web/assets/experience-store-Cf0PUDr3.js",
+        "sha256": "017ed4d62e21388b1e46a658bbbdf2e536900d05798debe74e60263c5c4c34dd",
+        "bytes": 6764
+      },
+      {
+        "path": "piclex-web/assets/main-D6YtTART.css",
+        "sha256": "590d35c934ac9121f3872b2d01e9ca703643efb064fb799c36efd7d7df2deaaf",
+        "bytes": 103597
+      },
+      {
+        "path": "piclex-web/lab/index.html",
+        "sha256": "98d67c24d5d49c9a99f30e42298f928ff0126599d542264f4cbf6a8f52ea978e",
+        "bytes": 6674
+      },
+      {
+        "path": "piclex-web/assets/lab-BLAm2t-y.js",
+        "sha256": "a08f75a084708222bf99c9a08db514a68f3e020f348aa9b52eb3a7205c2330e4",
+        "bytes": 2705
+      },
+      {
+        "path": "piclex-web/assets/lab-BIjv1P6V.css",
+        "sha256": "8380a7fbad17453457f4866f782ccff332c8fd982e616139c3a625bb104b3445",
+        "bytes": 58723
+      },
+      {
+        "path": "piclex-web/assets/main-Dd5u6t2U.js",
+        "sha256": "6f6a89fd841965da60bbc72a79b0876c212d471dfa26666e467864c135692ee8",
+        "bytes": 2805637
+      }
+    ]
+  },
+  "domestic": {
+    "sourceRevision": "a8c8e09436e36f35e772e869f736851949017164",
+    "releaseID": "a8c8e09436e3-896a363e2f8b",
+    "verified": [
+      {
+        "path": "piclex-web/index.html",
+        "sha256": "34e0da01395bab373971f8aa69a335a6f09b524b7b251dd8922f62d17b23e857",
+        "bytes": 13438
+      },
+      {
+        "path": "piclex-web/assets/main-ob3RuJLD.js",
+        "sha256": "37881978f1c1076d3ffce9e35faf4a3436acf92f76470ba913ae647ff82513f9",
+        "bytes": 709552
+      },
+      {
+        "path": "piclex-web/assets/modulepreload-polyfill-B5Qt9EMX.js",
+        "sha256": "d2a32840421496e872ade591618d2fa5c33797605d1aec04301717e5a90757d0",
+        "bytes": 711
+      },
+      {
+        "path": "piclex-web/assets/experience-store-Cf0PUDr3.js",
+        "sha256": "017ed4d62e21388b1e46a658bbbdf2e536900d05798debe74e60263c5c4c34dd",
+        "bytes": 6764
+      },
+      {
+        "path": "piclex-web/assets/main-D6YtTART.css",
+        "sha256": "590d35c934ac9121f3872b2d01e9ca703643efb064fb799c36efd7d7df2deaaf",
+        "bytes": 103597
+      },
+      {
+        "path": "piclex-web/lab/index.html",
+        "sha256": "98d67c24d5d49c9a99f30e42298f928ff0126599d542264f4cbf6a8f52ea978e",
+        "bytes": 6674
+      },
+      {
+        "path": "piclex-web/assets/lab-BLAm2t-y.js",
+        "sha256": "a08f75a084708222bf99c9a08db514a68f3e020f348aa9b52eb3a7205c2330e4",
+        "bytes": 2705
+      },
+      {
+        "path": "piclex-web/assets/lab-BIjv1P6V.css",
+        "sha256": "8380a7fbad17453457f4866f782ccff332c8fd982e616139c3a625bb104b3445",
+        "bytes": 58723
+      },
+      {
+        "path": "piclex-web/assets/main-Dd5u6t2U.js",
+        "sha256": "6f6a89fd841965da60bbc72a79b0876c212d471dfa26666e467864c135692ee8",
+        "bytes": 2805637
+      }
+    ]
+  }
+}

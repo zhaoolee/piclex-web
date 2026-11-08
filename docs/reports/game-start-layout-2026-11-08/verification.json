@@ -1,0 +1,47 @@
+{
+  "sourceRevision": "a8c8e09436e36f35e772e869f736851949017164",
+  "readmeRemoteVerified": true,
+  "sourceSHA256": {
+    "README.md": "42dfaf81ba54fe58edda639fa1503a5617da959777f31ea37d96b395e7b5d4a0",
+    "docs/readme/game-start.png": "8de1ddf3162376dfcd407b07334b60042e4c4ebb4af02a97ff076eb07cdf52b1",
+    "packages/laboratory/src/game.css": "00bc716322a33c5b19263568ce86d4815dc729d93cc211f65a85e45dc47f3f5a"
+  },
+  "verification": {
+    "unitPassed": 303,
+    "focusedBrowserPassed": 51,
+    "interactionScenarios": 4,
+    "screenshots": "Same Linux Chromium build, DPR2, before/after; game viewport 844x522, image 1688x1044.",
+    "audioIsolation": "Dedicated Linux container with no host mounts, audio devices, speech service or audio sockets; screenshots also mute browser output and replace TTS."
+  },
+  "ci": {
+    "runID": 42443644183,
+    "status": "success",
+    "browserPassed": 611,
+    "browserSkipped": 4,
+    "browserFailed": 0,
+    "url": "https://github.com/zhaoolee/piclex-web/actions/runs/42443644183"
+  },
+  "deployment": {
+    "releaseID": "a8c8e09436e3-896a363e2f8b",
+    "pages": "https://zhaoolee.com/piclex-web/",
+    "domestic": "https://piclex.v2fy.com/piclex-web/",
+    "liveInteractionScenariosPassed": 8,
+    "resourceHashesVerifiedPerSite": 9,
+    "dockerDigest": "sha256:d77f3771bb12b0b60de795cc4c27152a0fdb57a6a3b4483bcb858fc22afc1e04",
+    "dockerTagsMatch": [
+      "latest",
+      "sha-a8c8e09"
+    ],
+    "architectures": [
+      "linux/amd64",
+      "linux/arm64"
+    ]
+  },
+  "cleanup": {
+    "linuxContainerRemoved": true,
+    "previewAndBrowsersStopped": true,
+    "domesticRetainsOnlyCurrentRelease": true,
+    "temporaryCheckout": "Retained only until this evidence commit is pushed and verified; removed during final task cleanup."
+  },
+  "transportNote": "Initial Mac Python HTTPS fetch encountered an SSL EOF; curl fetched the same public URLs successfully with all original source revision and SHA256 checks intact."
+}
