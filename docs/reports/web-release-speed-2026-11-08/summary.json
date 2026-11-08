@@ -11,7 +11,8 @@
     "independentRunners": 8,
     "maxTaskMs": 24.483,
     "maxFrameMs": 33.400000000001455,
-    "status": "passed"
+    "status": "passed",
+    "elapsedIncludingJobQueueSeconds": 182
   },
   "browserCoverage": {
     "mode": "reuse",
@@ -55,5 +56,6 @@
     "manifestSHA256": "a522d9cfab78ae05419efd796ccba6548e07c85b2fc89951cfe6201214e1fdc8",
     "elapsedSeconds": 0.7294828750018496
   },
-  "note": "Follow-up complete-manifest digest check is verified separately; 122.138 seconds remains the only measured new-release result. No unchanged release rerun to claim 120 seconds."
+  "note": "Follow-up complete-manifest digest check is verified separately; 122.138 seconds remains the only measured new-release result. No unchanged release rerun to claim 120 seconds.",
+  "toolingRevision": "08daff797999b40b5b92cb84307d9f65483c688c"
 }

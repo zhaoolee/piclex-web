@@ -4,7 +4,7 @@
 
 | 环节 | 上一成功基线 | 本次 |
 | --- | ---: | ---: |
-| 性能检查 | 单job549秒 | 八个独立runner最慢157秒 + 原始trace汇总24秒 |
+| 性能检查 | 单job549秒 | 182秒（含作业间排队；最慢分片157秒、汇总24秒） |
 | 浏览器检查 | 最慢496秒 | 9–12秒核验并复用同产品完整基线；不冒称重新执行 |
 | 镜像准备 | 143秒 | 230秒（仍为候选准备瓶颈） |
 | Pages发布job | 104秒 | 44秒 |
@@ -18,3 +18,5 @@
 - `summary.json` 汇总口径；`release-timing.json` 保留每阶段墙钟；`candidate-*.json` / `release-jobs.json` 保留Actions原始作业时间；`performance/` 保留24轮原始trace和每轮数据；`live/` 保存双站真实验收结果与截图。
 
 未开通付费runner，没有操作手机、模拟器或用户数据。共享源码全部保留，使用隔离副本完成。临时环境清理结果见cleanup.json。
+
+完整原始证据位于本机 `/Users/zhaoolee/github/PicLex/docs/reports/web-release-speed-2026-11-08/`，GitHub本目录保存本报告与summary.json；原始CI产物亦保存在上述工作流。
