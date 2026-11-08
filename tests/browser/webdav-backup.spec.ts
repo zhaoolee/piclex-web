@@ -4,13 +4,15 @@ import fs from 'node:fs';import path from 'node:path';import {execFileSync} from
 import {createPhotoDeck} from '../../packages/deck-format/src/create.mjs';
 import {decodeProgress,encodeProgress} from '../../packages/backup/src/progress.mjs';
 const test=baseTest.extend({context:async({context,browserName},use,info)=>{if(browserName!=='webkit'){await use(context);return;}const profile=info.outputPath('webkit-profile'),persistent=await webkit.launchPersistentContext(profile,{headless:true,ignoreHTTPSErrors:true,args:process.platform==='darwin'?['--mute-audio']:[],viewport:{width:390,height:844},isMobile:true,hasTouch:true});try{
- // Linux WebKit's persistent HTTP cache can fail a revalidated module with
- // 'WebKit encountered an internal error' before React starts after restore.
- // A pass-through asset route isolates this transport fixture from that cache;
+ // Linux WebKit can fail its document or module transfer before React starts
+ // ('WebKit encountered an internal error'). These test-only routes serve the same
+ // production build bytes from dist over the real server URL, isolating that
+ // transport without exercising or claiming anything about the browser HTTP cache;
  // persistent OPFS, actual HTTPS WebDAV traffic and restore assertions remain.
  await persistent.route('**/piclex-web/assets/*.js',route=>route.continue());
+ await persistent.route('**/piclex-web/',route=>route.fulfill({path:path.resolve('dist/index.html')}));
  await use(persistent);
- }finally{await persistent.close();fs.rmSync(profile,{recursive:true,force:true});}}});
+ }finally{try{await persistent.unrouteAll({behavior:'wait'});}finally{await persistent.close();fs.rmSync(profile,{recursive:true,force:true});}}}});
 test.use({ignoreHTTPSErrors:true});
 test.describe.configure({mode:'default'});
 let testStarted=0;test.beforeEach(()=>{testStarted=Date.now();});

@@ -1,8 +1,14 @@
 import {test,expect,type Page} from '@playwright/test';
 import fs from 'node:fs';
+import {resolve} from 'node:path';
 import {fillSpelling} from './helpers/spelling';
 const catalog=JSON.parse(fs.readFileSync('apps/public/public/library/catalog.json','utf8')),card=catalog[0],deck=JSON.parse(fs.readFileSync('apps/public/public/'+card.payload,'utf8'));
 const parameters=(url:string)=>new URLSearchParams(url.split('?').at(-1));
+// Serve the same production build HTML from disk so Linux WebKit's document
+// transport and a fetch/fulfill round trip cannot race the navigation; browser URL,
+// JavaScript, photos and every other request still come from the real server.
+test.beforeEach(async({context,browserName})=>{if(browserName==='webkit')await context.route('**/piclex-web/',route=>route.fulfill({path:resolve('dist/index.html')}));});
+test.afterEach(async({context})=>{await context.unrouteAll({behavior:'wait'});});
 test('startup navigation before the first hash subscription is not lost',async({page})=>{
  await page.addInitScript(()=>{
   const add=window.addEventListener.bind(window);let moved=false;

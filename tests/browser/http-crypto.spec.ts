@@ -1,20 +1,26 @@
 import {test,expect} from '@playwright/test';
 import fs from 'node:fs';
+import {resolve} from 'node:path';
 import {unzipSync,zipSync} from 'fflate';
 import {decodeProgress,stableID} from '../../packages/backup/src/progress.mjs';
 
-const origin='http://piclex-http.test';
+const origin='http://piclex-http.test',dist=resolve('dist');
 const catalog=JSON.parse(fs.readFileSync('apps/public/public/library/catalog.json','utf8'));
 const first=catalog[0],deck=JSON.parse(fs.readFileSync('apps/public/public/'+first.payload,'utf8'));
 const fixture=fs.readFileSync('tests/fixtures/demo/decks/cafe.piclexdeck');
-test.beforeEach(async({page,baseURL})=>{
- // Forward bytes, not the browser URL: this is a real insecure HTTP origin.
+test.beforeEach(async({page})=>{
+ // Serve the same production build bytes under the real insecure HTTP origin without
+ // a second network hop, so fulfilling cannot race a cancelled navigation.
  await page.route(origin+'/**',async route=>{
-  const url=new URL(route.request().url());
-  const response=await route.fetch({url:new URL(url.pathname+url.search,baseURL).href});
-  await route.fulfill({response});
+  const pathname=decodeURIComponent(new URL(route.request().url()).pathname);
+  if(!pathname.startsWith('/piclex-web/'))throw Error('Unexpected insecure-origin path '+pathname);
+  const file=resolve(dist,pathname.slice('/piclex-web/'.length)||'index.html');
+  if(file!==dist&&!file.startsWith(dist+'/'))throw Error('Unexpected insecure-origin path '+pathname);
+  await route.fulfill({path:file});
  });
 });
+// Drain in-flight handlers before the context closes, so no route is fulfilled after disposal.
+test.afterEach(async({page})=>{await page.unrouteAll({behavior:'wait'});});
 async function insecure(page:import('@playwright/test').Page){
  expect(await page.evaluate(()=>({secure:isSecureContext,subtle:typeof crypto.subtle}))).toEqual({secure:false,subtle:'undefined'});
 }
