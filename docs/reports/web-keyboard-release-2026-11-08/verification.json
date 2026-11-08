@@ -1,0 +1,58 @@
+{
+  "status": "local full checks passed; CI and publication pending",
+  "date": "2026-11-08",
+  "base": "81c3fa07d5eeb5133a8412308d297f4c9056d707",
+  "scope": [
+    "Web keyboard: 26 Latin letters and Backspace only",
+    "PC Space playback and Escape assistance with visible hints",
+    "Automatic sentence separators and fixed punctuation/numbers",
+    "No Check Answer button; automatic grading with editable errors and automatic success advance",
+    "Stable action widths when assistance changes to Next"
+  ],
+  "prePublish": {
+    "npmCI": "passed",
+    "fixtureConsistency": "passed",
+    "unitPassed": 303,
+    "deployChecksPassed": 45,
+    "contentBuild": "passed",
+    "productionBuild": "passed",
+    "browser": {
+      "startTime": "2026-11-08T03:02:19.623Z",
+      "duration": 909029.127,
+      "expected": 611,
+      "skipped": 4,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "environment": "native Linux ARM64 Node 24.20.0, Playwright 1.63.0 Chromium and WebKit; original two workers and no retries",
+    "brandingLimit": "ARM64 image has Chromium; exact Ubuntu Chrome/WebKit matrix remains mandatory in formal CI"
+  },
+  "visualReview": {
+    "viewports": [
+      "1440x1000 desktop",
+      "390x844 touch"
+    ],
+    "source": "same isolated Linux Chromium and seeded cafe deck, before live release vs final candidate",
+    "result": "No Check Answer button; 27 keys; PC hints; no overlap or blocked buttons; original page structure preserved"
+  },
+  "initialFailures": {
+    "pcActionWidth": "Escape badge changed intrinsic button width on reveal; fixed reserved action width in both spelling and dictation, original geometry assertions passed",
+    "guidedContraction": "Test expected a manually typed apostrophe; now letters-only draft plus exact rendered apostrophe assertion",
+    "webkitInitialBaseline": "First poll incorrectly counted two immediate geometry reads as settled; now two spaced stable reads are required, all later thresholds unchanged"
+  },
+  "isolation": {
+    "container": "No host filesystem mounts or audio devices/sockets; no connection to host TTS",
+    "screenshots": "Additional --mute-audio and isolated speechSynthesis stub",
+    "userData": "Fresh browser contexts and repository fixtures only",
+    "simulator": "not used"
+  },
+  "ci": null,
+  "live": null,
+  "docker": null,
+  "outstanding": [
+    "Formal exact-commit CI including Pages and Docker",
+    "Domestic standard release activation",
+    "Both live origins resource and interaction verification",
+    "Cleanup and final records push"
+  ]
+}

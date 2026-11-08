@@ -15,7 +15,7 @@ test('learning tab and capture start choose a deck while explicit library remain
 });
 test('remembered local deck opens spelling without losing spelling or listening drafts',async({page})=>{
  await page.goto('/piclex-web/#/decks');await expect(page.getByRole('button',{name:'导入自己的卡组',exact:true})).toBeEnabled();await page.getByLabel('选择照片卡组文件').setInputFiles(fixture);const input=page.getByRole('textbox',{name:'输入英文',exact:true});await fillSpelling(page,'cr');
- await page.getByRole('tab',{name:'练听力',exact:true}).click();await page.getByLabel('句子练习模式').selectOption('free');await page.getByLabel('听写难度').selectOption('hard');await fillEnglish(page.getByRole('textbox',{name:'听写句子',exact:true}),'I like');
+ await page.getByRole('tab',{name:'练听力',exact:true}).click();await page.getByLabel('句子练习模式').selectOption('free');await page.getByLabel('听写难度').selectOption('hard');await fillEnglish(page.getByRole('textbox',{name:'听写句子',exact:true}),'Ilike');
  const tabs=page.getByRole('navigation',{name:'底部导航'});await tabs.getByRole('button',{name:'设置',exact:true}).click();await tabs.getByRole('button',{name:'学习',exact:true}).click();await expect(input).toHaveValue('cr');await expect(page.getByRole('heading',{name:'牛角包',exact:true})).toBeVisible();
  await page.getByRole('tab',{name:'练听力',exact:true}).click();await expect(page.getByRole('textbox',{name:'听写句子',exact:true})).toHaveValue('I like');await page.reload();await expect(page.getByRole('tab',{name:'练听力',exact:true})).toHaveAttribute('aria-selected','true');
  await tabs.getByRole('button',{name:'学习',exact:true}).click();await expect(input).toHaveValue('cr');await page.goto('/piclex-web/#/learn');await expect(input).toHaveValue('cr');await expect(page).toHaveURL(/#\/deck\/local-/);

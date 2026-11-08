@@ -1,0 +1,57 @@
+
+> piclex-web@0.1.0 test:browser
+> playwright test --config=playwright.local-linux.config.ts learning-parity.spec.ts spelling-feedback.spec.ts --grep guided word blanks|no result line moves
+
+
+Running 9 tests using 2 workers
+
+[1/9] [desktop] › tests/browser/spelling-feedback.spec.ts:53:52 › no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: light
+[2/9] [desktop] › tests/browser/learning-parity.spec.ts:6:1 › guided word blanks show readable underlines and preserve typing, reveal and difficulty changes
+[3/9] [desktop] › tests/browser/spelling-feedback.spec.ts:53:52 › no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: dark
+[4/9] [mobile] › tests/browser/learning-parity.spec.ts:6:1 › guided word blanks show readable underlines and preserve typing, reveal and difficulty changes
+[5/9] [mobile] › tests/browser/spelling-feedback.spec.ts:53:52 › no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: light
+[6/9] [mobile] › tests/browser/spelling-feedback.spec.ts:53:52 › no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: dark
+[7/9] [mobile-webkit] › tests/browser/learning-parity.spec.ts:6:1 › guided word blanks show readable underlines and preserve typing, reveal and difficulty changes
+[8/9] [mobile-webkit] › tests/browser/spelling-feedback.spec.ts:53:52 › no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: light
+  1) [mobile-webkit] › tests/browser/spelling-feedback.spec.ts:53:52 › no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: light 
+
+    Error: first error photo height
+
+    expect(received).toBeCloseTo(expected, precision)
+
+    Expected: 330
+    Received: 253
+
+    Expected precision:    0
+    Expected difference: < 0.5
+    Received difference:   77
+
+      84 |    expect(after.y,`${label} ${key} y`).toBeCloseTo(before.y,0);
+      85 |    expect(after.width,`${label} ${key} width`).toBeCloseTo(before.width,0);
+    > 86 |    expect(after.height,`${label} ${key} height`).toBeCloseTo(before.height,0);
+         |                                                  ^
+      87 |   }
+      88 |  };
+      89 |  const recovered=async()=>{await expect(answer).not.toHaveClass(/wrong/);await expect(feedback).toHaveCount(0);expect((await border()).color).not.toBe('rgb(198, 68, 68)');};
+        at stable (/work/tests/browser/spelling-feedback.spec.ts:86:50)
+        at /work/tests/browser/spelling-feedback.spec.ts:93:2
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../evidence/test-results/spelling-feedback-no-resul-b80ac-ed-or-revealed-states-light-mobile-webkit/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../evidence/test-results/spelling-feedback-no-resul-b80ac-ed-or-revealed-states-light-mobile-webkit/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../evidence/test-results/spelling-feedback-no-resul-b80ac-ed-or-revealed-states-light-mobile-webkit/trace.zip
+    Usage:
+
+        npx playwright show-trace ../evidence/test-results/spelling-feedback-no-resul-b80ac-ed-or-revealed-states-light-mobile-webkit/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[9/9] [mobile-webkit] › tests/browser/spelling-feedback.spec.ts:53:52 › no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: dark
+  1 failed
+    [mobile-webkit] › tests/browser/spelling-feedback.spec.ts:53:52 › no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: light 
+  8 passed (20.1s)

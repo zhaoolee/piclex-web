@@ -19,6 +19,7 @@ import {playTypingSound,stopTypingSound,prepareTypingSound} from '../../../packa
 import {PracticeProgress,useExperience,LevelPage} from './Experience';
 import VirtualKeyboard,{useDesktopKeyboard} from '../../../packages/learning-ui/src/VirtualKeyboard';
 import {editSpellingText} from '../../../packages/learning-ui/src/spelling-edit.mjs';
+import {editDictationText} from '../../../packages/learning-ui/src/dictation-edit.mjs';
 import useStudyPersistence from './useStudyPersistence';
 import {editKeyboardText} from '../../../packages/learning-ui/src/keyboard-edit.mjs';
 import {transactExperience} from '../../../packages/practice/src/experience-store.mjs';
@@ -77,8 +78,8 @@ function PlaybackFill({progress}:{progress:ReturnType<typeof useSpeech>['progres
  },[progress]);
  return <span className={`playback-progress${indeterminate?' indeterminate':''}`} role="progressbar" aria-label="播放进度" aria-valuemin={0} aria-valuemax={100} aria-valuenow={indeterminate?undefined:Math.round(value*100)} aria-valuetext={indeterminate?'正在播放':undefined}><span ref={fill} className="playback-fill"/></span>;
 }
-function Playback({play,audio,rate,setRate,label='播放句子'}:{play:()=>void;audio:ReturnType<typeof useSpeech>;rate:number;setRate:(n:number)=>void;label?:string}){
- return <div className="native-playback"><button className="native-button playback-button" onClick={play}>{audio.playing&&<PlaybackFill progress={audio.progress}/>}<span className="playback-label"><SpeakerIcon/>{audio.preparing?'准备音频…':audio.playing?'重新播放':label}</span></button><span className="playback-rate"><select aria-label="播放速度" value={rate} onChange={e=>setRate(Number(e.target.value))}>{rates.map(r=><option key={r} value={r}>{r===1?'1.0':r}×</option>)}</select><span aria-hidden="true">⌄</span></span></div>;
+function Playback({play,audio,rate,setRate,label='播放句子',shortcut=false}:{play:()=>void;audio:ReturnType<typeof useSpeech>;rate:number;setRate:(n:number)=>void;label?:string;shortcut?:boolean}){
+ return <div className="native-playback"><button className="native-button playback-button" aria-keyshortcuts={shortcut?'Space':undefined} onClick={play}>{audio.playing&&<PlaybackFill progress={audio.progress}/>}<span className="playback-label"><SpeakerIcon/>{audio.preparing?'准备音频…':audio.playing?'重新播放':label}</span><kbd className="space-keycap" aria-hidden="true"/></button><span className="playback-rate"><select aria-label="播放速度" value={rate} onChange={e=>setRate(Number(e.target.value))}>{rates.map(r=><option key={r} value={r}>{r===1?'1.0':r}×</option>)}</select><span aria-hidden="true">⌄</span></span></div>;
 }
 function ListeningSeek({audio,prompt,original,seek,onSeek,onBegin}:{audio:ReturnType<typeof useSpeech>;prompt:string;original:boolean;seek:number;onSeek:(value:number)=>void;onBegin:()=>void}){
  const progress=useSyncExternalStore(audio.progress.subscribe,audio.progress.getSnapshot),words=exampleWords(prompt);
@@ -102,17 +103,19 @@ function GuidedInput({sentence,value,difficulty,disabled,deckWord,deckMeaning,on
  const {peek:wordPeek,begin,consumeClick}=useWordPeek(`${sentence}|${difficulty}|${disabled}`,!disabled);
  const target=(word:string,node:Element)=>()=>({word,anchor:node.getBoundingClientRect(),meaning:normalizeDefinitionWord(word)===normalizeDefinitionWord(deckWord)?deckMeaning:undefined});
  const letterGroups=(w:string)=>{const values:{letter:string;punctuation:string}[]=[];for(const character of w){if(/[\p{L}\p{N}]/u.test(character))values.push({letter:character,punctuation:''});else if(values.length)values[values.length-1].punctuation+=character;}return values;};
- const update=(i:number,v:string)=>{const next=words.map((_,j)=>value[j]||'');next[i]=v;onChange(next);};
+ const editableWord=(word:string)=>/[a-z]/i.test(word);
+ const savedValues=()=>words.map((word,j)=>editableWord(word)?value[j]||'':word);
+ const update=(i:number,v:string)=>{const next=savedValues();next[i]=v;onChange(next);};
  const wordPress=(word:string,e:ReactPointerEvent<HTMLLabelElement>)=>{
   if(disabled||e.button!==0||!e.isPrimary)return;
   begin(target(word,e.currentTarget),e);
  };
  return <div className="guided-input" onClickCapture={consumeClick} onContextMenu={e=>e.preventDefault()} aria-label={difficulty==='easy'?'显示单词和字母数量':'只显示单词数量'}>{words.map((word,i)=>{
-  const expected=letterGroups(word),entered=value[i]||'',typed=letterGroups(entered),capacity=expected.length,slots=Math.max(capacity,typed.length);
+  const expected=letterGroups(word),entered=editableWord(word)?value[i]||'':word,typed=letterGroups(entered),capacity=expected.length,slots=Math.max(capacity,typed.length);
   return <label key={i} className="guided-word" style={{width:difficulty==='easy'?`min(${slots*16}px,100%)`:80}} onPointerDown={e=>wordPress(word,e)}>
    <EnglishInput key={`${sentence}:${i}`} ref={n=>{inputs.current[i]=n as HTMLInputElement|null;}} label={`第 ${i+1} 个单词${difficulty==='easy'?`，${capacity} 个字母`:''}`} readOnly={disabled} onVirtualKey={onVirtualKey} value={entered} onWarning={onWarning} onComposing={onComposing}
-    onValue={(raw,advance)=>{update(i,raw.replace(/\s/g,''));if(advance&&(raw.endsWith(' ')||(difficulty==='easy'&&letterGroups(raw).length>=capacity)))inputs.current[i+1]?.focus({preventScroll:true});}}
-    onPaste={e=>{const text=e.clipboardData.getData('text');if(!/\s/.test(text))return;e.preventDefault();const next=words.map((_,j)=>value[j]||'');text.trim().split(/\s+/).forEach((v,j)=>{if(i+j<next.length)next[i+j]=v;});onChange(next);}}
+    onValue={(raw,advance)=>{const next=raw.replace(/\s/g,''),before=letterGroups(entered).length,after=letterGroups(next).length,later=value.some((v,j)=>j>i&&editableWord(words[j])&&!!String(v||'').trim());update(i,next);if(advance&&!later&&before<capacity&&after>=capacity)inputs.current.find((node,j)=>j>i&&editableWord(words[j]))?.focus({preventScroll:true});}}
+    onPaste={e=>{const text=e.clipboardData.getData('text');if(!/\s/.test(text))return;e.preventDefault();const next=savedValues();text.trim().split(/\s+/).forEach((v,j)=>{if(i+j<next.length)next[i+j]=v;});onChange(next);}}
     onKeyDown={e=>{if(e.nativeEvent.isComposing)return;if(e.key==='Enter'){e.preventDefault();if(!disabled&&inputs.current[i+1])inputs.current[i+1]?.focus({preventScroll:true});else onSubmit();return;}if(disabled)return;if(e.key==='Backspace'&&!entered){e.preventDefault();inputs.current[i-1]?.focus({preventScroll:true});}}}/>
    {difficulty==='easy'&&<span className="guided-letters" aria-hidden="true">{Array.from({length:slots},(_,j)=>{const want=expected[j],got=typed[j],punctuation=got?.punctuation||want?.punctuation;return <i key={j} className={got&&(!want||got.letter.toLowerCase()!==want.letter.toLowerCase())?'bad-letter':''}><span>{got?.letter||'\u00a0'}</span>{punctuation&&<b className="guided-punctuation">{punctuation}</b>}</i>;})}</span>}
   </label>;
@@ -136,6 +139,7 @@ function HardDictationInput({promptKey,sentence,value,disabled,deckWord,deckMean
 export default function NativePractice({deck,openGame,gameBusy,deckChoices,selectDeck,spellingRequest=0,consumeSpellingRequest,notify,exit,download,share,installedDecks,saveDownloaded}:{deck:PracticeDeck;openGame:()=>void;gameBusy:boolean;deckChoices:{id:string;title:string;cover:string;photoCount?:number}[];selectDeck:(id:string)=>void;spellingRequest?:number;consumeSpellingRequest:(sequence:number)=>void;notify:(s:string)=>void;exit:()=>void;download:()=>void;share:()=>void;installedDecks:{id:string;fingerprint?:string}[];saveDownloaded:(bytes:Uint8Array,signal:AbortSignal,source?:{url:string;feed:SourceDeck})=>Promise<void>}){
  usePageViewport();
  const desktopKeyboard=useDesktopKeyboard();
+ const desktopShortcut=useDesktopKeyboard(700);
  const [photoState,setPhotoState]=useState<'loading'|'ready'|'error'>('loading'),[photoRetry,setPhotoRetry]=useState(0);
  const xp=useExperience(),[effect]=useState(()=>readPreference('piclex-web.particle-effect')||'socialCode');
  const particleEffect=xp.level>=7?effect:'socialCode';
@@ -290,6 +294,24 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,selec
   },promptAudio?0:seek,promptAudio,promptAudio?seek:0);
   return audio.stop;
  },[listenRun,active,playback,prompt?.key,pass,repeat,state.rate,seek,seekRevision,onePhoto]);
+ useEffect(()=>{
+  if(!desktopShortcut)return;
+  // Capture Space before EnglishInput can treat it as printable text. Native
+  // button/select activation, dialogs and menus keep their own handling.
+  const space=(e:KeyboardEvent)=>{
+   if(e.key!==' '||e.repeat||e.shiftKey||e.ctrlKey||e.altKey||e.metaKey||composing||e.isComposing||e.keyCode===229)return;
+   if(!active||complete||panel||document.hidden)return;
+   if(!(state.module==='spelling'&&word||state.module==='listening'&&(state.mode==='chunks'||state.mode==='free')&&prompt&&!state.sentenceFinished))return;
+   if(document.querySelector('dialog[open],[role=dialog],.sentence-ambience[open],.chunk-menu'))return;
+   const target=e.target instanceof HTMLElement?e.target:null;if(!target)return;
+   if(target.closest('button,a,summary,select,[contenteditable=true],[role=button],[role=menuitem]'))return;
+   const field=target.closest('input,textarea');
+   if(field&&!field.matches('.spelling-input,.guided-input input,.dictation-input'))return;
+   if(!(target.closest('.native-practice')||target===document.body||target===document.documentElement||target.id==='main-content'))return;
+   e.preventDefault();e.stopPropagation();replay();
+  };
+  window.addEventListener('keydown',space,true);return()=>window.removeEventListener('keydown',space,true);
+ });
  useEffect(()=>{const keyboard=(e:KeyboardEvent)=>{
   const hardwareKey=/^Key[A-Z]$/.test(e.code)&&(e.key==='Process'||e.key==='Unidentified'||e.keyCode===229)?(e.shiftKey?e.code.slice(3):e.code.slice(3).toLowerCase()):e.key;
   if(e.defaultPrevented||!active||composing||e.isComposing||(e.keyCode===229&&hardwareKey===e.key)||e.metaKey||e.ctrlKey||e.altKey)return;
@@ -300,8 +322,17 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,selec
    e.preventDefault();focusAnswer();virtualPress(hardwareKey);return;
   }
   if(e.repeat||e.shiftKey)return;
+  const shortcutTarget=target?.closest('.native-practice')||target===document.body||target===document.documentElement||target?.id==='main-content';
+  const shortcutBlocked=target?.closest('select,dialog,[role=dialog],[contenteditable=true],.sentence-ambience')||document.querySelector('.sentence-ambience[open],.chunk-menu');
+  const shortcutField=target?.closest('input,textarea');
+  if(desktopShortcut&&e.key==='Escape'&&!complete&&state.module==='listening'&&prompt&&!state.sentenceFinished&&(state.mode==='chunks'||state.mode==='free')&&!sentenceResult&&!shortcutBlocked&&shortcutTarget&&(!shortcutField||shortcutField.matches('.guided-input input,.dictation-input'))){
+   e.preventDefault();act({type:'giveUp'});return;
+  }
+  if(state.module==='spelling'&&e.key==='Escape'&&!draft.result&&!shortcutBlocked&&(!shortcutField||shortcutField.matches('.spelling-input'))&&(shortcutTarget||target===document.body||target===document.documentElement||target?.id==='main-content')){
+   e.preventDefault();revealWord();return;
+  }
   if(e.target!==input.current&&e.target!==document.body&&e.target!==document.documentElement)return;
-  if(state.module==='spelling'){if(e.key===' '){e.preventDefault();replay();}if(e.key==='Escape'&&!draft.result){e.preventDefault();revealWord();}if(e.key==='Enter'&&draft.result){e.preventDefault();dispatch({type:'next'});}}
+  if(state.module==='spelling'){if(e.key===' '){e.preventDefault();replay();}if(e.key==='Enter'&&draft.result){e.preventDefault();dispatch({type:'next'});}}
  };window.addEventListener('keydown',keyboard);return()=>window.removeEventListener('keydown',keyboard);});
  const virtualPress=(pressed:string)=>{
   if(!active||complete||composing)return;
@@ -314,15 +345,24 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,selec
    const edited=editSpellingText(expectedInput(word,draft),draft.input,input.current?.selectionStart,input.current?.selectionEnd,pressed);
    if(edited){setImeWarning(false);if(typingSound)playTypingSound();flushSync(()=>dispatch({type:'input',value:edited.value}));input.current?.setSelectionRange(edited.cursor,edited.end);}
   }else if(state.module==='listening'&&state.mode==='free'&&!state.sentenceFinished){
+   if(pressed===' ')return;
    if(sentenceResult){if(pressed==='Enter'&&sentence.pending!==state.mode)dispatch({type:'sentenceNext'});return;}
    const inputs=[...document.querySelectorAll<HTMLInputElement|HTMLTextAreaElement>('.guided-input input,.dictation-input')];
-   const target=inputs.find(node=>node===document.activeElement)||inputs.find(node=>!node.value)||inputs[0];if(!target)return;target.focus({preventScroll:true});
+   let target=inputs.find(node=>node===document.activeElement)||inputs.find(node=>!node.value)||inputs[0];if(!target)return;
+   if(target.matches('.guided-input input')&&!/[a-z]/i.test(sentenceWords[inputs.indexOf(target)]||'')){target=inputs.find((node,j)=>j>inputs.indexOf(target)&&/[a-z]/i.test(sentenceWords[j]||''))!;if(!target)return;}
+   target.focus({preventScroll:true});
+   const index=inputs.indexOf(target);
+   const edit=(field:HTMLInputElement|HTMLTextAreaElement,key:string)=>prompt?editDictationText(field.matches('.dictation-input')?prompt.sentence:(sentenceWords[inputs.indexOf(field)]||'').replace(/['’‘]/g,''),field.value,field.selectionStart,field.selectionEnd,key):editKeyboardText(field.value,field.selectionStart,field.selectionEnd,key);
+   const commit=(field:HTMLInputElement|HTMLTextAreaElement,edited:{value:string;cursor:number})=>{
+    const prototype=field instanceof HTMLTextAreaElement?HTMLTextAreaElement.prototype:HTMLInputElement.prototype;
+    Object.getOwnPropertyDescriptor(prototype,'value')!.set!.call(field,edited.value);field.setSelectionRange(edited.cursor,edited.cursor);flushSync(()=>field.dispatchEvent(new Event('input',{bubbles:true})));if(field===document.activeElement)field.setSelectionRange(Math.min(edited.cursor,field.value.length),Math.min(edited.cursor,field.value.length));
+   };
    if(pressed==='Escape'){act({type:'giveUp'});return;}
-   if(pressed==='Backspace'&&!target.value){inputs[inputs.indexOf(target)-1]?.focus({preventScroll:true});return;}
-   if(pressed==='Enter'){const next=inputs[inputs.indexOf(target)+1];if(next)next.focus({preventScroll:true});else act({type:'submit'});return;}
-   const edited=editKeyboardText(target.value,target.selectionStart,target.selectionEnd,pressed);if(!edited)return;
-   const prototype=target instanceof HTMLTextAreaElement?HTMLTextAreaElement.prototype:HTMLInputElement.prototype;
-   Object.getOwnPropertyDescriptor(prototype,'value')!.set!.call(target,edited.value);target.setSelectionRange(edited.cursor,edited.cursor);flushSync(()=>target.dispatchEvent(new Event('input',{bubbles:true})));if(target===document.activeElement)target.setSelectionRange(Math.min(edited.cursor,target.value.length),Math.min(edited.cursor,target.value.length));
+   if(pressed==='Backspace'&&target.selectionStart===target.selectionEnd&&target.selectionStart===0){
+    const previous=inputs.slice(0,index).filter((node,j)=>/[a-z]/i.test(sentenceWords[j]||'')).at(-1);if(previous){previous.focus({preventScroll:true});previous.setSelectionRange(previous.value.length,previous.value.length);const edited=edit(previous,'Backspace');if(edited)commit(previous,edited);}return;
+   }
+   if(pressed==='Enter'){const next=inputs[index+1];if(next)next.focus({preventScroll:true});else act({type:'submit'});return;}
+   const edited=edit(target,pressed);if(!edited)return;commit(target,edited);
   }
  };
  const required=word?expectedInput(word,draft):'',wrong=word?mismatch(required,draft.input):-1;
@@ -380,13 +420,13 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,selec
    </div>
    {state.module==='spelling'?<div className="native-answer-footer">
     <div className={`native-answer ${wrong>=0?'wrong':''}`} onClick={()=>input.current?.focus({preventScroll:true})}><AnswerSlots expected={word.english} entered={draft.input} revealed={draft.result==='revealed'} quickIndices={draft.quickIndices} scope={key} active={active} effect={particleEffect} completed={draft.result==='correct'||draft.result==='reviewed'} perfect={draft.result==='correct'}/><SpellingGlow progress={progress} complete={draft.result==='correct'||draft.result==='reviewed'} revealed={draft.result==='revealed'} error={wrong>=0} active={active} scope={`${deck.fingerprint}:${state.round}`}/><EnglishInput key={key} ref={input} label="输入英文" className="spelling-input" onVirtualKey={virtualPress} value={draft.input} readOnly={!!draft.result} onWarning={setImeWarning} onComposing={setComposing} onValue={value=>dispatch({type:'input',value})}/></div>
-    <Playback play={replay} audio={audio} rate={state.rate} setRate={setRate} label={word.example?'播放句子和单词':'播放单词'}/>
-    {draft.result==='revealed'||draft.result&&!state.pending?<button className="native-primary" onClick={()=>dispatch({type:'next'})}>{state.index+1===deck.words.length?'完成本轮':'下一个'}</button>:<button className="native-primary" disabled={!!draft.result} onClick={revealWord}>不认识 <kbd>Esc</kbd></button>}
+    <Playback play={replay} audio={audio} rate={state.rate} setRate={setRate} shortcut={desktopShortcut} label={word.example?'播放句子和单词':'播放单词'}/>
+    {draft.result==='revealed'||draft.result&&!state.pending?<button className="native-primary" onClick={()=>dispatch({type:'next'})}>{state.index+1===deck.words.length?'完成本轮':'下一个'}</button>:<button className="native-primary" disabled={!!draft.result} aria-keyshortcuts={desktopShortcut?'Escape':undefined} onClick={revealWord}>不认识 <kbd className="esc-keycap" aria-hidden="true">Esc</kbd></button>}
    </div>:state.module==='listening'&&prompt&&!state.sentenceFinished?<div className="native-answer-footer sentence-footer">
-    {playback?<><ListeningSeek onBegin={()=>{if(listenRun)setSeek(promptAudio?audio.readProgress():Math.max(0,audio.position));audio.stop();}} audio={audio} prompt={prompt.sentence} original={!!promptAudio} seek={seek} onSeek={value=>{audio.stop();setSeek(value);setSeekRevision(n=>n+1);}}/><div className="listening-metadata"><span aria-label="播放列表位置">{Math.max(0,playlist.indexOf(state.sentenceIndex))+1}/{playlist.length}</span><label className="listening-repeat"><span aria-hidden="true">↻</span><select aria-label="循环方式" value={repeat} onChange={e=>{if(listenRun)setSeek(promptAudio?audio.readProgress():Math.max(0,audio.position));setRepeat(e.target.value);setPass(0);writePreference('piclex-web.listening.repeat',e.target.value);}}>{repeatModes.map(([id,title])=><option key={id} value={id}>{title}</option>)}</select></label><select aria-label="播放速度" disabled={repeat==='fastThreeSlowTwo'} value={repeat==='fastThreeSlowTwo'?(pass<3?1:.75):state.rate} onChange={e=>setRate(Number(e.target.value))}>{rates.map(r=><option key={r} value={r}>{r}×</option>)}</select></div><div className="listening-transport"><button className="native-button" aria-label="上一句" onClick={()=>skipListening(-1)}><span className="transport-skip previous" aria-hidden="true"/></button><button className="native-button" onClick={()=>{if(listenRun)pauseListening();else setListenRun(true);}}>{listenRun?<Icon name="pause"/>:<span className="transport-play" aria-hidden="true"/>}{audio.preparing&&listenRun?'准备中…':listenRun?'暂停':audio.error?'重新准备':'播放'}</button><button className="native-button" aria-label="下一句" onClick={()=>skipListening(1)}><span className="transport-skip" aria-hidden="true"/></button></div></>:<><Playback play={replay} audio={audio} rate={state.rate} setRate={setRate}/>{sentenceResult&&sentence.pending!==state.mode?<div className="sentence-actions">{state.mode==='chunks'&&sentenceResult==='correct'&&<button className="native-button" onClick={()=>setMode('free')}>挑战自由听写</button>}<button className="native-primary" onClick={()=>dispatch({type:'sentenceNext'})}>下一个</button></div>:<div className={`sentence-actions${sentenceResult?' sentence-actions-pending':''}`} aria-hidden={sentenceResult?true:undefined} inert={!!sentenceResult}>{state.mode==='free'&&<button className="native-button" disabled={!sentence.freeText.trim()} onClick={()=>act({type:'submit'})}>检查答案</button>}<button className="native-primary" onClick={()=>act({type:'giveUp'})}>听不懂</button></div>}</>}
+    {playback?<><ListeningSeek onBegin={()=>{if(listenRun)setSeek(promptAudio?audio.readProgress():Math.max(0,audio.position));audio.stop();}} audio={audio} prompt={prompt.sentence} original={!!promptAudio} seek={seek} onSeek={value=>{audio.stop();setSeek(value);setSeekRevision(n=>n+1);}}/><div className="listening-metadata"><span aria-label="播放列表位置">{Math.max(0,playlist.indexOf(state.sentenceIndex))+1}/{playlist.length}</span><label className="listening-repeat"><span aria-hidden="true">↻</span><select aria-label="循环方式" value={repeat} onChange={e=>{if(listenRun)setSeek(promptAudio?audio.readProgress():Math.max(0,audio.position));setRepeat(e.target.value);setPass(0);writePreference('piclex-web.listening.repeat',e.target.value);}}>{repeatModes.map(([id,title])=><option key={id} value={id}>{title}</option>)}</select></label><select aria-label="播放速度" disabled={repeat==='fastThreeSlowTwo'} value={repeat==='fastThreeSlowTwo'?(pass<3?1:.75):state.rate} onChange={e=>setRate(Number(e.target.value))}>{rates.map(r=><option key={r} value={r}>{r}×</option>)}</select></div><div className="listening-transport"><button className="native-button" aria-label="上一句" onClick={()=>skipListening(-1)}><span className="transport-skip previous" aria-hidden="true"/></button><button className="native-button" onClick={()=>{if(listenRun)pauseListening();else setListenRun(true);}}>{listenRun?<Icon name="pause"/>:<span className="transport-play" aria-hidden="true"/>}{audio.preparing&&listenRun?'准备中…':listenRun?'暂停':audio.error?'重新准备':'播放'}</button><button className="native-button" aria-label="下一句" onClick={()=>skipListening(1)}><span className="transport-skip" aria-hidden="true"/></button></div></>:<><Playback play={replay} audio={audio} rate={state.rate} setRate={setRate} shortcut={desktopShortcut}/>{sentenceResult&&sentence.pending!==state.mode?<div className="sentence-actions">{state.mode==='chunks'&&sentenceResult==='correct'&&<button className="native-button" onClick={()=>setMode('free')}>挑战自由听写</button>}<button className="native-primary" onClick={()=>dispatch({type:'sentenceNext'})}>下一个</button></div>:<div className={`sentence-actions${sentenceResult?' sentence-actions-pending':''}`} aria-hidden={sentenceResult?true:undefined} inert={!!sentenceResult}><button className="native-primary" aria-keyshortcuts={desktopShortcut&&!sentenceResult?'Escape':undefined} onClick={()=>act({type:'giveUp'})}>听不懂 <kbd className="esc-keycap" aria-hidden="true">Esc</kbd></button></div>}</>}
    </div>:null}
   </>}
-  {!complete&&(state.module==='spelling'||state.module==='listening'&&state.mode==='free'&&!!prompt&&!state.sentenceFinished)&&<VirtualKeyboard active={active} press={virtualPress} lettersOnly={state.module==='spelling'}/>}
+  {!complete&&(state.module==='spelling'||state.module==='listening'&&state.mode==='free'&&!!prompt&&!state.sentenceFinished)&&<VirtualKeyboard active={active} press={virtualPress} lettersOnly />}
   {panel==='download'&&<DeckDownload close={()=>setPanel(null)} installed={installedDecks} save={saveDownloaded}/>}
   {panel==='level'&&<Dialog title="我的等级" close={()=>setPanel(null)}><LevelPage embedded openGame={openGame} gameBusy={gameBusy} learn={()=>{setPanel(null);selectModule('spelling');}}/></Dialog>}
   {panel&&panel!=='download'&&panel!=='level'&&<Dialog title={panel==='gallery'?'选择照片':'选择卡组'} close={()=>setPanel(null)}>{panel==='settings'?<DeckPicker choices={deckChoices} selectedID={deck.id} select={id=>{audio.stop();setPanel(null);selectDeck(id);}}/>:<><div className="gallery-tools"><button className="native-button" aria-label="分享卡组" onClick={share}><Icon name="share"/></button><button className="native-button" aria-label="下载卡组" onClick={download}>↓</button></div><div className="native-photo-grid">{deck.images.map((src,imageIndex)=>{const first=deck.words.findIndex(w=>w.imageIndex===imageIndex);return <button key={src} aria-label={`照片 ${imageIndex+1}`} aria-pressed={word?.imageIndex===imageIndex} onClick={()=>{dispatch({type:'selectWord',index:word?.imageIndex===imageIndex?state.index:first});setPanel(null);}}><img src={src} alt="" loading="lazy"/><span>{imageIndex+1}</span></button>;})}</div></>}</Dialog>}
@@ -395,5 +435,5 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,selec
 function Chunk({text,disabled,remove,move}:{text:string;disabled:boolean;remove:()=>void;move:(offset:number)=>void}){
  const [menu,setMenu]=useState(false),timer=useRef<ReturnType<typeof setTimeout>|undefined>(undefined),long=useRef(false);
  useEffect(()=>()=>clearTimeout(timer.current),[]);
- return <span className="selected-chunk"><button className="chunk" disabled={disabled} onClick={()=>{if(!long.current)remove();long.current=false;}} onContextMenu={e=>{e.preventDefault();setMenu(true);}} onPointerDown={()=>{long.current=false;timer.current=setTimeout(()=>{long.current=true;setMenu(true);},450);}} onPointerUp={()=>clearTimeout(timer.current)} onPointerCancel={()=>clearTimeout(timer.current)} onKeyDown={e=>{if(e.altKey&&['ArrowLeft','ArrowRight'].includes(e.key)){e.preventDefault();move(e.key==='ArrowLeft'?-1:1);}if(e.key==='Escape')setMenu(false);}}>{text}</button>{menu&&!disabled&&<span className="chunk-menu"><button aria-label={`向前移动 ${text}`} onClick={()=>{move(-1);setMenu(false);}}><Icon name="back"/></button><button aria-label={`向后移动 ${text}`} onClick={()=>{move(1);setMenu(false);}}><Icon name="arrow"/></button><button aria-label={`撤回 ${text}`} onClick={remove}>撤回</button><button aria-label="关闭词块菜单" onClick={()=>setMenu(false)}><Icon name="close"/></button></span>}</span>;
+ return <span className="selected-chunk"><button className="chunk" disabled={disabled} onClick={()=>{if(!long.current)remove();long.current=false;}} onContextMenu={e=>{e.preventDefault();setMenu(true);}} onPointerDown={()=>{long.current=false;timer.current=setTimeout(()=>{long.current=true;setMenu(true);},450);}} onPointerUp={()=>clearTimeout(timer.current)} onPointerCancel={()=>clearTimeout(timer.current)} onKeyDown={e=>{if(e.altKey&&['ArrowLeft','ArrowRight'].includes(e.key)){e.preventDefault();move(e.key==='ArrowLeft'?-1:1);}if(e.key==='Escape'){if(menu){e.preventDefault();e.stopPropagation();}setMenu(false);}}}>{text}</button>{menu&&!disabled&&<span className="chunk-menu"><button aria-label={`向前移动 ${text}`} onClick={()=>{move(-1);setMenu(false);}}><Icon name="back"/></button><button aria-label={`向后移动 ${text}`} onClick={()=>{move(1);setMenu(false);}}><Icon name="arrow"/></button><button aria-label={`撤回 ${text}`} onClick={remove}>撤回</button><button aria-label="关闭词块菜单" onClick={()=>setMenu(false)}><Icon name="close"/></button></span>}</span>;
 }

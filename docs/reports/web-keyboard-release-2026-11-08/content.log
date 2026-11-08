@@ -1,0 +1,11 @@
+
+> piclex-web@0.1.0 content:build
+> node scripts/build-public-content.mjs
+
+Basic English 850 场景卡片: 100 photos / 850 words; lazy image payload 276258 bytes
+程序员工作英语: 80 photos / 320 words; lazy image payload 150010 bytes
+程序员 Vibe Coding: 23 photos / 92 words; lazy image payload 44078 bytes
+下班后，去摄影吧！: 50 photos / 200 words; lazy image payload 91101 bytes
+新概念英语第二册: 241 photos / 1054 words; lazy image payload 440877 bytes
+经典英语歌曲: 53 photos / 342 words; lazy image payload 213538 bytes
+经典电影台词: 100 photos / 100 words; lazy image payload 47125 bytes

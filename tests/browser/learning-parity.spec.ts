@@ -21,12 +21,13 @@ test('guided word blanks show readable underlines and preserve typing, reveal an
  await page.locator('.photo-focus img').first().waitFor({state:'visible'});
  await page.screenshot({path:info.outputPath('guided-empty.png')});
  const second=fields.nth(1);
- await fillEnglish(second,"i'm");await expect(second).toHaveValue("i'm");
+ await fillEnglish(second,"im");await expect(second).toHaveValue("im");
+ await expect(words.nth(1).locator('.guided-letters')).toHaveText("i'm");
  await expect(words.nth(1).locator('.guided-letters')).toContainText('m');
  await expect(words.nth(1).locator('.bad-letter')).toHaveCount(0);
- await second.focus();await second.press('End');await second.press('Backspace');await expect(second).toHaveValue("i'");
+ await second.focus();await second.press('End');await second.press('Backspace');await expect(second).toHaveValue("i");
  await page.getByLabel('听写难度',{exact:true}).selectOption('medium');
- await expect(fields.nth(1)).toHaveValue("i'");
+ await expect(fields.nth(1)).toHaveValue("i");
  const equalWidths=await words.evaluateAll(nodes=>nodes.map(n=>n.getBoundingClientRect().width));
  expect(new Set(equalWidths).size).toBe(1);
  await page.getByLabel('听写难度',{exact:true}).selectOption('easy');
@@ -43,7 +44,7 @@ test('guided word blanks show readable underlines and preserve typing, reveal an
  await page.getByLabel('听写难度',{exact:true}).selectOption('hard');
  await expect(page.locator('.guided-input')).toHaveCount(0);
  await page.getByLabel('听写难度',{exact:true}).selectOption('easy');
- await expect(fields.nth(1)).toHaveValue("i'");
+ await expect(fields.nth(1)).toHaveValue("i");
  await page.screenshot({path:info.outputPath('guided-typed.png')});
 });
 test('long guided words wrap without covering the next word or reserving an icon row',async({page},info)=>{

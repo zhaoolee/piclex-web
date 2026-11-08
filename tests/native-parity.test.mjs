@@ -42,6 +42,29 @@ test('free typing auto-completes with native equivalence; guided apostrophe hand
  assert.equal(guidedCorrect("I'm here.",['im','here']),true);assert.equal(checkSentence("I'm here.",'im here').isCorrect,false);
  let bad=sentenceAct(newSentence(prompt),'free','input',{value:'To bee'});bad=sentenceAct(bad,'free','submit');assert.equal(bad.checks.free.isCorrect,false);bad=sentenceAct(bad,'free','reveal');bad=sentenceAct(bad,'free','retry');assert.equal(bad.freeText,'');assert.equal(bad.statistics.free.submissions,1);
 });
+test('complete free dictation checks automatically, clears stale errors while incomplete, and still completes after correction',()=>{
+ const p={key:'auto-free',sentence:"I'm in room 3 at 8 pm.",translation:''};
+ const freeAct=(s,type,extra={})=>reduceSentence(p,s,'free',{key:p.key,type,...extra});
+ let hard=newSentence(p);
+ hard=freeAct(hard,'input',{value:'Iminroom3at8'});
+ assert.equal(hard.checks.free,undefined);assert.equal(hard.statistics.free.submissions,0);assert.equal(hard.outcomes.free,undefined);
+ hard=freeAct(hard,'input',{value:'Iminroom3at8pm'});
+ assert.equal(hard.checks.free?.isCorrect,false);assert.equal(hard.statistics.free.submissions,1);assert.equal(hard.outcomes.free,undefined);assert.equal(hard.pending,null);
+ hard=freeAct(hard,'input',{value:'Iminroom3at8'});
+ assert.equal(hard.checks.free,undefined);assert.equal(hard.statistics.free.submissions,1);
+ hard=freeAct(hard,'input',{value:'Iminroom3at8pm'});assert.equal(hard.checks.free?.isCorrect,false);assert.equal(hard.statistics.free.submissions,2);
+ hard=freeAct(hard,'input',{value:p.sentence});
+ assert.equal(hard.checks.free.isCorrect,true);assert.equal(hard.outcomes.free,'correct');assert.equal(hard.pending,'free');assert.equal(hard.statistics.free.correct,1);
+ let guided=newSentence(p);
+ guided=freeAct(guided,'guided',{values:['I','in','room','3','at','8','pm']});
+ assert.equal(guided.checks.free,undefined);assert.equal(guided.statistics.free.submissions,0);
+ guided=freeAct(guided,'guided',{values:['xx','in','room','3','at','8','pm']});
+ assert.equal(guided.checks.free?.isCorrect,false);assert.equal(guided.statistics.free.submissions,1);assert.equal(guided.outcomes.free,undefined);
+ guided=freeAct(guided,'guided',{values:['x','in','room','3','at','8','pm']});
+ assert.equal(guided.checks.free,undefined);assert.equal(guided.statistics.free.submissions,1);
+ guided=freeAct(guided,'guided',{values:['Im','in','room','3','at','8','pm']});
+ assert.equal(guided.checks.free.isCorrect,true);assert.equal(guided.outcomes.free,'correct');assert.equal(guided.pending,'free');assert.equal(guided.statistics.free.correct,1);
+});
 test('spelling blocks additions after errors, remembers quick slots and rejects delayed actions after navigation',()=>{
  let s=act(newStudy(deck),'input',{value:'ax'});assert.equal(act(s,'input',{value:'axp'}).words.a.input,'ax');s=act(s,'input',{value:'a'});s=act(s,'input',{value:'apple'});assert.equal(s.words.a.result,'reviewed');const stale=studyKey(s);
  s=act(s,'selectWord',{index:2});assert.equal(reduceStudy(deck,s,{type:'next',question:stale}),s);
@@ -82,4 +105,12 @@ test('speaking retains earlier matched positions without crediting repeated part
 });
 test('speaking can finish the final sentence and restart in the same module without grading spelling',()=>{
  let s=act(newStudy(deck),'module',{value:'speaking'});for(let i=0;i<deck.words.length;i++)s=act(s,'speakingNext');assert.equal(s.index,deck.words.length);assert.equal(s.module,'speaking');assert.ok(Object.values(s.words).every(d=>!d.result));s=act(s,'restart');assert.equal(s.index,0);assert.equal(s.module,'speaking');
+});
+
+test('guided drafts switch to hard input without phantom trailing word spaces',()=>{
+ const p={key:'guided-space-boundary',sentence:'A croissant is on the wooden plate.'};
+ const s=reduceSentence(p,newSentence(p),'free',{key:p.key,type:'guided',values:['a','','is','','','','']});
+ assert.equal(s.freeText,'a  is');
+ assert.deepEqual(s.guided,['a','','is','','','','']);
+ assert.equal(s.outcomes.free,undefined);
 });

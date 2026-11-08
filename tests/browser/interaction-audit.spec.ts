@@ -21,9 +21,9 @@ test('dictation assistance speaks its answer; replay of a correct answer holds t
  await page.clock.install();await open(page);await page.getByRole('tab',{name:'练听力',exact:true}).click();await page.getByLabel('句子练习模式',{exact:true}).selectOption('free');
  // Freeze the answer deadline before entering the final character: slow CI must still click replay before auto-next.
  await page.clock.pauseAt(await page.evaluate(()=>Date.now()+1000));
- await fillEnglish(page.getByRole('textbox',{name:'听写句子',exact:true}),'I am still in bed');
+ await fillEnglish(page.getByRole('textbox',{name:'听写句子',exact:true}),'Iamstillinbed');
  await page.locator('.playback-button').click();await expect.poll(()=>page.evaluate(()=>(window as any).__spoken.at(-1)?.text)).toBe('I am still in bed.');
- await page.clock.runFor(1150);await expect(page.getByRole('textbox',{name:'听写句子',exact:true})).toHaveValue('I am still in bed');
+ await page.clock.runFor(1150);await expect(page.getByRole('textbox',{name:'听写句子',exact:true})).toHaveValue('I am still in bed.');
  await page.getByRole('button',{name:'下一个',exact:true}).click();await page.clock.runFor(150);await expect.poll(()=>page.evaluate(()=>(window as any).__spoken.length)).toBe(2);
  await page.getByRole('button',{name:'听不懂',exact:true}).click();await expect(page.locator('.sentence-feedback')).toContainText('参考答案');await expect.poll(()=>page.evaluate(()=>(window as any).__spoken.length)).toBe(3);
 });

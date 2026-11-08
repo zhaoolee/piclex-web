@@ -74,7 +74,7 @@ test('dictation keyboard follows App modes, focuses all difficulty inputs and pr
  await page.getByLabel('听写难度').selectOption('easy');
  const first=page.getByRole('textbox',{name:/第 1 个单词/}),second=page.getByRole('textbox',{name:/第 2 个单词/});
  await expect(second).toBeFocused();await expect(first).toHaveValue('i');
- if(info.project.name==='desktop'){await keyboard.getByRole('button',{name:'退格',exact:true}).click();await expect(first).toBeFocused();}
+ if(info.project.name==='desktop'){await keyboard.getByRole('button',{name:'退格',exact:true}).click();await expect(first).toBeFocused();await expect(first).toHaveValue('');await first.press('i');await expect(first).toHaveValue('i');}
  await page.getByLabel('听写难度').selectOption('medium');await expect(first).toHaveValue('i');
  await page.getByLabel('听写难度').selectOption('hard');await expect(sentence).toBeFocused();await expect(sentence).toHaveValue('i');
  await page.getByRole('button',{name:'当前卡组，学习设置'}).click();await page.getByRole('button',{name:'关闭',exact:true}).click();await expect(sentence).toBeFocused();
@@ -91,7 +91,8 @@ test('dictation keeps its keyboard after assistance and Enter continues without 
  {
   await expect(keyboard).toBeVisible();await keyboard.getByRole('button',{name:'按键 X',exact:true}).click();await expect(sentence).toHaveValue(answer);
   await page.screenshot({path:'test-results/dictation-keyboard-desktop.png'});
-  await keyboard.getByRole('button',{name:'回车',exact:true}).click();
+  if(info.project.name==='desktop')await sentence.press('Enter');
+  else await page.getByRole('button',{name:'下一个',exact:true}).click();
  }
  await expect(sentence).toHaveAttribute('readonly','');await expect(sentence).toHaveValue('');await expect(sentence).toBeFocused();
  await page.getByLabel('听写难度').selectOption('easy');const fields=page.getByRole('textbox',{name:/第 \d+ 个单词/});

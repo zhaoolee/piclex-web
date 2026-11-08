@@ -1,7 +1,8 @@
 import {useEffect,useRef,useState} from 'react';
-export function useDesktopKeyboard(){
- const [enabled,setEnabled]=useState(()=>matchMedia('(hover: hover) and (pointer: fine)').matches);
- useEffect(()=>{const query=matchMedia('(hover: hover) and (pointer: fine)');const update=()=>setEnabled(query.matches);query.addEventListener('change',update);return()=>query.removeEventListener('change',update);},[]);return enabled;
+export function useDesktopKeyboard(minWidth?:number){
+ const media=`(hover: hover) and (pointer: fine)${minWidth?` and (min-width: ${minWidth}px)`:''}`;
+ const [enabled,setEnabled]=useState(()=>matchMedia(media).matches);
+ useEffect(()=>{const query=matchMedia(media);const update=()=>setEnabled(query.matches);update();query.addEventListener('change',update);return()=>{query.removeEventListener('change',update);};},[media]);return enabled;
 }
 export default function VirtualKeyboard({active,press,lettersOnly=false}:{active:boolean;press:(key:string)=>void;lettersOnly?:boolean}){
  const [pressed,setPressed]=useState<Set<string>>(new Set()),[symbols,setSymbols]=useState(false),[shift,setShift]=useState(false),timers=useRef(new Map<string,ReturnType<typeof setTimeout>>());

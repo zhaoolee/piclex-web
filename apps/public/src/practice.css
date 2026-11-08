@@ -71,6 +71,8 @@ body[data-practice=true] .app-tabs{position:absolute}
 /* On a desktop, the two action rows can share the available width. The image,
    prompt and answer keep their native order and their original aspect ratio. */
 @media(hover:hover) and (pointer:fine) and (min-width:700px){
+ /* Reserve the Escape action width when it changes to Next. */
+ .native-practice[data-module=spelling]>.native-answer-footer>.native-primary,.native-practice .sentence-actions>.native-primary{min-width:112px}
  .native-practice{max-width:560px}
  .native-answer-footer{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 8px}
  .native-answer-footer>.native-answer{grid-column:1/-1}
@@ -271,3 +273,12 @@ body[data-practice=true] .learning-dialog{position:fixed;inset:auto;top:calc(var
 .hard-dictation-peek{display:block}
 
 .audio-unlock{position:absolute;top:10px;right:10px;z-index:4;width:34px;height:34px;display:grid;place-items:center;padding:0;border:1px solid #ffffff4d;border-radius:50%;background:#00000073;color:#fff;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 2px 8px #0003;touch-action:manipulation}.audio-unlock svg{width:18px;height:18px}.audio-unlock:focus-visible{outline:2px solid #fff;outline-offset:2px}
+
+/* PC-only Escape keycaps stay out of the accessible name; narrow layouts keep
+   the existing buttons without an always-on hint. */
+.esc-keycap,.space-keycap{display:none}
+@media(hover:hover) and (pointer:fine) and (min-width:700px){
+ .native-practice .native-primary .esc-keycap,.native-practice .playback-button .space-keycap{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:17px;padding:0 4px;border:1px solid color-mix(in srgb,currentColor 30%,transparent);border-radius:4px;background:transparent;color:inherit;font-family:inherit;font-size:10px;font-weight:600;line-height:1;letter-spacing:0;opacity:.65}
+ .native-practice .playback-button .space-keycap{min-width:30px;letter-spacing:.02em}
+ .native-practice .playback-button .space-keycap::after{content:"空格"}
+}

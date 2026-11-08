@@ -83,7 +83,7 @@ test('native modules preserve independent sentence drafts, shuffle order and pho
  const bank=page.getByLabel('待选词块');const selected=page.getByLabel('已选词块');
  const bankOrder=await bank.getByRole('button').allTextContents();
  await bank.getByRole('button',{name:'I',exact:true}).click();
- await mode.selectOption('free');await fillEnglish(page.getByRole('textbox',{name:'听写句子'}),'I am');
+ await mode.selectOption('free');await fillEnglish(page.getByRole('textbox',{name:'听写句子'}),'Iam');
  await mode.selectOption('chunks');await expect(selected).toContainText('I');
  await page.getByRole('button',{name:'选择照片',exact:true}).click();
  await page.getByRole('button',{name:'照片 2',exact:true}).click();
@@ -118,11 +118,15 @@ test('sentence fill checks automatically; failed order can be corrected and assi
  await page.getByRole('button',{name:'播放句子',exact:true}).click();
  await expect(page.getByRole('button',{name:'挑战自由听写'})).toBeVisible();
  await page.getByRole('button',{name:'挑战自由听写'}).click();
- await fillEnglish(page.getByRole('textbox',{name:'听写句子'}),'I wrong');await page.getByRole('button',{name:'检查答案'}).click();
+ const dictation=page.getByRole('textbox',{name:'听写句子'});
+ await fillEnglish(dictation,'Iamstillinbad');
+ await expect(page.getByRole('button',{name:'检查答案',exact:true})).toHaveCount(0);
  await expect(page.locator('.sentence-feedback[role=status]')).toContainText('再听一次');
+ await dictation.press('Backspace');await expect(page.locator('.sentence-feedback')).toHaveCount(0);
+ await fillEnglish(dictation,'Iamstillinbad');await expect(page.locator('.sentence-feedback[role=status]')).toContainText('再听一次');
  await page.getByRole('button',{name:'显示答案',exact:true}).click();await expect(page.locator('.standard-answer')).toContainText('I am still in bed.');
  await page.getByRole('button',{name:'重新拼写',exact:true}).click();await expect(page.getByRole('textbox',{name:'听写句子'})).toHaveValue('');
- await fillEnglish(page.getByRole('textbox',{name:'听写句子'}),'i am still in bed');
+ await fillEnglish(page.getByRole('textbox',{name:'听写句子'}),'iamstillinbed');
  await expect(page.getByRole('textbox',{name:'听写句子'})).toHaveValue(''); // auto-advance to next sentence
  await page.getByRole('button',{name:'当前卡组，学习设置'}).click();await expect(page.getByRole('dialog',{name:'选择卡组',exact:true})).toBeVisible();await page.getByRole('button',{name:'关闭',exact:true}).click();
  await page.getByRole('tab',{name:'拼单词'}).click();await expect(page.locator('.answer-feedback')).toHaveCount(0);

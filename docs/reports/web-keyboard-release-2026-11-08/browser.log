@@ -1,0 +1,704 @@
+
+> piclex-web@0.1.0 test:browser
+> playwright test --config=playwright.local-linux.config.ts
+
+
+Running 615 tests using 2 workers
+
+[1/615] [desktop] › tests/browser/ai-settings.spec.ts:17:1 › custom recognition uses configured provider, preserves bounding boxes and never falls back to official
+[2/615] [desktop] › tests/browser/ai-settings.spec.ts:5:1 › provider fields persist independently, key visibility resets, home label matches and narrow screens fit
+[3/615] [desktop] › tests/browser/ai-settings.spec.ts:24:1 › invalid settings and provider errors keep the photo without official fallback or key disclosure
+[4/615] [desktop] › tests/browser/ai-settings.spec.ts:31:1 › failed storage write leaves the last saved model selected
+[5/615] [desktop] › tests/browser/alignment-extension.spec.ts:6:1 › camera GitHub badge is centered above shutter and opens the repository separately
+[6/615] [desktop] › tests/browser/alignment-extension.spec.ts:14:1 › native theme menus retain day and night choices, custom themes and reset
+[7/615] [desktop] › tests/browser/alignment-extension.spec.ts:19:1 › level sheet preserves the route and draft
+[8/615] [desktop] › tests/browser/alignment-extension.spec.ts:22:1 › shutter preview and mute agree and all three native recordings are deployed
+[9/615] [desktop] › tests/browser/alignment-extension.spec.ts:27:1 › speech choice is used by preview and persists
+[10/615] [desktop] › tests/browser/alignment-extension.spec.ts:32:1 › import animation preference controls the actual photo flow
+[11/615] [desktop] › tests/browser/app-shell.spec.ts:9:1 › three App tabs keep the current deck and draft; earned experience survives reload without duplication
+[12/615] [desktop] › tests/browser/app-shell.spec.ts:14:1 › capture creates a real local deck and retains an unsaved photo when changing tabs
+[13/615] [desktop] › tests/browser/app-shell.spec.ts:20:1 › new correct letters render particles, restored answers do not, and reduced motion suppresses them
+[14/615] [desktop] › tests/browser/app-shell.spec.ts:23:1 › two tabs award a completed word only once and keep low-level rewards locked
+[15/615] [desktop] › tests/browser/app-shell.spec.ts:26:1 › the native game loads local assets, pauses, saves before changing tabs, and resumes
+[16/615] [desktop] › tests/browser/app-shell.spec.ts:32:1 › one App shell adapts at 320, 390, 768 and 1440px without hiding navigation or controls
+[17/615] [desktop] › tests/browser/app-shell.spec.ts:52:1 › spelling keyboard mirrors hardware keys on desktop and suppresses the OS keyboard on touch devices
+[18/615] [desktop] › tests/browser/app-shell.spec.ts:64:1 › dictation keyboard follows App modes, focuses all difficulty inputs and preserves drafts
+[19/615] [desktop] › tests/browser/app-shell.spec.ts:86:1 › dictation keeps its keyboard after assistance and Enter continues without losing focus
+[20/615] [desktop] › tests/browser/audio-unlock-speech.spec.ts:19:1 › speech policy denial keeps one retryable request, ignores stale callbacks and only hides on real start
+[21/615] [desktop] › tests/browser/audio-unlock-speech.spec.ts:42:1 › a later denied TTS word retries only that word, not the clip that already finished
+[22/615] [desktop] › tests/browser/audio-unlock-speech.spec.ts:66:1 › automatic service failure stays quiet and explicit errors belong only to the current content
+[23/615] [desktop] › tests/browser/camera-parity.spec.ts:2:51 › camera saves the visible crop for a landscape source and plays the native shutter once
+[24/615] [desktop] › tests/browser/camera-parity.spec.ts:2:51 › camera saves the visible crop for a portrait source and plays the native shutter once
+[25/615] [desktop] › tests/browser/camera-surface.spec.ts:3:1 › empty camera has soft day/night dunes and a transparent App Store mark opening a new tab
+[26/615] [desktop] › tests/browser/camera-surface.spec.ts:18:1 › generated card uses native paper, separated glass callouts, object connectors and fixed footer proportions in both themes
+[27/615] [desktop] › tests/browser/camera-surface.spec.ts:33:1 › sand falls back without WebGL and recovers after a lost context on re-entry
+[28/615] [desktop] › tests/browser/capture-mobile-fit.spec.ts:20:1 › portrait review keeps two brand lines, equal label padding and tools clear of navigation with enlarged browser text
+[29/615] [desktop] › tests/browser/capture-render.spec.ts:9:1 › diffuse colour is baked into every layer even with CSS filters disabled
+[30/615] [desktop] › tests/browser/capture-render.spec.ts:34:1 › destination remains hidden until the entire tilted sheet lands, including the final flight frames
+[31/615] [desktop] › tests/browser/capture-render.spec.ts:66:1 › closing during the tilted flight removes both the hidden destination and printing overlay
+[32/615] [desktop] › tests/browser/capture-render.spec.ts:113:1 › early recognition keeps every label hidden through landing and reveals once in native order
+[33/615] [desktop] › tests/browser/capture-render.spec.ts:143:35 › late recognition preserves stagger and connector travel (reduced motion false)
+[34/615] [desktop] › tests/browser/capture-render.spec.ts:143:35 › late recognition preserves stagger and connector travel (reduced motion true)
+[35/615] [desktop] › tests/browser/deck-picker-audio.spec.ts:7:1 › learning settings switches public and personal decks directly and restores each draft
+[36/615] [desktop] › tests/browser/deck-picker-audio.spec.ts:16:1 › song clips decode, respect rate, precede word TTS and stop on mode or deck changes
+[37/615] [desktop] › tests/browser/deck-picker-audio.spec.ts:30:1 › original listening audio seeks by time and resumes from its paused position
+[38/615] [desktop] › tests/browser/deck-picker-audio.spec.ts:41:1 › advancing original audio clears preparation even when playing notification is lost; buffered stalls retain Pause
+[39/615] [desktop] › tests/browser/deck-subscription-themes.spec.ts:5:1 › subscription links expand, copy and fit light and dark themes after reload at 320px
+[40/615] [desktop] › tests/browser/deck-subscriptions.spec.ts:4:1 › confirmation and persistent cancellation preserve downloaded bytes and draft
+[41/615] [desktop] › tests/browser/deck-subscriptions.spec.ts:13:1 › failed clipboard and storage writes do not falsely confirm or remove a subscription
+[42/615] [desktop] › tests/browser/desktop-fit.spec.ts:5:1 › desktop preserves full photograph and fits answer, rate and keyboard without scrolling
+[43/615] [desktop] › tests/browser/focus-ambience.spec.ts:9:1 › default cafe is controllable in spelling; choice survives modules and reload, pauses on exit
+[44/615] [desktop] › tests/browser/focus-ambience.spec.ts:31:1 › gradient stays on the ring surface through resize, pause and reduced motion
+[45/615] [desktop] › tests/browser/focus-ambience.spec.ts:44:1 › background gain stays below keys when media volume is read-only, ducks for typing and recovers
+[46/615] [desktop] › tests/browser/focus-ambience.spec.ts:78:1 › an unavailable audio mixer never falls back to full-volume background or breaks typing
+[47/615] [desktop] › tests/browser/glass-tabs.spec.ts:3:1 › floating glass tabs preserve native order, selection, scrub cancellation and keyboard activation
+[48/615] [desktop] › tests/browser/guided-no-eyes.spec.ts:5:43 › easy has no eye controls or reserved row; word hold preserves bilingual help and input
+[49/615] [desktop] › tests/browser/guided-no-eyes.spec.ts:5:43 › medium has no eye controls or reserved row; word hold preserves bilingual help and input
+[50/615] [desktop] › tests/browser/http-crypto.spec.ts:21:1 › HTTP official deck opens and reloads without WebCrypto
+[51/615] [desktop] › tests/browser/http-crypto.spec.ts:27:1 › HTTP local import works and corrupt archives cannot replace it
+[52/615] [desktop] › tests/browser/http-crypto.spec.ts:39:1 › HTTP automatic progress reads and publishes verified snapshots without secure-only crypto
+[53/615] [desktop] › tests/browser/ime.spec.ts:8:1 › Chinese spelling input warns, preserves English progress and resumes normally
+[54/615] [desktop] › tests/browser/ime.spec.ts:14:1 › guided dictation keeps composition focus and hard dictation does not submit an IME Enter
+[55/615] [desktop] › tests/browser/ime.spec.ts:19:1 › pasted Chinese warns only in learning fields and full-width input preserves the answer
+[56/615] [desktop] › tests/browser/input-performance.spec.ts:16:1 › phrase separators keep touch and hardware insertion after the last entered letter
+[57/615] [desktop] › tests/browser/input-performance.spec.ts:27:1 › typing avoids whole-study clones and prompt rebuilds while preserving glyph and ripple effects
+[58/615] [desktop] › tests/browser/input-performance.spec.ts:46:1 › rapid typing preserves the active particle frame instead of resetting the full-screen canvas
+[59/615] [desktop] › tests/browser/input-performance.spec.ts:75:1 › an immediate page exit and leaving learning flush the last burst without waiting for autosave
+[60/615] [desktop] › tests/browser/input-performance.spec.ts:88:1 › typing preserves restored progress and unrelated stored decks when the page hides
+[61/615] [desktop] › tests/browser/input-performance.spec.ts:116:39 › full Emoji effects reuse prepared glyphs with idle callbacks available
+[62/615] [desktop] › tests/browser/input-performance.spec.ts:116:39 › full Emoji effects reuse prepared glyphs with idle callbacks deferred
+[63/615] [desktop] › tests/browser/interaction-audit.spec.ts:13:1 › reveal speaks the word, next speaks the next prompt, and tapping the selected tab leaves playback intact
+[64/615] [desktop] › tests/browser/interaction-audit.spec.ts:20:1 › dictation assistance speaks its answer; replay of a correct answer holds the current sentence
+[65/615] [desktop] › tests/browser/interaction-audit.spec.ts:30:1 › demonstration releases the microphone before playing and restarting reading stops the example
+[66/615] [desktop] › tests/browser/interaction-audit.spec.ts:39:1 › classic key sound works at LV0 for physical and touch input, dictation and backspace
+[67/615] [desktop] › tests/browser/interaction-audit.spec.ts:49:1 › keyboard sound mute survives settings navigation and a full reload
+[68/615] [desktop] › tests/browser/interaction-audit.spec.ts:58:1 › reading keeps partial matches, closes its microphone on completion and continues in speaking
+[69/615] [desktop] › tests/browser/keyboard-viewport.spec.ts:12:1 › every keyboard row stays clickable with browser chrome, short screens and mode changes
+[70/615] [desktop] › tests/browser/keyboard-viewport.spec.ts:43:1 › hard dictation accepts hardware editing and English paste while remaining keyboard protected
+[71/615] [desktop] › tests/browser/lab-loading.spec.ts:4:1 › game program delay shows loading immediately and navigation remains usable
+[72/615] [desktop] › tests/browser/lab-loading.spec.ts:9:1 › artwork reports real partial progress then reveals a playable game
+[73/615] [desktop] › tests/browser/lab-loading.spec.ts:14:1 › failed game resources show retry and preserve an existing adventure
+[74/615] [desktop] › tests/browser/lab-loading.spec.ts:18:1 › failed game program has a recovery action instead of a blank canvas
+[75/615] [desktop] › tests/browser/lab-loading.spec.ts:23:1 › a half-downloaded game program shows measured byte progress, not a black screen
+[76/615] [desktop] › tests/browser/lab-loading.spec.ts:30:1 › a slow artwork transfer beyond 45 seconds stays loading and can finish
+[77/615] [desktop] › tests/browser/large-backup.spec.ts:5:1 › real HTTPS WebDAV large upload, readback and restore preserve every photo
+[78/615] [desktop] › tests/browser/layout-audit.spec.ts:31:37 › native listening controls and speaking dock fit all viewports in light
+[79/615] [desktop] › tests/browser/layout-audit.spec.ts:31:37 › native listening controls and speaking dock fit all viewports in dark
+[80/615] [desktop] › tests/browser/layout-audit.spec.ts:46:1 › single-card preference lives in personalization, preserves choice on reload and filters both directions
+[81/615] [desktop] › tests/browser/layout-audit.spec.ts:52:1 › listening loops at end, retains position through a sheet and handles failures and fixed-rate repeat
+[82/615] [desktop] › tests/browser/layout-audit.spec.ts:60:1 › native ambience loops, ducks during speech, persists and stops at panels, hidden page and module changes
+[83/615] [desktop] › tests/browser/layout-audit.spec.ts:71:1 › theme navigation and editor match native compact hierarchy and preserve separate day/night selections
+[84/615] [desktop] › tests/browser/layout-audit.spec.ts:79:1 › dragging a listening seek bar commits once instead of restarting on every movement
+[85/615] [desktop] › tests/browser/learning-entry.spec.ts:8:1 › first learning visit opens the first official deck in spelling without a chooser
+[86/615] [desktop] › tests/browser/learning-entry.spec.ts:11:1 › learning tab and capture start choose a deck while explicit library remains available
+[87/615] [desktop] › tests/browser/learning-entry.spec.ts:16:1 › remembered local deck opens spelling without losing spelling or listening drafts
+[88/615] [desktop] › tests/browser/learning-entry.spec.ts:23:1 › missing remembered deck falls back and a failed catalog has a recovery action
+[89/615] [desktop] › tests/browser/learning-keyboard-shortcuts.spec.ts:40:1 › learning keyboards show exactly 26 letters and Backspace at desktop and mobile widths
+[90/615] [desktop] › tests/browser/learning-keyboard-shortcuts.spec.ts:58:1 › PC Esc and Space keycaps follow the desktop media query without changing button names
+[91/615] [desktop] › tests/browser/learning-keyboard-shortcuts.spec.ts:74:50 › continuous letter-only input inserts sentence separators in free easy
+[92/615] [desktop] › tests/browser/learning-keyboard-shortcuts.spec.ts:74:50 › continuous letter-only input inserts sentence separators in free medium
+[93/615] [desktop] › tests/browser/learning-keyboard-shortcuts.spec.ts:74:50 › continuous letter-only input inserts sentence separators in free hard
+[94/615] [desktop] › tests/browser/learning-keyboard-shortcuts.spec.ts:92:50 › free easy dictation checks complete wrong answers without a submit control
+[95/615] [desktop] › tests/browser/learning-keyboard-shortcuts.spec.ts:92:50 › free medium dictation checks complete wrong answers without a submit control
+[96/615] [desktop] › tests/browser/learning-keyboard-shortcuts.spec.ts:92:50 › free hard dictation checks complete wrong answers without a submit control
+[97/615] [desktop] › tests/browser/learning-keyboard-shortcuts.spec.ts:112:43 › boundary Backspace returns to the previous easy word and deletes its last letter
+[98/615] [desktop] › tests/browser/learning-keyboard-shortcuts.spec.ts:112:43 › boundary Backspace returns to the previous medium word and deletes its last letter
+[99/615] [desktop] › tests/browser/learning-keyboard-shortcuts.spec.ts:124:1 › Space replays exactly once from answer fields and noneditable learning areas; touch has no shortcut
+[100/615] [desktop] › tests/browser/learning-keyboard-shortcuts.spec.ts:174:1 › Escape acts once and respects modified, repeated and IME keys, selects, dialogs and chunk menus
+[desktop] › tests/browser/large-backup.spec.ts:5:1 › real HTTPS WebDAV large upload, readback and restore preserve every photo
+LARGE_FIXTURE {
+  count: 33,
+  imageBytes: 4178361,
+  imageSHA256: '931ecd97cf0801a909992cb422d87ea02ad8ec096da6a7b0b2fa88e9833d884d',
+  archiveBytes: 137926307,
+  firstID: '55555555-5555-4555-8555-000000000000'
+}
+LARGE_UPLOAD {
+  photoCount: 33,
+  imageSHA256: '931ecd97cf0801a909992cb422d87ea02ad8ec096da6a7b0b2fa88e9833d884d',
+  zip64: false,
+  archiveBytes: 137931665
+}
+LARGE_PASSED {
+  mib: 128,
+  fixture: {
+    count: 33,
+    imageBytes: 4178361,
+    imageSHA256: '931ecd97cf0801a909992cb422d87ea02ad8ec096da6a7b0b2fa88e9833d884d',
+    archiveBytes: 137926307,
+    firstID: '55555555-5555-4555-8555-000000000000'
+  },
+  result: {
+    photoCount: 33,
+    imageSHA256: '931ecd97cf0801a909992cb422d87ea02ad8ec096da6a7b0b2fa88e9833d884d',
+    zip64: false,
+    archiveBytes: 137931665
+  },
+  records: { count: 33, referenced: 33, files: 33 },
+  observations: [
+    { phase: 'restore', ms: 7649 },
+    { phase: 'upload-and-readback', ms: 11489 }
+  ],
+  received: 137934049,
+  sent: 413795113,
+  browser: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.12 Safari/537.36'
+}
+
+
+[101/615] [desktop] › tests/browser/learning-keyboard-shortcuts.spec.ts:218:50 › letters alone complete contractions and fixed numbers in easy
+[102/615] [desktop] › tests/browser/learning-keyboard-shortcuts.spec.ts:218:50 › letters alone complete contractions and fixed numbers in medium
+[103/615] [desktop] › tests/browser/learning-keyboard-shortcuts.spec.ts:218:50 › letters alone complete contractions and fixed numbers in hard
+[104/615] [desktop] › tests/browser/learning-parity.spec.ts:6:1 › guided word blanks show readable underlines and preserve typing, reveal and difficulty changes
+[105/615] [desktop] › tests/browser/learning-parity.spec.ts:50:1 › long guided words wrap without covering the next word or reserving an icon row
+[106/615] [desktop] › tests/browser/learning-parity.spec.ts:76:1 › avatar level sheet enters the real game with the current deck and returns to the same listening draft
+[107/615] [desktop] › tests/browser/learning-parity.spec.ts:101:1 › settings level entry offers game loading recovery back to the level page
+[108/615] [desktop] › tests/browser/learning-parity.spec.ts:111:1 › rewards have real details, learning and settings routes, and saved milestones remain visible after spending
+[109/615] [desktop] › tests/browser/learning-parity.spec.ts:126:37 › light listening answer trays remain distinct from the page and selected chips have a visible outline
+[110/615] [desktop] › tests/browser/learning-parity.spec.ts:126:37 › dark listening answer trays remain distinct from the page and selected chips have a visible outline
+[111/615] [desktop] › tests/browser/learning-url.spec.ts:7:1 › share restores module, photo and sentence in a fresh browser without sender progress
+[112/615] [desktop] › tests/browser/learning-url.spec.ts:21:1 › same-deck links and refresh restore dictation difficulty, legacy links still open, invalid locations recover
+[113/615] [desktop] › tests/browser/learning-url.spec.ts:29:1 › opening a link to an already completed spelling starts a writable new attempt
+[114/615] [desktop] › tests/browser/learning-url.spec.ts:39:1 › an incoming learning link wins over a pending local module update
+[115/615] [desktop] › tests/browser/learning.spec.ts:10:1 › a visitor can complete a scene, resume after refresh, and restart without a phone
+[116/615] [desktop] › tests/browser/learning.spec.ts:32:1 › local archives survive refresh; duplicate and invalid imports preserve previous progress
+[117/615] [desktop] › tests/browser/learning.spec.ts:47:1 › direct links, reveal, dark theme and unknown decks have usable states
+[118/615] [desktop] › tests/browser/learning.spec.ts:57:1 › public catalog reuses existing content and practice never downloads a whole archive
+[119/615] [desktop] › tests/browser/learning.spec.ts:77:1 › native modules preserve independent sentence drafts, shuffle order and photo navigation
+[120/615] [desktop] › tests/browser/learning.spec.ts:108:1 › sentence fill checks automatically; failed order can be corrected and assistance does not claim success
+[121/615] [desktop] › tests/browser/learning.spec.ts:135:1 › guided dictation, listening controls, compact height and reduced-motion remain usable
+[122/615] [desktop] › tests/browser/learning.spec.ts:154:1 › speaking starts only on explicit action and stops when leaving the module
+[123/615] [desktop] › tests/browser/listening-layout.spec.ts:6:44 › listening preserves the full portrait scene above the keyboard across layouts
+[124/615] [desktop] › tests/browser/listening-layout.spec.ts:6:44 › listening preserves the full landscape scene above the keyboard across layouts
+[125/615] [desktop] › tests/browser/loading.spec.ts:7:1 › the inline Pac-Man maze appears before app assets and leaves after the styled app mounts
+[126/615] [desktop] › tests/browser/loading.spec.ts:90:1 › all bottom icon assets start loading before any tap and delayed atlases retain square static icons
+[127/615] [desktop] › tests/browser/loading.spec.ts:108:1 › warmed bottom icons reuse image bytes when navigating without request interception
+[128/615] [desktop] › tests/browser/loading.spec.ts:124:1 › deck and photo downloads display actual intermediate progress, then clear after decoding
+[129/615] [desktop] › tests/browser/loading.spec.ts:141:1 › a failed photo has an explicit retry action and no endless progress bar
+[130/615] [desktop] › tests/browser/native-style.spec.ts:4:1 › native camera paper and practice metrics keep complete content at wide, narrow and short sizes
+[131/615] [desktop] › tests/browser/parity-speaking.spec.ts:10:1 › F02 dialogue alternates learner A and machine B without grading labels or machine lines
+[132/615] [desktop] › tests/browser/parity-speaking.spec.ts:16:1 › F02 skipping learner A never grants its words
+[133/615] [desktop] › tests/browser/parity-speaking.spec.ts:18:1 › ordinary speaking still advances and continues through consecutive sentences
+[134/615] [desktop] › tests/browser/parity-speaking.spec.ts:24:1 › F02 bundled programmer dialogue advances without speaking labels and fits the existing page
+[135/615] [desktop] › tests/browser/parity-state.spec.ts:33:1 › a warm Learning entry is one-shot and never overrides an explicit listening link
+[136/615] [desktop] › tests/browser/parity-state.spec.ts:65:1 › finished dictation offers challenge, another round and word learning without losing spelling drafts
+[137/615] [desktop] › tests/browser/parity-state.spec.ts:101:1 › another dictation round preserves reward dedupe identity and spelling history
+[138/615] [desktop] › tests/browser/parity-state.spec.ts:125:1 › F05 selecting the completed photo opens an editable fresh dictation
+[139/615] [desktop] › tests/browser/parity-subscriptions.spec.ts:8:1 › F17 stable version updates preserve card IDs and draft; cancelled subscription keeps content
+[140/615] [desktop] › tests/browser/photo-prefetch.spec.ts:14:1 › preloads exactly five distinct upcoming photos and reuses them while advancing
+[141/615] [desktop] › tests/browser/photo-prefetch.spec.ts:29:1 › tail stays bounded and failed speculation retries when selected
+[142/615] [desktop] › tests/browser/playback-parity.spec.ts:19:1 › App replay button keeps its geometry and fills in place across sentence, word, replay and rate change
+[143/615] [desktop] › tests/browser/playback-parity.spec.ts:45:1 › errors, mode changes and leaving the page clear progress and reject old callbacks
+[144/615] [desktop] › tests/browser/playback-parity.spec.ts:71:1 › speech without boundary events animates continuously, freezes on pause and resumes without jumping
+[145/615] [desktop] › tests/browser/playback-parity.spec.ts:82:1 › sparse speech boundaries calibrate the continuous fill without a visible jump
+[146/615] [desktop] › tests/browser/playback-parity.spec.ts:88:1 › reduced motion retains estimated speech progress and only the real end completes it
+[147/615] [desktop] › tests/browser/playback-parity.spec.ts:97:1 › original audio fills the button from its clock even without timeupdate and stops advancing while paused
+[148/615] [desktop] › tests/browser/settings-parity.spec.ts:9:1 › settings matches native hierarchy, pins the level card and retains theme and native subpages
+[149/615] [desktop] › tests/browser/settings-parity.spec.ts:25:1 › third party download preserves the current draft, validates the package, and makes it selectable
+[150/615] [desktop] › tests/browser/settings-parity.spec.ts:36:1 › failed and cancelled downloads leave practice and stored decks intact
+[151/615] [desktop] › tests/browser/settings-parity.spec.ts:45:1 › keyboard settings use the native samples and eight voices; preview, mute and route cleanup work
+[152/615] [desktop] › tests/browser/speech-voice.spec.ts:2:1 › automatic speech avoids Albert, manual choice persists, and normal pitch is retained
+[153/615] [desktop] › tests/browser/spelling-feedback.spec.ts:9:1 › hardware input survives replay focus, protected IME keys, and keeps dialogs isolated
+[154/615] [desktop] › tests/browser/spelling-feedback.spec.ts:22:52 › spelling progress stays below glyphs and playback grows from a fixed left edge: light
+[155/615] [desktop] › tests/browser/spelling-feedback.spec.ts:22:52 › spelling progress stays below glyphs and playback grows from a fixed left edge: dark
+[156/615] [desktop] › tests/browser/spelling-feedback.spec.ts:53:52 › no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: light
+[157/615] [desktop] › tests/browser/spelling-feedback.spec.ts:53:52 › no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: dark
+[158/615] [desktop] › tests/browser/spelling-letter-color.spec.ts:25:52 › only the wrong letter is red and edits clear it: light
+[159/615] [desktop] › tests/browser/spelling-letter-color.spec.ts:25:52 › only the wrong letter is red and edits clear it: dark
+[160/615] [desktop] › tests/browser/spelling-letter-color.spec.ts:55:52 › glyph animations never outlive their letter across edits and answers: light
+[161/615] [desktop] › tests/browser/spelling-letter-color.spec.ts:55:52 › glyph animations never outlive their letter across edits and answers: dark
+[162/615] [desktop] › tests/browser/spelling-revisit.spec.ts:9:1 › a spelling link revisit keeps reopening the completed words that follow
+[163/615] [desktop] › tests/browser/subscription-poster.spec.ts:5:1 › editable template exports a real PNG and never sends the subscription URL to its host
+[164/615] [desktop] › tests/browser/subscription-poster.spec.ts:27:1 › preview recovers before PNG export finishes and stale exports cannot replace newer text
+[165/615] [desktop] › tests/browser/subscription-qr.spec.ts:2:1 › plain URL QR generator accepts third-party domains without a network request
+[166/615] [desktop] › tests/browser/subscription-qr.spec.ts:16:1 › unsafe URL does not produce a downloadable QR
+[167/615] [desktop] › tests/browser/touch-spelling.spec.ts:4:1 › touch spelling keeps the OS keyboard disabled through taps, next word and navigation
+[168/615] [desktop] › tests/browser/ui-assets.spec.ts:3:1 › necessary icons warm in background and are reused on navigation
+[169/615] [desktop] › tests/browser/visible-focus.spec.ts:16:48 › all four target edges remain visible with keyboard and resize: light
+[170/615] [desktop] › tests/browser/visible-focus.spec.ts:16:48 › all four target edges remain visible with keyboard and resize: dark
+[171/615] [desktop] › tests/browser/visual-viewport.spec.ts:21:1 › learning header, input and tabs share the moving visual viewport instead of the layout viewport
+[172/615] [desktop] › tests/browser/visual-viewport.spec.ts:33:1 › viewport ownership handles dialogs, pinch zoom and leaving practice without locking settings
+[173/615] [desktop] › tests/browser/webdav-backup.spec.ts:37:1 › App backup restores into Web, duplicate restore is idempotent, and Web publishes App-compatible progress
+[174/615] [desktop] › tests/browser/word-completion.spec.ts:6:1 › keyboard deletion and fresh word success match App; completion survives auto-next and restored answers stay silent
+[175/615] [desktop] › tests/browser/webdav-backup.spec.ts:47:1 › corrupt remote progress is rejected before saving photos or credits; password field stays masked
+[176/615] [desktop] › tests/browser/webdav-backup.spec.ts:48:1 › native photo-data hierarchy fits small screens and short viewports with usable configuration controls
+[177/615] [desktop] › tests/browser/word-completion.spec.ts:20:1 › unavailable success audio does not block completion or the next word
+[178/615] [desktop] › tests/browser/webdav-backup.spec.ts:50:1 › failed upload cleans only its own staging directory and retains existing backups
+[179/615] [desktop] › tests/browser/word-peek.spec.ts:31:1 › guided actual-word hold shows English and Chinese, then releases without changing focus or draft
+[180/615] [desktop] › tests/browser/webdav-backup.spec.ts:51:1 › successful PUT and MOVE are not reported as a valid backup when readback is corrupt
+[181/615] [desktop] › tests/browser/webdav-backup.spec.ts:54:1 › local complete ZIP restores idempotently and recycled photos can return to practice
+[182/615] [desktop] › tests/browser/webdav-backup.spec.ts:55:1 › legacy Web completion exports its original word and date without awarding restored answers again
+[183/615] [desktop] › tests/browser/word-peek.spec.ts:62:1 › hard-input hold peeks an existing written word and a late dictionary reply cannot resurrect it
+[184/615] [desktop] › tests/browser/webdav-backup.spec.ts:56:1 › authentication is not forwarded to a redirected WebDAV host
+[185/615] [desktop] › tests/browser/word-peek.spec.ts:80:1 › successful chunks hide Next and the challenge row while auto-advance runs once
+[186/615] [desktop] › tests/browser/webdav-backup.spec.ts:59:1 › quota and native 20 GiB limit failures leave existing data intact and clean temporary files
+[187/615] [desktop] › tests/browser/webdav-backup.spec.ts:60:1 › cancel download and upload removes only operation files and keeps photos and progress
+[188/615] [desktop] › tests/browser/webdav-backup.spec.ts:62:1 › conservative storage estimates do not reject valid backups
+[189/615] [desktop] › tests/browser/webdav-backup.spec.ts:65:1 › automatic progress imports native XP without photos and unchanged sync never uploads a deck
+[190/615] [desktop] › tests/browser/word-peek.spec.ts:96:1 › paused automatic advance and assisted answers keep a manual Next fallback
+[191/615] [desktop] › tests/browser/webdav-backup.spec.ts:79:1 › automatic progress merges offline web and native receipts once and retries failed uploads
+[192/615] [desktop] › tests/browser/word-peek.spec.ts:110:1 › hard hold targets the pointed word instead of the old caret and ignores blank space
+[193/615] [desktop] › tests/browser/webdav-backup.spec.ts:107:1 › automatic progress merges concurrent native snapshots and opt out stops transfers
+[194/615] [desktop] › tests/browser/webdav-backup.spec.ts:123:1 › corrupt standalone progress is rejected without publishing or replacing local records
+[195/615] [desktop] › tests/browser/webdav-backup.spec.ts:132:1 › deck positions receive native anchors without changing XP and defer while typing
+[196/615] [desktop] › tests/browser/webdav-backup.spec.ts:148:1 › deck positions publish navigation and a fresh browser resumes the same word
+[197/615] [desktop] › tests/browser/word-peek.spec.ts:132:1 › a pending hold is cancelled by difficulty changes and scrolling before it can reveal
+[198/615] [desktop] › tests/browser/word-peek.spec.ts:143:1 › failed dictionary loads can retry on a later hold
+[199/615] [desktop] › tests/browser/word-peek.spec.ts:150:191 › free easy success preserves button dimensions without a success row or transient Next
+[200/615] [desktop] › tests/browser/word-peek.spec.ts:150:191 › free medium success preserves button dimensions without a success row or transient Next
+[201/615] [desktop] › tests/browser/word-peek.spec.ts:150:191 › free hard success preserves button dimensions without a success row or transient Next
+[202/615] [desktop] › tests/browser/word-peek.spec.ts:150:191 › free hard 390x667 success preserves button dimensions without a success row or transient Next
+[203/615] [desktop] › tests/browser/word-peek.spec.ts:150:191 › free hard 844x390 success preserves button dimensions without a success row or transient Next
+[204/615] [desktop] › tests/browser/audio-unlock.spec.ts:41:1 › real original audio: first load is blocked, the photo icon unlocks exactly that clip and disappears
+[205/615] [desktop] › tests/browser/audio-unlock.spec.ts:55:1 › a hardware letter unlocks without losing the first letter and later keys do not restart playback
+[206/615] [desktop] › tests/browser/audio-unlock.spec.ts:74:1 › one real tap on the virtual F unlocks, keeps f, and a second tap never replays the blocked clip
+[207/615] [desktop] › tests/browser/audio-unlock.spec.ts:88:1 › changing module grants interaction permission, hides the icon and never replays stale audio
+[208/615] [desktop] › tests/browser/capture-grouping.spec.ts:54:1 › three imported photos become one default deck and survive photo navigation and reload
+[209/615] [desktop] › tests/browser/capture-grouping.spec.ts:87:1 › legacy default captures group without touching stored bytes while custom and same-title imports stay separate
+[210/615] [desktop] › tests/browser/capture-grouping.spec.ts:144:1 › editing a captured photo reuses its slot instead of appending a duplicate
+[211/615] [desktop] › tests/browser/capture-grouping.spec.ts:166:1 › camera capture and an upload share the default photo group
+[212/615] [desktop] › tests/browser/capture.spec.ts:14:1 › camera starts automatic recognition, matches the preview crop and releases tracks on capture and tab exit
+[213/615] [desktop] › tests/browser/capture.spec.ts:25:1 › import automatically recognizes and saves, then enters spelling after three seconds
+[214/615] [desktop] › tests/browser/capture.spec.ts:30:1 › review cancels once, edits replace the saved card and retain focus and examples
+[215/615] [desktop] › tests/browser/capture.spec.ts:38:1 › quota failure retains the draft across reload and manual editing is optional
+[216/615] [desktop] › tests/browser/capture.spec.ts:43:1 › background completion saves without changing tabs or restarting a countdown
+[217/615] [desktop] › tests/browser/capture.spec.ts:47:1 › continuing capture serializes recognition and preserves both cards
+[218/615] [desktop] › tests/browser/capture.spec.ts:51:1 › failed local save retries stored recognition without another upload
+[219/615] [desktop] › tests/browser/capture.spec.ts:55:1 › cancel waiting keeps photo and allows retry without stale response navigation
+[220/615] [desktop] › tests/browser/capture.spec.ts:59:1 › denied camera permission still allows import and automatic recognition
+[221/615] [desktop] › tests/browser/capture.spec.ts:63:1 › native recognition halo and fixed poster footer survive completion before countdown
+[222/615] [desktop] › tests/browser/capture.spec.ts:80:1 › reduced motion keeps the recognition frame static and still saves the card
+[223/615] [mobile] › tests/browser/ai-settings.spec.ts:5:1 › provider fields persist independently, key visibility resets, home label matches and narrow screens fit
+[224/615] [mobile] › tests/browser/ai-settings.spec.ts:17:1 › custom recognition uses configured provider, preserves bounding boxes and never falls back to official
+[225/615] [mobile] › tests/browser/ai-settings.spec.ts:24:1 › invalid settings and provider errors keep the photo without official fallback or key disclosure
+[226/615] [mobile] › tests/browser/ai-settings.spec.ts:31:1 › failed storage write leaves the last saved model selected
+[227/615] [mobile] › tests/browser/alignment-extension.spec.ts:6:1 › camera GitHub badge is centered above shutter and opens the repository separately
+[228/615] [mobile] › tests/browser/alignment-extension.spec.ts:14:1 › native theme menus retain day and night choices, custom themes and reset
+[229/615] [mobile] › tests/browser/alignment-extension.spec.ts:19:1 › level sheet preserves the route and draft
+[230/615] [mobile] › tests/browser/alignment-extension.spec.ts:22:1 › shutter preview and mute agree and all three native recordings are deployed
+[231/615] [mobile] › tests/browser/alignment-extension.spec.ts:27:1 › speech choice is used by preview and persists
+[232/615] [mobile] › tests/browser/alignment-extension.spec.ts:32:1 › import animation preference controls the actual photo flow
+[233/615] [mobile] › tests/browser/app-shell.spec.ts:9:1 › three App tabs keep the current deck and draft; earned experience survives reload without duplication
+[234/615] [mobile] › tests/browser/app-shell.spec.ts:14:1 › capture creates a real local deck and retains an unsaved photo when changing tabs
+[235/615] [mobile] › tests/browser/app-shell.spec.ts:20:1 › new correct letters render particles, restored answers do not, and reduced motion suppresses them
+[236/615] [mobile] › tests/browser/app-shell.spec.ts:23:1 › two tabs award a completed word only once and keep low-level rewards locked
+[237/615] [mobile] › tests/browser/app-shell.spec.ts:26:1 › the native game loads local assets, pauses, saves before changing tabs, and resumes
+[238/615] [mobile] › tests/browser/app-shell.spec.ts:32:1 › one App shell adapts at 320, 390, 768 and 1440px without hiding navigation or controls
+[239/615] [mobile] › tests/browser/app-shell.spec.ts:52:1 › spelling keyboard mirrors hardware keys on desktop and suppresses the OS keyboard on touch devices
+[240/615] [mobile] › tests/browser/app-shell.spec.ts:64:1 › dictation keyboard follows App modes, focuses all difficulty inputs and preserves drafts
+[241/615] [mobile] › tests/browser/app-shell.spec.ts:86:1 › dictation keeps its keyboard after assistance and Enter continues without losing focus
+[242/615] [mobile] › tests/browser/audio-unlock-speech.spec.ts:19:1 › speech policy denial keeps one retryable request, ignores stale callbacks and only hides on real start
+[243/615] [mobile] › tests/browser/audio-unlock-speech.spec.ts:42:1 › a later denied TTS word retries only that word, not the clip that already finished
+[244/615] [mobile] › tests/browser/audio-unlock-speech.spec.ts:66:1 › automatic service failure stays quiet and explicit errors belong only to the current content
+[245/615] [mobile] › tests/browser/camera-parity.spec.ts:2:51 › camera saves the visible crop for a landscape source and plays the native shutter once
+[246/615] [mobile] › tests/browser/camera-parity.spec.ts:2:51 › camera saves the visible crop for a portrait source and plays the native shutter once
+[247/615] [mobile] › tests/browser/camera-surface.spec.ts:3:1 › empty camera has soft day/night dunes and a transparent App Store mark opening a new tab
+[248/615] [mobile] › tests/browser/camera-surface.spec.ts:18:1 › generated card uses native paper, separated glass callouts, object connectors and fixed footer proportions in both themes
+[249/615] [mobile] › tests/browser/camera-surface.spec.ts:33:1 › sand falls back without WebGL and recovers after a lost context on re-entry
+[250/615] [mobile] › tests/browser/capture-mobile-fit.spec.ts:20:1 › portrait review keeps two brand lines, equal label padding and tools clear of navigation with enlarged browser text
+[251/615] [mobile] › tests/browser/capture-render.spec.ts:9:1 › diffuse colour is baked into every layer even with CSS filters disabled
+[252/615] [mobile] › tests/browser/capture-render.spec.ts:34:1 › destination remains hidden until the entire tilted sheet lands, including the final flight frames
+[253/615] [mobile] › tests/browser/capture-render.spec.ts:66:1 › closing during the tilted flight removes both the hidden destination and printing overlay
+[254/615] [mobile] › tests/browser/capture-render.spec.ts:113:1 › early recognition keeps every label hidden through landing and reveals once in native order
+[255/615] [mobile] › tests/browser/capture-render.spec.ts:143:35 › late recognition preserves stagger and connector travel (reduced motion false)
+[256/615] [mobile] › tests/browser/capture-render.spec.ts:143:35 › late recognition preserves stagger and connector travel (reduced motion true)
+[257/615] [mobile] › tests/browser/deck-picker-audio.spec.ts:7:1 › learning settings switches public and personal decks directly and restores each draft
+[258/615] [mobile] › tests/browser/deck-picker-audio.spec.ts:16:1 › song clips decode, respect rate, precede word TTS and stop on mode or deck changes
+[259/615] [mobile] › tests/browser/deck-picker-audio.spec.ts:30:1 › original listening audio seeks by time and resumes from its paused position
+[260/615] [mobile] › tests/browser/deck-picker-audio.spec.ts:41:1 › advancing original audio clears preparation even when playing notification is lost; buffered stalls retain Pause
+[261/615] [mobile] › tests/browser/deck-subscription-themes.spec.ts:5:1 › subscription links expand, copy and fit light and dark themes after reload at 320px
+[262/615] [mobile] › tests/browser/deck-subscriptions.spec.ts:4:1 › confirmation and persistent cancellation preserve downloaded bytes and draft
+[263/615] [mobile] › tests/browser/deck-subscriptions.spec.ts:13:1 › failed clipboard and storage writes do not falsely confirm or remove a subscription
+[264/615] [mobile] › tests/browser/desktop-fit.spec.ts:5:1 › desktop preserves full photograph and fits answer, rate and keyboard without scrolling
+[265/615] [mobile] › tests/browser/focus-ambience.spec.ts:9:1 › default cafe is controllable in spelling; choice survives modules and reload, pauses on exit
+[266/615] [mobile] › tests/browser/focus-ambience.spec.ts:31:1 › gradient stays on the ring surface through resize, pause and reduced motion
+[267/615] [mobile] › tests/browser/focus-ambience.spec.ts:44:1 › background gain stays below keys when media volume is read-only, ducks for typing and recovers
+[268/615] [mobile] › tests/browser/focus-ambience.spec.ts:78:1 › an unavailable audio mixer never falls back to full-volume background or breaks typing
+[269/615] [mobile] › tests/browser/glass-tabs.spec.ts:3:1 › floating glass tabs preserve native order, selection, scrub cancellation and keyboard activation
+[270/615] [mobile] › tests/browser/guided-no-eyes.spec.ts:5:43 › easy has no eye controls or reserved row; word hold preserves bilingual help and input
+[271/615] [mobile] › tests/browser/guided-no-eyes.spec.ts:5:43 › medium has no eye controls or reserved row; word hold preserves bilingual help and input
+[272/615] [mobile] › tests/browser/http-crypto.spec.ts:21:1 › HTTP official deck opens and reloads without WebCrypto
+[273/615] [mobile] › tests/browser/http-crypto.spec.ts:27:1 › HTTP local import works and corrupt archives cannot replace it
+[274/615] [mobile] › tests/browser/http-crypto.spec.ts:39:1 › HTTP automatic progress reads and publishes verified snapshots without secure-only crypto
+[275/615] [mobile] › tests/browser/ime.spec.ts:8:1 › Chinese spelling input warns, preserves English progress and resumes normally
+[276/615] [mobile] › tests/browser/ime.spec.ts:14:1 › guided dictation keeps composition focus and hard dictation does not submit an IME Enter
+[277/615] [mobile] › tests/browser/ime.spec.ts:19:1 › pasted Chinese warns only in learning fields and full-width input preserves the answer
+[278/615] [mobile] › tests/browser/input-performance.spec.ts:16:1 › phrase separators keep touch and hardware insertion after the last entered letter
+[279/615] [mobile] › tests/browser/input-performance.spec.ts:27:1 › typing avoids whole-study clones and prompt rebuilds while preserving glyph and ripple effects
+[280/615] [mobile] › tests/browser/input-performance.spec.ts:46:1 › rapid typing preserves the active particle frame instead of resetting the full-screen canvas
+[281/615] [mobile] › tests/browser/input-performance.spec.ts:75:1 › an immediate page exit and leaving learning flush the last burst without waiting for autosave
+[282/615] [mobile] › tests/browser/input-performance.spec.ts:88:1 › typing preserves restored progress and unrelated stored decks when the page hides
+[283/615] [mobile] › tests/browser/input-performance.spec.ts:116:39 › full Emoji effects reuse prepared glyphs with idle callbacks available
+[284/615] [mobile] › tests/browser/input-performance.spec.ts:116:39 › full Emoji effects reuse prepared glyphs with idle callbacks deferred
+[285/615] [mobile] › tests/browser/interaction-audit.spec.ts:13:1 › reveal speaks the word, next speaks the next prompt, and tapping the selected tab leaves playback intact
+[286/615] [mobile] › tests/browser/interaction-audit.spec.ts:20:1 › dictation assistance speaks its answer; replay of a correct answer holds the current sentence
+[287/615] [mobile] › tests/browser/interaction-audit.spec.ts:30:1 › demonstration releases the microphone before playing and restarting reading stops the example
+[288/615] [mobile] › tests/browser/interaction-audit.spec.ts:39:1 › classic key sound works at LV0 for physical and touch input, dictation and backspace
+[289/615] [mobile] › tests/browser/interaction-audit.spec.ts:49:1 › keyboard sound mute survives settings navigation and a full reload
+[290/615] [mobile] › tests/browser/interaction-audit.spec.ts:58:1 › reading keeps partial matches, closes its microphone on completion and continues in speaking
+[291/615] [mobile] › tests/browser/keyboard-viewport.spec.ts:12:1 › every keyboard row stays clickable with browser chrome, short screens and mode changes
+[292/615] [mobile] › tests/browser/keyboard-viewport.spec.ts:43:1 › hard dictation accepts hardware editing and English paste while remaining keyboard protected
+[293/615] [mobile] › tests/browser/lab-loading.spec.ts:4:1 › game program delay shows loading immediately and navigation remains usable
+[294/615] [mobile] › tests/browser/lab-loading.spec.ts:9:1 › artwork reports real partial progress then reveals a playable game
+[295/615] [mobile] › tests/browser/lab-loading.spec.ts:14:1 › failed game resources show retry and preserve an existing adventure
+[296/615] [mobile] › tests/browser/lab-loading.spec.ts:18:1 › failed game program has a recovery action instead of a blank canvas
+[297/615] [mobile] › tests/browser/lab-loading.spec.ts:23:1 › a half-downloaded game program shows measured byte progress, not a black screen
+[298/615] [mobile] › tests/browser/lab-loading.spec.ts:30:1 › a slow artwork transfer beyond 45 seconds stays loading and can finish
+[299/615] [mobile] › tests/browser/large-backup.spec.ts:5:1 › real HTTPS WebDAV large upload, readback and restore preserve every photo
+[300/615] [mobile] › tests/browser/layout-audit.spec.ts:31:37 › native listening controls and speaking dock fit all viewports in light
+[301/615] [mobile] › tests/browser/layout-audit.spec.ts:31:37 › native listening controls and speaking dock fit all viewports in dark
+[302/615] [mobile] › tests/browser/layout-audit.spec.ts:46:1 › single-card preference lives in personalization, preserves choice on reload and filters both directions
+[303/615] [mobile] › tests/browser/layout-audit.spec.ts:52:1 › listening loops at end, retains position through a sheet and handles failures and fixed-rate repeat
+[304/615] [mobile] › tests/browser/layout-audit.spec.ts:60:1 › native ambience loops, ducks during speech, persists and stops at panels, hidden page and module changes
+[305/615] [mobile] › tests/browser/layout-audit.spec.ts:71:1 › theme navigation and editor match native compact hierarchy and preserve separate day/night selections
+[306/615] [mobile] › tests/browser/layout-audit.spec.ts:79:1 › dragging a listening seek bar commits once instead of restarting on every movement
+[307/615] [mobile] › tests/browser/learning-entry.spec.ts:8:1 › first learning visit opens the first official deck in spelling without a chooser
+[308/615] [mobile] › tests/browser/learning-entry.spec.ts:11:1 › learning tab and capture start choose a deck while explicit library remains available
+[309/615] [mobile] › tests/browser/learning-entry.spec.ts:16:1 › remembered local deck opens spelling without losing spelling or listening drafts
+[310/615] [mobile] › tests/browser/learning-entry.spec.ts:23:1 › missing remembered deck falls back and a failed catalog has a recovery action
+[311/615] [mobile] › tests/browser/learning-keyboard-shortcuts.spec.ts:40:1 › learning keyboards show exactly 26 letters and Backspace at desktop and mobile widths
+[312/615] [mobile] › tests/browser/learning-keyboard-shortcuts.spec.ts:58:1 › PC Esc and Space keycaps follow the desktop media query without changing button names
+[313/615] [mobile] › tests/browser/learning-keyboard-shortcuts.spec.ts:74:50 › continuous letter-only input inserts sentence separators in free easy
+[314/615] [mobile] › tests/browser/learning-keyboard-shortcuts.spec.ts:74:50 › continuous letter-only input inserts sentence separators in free medium
+[315/615] [mobile] › tests/browser/learning-keyboard-shortcuts.spec.ts:74:50 › continuous letter-only input inserts sentence separators in free hard
+[316/615] [mobile] › tests/browser/learning-keyboard-shortcuts.spec.ts:92:50 › free easy dictation checks complete wrong answers without a submit control
+[317/615] [mobile] › tests/browser/learning-keyboard-shortcuts.spec.ts:92:50 › free medium dictation checks complete wrong answers without a submit control
+[318/615] [mobile] › tests/browser/learning-keyboard-shortcuts.spec.ts:92:50 › free hard dictation checks complete wrong answers without a submit control
+[319/615] [mobile] › tests/browser/learning-keyboard-shortcuts.spec.ts:112:43 › boundary Backspace returns to the previous easy word and deletes its last letter
+[320/615] [mobile] › tests/browser/learning-keyboard-shortcuts.spec.ts:112:43 › boundary Backspace returns to the previous medium word and deletes its last letter
+[321/615] [mobile] › tests/browser/learning-keyboard-shortcuts.spec.ts:124:1 › Space replays exactly once from answer fields and noneditable learning areas; touch has no shortcut
+[322/615] [mobile] › tests/browser/learning-keyboard-shortcuts.spec.ts:174:1 › Escape acts once and respects modified, repeated and IME keys, selects, dialogs and chunk menus
+[323/615] [mobile] › tests/browser/learning-keyboard-shortcuts.spec.ts:218:50 › letters alone complete contractions and fixed numbers in easy
+[324/615] [mobile] › tests/browser/learning-keyboard-shortcuts.spec.ts:218:50 › letters alone complete contractions and fixed numbers in medium
+[325/615] [mobile] › tests/browser/learning-keyboard-shortcuts.spec.ts:218:50 › letters alone complete contractions and fixed numbers in hard
+[326/615] [mobile] › tests/browser/learning-parity.spec.ts:6:1 › guided word blanks show readable underlines and preserve typing, reveal and difficulty changes
+[327/615] [mobile] › tests/browser/learning-parity.spec.ts:50:1 › long guided words wrap without covering the next word or reserving an icon row
+[328/615] [mobile] › tests/browser/learning-parity.spec.ts:76:1 › avatar level sheet enters the real game with the current deck and returns to the same listening draft
+[329/615] [mobile] › tests/browser/learning-parity.spec.ts:101:1 › settings level entry offers game loading recovery back to the level page
+[330/615] [mobile] › tests/browser/learning-parity.spec.ts:111:1 › rewards have real details, learning and settings routes, and saved milestones remain visible after spending
+[331/615] [mobile] › tests/browser/learning-parity.spec.ts:126:37 › light listening answer trays remain distinct from the page and selected chips have a visible outline
+[332/615] [mobile] › tests/browser/learning-parity.spec.ts:126:37 › dark listening answer trays remain distinct from the page and selected chips have a visible outline
+[333/615] [mobile] › tests/browser/learning-url.spec.ts:7:1 › share restores module, photo and sentence in a fresh browser without sender progress
+[334/615] [mobile] › tests/browser/learning-url.spec.ts:21:1 › same-deck links and refresh restore dictation difficulty, legacy links still open, invalid locations recover
+[335/615] [mobile] › tests/browser/learning-url.spec.ts:29:1 › opening a link to an already completed spelling starts a writable new attempt
+[336/615] [mobile] › tests/browser/learning-url.spec.ts:39:1 › an incoming learning link wins over a pending local module update
+[337/615] [mobile] › tests/browser/learning.spec.ts:10:1 › a visitor can complete a scene, resume after refresh, and restart without a phone
+[338/615] [mobile] › tests/browser/learning.spec.ts:32:1 › local archives survive refresh; duplicate and invalid imports preserve previous progress
+[339/615] [mobile] › tests/browser/learning.spec.ts:47:1 › direct links, reveal, dark theme and unknown decks have usable states
+[340/615] [mobile] › tests/browser/learning.spec.ts:57:1 › public catalog reuses existing content and practice never downloads a whole archive
+[341/615] [mobile] › tests/browser/learning.spec.ts:77:1 › native modules preserve independent sentence drafts, shuffle order and photo navigation
+[342/615] [mobile] › tests/browser/learning.spec.ts:108:1 › sentence fill checks automatically; failed order can be corrected and assistance does not claim success
+[343/615] [mobile] › tests/browser/learning.spec.ts:135:1 › guided dictation, listening controls, compact height and reduced-motion remain usable
+[344/615] [mobile] › tests/browser/learning.spec.ts:154:1 › speaking starts only on explicit action and stops when leaving the module
+[345/615] [mobile] › tests/browser/listening-layout.spec.ts:6:44 › listening preserves the full portrait scene above the keyboard across layouts
+[346/615] [mobile] › tests/browser/listening-layout.spec.ts:6:44 › listening preserves the full landscape scene above the keyboard across layouts
+[347/615] [mobile] › tests/browser/loading.spec.ts:7:1 › the inline Pac-Man maze appears before app assets and leaves after the styled app mounts
+[348/615] [mobile] › tests/browser/loading.spec.ts:90:1 › all bottom icon assets start loading before any tap and delayed atlases retain square static icons
+[349/615] [mobile] › tests/browser/loading.spec.ts:108:1 › warmed bottom icons reuse image bytes when navigating without request interception
+[350/615] [mobile] › tests/browser/loading.spec.ts:124:1 › deck and photo downloads display actual intermediate progress, then clear after decoding
+[351/615] [mobile] › tests/browser/loading.spec.ts:141:1 › a failed photo has an explicit retry action and no endless progress bar
+[352/615] [mobile] › tests/browser/native-style.spec.ts:4:1 › native camera paper and practice metrics keep complete content at wide, narrow and short sizes
+[353/615] [mobile] › tests/browser/parity-speaking.spec.ts:10:1 › F02 dialogue alternates learner A and machine B without grading labels or machine lines
+[354/615] [mobile] › tests/browser/parity-speaking.spec.ts:16:1 › F02 skipping learner A never grants its words
+[355/615] [mobile] › tests/browser/parity-speaking.spec.ts:18:1 › ordinary speaking still advances and continues through consecutive sentences
+[356/615] [mobile] › tests/browser/parity-speaking.spec.ts:24:1 › F02 bundled programmer dialogue advances without speaking labels and fits the existing page
+[357/615] [mobile] › tests/browser/parity-state.spec.ts:33:1 › a warm Learning entry is one-shot and never overrides an explicit listening link
+[358/615] [mobile] › tests/browser/parity-state.spec.ts:65:1 › finished dictation offers challenge, another round and word learning without losing spelling drafts
+[359/615] [mobile] › tests/browser/parity-state.spec.ts:125:1 › F05 selecting the completed photo opens an editable fresh dictation
+[360/615] [mobile] › tests/browser/parity-state.spec.ts:101:1 › another dictation round preserves reward dedupe identity and spelling history
+[361/615] [mobile] › tests/browser/parity-subscriptions.spec.ts:8:1 › F17 stable version updates preserve card IDs and draft; cancelled subscription keeps content
+[362/615] [mobile] › tests/browser/photo-prefetch.spec.ts:14:1 › preloads exactly five distinct upcoming photos and reuses them while advancing
+[363/615] [mobile] › tests/browser/photo-prefetch.spec.ts:29:1 › tail stays bounded and failed speculation retries when selected
+[364/615] [mobile] › tests/browser/playback-parity.spec.ts:19:1 › App replay button keeps its geometry and fills in place across sentence, word, replay and rate change
+[365/615] [mobile] › tests/browser/playback-parity.spec.ts:45:1 › errors, mode changes and leaving the page clear progress and reject old callbacks
+[366/615] [mobile] › tests/browser/playback-parity.spec.ts:71:1 › speech without boundary events animates continuously, freezes on pause and resumes without jumping
+[367/615] [mobile] › tests/browser/playback-parity.spec.ts:82:1 › sparse speech boundaries calibrate the continuous fill without a visible jump
+[368/615] [mobile] › tests/browser/playback-parity.spec.ts:88:1 › reduced motion retains estimated speech progress and only the real end completes it
+[369/615] [mobile] › tests/browser/playback-parity.spec.ts:97:1 › original audio fills the button from its clock even without timeupdate and stops advancing while paused
+[370/615] [mobile] › tests/browser/settings-parity.spec.ts:9:1 › settings matches native hierarchy, pins the level card and retains theme and native subpages
+[371/615] [mobile] › tests/browser/settings-parity.spec.ts:25:1 › third party download preserves the current draft, validates the package, and makes it selectable
+[372/615] [mobile] › tests/browser/settings-parity.spec.ts:36:1 › failed and cancelled downloads leave practice and stored decks intact
+[373/615] [mobile] › tests/browser/settings-parity.spec.ts:45:1 › keyboard settings use the native samples and eight voices; preview, mute and route cleanup work
+[374/615] [mobile] › tests/browser/speech-voice.spec.ts:2:1 › automatic speech avoids Albert, manual choice persists, and normal pitch is retained
+[375/615] [mobile] › tests/browser/spelling-feedback.spec.ts:9:1 › hardware input survives replay focus, protected IME keys, and keeps dialogs isolated
+[376/615] [mobile] › tests/browser/spelling-feedback.spec.ts:22:52 › spelling progress stays below glyphs and playback grows from a fixed left edge: light
+[377/615] [mobile] › tests/browser/spelling-feedback.spec.ts:22:52 › spelling progress stays below glyphs and playback grows from a fixed left edge: dark
+[378/615] [mobile] › tests/browser/spelling-feedback.spec.ts:53:52 › no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: light
+[379/615] [mobile] › tests/browser/spelling-feedback.spec.ts:53:52 › no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: dark
+[380/615] [mobile] › tests/browser/spelling-letter-color.spec.ts:25:52 › only the wrong letter is red and edits clear it: light
+[381/615] [mobile] › tests/browser/spelling-letter-color.spec.ts:25:52 › only the wrong letter is red and edits clear it: dark
+[382/615] [mobile] › tests/browser/spelling-letter-color.spec.ts:55:52 › glyph animations never outlive their letter across edits and answers: light
+[383/615] [mobile] › tests/browser/spelling-letter-color.spec.ts:55:52 › glyph animations never outlive their letter across edits and answers: dark
+[384/615] [mobile] › tests/browser/spelling-revisit.spec.ts:9:1 › a spelling link revisit keeps reopening the completed words that follow
+[385/615] [mobile] › tests/browser/subscription-poster.spec.ts:5:1 › editable template exports a real PNG and never sends the subscription URL to its host
+[386/615] [mobile] › tests/browser/subscription-poster.spec.ts:27:1 › preview recovers before PNG export finishes and stale exports cannot replace newer text
+[387/615] [mobile] › tests/browser/subscription-qr.spec.ts:2:1 › plain URL QR generator accepts third-party domains without a network request
+[388/615] [mobile] › tests/browser/subscription-qr.spec.ts:16:1 › unsafe URL does not produce a downloadable QR
+[389/615] [mobile] › tests/browser/touch-spelling.spec.ts:4:1 › touch spelling keeps the OS keyboard disabled through taps, next word and navigation
+[390/615] [mobile] › tests/browser/ui-assets.spec.ts:3:1 › necessary icons warm in background and are reused on navigation
+[391/615] [mobile] › tests/browser/visible-focus.spec.ts:16:48 › all four target edges remain visible with keyboard and resize: light
+[392/615] [mobile] › tests/browser/visible-focus.spec.ts:16:48 › all four target edges remain visible with keyboard and resize: dark
+[393/615] [mobile] › tests/browser/visual-viewport.spec.ts:21:1 › learning header, input and tabs share the moving visual viewport instead of the layout viewport
+[394/615] [mobile] › tests/browser/visual-viewport.spec.ts:33:1 › viewport ownership handles dialogs, pinch zoom and leaving practice without locking settings
+[395/615] [mobile] › tests/browser/webdav-backup.spec.ts:37:1 › App backup restores into Web, duplicate restore is idempotent, and Web publishes App-compatible progress
+[396/615] [mobile] › tests/browser/word-completion.spec.ts:6:1 › keyboard deletion and fresh word success match App; completion survives auto-next and restored answers stay silent
+[397/615] [mobile] › tests/browser/webdav-backup.spec.ts:47:1 › corrupt remote progress is rejected before saving photos or credits; password field stays masked
+[398/615] [mobile] › tests/browser/webdav-backup.spec.ts:48:1 › native photo-data hierarchy fits small screens and short viewports with usable configuration controls
+[399/615] [mobile] › tests/browser/word-completion.spec.ts:20:1 › unavailable success audio does not block completion or the next word
+[400/615] [mobile] › tests/browser/webdav-backup.spec.ts:50:1 › failed upload cleans only its own staging directory and retains existing backups
+[401/615] [mobile] › tests/browser/webdav-backup.spec.ts:51:1 › successful PUT and MOVE are not reported as a valid backup when readback is corrupt
+[402/615] [mobile] › tests/browser/word-peek.spec.ts:31:1 › guided actual-word hold shows English and Chinese, then releases without changing focus or draft
+[403/615] [mobile] › tests/browser/webdav-backup.spec.ts:54:1 › local complete ZIP restores idempotently and recycled photos can return to practice
+[404/615] [mobile] › tests/browser/webdav-backup.spec.ts:55:1 › legacy Web completion exports its original word and date without awarding restored answers again
+[405/615] [mobile] › tests/browser/word-peek.spec.ts:62:1 › hard-input hold peeks an existing written word and a late dictionary reply cannot resurrect it
+[406/615] [mobile] › tests/browser/webdav-backup.spec.ts:56:1 › authentication is not forwarded to a redirected WebDAV host
+[407/615] [mobile] › tests/browser/webdav-backup.spec.ts:59:1 › quota and native 20 GiB limit failures leave existing data intact and clean temporary files
+[408/615] [mobile] › tests/browser/word-peek.spec.ts:80:1 › successful chunks hide Next and the challenge row while auto-advance runs once
+[409/615] [mobile] › tests/browser/webdav-backup.spec.ts:60:1 › cancel download and upload removes only operation files and keeps photos and progress
+[410/615] [mobile] › tests/browser/webdav-backup.spec.ts:62:1 › conservative storage estimates do not reject valid backups
+[411/615] [mobile] › tests/browser/webdav-backup.spec.ts:65:1 › automatic progress imports native XP without photos and unchanged sync never uploads a deck
+[412/615] [mobile] › tests/browser/webdav-backup.spec.ts:79:1 › automatic progress merges offline web and native receipts once and retries failed uploads
+[413/615] [mobile] › tests/browser/word-peek.spec.ts:96:1 › paused automatic advance and assisted answers keep a manual Next fallback
+[414/615] [mobile] › tests/browser/webdav-backup.spec.ts:107:1 › automatic progress merges concurrent native snapshots and opt out stops transfers
+[415/615] [mobile] › tests/browser/word-peek.spec.ts:110:1 › hard hold targets the pointed word instead of the old caret and ignores blank space
+[416/615] [mobile] › tests/browser/webdav-backup.spec.ts:123:1 › corrupt standalone progress is rejected without publishing or replacing local records
+[417/615] [mobile] › tests/browser/webdav-backup.spec.ts:132:1 › deck positions receive native anchors without changing XP and defer while typing
+[418/615] [mobile] › tests/browser/webdav-backup.spec.ts:148:1 › deck positions publish navigation and a fresh browser resumes the same word
+[419/615] [mobile] › tests/browser/word-peek.spec.ts:132:1 › a pending hold is cancelled by difficulty changes and scrolling before it can reveal
+[420/615] [mobile] › tests/browser/word-peek.spec.ts:143:1 › failed dictionary loads can retry on a later hold
+[421/615] [mobile] › tests/browser/word-peek.spec.ts:150:191 › free easy success preserves button dimensions without a success row or transient Next
+[422/615] [mobile] › tests/browser/word-peek.spec.ts:150:191 › free medium success preserves button dimensions without a success row or transient Next
+[423/615] [mobile] › tests/browser/word-peek.spec.ts:150:191 › free hard success preserves button dimensions without a success row or transient Next
+[424/615] [mobile] › tests/browser/word-peek.spec.ts:150:191 › free hard 390x667 success preserves button dimensions without a success row or transient Next
+[425/615] [mobile] › tests/browser/word-peek.spec.ts:150:191 › free hard 844x390 success preserves button dimensions without a success row or transient Next
+[426/615] [mobile] › tests/browser/audio-unlock.spec.ts:41:1 › real original audio: first load is blocked, the photo icon unlocks exactly that clip and disappears
+[427/615] [mobile] › tests/browser/audio-unlock.spec.ts:74:1 › one real tap on the virtual F unlocks, keeps f, and a second tap never replays the blocked clip
+[428/615] [mobile] › tests/browser/audio-unlock.spec.ts:55:1 › a hardware letter unlocks without losing the first letter and later keys do not restart playback
+[429/615] [mobile] › tests/browser/audio-unlock.spec.ts:88:1 › changing module grants interaction permission, hides the icon and never replays stale audio
+[430/615] [mobile] › tests/browser/capture-grouping.spec.ts:54:1 › three imported photos become one default deck and survive photo navigation and reload
+[431/615] [mobile] › tests/browser/capture-grouping.spec.ts:87:1 › legacy default captures group without touching stored bytes while custom and same-title imports stay separate
+[432/615] [mobile] › tests/browser/capture-grouping.spec.ts:144:1 › editing a captured photo reuses its slot instead of appending a duplicate
+[433/615] [mobile] › tests/browser/capture-grouping.spec.ts:166:1 › camera capture and an upload share the default photo group
+[434/615] [mobile] › tests/browser/capture.spec.ts:14:1 › camera starts automatic recognition, matches the preview crop and releases tracks on capture and tab exit
+[435/615] [mobile] › tests/browser/capture.spec.ts:25:1 › import automatically recognizes and saves, then enters spelling after three seconds
+[436/615] [mobile] › tests/browser/capture.spec.ts:30:1 › review cancels once, edits replace the saved card and retain focus and examples
+[437/615] [mobile] › tests/browser/capture.spec.ts:38:1 › quota failure retains the draft across reload and manual editing is optional
+[438/615] [mobile] › tests/browser/capture.spec.ts:43:1 › background completion saves without changing tabs or restarting a countdown
+[439/615] [mobile] › tests/browser/capture.spec.ts:47:1 › continuing capture serializes recognition and preserves both cards
+[440/615] [mobile] › tests/browser/capture.spec.ts:51:1 › failed local save retries stored recognition without another upload
+[441/615] [mobile] › tests/browser/capture.spec.ts:55:1 › cancel waiting keeps photo and allows retry without stale response navigation
+[442/615] [mobile] › tests/browser/capture.spec.ts:59:1 › denied camera permission still allows import and automatic recognition
+[443/615] [mobile] › tests/browser/capture.spec.ts:63:1 › native recognition halo and fixed poster footer survive completion before countdown
+[444/615] [mobile] › tests/browser/capture.spec.ts:80:1 › reduced motion keeps the recognition frame static and still saves the card
+[445/615] [mobile-webkit] › tests/browser/ai-settings.spec.ts:5:1 › provider fields persist independently, key visibility resets, home label matches and narrow screens fit
+[446/615] [mobile-webkit] › tests/browser/ai-settings.spec.ts:17:1 › custom recognition uses configured provider, preserves bounding boxes and never falls back to official
+[447/615] [mobile-webkit] › tests/browser/ai-settings.spec.ts:24:1 › invalid settings and provider errors keep the photo without official fallback or key disclosure
+[448/615] [mobile-webkit] › tests/browser/ai-settings.spec.ts:31:1 › failed storage write leaves the last saved model selected
+[449/615] [mobile-webkit] › tests/browser/alignment-extension.spec.ts:6:1 › camera GitHub badge is centered above shutter and opens the repository separately
+[450/615] [mobile-webkit] › tests/browser/alignment-extension.spec.ts:14:1 › native theme menus retain day and night choices, custom themes and reset
+[451/615] [mobile-webkit] › tests/browser/alignment-extension.spec.ts:19:1 › level sheet preserves the route and draft
+[452/615] [mobile-webkit] › tests/browser/alignment-extension.spec.ts:22:1 › shutter preview and mute agree and all three native recordings are deployed
+[453/615] [mobile-webkit] › tests/browser/alignment-extension.spec.ts:27:1 › speech choice is used by preview and persists
+[454/615] [mobile-webkit] › tests/browser/alignment-extension.spec.ts:32:1 › import animation preference controls the actual photo flow
+[455/615] [mobile-webkit] › tests/browser/audio-unlock-speech.spec.ts:19:1 › speech policy denial keeps one retryable request, ignores stale callbacks and only hides on real start
+[456/615] [mobile-webkit] › tests/browser/audio-unlock-speech.spec.ts:42:1 › a later denied TTS word retries only that word, not the clip that already finished
+[457/615] [mobile-webkit] › tests/browser/audio-unlock-speech.spec.ts:66:1 › automatic service failure stays quiet and explicit errors belong only to the current content
+[458/615] [mobile-webkit] › tests/browser/camera-parity.spec.ts:2:51 › camera saves the visible crop for a landscape source and plays the native shutter once
+[459/615] [mobile-webkit] › tests/browser/camera-parity.spec.ts:2:51 › camera saves the visible crop for a portrait source and plays the native shutter once
+[460/615] [mobile-webkit] › tests/browser/camera-surface.spec.ts:3:1 › empty camera has soft day/night dunes and a transparent App Store mark opening a new tab
+[461/615] [mobile-webkit] › tests/browser/camera-surface.spec.ts:18:1 › generated card uses native paper, separated glass callouts, object connectors and fixed footer proportions in both themes
+[462/615] [mobile-webkit] › tests/browser/camera-surface.spec.ts:33:1 › sand falls back without WebGL and recovers after a lost context on re-entry
+[463/615] [mobile-webkit] › tests/browser/capture-mobile-fit.spec.ts:20:1 › portrait review keeps two brand lines, equal label padding and tools clear of navigation with enlarged browser text
+[464/615] [mobile-webkit] › tests/browser/capture-render.spec.ts:9:1 › diffuse colour is baked into every layer even with CSS filters disabled
+[465/615] [mobile-webkit] › tests/browser/capture-render.spec.ts:34:1 › destination remains hidden until the entire tilted sheet lands, including the final flight frames
+[466/615] [mobile-webkit] › tests/browser/capture-render.spec.ts:66:1 › closing during the tilted flight removes both the hidden destination and printing overlay
+[467/615] [mobile-webkit] › tests/browser/capture-render.spec.ts:113:1 › early recognition keeps every label hidden through landing and reveals once in native order
+[468/615] [mobile-webkit] › tests/browser/capture-render.spec.ts:143:35 › late recognition preserves stagger and connector travel (reduced motion false)
+[469/615] [mobile-webkit] › tests/browser/capture-render.spec.ts:143:35 › late recognition preserves stagger and connector travel (reduced motion true)
+[470/615] [mobile-webkit] › tests/browser/deck-picker-audio.spec.ts:7:1 › learning settings switches public and personal decks directly and restores each draft
+[471/615] [mobile-webkit] › tests/browser/deck-picker-audio.spec.ts:16:1 › song clips decode, respect rate, precede word TTS and stop on mode or deck changes
+[472/615] [mobile-webkit] › tests/browser/deck-picker-audio.spec.ts:30:1 › original listening audio seeks by time and resumes from its paused position
+[473/615] [mobile-webkit] › tests/browser/deck-picker-audio.spec.ts:41:1 › advancing original audio clears preparation even when playing notification is lost; buffered stalls retain Pause
+[474/615] [mobile-webkit] › tests/browser/deck-subscription-themes.spec.ts:5:1 › subscription links expand, copy and fit light and dark themes after reload at 320px
+[475/615] [mobile-webkit] › tests/browser/deck-subscriptions.spec.ts:4:1 › confirmation and persistent cancellation preserve downloaded bytes and draft
+[476/615] [mobile-webkit] › tests/browser/deck-subscriptions.spec.ts:13:1 › failed clipboard and storage writes do not falsely confirm or remove a subscription
+[477/615] [mobile-webkit] › tests/browser/focus-ambience.spec.ts:9:1 › default cafe is controllable in spelling; choice survives modules and reload, pauses on exit
+[478/615] [mobile-webkit] › tests/browser/focus-ambience.spec.ts:31:1 › gradient stays on the ring surface through resize, pause and reduced motion
+[479/615] [mobile-webkit] › tests/browser/focus-ambience.spec.ts:44:1 › background gain stays below keys when media volume is read-only, ducks for typing and recovers
+[480/615] [mobile-webkit] › tests/browser/focus-ambience.spec.ts:78:1 › an unavailable audio mixer never falls back to full-volume background or breaks typing
+[481/615] [mobile-webkit] › tests/browser/glass-tabs.spec.ts:3:1 › floating glass tabs preserve native order, selection, scrub cancellation and keyboard activation
+[482/615] [mobile-webkit] › tests/browser/guided-no-eyes.spec.ts:5:43 › easy has no eye controls or reserved row; word hold preserves bilingual help and input
+[483/615] [mobile-webkit] › tests/browser/guided-no-eyes.spec.ts:5:43 › medium has no eye controls or reserved row; word hold preserves bilingual help and input
+[484/615] [mobile-webkit] › tests/browser/http-crypto.spec.ts:21:1 › HTTP official deck opens and reloads without WebCrypto
+[485/615] [mobile-webkit] › tests/browser/http-crypto.spec.ts:27:1 › HTTP local import works and corrupt archives cannot replace it
+[486/615] [mobile-webkit] › tests/browser/http-crypto.spec.ts:39:1 › HTTP automatic progress reads and publishes verified snapshots without secure-only crypto
+[487/615] [mobile-webkit] › tests/browser/input-performance.spec.ts:16:1 › phrase separators keep touch and hardware insertion after the last entered letter
+[488/615] [mobile-webkit] › tests/browser/input-performance.spec.ts:27:1 › typing avoids whole-study clones and prompt rebuilds while preserving glyph and ripple effects
+[489/615] [mobile-webkit] › tests/browser/input-performance.spec.ts:46:1 › rapid typing preserves the active particle frame instead of resetting the full-screen canvas
+[490/615] [mobile-webkit] › tests/browser/input-performance.spec.ts:75:1 › an immediate page exit and leaving learning flush the last burst without waiting for autosave
+[491/615] [mobile-webkit] › tests/browser/input-performance.spec.ts:88:1 › typing preserves restored progress and unrelated stored decks when the page hides
+[492/615] [mobile-webkit] › tests/browser/input-performance.spec.ts:116:39 › full Emoji effects reuse prepared glyphs with idle callbacks available
+[493/615] [mobile-webkit] › tests/browser/input-performance.spec.ts:116:39 › full Emoji effects reuse prepared glyphs with idle callbacks deferred
+[494/615] [mobile-webkit] › tests/browser/interaction-audit.spec.ts:13:1 › reveal speaks the word, next speaks the next prompt, and tapping the selected tab leaves playback intact
+[495/615] [mobile-webkit] › tests/browser/interaction-audit.spec.ts:20:1 › dictation assistance speaks its answer; replay of a correct answer holds the current sentence
+[496/615] [mobile-webkit] › tests/browser/interaction-audit.spec.ts:30:1 › demonstration releases the microphone before playing and restarting reading stops the example
+[497/615] [mobile-webkit] › tests/browser/interaction-audit.spec.ts:39:1 › classic key sound works at LV0 for physical and touch input, dictation and backspace
+[498/615] [mobile-webkit] › tests/browser/interaction-audit.spec.ts:49:1 › keyboard sound mute survives settings navigation and a full reload
+[499/615] [mobile-webkit] › tests/browser/interaction-audit.spec.ts:58:1 › reading keeps partial matches, closes its microphone on completion and continues in speaking
+[500/615] [mobile-webkit] › tests/browser/keyboard-viewport.spec.ts:12:1 › every keyboard row stays clickable with browser chrome, short screens and mode changes
+[501/615] [mobile-webkit] › tests/browser/keyboard-viewport.spec.ts:43:1 › hard dictation accepts hardware editing and English paste while remaining keyboard protected
+[502/615] [mobile-webkit] › tests/browser/large-backup.spec.ts:5:1 › real HTTPS WebDAV large upload, readback and restore preserve every photo
+[503/615] [mobile-webkit] › tests/browser/layout-audit.spec.ts:31:37 › native listening controls and speaking dock fit all viewports in light
+[mobile-webkit] › tests/browser/large-backup.spec.ts:5:1 › real HTTPS WebDAV large upload, readback and restore preserve every photo
+LARGE_FIXTURE {
+  count: 33,
+  imageBytes: 4178361,
+  imageSHA256: '931ecd97cf0801a909992cb422d87ea02ad8ec096da6a7b0b2fa88e9833d884d',
+  archiveBytes: 137926307,
+  firstID: '55555555-5555-4555-8555-000000000000'
+}
+LARGE_UPLOAD {
+  photoCount: 33,
+  imageSHA256: '931ecd97cf0801a909992cb422d87ea02ad8ec096da6a7b0b2fa88e9833d884d',
+  zip64: false,
+  archiveBytes: 137931665
+}
+LARGE_PASSED {
+  mib: 128,
+  fixture: {
+    count: 33,
+    imageBytes: 4178361,
+    imageSHA256: '931ecd97cf0801a909992cb422d87ea02ad8ec096da6a7b0b2fa88e9833d884d',
+    archiveBytes: 137926307,
+    firstID: '55555555-5555-4555-8555-000000000000'
+  },
+  result: {
+    photoCount: 33,
+    imageSHA256: '931ecd97cf0801a909992cb422d87ea02ad8ec096da6a7b0b2fa88e9833d884d',
+    zip64: false,
+    archiveBytes: 137931665
+  },
+  records: { count: 33, referenced: 33, files: 33 },
+  observations: [
+    { phase: 'restore', ms: 4032 },
+    { phase: 'upload-and-readback', ms: 7238 }
+  ],
+  received: 137934049,
+  sent: 413795113,
+  browser: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.6 Safari/605.1.15'
+}
+
+
+[504/615] [mobile-webkit] › tests/browser/layout-audit.spec.ts:31:37 › native listening controls and speaking dock fit all viewports in dark
+[505/615] [mobile-webkit] › tests/browser/layout-audit.spec.ts:46:1 › single-card preference lives in personalization, preserves choice on reload and filters both directions
+[506/615] [mobile-webkit] › tests/browser/layout-audit.spec.ts:52:1 › listening loops at end, retains position through a sheet and handles failures and fixed-rate repeat
+[507/615] [mobile-webkit] › tests/browser/layout-audit.spec.ts:60:1 › native ambience loops, ducks during speech, persists and stops at panels, hidden page and module changes
+[508/615] [mobile-webkit] › tests/browser/layout-audit.spec.ts:71:1 › theme navigation and editor match native compact hierarchy and preserve separate day/night selections
+[509/615] [mobile-webkit] › tests/browser/layout-audit.spec.ts:79:1 › dragging a listening seek bar commits once instead of restarting on every movement
+[510/615] [mobile-webkit] › tests/browser/learning-keyboard-shortcuts.spec.ts:40:1 › learning keyboards show exactly 26 letters and Backspace at desktop and mobile widths
+[511/615] [mobile-webkit] › tests/browser/learning-keyboard-shortcuts.spec.ts:58:1 › PC Esc and Space keycaps follow the desktop media query without changing button names
+[512/615] [mobile-webkit] › tests/browser/learning-keyboard-shortcuts.spec.ts:74:50 › continuous letter-only input inserts sentence separators in free easy
+[513/615] [mobile-webkit] › tests/browser/learning-keyboard-shortcuts.spec.ts:74:50 › continuous letter-only input inserts sentence separators in free medium
+[514/615] [mobile-webkit] › tests/browser/learning-keyboard-shortcuts.spec.ts:74:50 › continuous letter-only input inserts sentence separators in free hard
+[515/615] [mobile-webkit] › tests/browser/learning-keyboard-shortcuts.spec.ts:92:50 › free easy dictation checks complete wrong answers without a submit control
+[516/615] [mobile-webkit] › tests/browser/learning-keyboard-shortcuts.spec.ts:92:50 › free medium dictation checks complete wrong answers without a submit control
+[517/615] [mobile-webkit] › tests/browser/learning-keyboard-shortcuts.spec.ts:92:50 › free hard dictation checks complete wrong answers without a submit control
+[518/615] [mobile-webkit] › tests/browser/learning-keyboard-shortcuts.spec.ts:112:43 › boundary Backspace returns to the previous easy word and deletes its last letter
+[519/615] [mobile-webkit] › tests/browser/learning-keyboard-shortcuts.spec.ts:112:43 › boundary Backspace returns to the previous medium word and deletes its last letter
+[520/615] [mobile-webkit] › tests/browser/learning-keyboard-shortcuts.spec.ts:124:1 › Space replays exactly once from answer fields and noneditable learning areas; touch has no shortcut
+[521/615] [mobile-webkit] › tests/browser/learning-keyboard-shortcuts.spec.ts:174:1 › Escape acts once and respects modified, repeated and IME keys, selects, dialogs and chunk menus
+[522/615] [mobile-webkit] › tests/browser/learning-keyboard-shortcuts.spec.ts:218:50 › letters alone complete contractions and fixed numbers in easy
+[523/615] [mobile-webkit] › tests/browser/learning-keyboard-shortcuts.spec.ts:218:50 › letters alone complete contractions and fixed numbers in medium
+[524/615] [mobile-webkit] › tests/browser/learning-keyboard-shortcuts.spec.ts:218:50 › letters alone complete contractions and fixed numbers in hard
+[525/615] [mobile-webkit] › tests/browser/learning-parity.spec.ts:6:1 › guided word blanks show readable underlines and preserve typing, reveal and difficulty changes
+[526/615] [mobile-webkit] › tests/browser/learning-parity.spec.ts:50:1 › long guided words wrap without covering the next word or reserving an icon row
+[527/615] [mobile-webkit] › tests/browser/learning-parity.spec.ts:76:1 › avatar level sheet enters the real game with the current deck and returns to the same listening draft
+[528/615] [mobile-webkit] › tests/browser/learning-parity.spec.ts:101:1 › settings level entry offers game loading recovery back to the level page
+[529/615] [mobile-webkit] › tests/browser/learning-parity.spec.ts:111:1 › rewards have real details, learning and settings routes, and saved milestones remain visible after spending
+[530/615] [mobile-webkit] › tests/browser/learning-parity.spec.ts:126:37 › light listening answer trays remain distinct from the page and selected chips have a visible outline
+[531/615] [mobile-webkit] › tests/browser/learning-parity.spec.ts:126:37 › dark listening answer trays remain distinct from the page and selected chips have a visible outline
+[532/615] [mobile-webkit] › tests/browser/learning-url.spec.ts:7:1 › share restores module, photo and sentence in a fresh browser without sender progress
+[533/615] [mobile-webkit] › tests/browser/learning-url.spec.ts:21:1 › same-deck links and refresh restore dictation difficulty, legacy links still open, invalid locations recover
+[534/615] [mobile-webkit] › tests/browser/learning-url.spec.ts:29:1 › opening a link to an already completed spelling starts a writable new attempt
+[535/615] [mobile-webkit] › tests/browser/learning-url.spec.ts:39:1 › an incoming learning link wins over a pending local module update
+[536/615] [mobile-webkit] › tests/browser/loading.spec.ts:7:1 › the inline Pac-Man maze appears before app assets and leaves after the styled app mounts
+[537/615] [mobile-webkit] › tests/browser/loading.spec.ts:90:1 › all bottom icon assets start loading before any tap and delayed atlases retain square static icons
+[538/615] [mobile-webkit] › tests/browser/loading.spec.ts:108:1 › warmed bottom icons reuse image bytes when navigating without request interception
+[539/615] [mobile-webkit] › tests/browser/loading.spec.ts:124:1 › deck and photo downloads display actual intermediate progress, then clear after decoding
+[540/615] [mobile-webkit] › tests/browser/loading.spec.ts:141:1 › a failed photo has an explicit retry action and no endless progress bar
+[541/615] [mobile-webkit] › tests/browser/parity-speaking.spec.ts:10:1 › F02 dialogue alternates learner A and machine B without grading labels or machine lines
+[542/615] [mobile-webkit] › tests/browser/parity-speaking.spec.ts:16:1 › F02 skipping learner A never grants its words
+[543/615] [mobile-webkit] › tests/browser/parity-speaking.spec.ts:18:1 › ordinary speaking still advances and continues through consecutive sentences
+[544/615] [mobile-webkit] › tests/browser/parity-speaking.spec.ts:24:1 › F02 bundled programmer dialogue advances without speaking labels and fits the existing page
+[545/615] [mobile-webkit] › tests/browser/parity-state.spec.ts:33:1 › a warm Learning entry is one-shot and never overrides an explicit listening link
+[546/615] [mobile-webkit] › tests/browser/parity-state.spec.ts:65:1 › finished dictation offers challenge, another round and word learning without losing spelling drafts
+[547/615] [mobile-webkit] › tests/browser/parity-state.spec.ts:101:1 › another dictation round preserves reward dedupe identity and spelling history
+[548/615] [mobile-webkit] › tests/browser/parity-state.spec.ts:125:1 › F05 selecting the completed photo opens an editable fresh dictation
+[549/615] [mobile-webkit] › tests/browser/parity-subscriptions.spec.ts:8:1 › F17 stable version updates preserve card IDs and draft; cancelled subscription keeps content
+[550/615] [mobile-webkit] › tests/browser/photo-prefetch.spec.ts:14:1 › preloads exactly five distinct upcoming photos and reuses them while advancing
+[551/615] [mobile-webkit] › tests/browser/photo-prefetch.spec.ts:29:1 › tail stays bounded and failed speculation retries when selected
+[552/615] [mobile-webkit] › tests/browser/playback-parity.spec.ts:19:1 › App replay button keeps its geometry and fills in place across sentence, word, replay and rate change
+[553/615] [mobile-webkit] › tests/browser/playback-parity.spec.ts:45:1 › errors, mode changes and leaving the page clear progress and reject old callbacks
+[554/615] [mobile-webkit] › tests/browser/playback-parity.spec.ts:71:1 › speech without boundary events animates continuously, freezes on pause and resumes without jumping
+[555/615] [mobile-webkit] › tests/browser/playback-parity.spec.ts:82:1 › sparse speech boundaries calibrate the continuous fill without a visible jump
+[556/615] [mobile-webkit] › tests/browser/playback-parity.spec.ts:88:1 › reduced motion retains estimated speech progress and only the real end completes it
+[557/615] [mobile-webkit] › tests/browser/playback-parity.spec.ts:97:1 › original audio fills the button from its clock even without timeupdate and stops advancing while paused
+[558/615] [mobile-webkit] › tests/browser/settings-parity.spec.ts:9:1 › settings matches native hierarchy, pins the level card and retains theme and native subpages
+[559/615] [mobile-webkit] › tests/browser/settings-parity.spec.ts:25:1 › third party download preserves the current draft, validates the package, and makes it selectable
+[560/615] [mobile-webkit] › tests/browser/settings-parity.spec.ts:36:1 › failed and cancelled downloads leave practice and stored decks intact
+[561/615] [mobile-webkit] › tests/browser/settings-parity.spec.ts:45:1 › keyboard settings use the native samples and eight voices; preview, mute and route cleanup work
+[562/615] [mobile-webkit] › tests/browser/speech-voice.spec.ts:2:1 › automatic speech avoids Albert, manual choice persists, and normal pitch is retained
+[563/615] [mobile-webkit] › tests/browser/spelling-feedback.spec.ts:9:1 › hardware input survives replay focus, protected IME keys, and keeps dialogs isolated
+[564/615] [mobile-webkit] › tests/browser/spelling-feedback.spec.ts:22:52 › spelling progress stays below glyphs and playback grows from a fixed left edge: light
+[565/615] [mobile-webkit] › tests/browser/spelling-feedback.spec.ts:22:52 › spelling progress stays below glyphs and playback grows from a fixed left edge: dark
+[566/615] [mobile-webkit] › tests/browser/spelling-feedback.spec.ts:53:52 › no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: light
+[567/615] [mobile-webkit] › tests/browser/spelling-feedback.spec.ts:53:52 › no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: dark
+[568/615] [mobile-webkit] › tests/browser/spelling-letter-color.spec.ts:25:52 › only the wrong letter is red and edits clear it: light
+[569/615] [mobile-webkit] › tests/browser/spelling-letter-color.spec.ts:25:52 › only the wrong letter is red and edits clear it: dark
+[570/615] [mobile-webkit] › tests/browser/spelling-letter-color.spec.ts:55:52 › glyph animations never outlive their letter across edits and answers: light
+[571/615] [mobile-webkit] › tests/browser/spelling-letter-color.spec.ts:55:52 › glyph animations never outlive their letter across edits and answers: dark
+[572/615] [mobile-webkit] › tests/browser/spelling-revisit.spec.ts:9:1 › a spelling link revisit keeps reopening the completed words that follow
+[573/615] [mobile-webkit] › tests/browser/subscription-poster.spec.ts:5:1 › editable template exports a real PNG and never sends the subscription URL to its host
+[574/615] [mobile-webkit] › tests/browser/subscription-poster.spec.ts:27:1 › preview recovers before PNG export finishes and stale exports cannot replace newer text
+[575/615] [mobile-webkit] › tests/browser/touch-spelling.spec.ts:4:1 › touch spelling keeps the OS keyboard disabled through taps, next word and navigation
+[576/615] [mobile-webkit] › tests/browser/ui-assets.spec.ts:3:1 › necessary icons warm in background and are reused on navigation
+[577/615] [mobile-webkit] › tests/browser/visible-focus.spec.ts:16:48 › all four target edges remain visible with keyboard and resize: light
+[578/615] [mobile-webkit] › tests/browser/visible-focus.spec.ts:16:48 › all four target edges remain visible with keyboard and resize: dark
+[579/615] [mobile-webkit] › tests/browser/visual-viewport.spec.ts:21:1 › learning header, input and tabs share the moving visual viewport instead of the layout viewport
+[580/615] [mobile-webkit] › tests/browser/visual-viewport.spec.ts:33:1 › viewport ownership handles dialogs, pinch zoom and leaving practice without locking settings
+[581/615] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:37:1 › App backup restores into Web, duplicate restore is idempotent, and Web publishes App-compatible progress
+[582/615] [mobile-webkit] › tests/browser/word-completion.spec.ts:6:1 › keyboard deletion and fresh word success match App; completion survives auto-next and restored answers stay silent
+[583/615] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:47:1 › corrupt remote progress is rejected before saving photos or credits; password field stays masked
+[584/615] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:48:1 › native photo-data hierarchy fits small screens and short viewports with usable configuration controls
+[585/615] [mobile-webkit] › tests/browser/word-completion.spec.ts:20:1 › unavailable success audio does not block completion or the next word
+[586/615] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:50:1 › failed upload cleans only its own staging directory and retains existing backups
+[587/615] [mobile-webkit] › tests/browser/word-peek.spec.ts:31:1 › guided actual-word hold shows English and Chinese, then releases without changing focus or draft
+[588/615] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:51:1 › successful PUT and MOVE are not reported as a valid backup when readback is corrupt
+[589/615] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:54:1 › local complete ZIP restores idempotently and recycled photos can return to practice
+[590/615] [mobile-webkit] › tests/browser/word-peek.spec.ts:62:1 › hard-input hold peeks an existing written word and a late dictionary reply cannot resurrect it
+[591/615] [mobile-webkit] › tests/browser/word-peek.spec.ts:80:1 › successful chunks hide Next and the challenge row while auto-advance runs once
+[592/615] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:55:1 › legacy Web completion exports its original word and date without awarding restored answers again
+[593/615] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:56:1 › authentication is not forwarded to a redirected WebDAV host
+[594/615] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:59:1 › quota and native 20 GiB limit failures leave existing data intact and clean temporary files
+[595/615] [mobile-webkit] › tests/browser/word-peek.spec.ts:96:1 › paused automatic advance and assisted answers keep a manual Next fallback
+[596/615] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:60:1 › cancel download and upload removes only operation files and keeps photos and progress
+[597/615] [mobile-webkit] › tests/browser/word-peek.spec.ts:110:1 › hard hold targets the pointed word instead of the old caret and ignores blank space
+[598/615] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:62:1 › conservative storage estimates do not reject valid backups
+[599/615] [mobile-webkit] › tests/browser/word-peek.spec.ts:132:1 › a pending hold is cancelled by difficulty changes and scrolling before it can reveal
+[600/615] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:65:1 › automatic progress imports native XP without photos and unchanged sync never uploads a deck
+[601/615] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:79:1 › automatic progress merges offline web and native receipts once and retries failed uploads
+[602/615] [mobile-webkit] › tests/browser/word-peek.spec.ts:143:1 › failed dictionary loads can retry on a later hold
+[603/615] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:107:1 › automatic progress merges concurrent native snapshots and opt out stops transfers
+[604/615] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:123:1 › corrupt standalone progress is rejected without publishing or replacing local records
+[605/615] [mobile-webkit] › tests/browser/word-peek.spec.ts:150:191 › free easy success preserves button dimensions without a success row or transient Next
+[606/615] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:132:1 › deck positions receive native anchors without changing XP and defer while typing
+[607/615] [mobile-webkit] › tests/browser/word-peek.spec.ts:150:191 › free medium success preserves button dimensions without a success row or transient Next
+[608/615] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:148:1 › deck positions publish navigation and a fresh browser resumes the same word
+[609/615] [mobile-webkit] › tests/browser/word-peek.spec.ts:150:191 › free hard success preserves button dimensions without a success row or transient Next
+[610/615] [mobile-webkit] › tests/browser/word-peek.spec.ts:150:191 › free hard 390x667 success preserves button dimensions without a success row or transient Next
+[611/615] [mobile-webkit] › tests/browser/word-peek.spec.ts:150:191 › free hard 844x390 success preserves button dimensions without a success row or transient Next
+[612/615] [mobile-webkit] › tests/browser/capture-grouping.spec.ts:54:1 › three imported photos become one default deck and survive photo navigation and reload
+[613/615] [mobile-webkit] › tests/browser/capture-grouping.spec.ts:87:1 › legacy default captures group without touching stored bytes while custom and same-title imports stay separate
+[614/615] [mobile-webkit] › tests/browser/capture-grouping.spec.ts:144:1 › editing a captured photo reuses its slot instead of appending a duplicate
+[615/615] [mobile-webkit] › tests/browser/capture-grouping.spec.ts:166:1 › camera capture and an upload share the default photo group
+  4 skipped
+  611 passed (15.2m)

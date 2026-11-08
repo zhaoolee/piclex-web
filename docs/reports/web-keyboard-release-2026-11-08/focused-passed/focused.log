@@ -1,0 +1,17 @@
+
+> piclex-web@0.1.0 test:browser
+> playwright test --config=playwright.local-linux.config.ts learning-parity.spec.ts spelling-feedback.spec.ts --grep guided word blanks|no result line moves
+
+
+Running 9 tests using 2 workers
+
+[1/9] [desktop] › tests/browser/spelling-feedback.spec.ts:53:52 › no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: light
+[2/9] [desktop] › tests/browser/learning-parity.spec.ts:6:1 › guided word blanks show readable underlines and preserve typing, reveal and difficulty changes
+[3/9] [desktop] › tests/browser/spelling-feedback.spec.ts:53:52 › no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: dark
+[4/9] [mobile] › tests/browser/learning-parity.spec.ts:6:1 › guided word blanks show readable underlines and preserve typing, reveal and difficulty changes
+[5/9] [mobile] › tests/browser/spelling-feedback.spec.ts:53:52 › no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: light
+[6/9] [mobile] › tests/browser/spelling-feedback.spec.ts:53:52 › no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: dark
+[7/9] [mobile-webkit] › tests/browser/learning-parity.spec.ts:6:1 › guided word blanks show readable underlines and preserve typing, reveal and difficulty changes
+[8/9] [mobile-webkit] › tests/browser/spelling-feedback.spec.ts:53:52 › no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: light
+[9/9] [mobile-webkit] › tests/browser/spelling-feedback.spec.ts:53:52 › no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: dark
+  9 passed (21.6s)

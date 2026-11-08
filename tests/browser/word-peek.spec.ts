@@ -114,15 +114,16 @@ test('hard hold targets the pointed word instead of the old caret and ignores bl
  const tooltip=page.getByRole('tooltip');await expect(tooltip).toBeVisible();
  const expected=await tooltip.locator('.word-peek-english').innerText();await page.mouse.up();
  await page.getByLabel('听写难度',{exact:true}).selectOption('hard');
- const field=page.getByRole('textbox',{name:'听写句子',exact:true});await fillEnglish(field,'xx yy');
- const point=await field.evaluate((node:HTMLTextAreaElement)=>{
+ const field=page.getByRole('textbox',{name:'听写句子',exact:true});await fillEnglish(field,'xxyy');
+ const fieldValue=await field.inputValue();expect(fieldValue.replace(/[^a-z]/gi,'')).toBe('xxyy');const split=fieldValue.indexOf(' ');expect(split).toBeGreaterThan(0);
+ const point=await field.evaluate((node:HTMLTextAreaElement,{value,split})=>{
   node.setSelectionRange(0,0);const box=node.getBoundingClientRect(),css=getComputedStyle(node),ctx=document.createElement('canvas').getContext('2d')!;ctx.font=css.font;
-  return {x:box.left+node.clientLeft+parseFloat(css.paddingLeft)+ctx.measureText('xx ').width+ctx.measureText('y').width/2,y:box.top+node.clientTop+parseFloat(css.paddingTop)+parseFloat(css.lineHeight)/2};
- });
+  return {x:box.left+node.clientLeft+parseFloat(css.paddingLeft)+ctx.measureText(value.slice(0,split+1)).width+ctx.measureText(value[split+1]||value[split]).width/2,y:box.top+node.clientTop+parseFloat(css.paddingTop)+parseFloat(css.lineHeight)/2};
+ },{value:fieldValue,split});
  await page.mouse.move(point.x,point.y);await page.mouse.down();await expect(tooltip).toBeVisible();
  await expect(tooltip.locator('.word-peek-english')).toHaveText(expected);
  expect(await field.evaluate((node:HTMLTextAreaElement)=>node.selectionStart)).toBe(0);
- await page.mouse.up();await expect(tooltip).toHaveCount(0);await expect(field).toHaveValue('xx yy');
+ await page.mouse.up();await expect(tooltip).toHaveCount(0);await expect(field).toHaveValue(fieldValue);
  expect(await field.evaluate((node:HTMLTextAreaElement)=>node.selectionStart)).toBe(0);
  const box=await field.boundingBox();await page.mouse.move(box!.x+box!.width-6,box!.y+box!.height-6);await page.mouse.down();
  await page.waitForTimeout(500);await expect(tooltip).toHaveCount(0);await page.mouse.up();
@@ -159,7 +160,7 @@ for(const scenario of [{difficulty:'easy'},{difficulty:'medium'},{difficulty:'ha
   return {replay:rect('.playback-button'),rate:rect('.playback-rate'),actions:rect('.sentence-actions'),height:node.getBoundingClientRect().height};
  });
  const before=await measure(),url=page.url();
- if(difficulty==='hard')await fillEnglish(page.getByRole('textbox',{name:'听写句子',exact:true}),"Hi I'm Alex");
+ if(difficulty==='hard')await fillEnglish(page.getByRole('textbox',{name:'听写句子',exact:true}),'HiImAlex');
  else for(const [i,word] of ['Hi',"I'm",'Alex'].entries())await fillEnglish(page.locator('.guided-input input').nth(i),word);
  await expect(page.locator('.sentence-actions-pending')).toHaveCount(1);
  await expect(page.locator('.sentence-feedback')).toHaveCount(0);

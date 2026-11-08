@@ -1,0 +1,11 @@
+
+> piclex-web@0.1.0 test:browser
+> playwright test --config=playwright.local-linux.config.ts learning-keyboard-shortcuts.spec.ts --grep Escape acts
+
+
+Running 3 tests using 2 workers
+
+[1/3] [mobile] › tests/browser/learning-keyboard-shortcuts.spec.ts:174:1 › Escape acts once and respects modified, repeated and IME keys, selects, dialogs and chunk menus
+[2/3] [desktop] › tests/browser/learning-keyboard-shortcuts.spec.ts:174:1 › Escape acts once and respects modified, repeated and IME keys, selects, dialogs and chunk menus
+[3/3] [mobile-webkit] › tests/browser/learning-keyboard-shortcuts.spec.ts:174:1 › Escape acts once and respects modified, repeated and IME keys, selects, dialogs and chunk menus
+  3 passed (5.6s)

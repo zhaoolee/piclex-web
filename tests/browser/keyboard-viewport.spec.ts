@@ -44,7 +44,7 @@ test('hard dictation accepts hardware editing and English paste while remaining 
  await page.goto('/piclex-web/#/decks');await expect(page.getByRole('button',{name:'导入自己的卡组'})).toBeEnabled();
  await page.getByLabel('选择照片卡组文件').setInputFiles(path.resolve('tests/fixtures/demo/decks/cafe.piclexdeck'));
  await page.getByRole('tab',{name:'练听力',exact:true}).click();await page.getByLabel('句子练习模式').selectOption('free');await page.getByLabel('听写难度').selectOption('hard');
- const field=page.getByRole('textbox',{name:'听写句子',exact:true});await field.pressSequentially('hello');await field.press('ArrowLeft');await field.press('Backspace');await expect(field).toHaveValue('helo');
+ const field=page.getByRole('textbox',{name:'听写句子',exact:true});await field.pressSequentially('hello');await expect(field).toHaveValue('h ello');await field.press('ArrowLeft');await field.press('Backspace');await expect(field).toHaveValue('h elo');expect(await field.evaluate((node:HTMLTextAreaElement)=>node.selectionStart)).toBe(4);
  await field.press('ControlOrMeta+a');await field.evaluate(node=>{const data=new DataTransfer();data.setData('text/plain','hello world');node.dispatchEvent(new ClipboardEvent('paste',{bubbles:true,cancelable:true,clipboardData:data}));});
  await expect(field).toHaveValue('hello world');await expect(field).toHaveAttribute('readonly','');
  await page.reload();await expect(field).toHaveValue('hello world');await expect(field).toHaveAttribute('inputmode','none');await keyboardIsUncovered(page);

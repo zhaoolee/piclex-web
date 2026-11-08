@@ -38,7 +38,14 @@ for(const kind of ['portrait','landscape'])test(`listening preserves the full ${
  }
  await page.setViewportSize({width:390,height:430});await mode.selectOption('free');await page.getByLabel('听写难度').selectOption('hard');await contained();
  expect(await page.locator('.native-body').evaluate(el=>el.scrollHeight>el.clientHeight)).toBe(true);
- await fillEnglish(page.getByRole('textbox',{name:'听写句子',exact:true}),'wrong');
- await page.getByRole('button',{name:'检查答案',exact:true}).click();await expect(page.getByText('再听一次，试着修改答案',{exact:true})).toBeVisible();
- if(info.project.name==='desktop'){await keyboard.getByRole('button',{name:'退格',exact:true}).click();await expect(page.getByRole('textbox',{name:'听写句子',exact:true})).toHaveValue('wron');}
+ const dictation=page.getByRole('textbox',{name:'听写句子',exact:true});
+ await fillEnglish(dictation,'wrong');
+ if(info.project.name==='desktop'){await keyboard.getByRole('button',{name:'退格',exact:true}).click();await expect(dictation).toHaveValue(kind==='portrait'?'w ro n':'w ron');}
+ await fillEnglish(dictation,kind==='portrait'?'Iamstillinbad':'Acroissantisonthewoodenplatx');
+ await expect(page.getByRole('button',{name:'检查答案',exact:true})).toHaveCount(0);
+ await expect(page.getByText('再听一次，试着修改答案',{exact:true})).toBeVisible();
+ if(info.project.name==='desktop'){await keyboard.getByRole('button',{name:'退格',exact:true}).click();await expect(page.getByText('再听一次，试着修改答案',{exact:true})).toHaveCount(0);}
+ await page.clock.install();await page.clock.pauseAt(await page.evaluate(()=>Date.now()+1000));
+ await fillEnglish(dictation,kind==='portrait'?'Iamstillinbed':'Acroissantisonthewoodenplate');
+ await expect(page.locator('.sentence-actions-pending')).toHaveCount(1);
 });

@@ -72,8 +72,8 @@ for(const colorScheme of ['light','dark'] as const)test(`no result line moves an
  await expect.poll(()=>page.locator('.native-practice').evaluate(node=>node.scrollHeight-node.clientHeight)).toBeLessThanOrEqual(1);
  // Take the baseline only after two consecutive reads agree: the photo budget
  // is measured by ResizeObserver and lands a frame or two after the image.
- let settled=await geometry();
- await expect.poll(async()=>{const current=await geometry(),same=JSON.stringify(current)===JSON.stringify(settled);settled=current;return same;},{intervals:[100,150,250,400]}).toBe(true);
+ let settled:Awaited<ReturnType<typeof geometry>>|undefined;
+ await expect.poll(async()=>{const current=await geometry(),same=settled!==undefined&&JSON.stringify(current)===JSON.stringify(settled);settled=current;return same;},{intervals:[100,150,250,400]}).toBe(true);
  const baseline=await geometry();
  const stable=async(label:string)=>{
   expect(await page.locator('.native-practice').evaluate(node=>node.scrollLeft)).toBe(0);

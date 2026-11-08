@@ -1,0 +1,521 @@
+{
+  "config": {
+    "argv": [
+      "/usr/bin/node",
+      "/work/node_modules/.bin/playwright",
+      "test",
+      "--config=playwright.local-linux.config.ts",
+      "learning-parity.spec.ts",
+      "spelling-feedback.spec.ts",
+      "--grep",
+      "guided word blanks|no result line moves"
+    ],
+    "configFile": "/work/playwright.local-linux.config.ts",
+    "rootDir": "/work/tests/browser",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 2
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/evidence/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "id": "desktop",
+        "name": "desktop",
+        "testDir": "/work/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/evidence/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "id": "mobile",
+        "name": "mobile",
+        "testDir": "/work/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/evidence/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "id": "mobile-webkit",
+        "name": "mobile-webkit",
+        "testDir": "/work/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "deck-subscription-themes.spec.ts",
+          "deck-subscriptions.spec.ts",
+          "audio-unlock-speech.spec.ts",
+          "spelling-letter-color.spec.ts",
+          "parity-state.spec.ts",
+          "parity-speaking.spec.ts",
+          "parity-subscriptions.spec.ts",
+          "guided-no-eyes.spec.ts",
+          "word-peek.spec.ts",
+          "capture-grouping.spec.ts",
+          "learning-parity.spec.ts",
+          "http-crypto.spec.ts",
+          "subscription-poster.spec.ts",
+          "input-performance.spec.ts",
+          "loading.spec.ts",
+          "photo-prefetch.spec.ts",
+          "spelling-feedback.spec.ts",
+          "speech-voice.spec.ts",
+          "capture-render.spec.ts",
+          "visible-focus.spec.ts",
+          "focus-ambience.spec.ts",
+          "ai-settings.spec.ts",
+          "large-backup.spec.ts",
+          "webdav-backup.spec.ts",
+          "ui-assets.spec.ts",
+          "capture-mobile-fit.spec.ts",
+          "learning-url.spec.ts",
+          "spelling-revisit.spec.ts",
+          "visual-viewport.spec.ts",
+          "deck-picker-audio.spec.ts",
+          "keyboard-viewport.spec.ts",
+          "touch-spelling.spec.ts",
+          "learning-keyboard-shortcuts.spec.ts",
+          "playback-parity.spec.ts",
+          "interaction-audit.spec.ts",
+          "camera-parity.spec.ts",
+          "camera-surface.spec.ts",
+          "glass-tabs.spec.ts",
+          "settings-parity.spec.ts",
+          "layout-audit.spec.ts",
+          "alignment-extension.spec.ts",
+          "word-completion.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "line",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "/evidence/browser-report.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 2,
+    "webServer": {
+      "command": "npm run preview",
+      "url": "http://127.0.0.1:18120",
+      "reuseExistingServer": false
+    }
+  },
+  "suites": [
+    {
+      "title": "learning-parity.spec.ts",
+      "file": "learning-parity.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "guided word blanks show readable underlines and preserve typing, reveal and difficulty changes",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3286,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T02:58:27.115Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d5b39b02b5fb66358f60-e49518e623550eca9ac5",
+          "file": "learning-parity.spec.ts",
+          "line": 6,
+          "column": 1
+        },
+        {
+          "title": "guided word blanks show readable underlines and preserve typing, reveal and difficulty changes",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile",
+              "projectName": "mobile",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3433,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T02:58:30.651Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d5b39b02b5fb66358f60-2eb624fdcb7e2a73595c",
+          "file": "learning-parity.spec.ts",
+          "line": 6,
+          "column": 1
+        },
+        {
+          "title": "guided word blanks show readable underlines and preserve typing, reveal and difficulty changes",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-webkit",
+              "projectName": "mobile-webkit",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 7976,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T02:58:34.753Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d5b39b02b5fb66358f60-2b4e226d462faaa90ebd",
+          "file": "learning-parity.spec.ts",
+          "line": 6,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "spelling-feedback.spec.ts",
+      "file": "spelling-feedback.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: light",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 2179,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T02:58:27.114Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "f05d46caa4a52a13e75a-ebf13d9b281ce658f303",
+          "file": "spelling-feedback.spec.ts",
+          "line": 53,
+          "column": 52
+        },
+        {
+          "title": "no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: dark",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 2016,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T02:58:29.367Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "f05d46caa4a52a13e75a-8b7e64c85cbb526878f1",
+          "file": "spelling-feedback.spec.ts",
+          "line": 53,
+          "column": 52
+        },
+        {
+          "title": "no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: light",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile",
+              "projectName": "mobile",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 2789,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T02:58:31.572Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "f05d46caa4a52a13e75a-e36751320bb831ee0d19",
+          "file": "spelling-feedback.spec.ts",
+          "line": 53,
+          "column": 52
+        },
+        {
+          "title": "no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: dark",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile",
+              "projectName": "mobile",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2967,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T02:58:34.157Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "f05d46caa4a52a13e75a-06e1dbceb7a90d141110",
+          "file": "spelling-feedback.spec.ts",
+          "line": 53,
+          "column": 52
+        },
+        {
+          "title": "no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: light",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-webkit",
+              "projectName": "mobile-webkit",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 2781,
+                  "error": {
+                    "message": "Error: first error photo height\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeCloseTo\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m, \u001b[22mprecision\u001b[2m)\u001b[22m\n\nExpected: \u001b[32m330\u001b[39m\nReceived: \u001b[31m253\u001b[39m\n\nExpected precision:    0\nExpected difference: < \u001b[32m0.5\u001b[39m\nReceived difference:   \u001b[31m77\u001b[39m",
+                    "stack": "Error: first error photo height\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeCloseTo\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m, \u001b[22mprecision\u001b[2m)\u001b[22m\n\nExpected: \u001b[32m330\u001b[39m\nReceived: \u001b[31m253\u001b[39m\n\nExpected precision:    0\nExpected difference: < \u001b[32m0.5\u001b[39m\nReceived difference:   \u001b[31m77\u001b[39m\n    at stable (/work/tests/browser/spelling-feedback.spec.ts:86:50)\n    at /work/tests/browser/spelling-feedback.spec.ts:93:2",
+                    "location": {
+                      "file": "/work/tests/browser/spelling-feedback.spec.ts",
+                      "column": 50,
+                      "line": 86
+                    },
+                    "snippet": "  84 |    expect(after.y,`${label} ${key} y`).toBeCloseTo(before.y,0);\n  85 |    expect(after.width,`${label} ${key} width`).toBeCloseTo(before.width,0);\n> 86 |    expect(after.height,`${label} ${key} height`).toBeCloseTo(before.height,0);\n     |                                                  ^\n  87 |   }\n  88 |  };\n  89 |  const recovered=async()=>{await expect(answer).not.toHaveClass(/wrong/);await expect(feedback).toHaveCount(0);expect((await border()).color).not.toBe('rgb(198, 68, 68)');};"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/work/tests/browser/spelling-feedback.spec.ts",
+                        "column": 50,
+                        "line": 86
+                      },
+                      "message": "Error: first error photo height\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeCloseTo\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m, \u001b[22mprecision\u001b[2m)\u001b[22m\n\nExpected: \u001b[32m330\u001b[39m\nReceived: \u001b[31m253\u001b[39m\n\nExpected precision:    0\nExpected difference: < \u001b[32m0.5\u001b[39m\nReceived difference:   \u001b[31m77\u001b[39m\n\n  84 |    expect(after.y,`${label} ${key} y`).toBeCloseTo(before.y,0);\n  85 |    expect(after.width,`${label} ${key} width`).toBeCloseTo(before.width,0);\n> 86 |    expect(after.height,`${label} ${key} height`).toBeCloseTo(before.height,0);\n     |                                                  ^\n  87 |   }\n  88 |  };\n  89 |  const recovered=async()=>{await expect(answer).not.toHaveClass(/wrong/);await expect(feedback).toHaveCount(0);expect((await border()).color).not.toBe('rgb(198, 68, 68)');};\n    at stable (/work/tests/browser/spelling-feedback.spec.ts:86:50)\n    at /work/tests/browser/spelling-feedback.spec.ts:93:2"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T02:58:37.446Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "/evidence/test-results/spelling-feedback-no-resul-b80ac-ed-or-revealed-states-light-mobile-webkit/test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/evidence/test-results/spelling-feedback-no-resul-b80ac-ed-or-revealed-states-light-mobile-webkit/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/evidence/test-results/spelling-feedback-no-resul-b80ac-ed-or-revealed-states-light-mobile-webkit/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/work/tests/browser/spelling-feedback.spec.ts",
+                    "column": 50,
+                    "line": 86
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "f05d46caa4a52a13e75a-43258cf35f4ecefc41ad",
+          "file": "spelling-feedback.spec.ts",
+          "line": 53,
+          "column": 52
+        },
+        {
+          "title": "no result line moves answer, photo, playback or keyboard in error, correct, corrected or revealed states: dark",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-webkit",
+              "projectName": "mobile-webkit",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5017,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T02:58:40.913Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "f05d46caa4a52a13e75a-2ed9186e08d2f27ba317",
+          "file": "spelling-feedback.spec.ts",
+          "line": 53,
+          "column": 52
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-08T02:58:26.312Z",
+    "duration": 20066.065000000002,
+    "expected": 8,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

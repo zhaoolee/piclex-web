@@ -1,0 +1,5 @@
+
+> piclex-web@0.1.0 decks:build
+> node scripts/build-demo-decks.mjs
+
+Built 3 demo decks with 18 words.

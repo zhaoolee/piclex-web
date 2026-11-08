@@ -20,38 +20,38 @@ test('App replay button keeps its geometry and fills in place across sentence, w
  // Return to idle through the real module controls after first-entry autoplay.
  await open(page);await page.getByRole('tab',{name:'练听力',exact:true}).click();await page.getByRole('tab',{name:'拼单词',exact:true}).click();await mockSpeech(page);const touch=!!info.project.use.hasTouch;
  const button=page.locator('.playback-button'),bar=page.getByRole('progressbar',{name:'播放进度'}),row=page.locator('.native-playback');
- await expect(button).toHaveText('播放句子和单词');const before=await row.boundingBox(),buttonBefore=await button.boundingBox();
- await press(button,touch);await expect(button).toHaveText('准备音频…');await expect(bar).toHaveCount(0);
- await emit(page,'start');await expect(button).toHaveText('重新播放');await expect(bar).toBeVisible();
+ await expect(button.locator('.playback-label')).toHaveText('播放句子和单词');const before=await row.boundingBox(),buttonBefore=await button.boundingBox();
+ await press(button,touch);await expect(button.locator('.playback-label')).toHaveText('准备音频…');await expect(bar).toHaveCount(0);
+ await emit(page,'start');await expect(button.locator('.playback-label')).toHaveText('重新播放');await expect(bar).toBeVisible();
  await expect(page.getByRole('button',{name:'停止播放'})).toHaveCount(0);await expect(row.getByRole('button')).toHaveCount(1);
  await emit(page,'boundary',-1,{charIndex:10});await expect.poll(async()=>Number(await bar.getAttribute('aria-valuenow'))).toBeGreaterThan(0);
  expect(await row.boundingBox()).toEqual(before);expect(await button.boundingBox()).toEqual(buttonBefore);
  await press(page.getByRole('region',{name:'虚拟键盘'}).getByRole('button',{name:'按键 C',exact:true}),touch);
  await expect(page.getByRole('textbox',{name:'输入英文',exact:true})).toHaveValue('c');
  await page.screenshot({path:info.outputPath('playback-progress.png')});
- await press(button,touch);await expect(button).toHaveText('准备音频…');await emit(page,'boundary',0,{charIndex:40});await emit(page,'end',0);
+ await press(button,touch);await expect(button.locator('.playback-label')).toHaveText('准备音频…');await emit(page,'boundary',0,{charIndex:40});await emit(page,'end',0);
  await expect.poll(()=>page.evaluate(()=>(window as any).__utterances.length)).toBe(2);await expect(bar).toHaveCount(0);
  await emit(page,'start');await emit(page,'boundary',-1,{charIndex:12});
  await page.getByLabel('播放速度',{exact:true}).selectOption('0.75');
- await expect.poll(()=>page.evaluate(()=>(window as any).__utterances.at(-1).rate)).toBe(.75);await expect(button).toHaveText('准备音频…');
+ await expect.poll(()=>page.evaluate(()=>(window as any).__utterances.at(-1).rate)).toBe(.75);await expect(button.locator('.playback-label')).toHaveText('准备音频…');
  await emit(page,'start');await emit(page,'end');
  await expect.poll(()=>page.evaluate(()=>(window as any).__utterances.at(-1).text)).toBe('croissant');
  const halfway=Number(await bar.getAttribute('aria-valuenow'));expect(halfway).toBeGreaterThan(0);expect(halfway).toBeLessThan(100);
  await emit(page,'start');await emit(page,'boundary',-1,{charIndex:4});expect(Number(await bar.getAttribute('aria-valuenow'))).toBeGreaterThanOrEqual(halfway);
- await emit(page,'end');await expect(button).toHaveText('播放句子和单词');await expect(bar).toHaveCount(0);
- await emit(page,'start');await emit(page,'end');await expect(button).toHaveText('播放句子和单词');
+ await emit(page,'end');await expect(button.locator('.playback-label')).toHaveText('播放句子和单词');await expect(bar).toHaveCount(0);
+ await emit(page,'start');await emit(page,'end');await expect(button.locator('.playback-label')).toHaveText('播放句子和单词');
  await expect(page.getByRole('textbox',{name:'输入英文',exact:true})).toHaveValue('c');
 });
 test('errors, mode changes and leaving the page clear progress and reject old callbacks',async({page},info)=>{
  await open(page);await mockSpeech(page);const touch=!!info.project.use.hasTouch,button=page.locator('.playback-button');
  await press(button,touch);await emit(page,'start');await emit(page,'boundary',-1,{charIndex:8});await emit(page,'error',-1,{error:'network'});
- await expect(button).toHaveText('播放句子和单词');await expect(page.getByRole('progressbar',{name:'播放进度'})).toHaveCount(0);
- await emit(page,'start');await expect(button).toHaveText('播放句子和单词');
+ await expect(button.locator('.playback-label')).toHaveText('播放句子和单词');await expect(page.getByRole('progressbar',{name:'播放进度'})).toHaveCount(0);
+ await emit(page,'start');await expect(button.locator('.playback-label')).toHaveText('播放句子和单词');
  await press(button,touch);await emit(page,'start');await press(page.getByRole('tab',{name:'练听力',exact:true}),touch);
- await expect(button).toHaveText('播放句子');await emit(page,'boundary',-1,{charIndex:20});await emit(page,'end');await expect(button).toHaveText('播放句子');
+ await expect(button.locator('.playback-label')).toHaveText('播放句子');await emit(page,'boundary',-1,{charIndex:20});await emit(page,'end');await expect(button.locator('.playback-label')).toHaveText('播放句子');
  await press(button,touch);await emit(page,'start');await emit(page,'boundary',-1,{charIndex:8});
  await expect(page.getByRole('progressbar',{name:'播放进度'})).toBeVisible();await expect(page.locator('.native-playback').getByRole('button')).toHaveCount(1);
- await page.evaluate(()=>window.dispatchEvent(new Event('pagehide')));await expect(button).toHaveText('播放句子');
+ await page.evaluate(()=>window.dispatchEvent(new Event('pagehide')));await expect(button.locator('.playback-label')).toHaveText('播放句子');
  await emit(page,'start');await emit(page,'end');await expect(page.getByRole('progressbar',{name:'播放进度'})).toHaveCount(0);
 });
 async function fillFrames(page:Page,duration=700){
@@ -90,7 +90,7 @@ test('reduced motion retains estimated speech progress and only the real end com
  const button=page.locator('.playback-button'),bar=page.getByRole('progressbar',{name:'播放进度'});
  await press(button,!!info.project.use.hasTouch);await emit(page,'start');await page.clock.runFor(500);
  await expect(page.locator('.playback-fill')).toHaveCSS('transition-duration','0s');expect(Number(await bar.getAttribute('aria-valuenow'))).toBeGreaterThan(0);
- await page.clock.runFor(12000);expect(Number(await bar.getAttribute('aria-valuenow'))).toBeLessThan(100);await expect(button).toHaveText('重新播放');
+ await page.clock.runFor(12000);expect(Number(await bar.getAttribute('aria-valuenow'))).toBeLessThan(100);await expect(button.locator('.playback-label')).toHaveText('重新播放');
  await emit(page,'end');await page.clock.runFor(200);await emit(page,'start');await page.clock.runFor(5000);expect(Number(await bar.getAttribute('aria-valuenow'))).toBeLessThan(100);await emit(page,'end');await page.clock.runFor(200);await expect(bar).toHaveCount(0);
 });
 

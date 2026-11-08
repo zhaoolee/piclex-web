@@ -1,0 +1,22 @@
+[
+  {
+    "check": "decks",
+    "exit": 0
+  },
+  {
+    "check": "unit",
+    "exit": 0
+  },
+  {
+    "check": "deploy",
+    "exit": 0
+  },
+  {
+    "check": "content",
+    "exit": 0
+  },
+  {
+    "check": "build",
+    "exit": 0
+  }
+]

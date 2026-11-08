@@ -1,0 +1,642 @@
+
+> piclex-web@0.1.0 test:deploy
+> python3 -B -m unittest discover -s deploy -p "test_*.py"
+
+Verified 6 files: aaaaaaaaaaaa-aaaaaaaaaaaa
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+Activated bbbbbbbbbbbb-bbbbbbbbbbbb
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+Verified 6 files: aaaaaaaaaaaa-aaaaaaaaaaaa
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+Verified 6 files: aaaaaaaaaaaa-aaaaaaaaaaaa
+Verified 6 files: aaaaaaaaaaaa-aaaaaaaaaaaa
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+{
+  "current": "bbbbbbbbbbbb-bbbbbbbbbbbb",
+  "deleted": [
+    "aaaaaaaaaaaa-aaaaaaaaaaaa"
+  ],
+  "skipped": [],
+  "remaining": [
+    "bbbbbbbbbbbb-bbbbbbbbbbbb"
+  ],
+  "freeBytesBefore": 63253598208,
+  "freeBytesAfter": 63253647360,
+  "completedAt": 1794106149.145393
+}
+.Verified 6 files: aaaaaaaaaaaa-aaaaaaaaaaaa
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+.Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+.Verified 6 files: aaaaaaaaaaaa-aaaaaaaaaaaa
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+.Candidate verified: bbbbbbbbbbbb-bbbbbbbbbbbb
+Verified 6 files: aaaaaaaaaaaa-aaaaaaaaaaaa
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+Activated bbbbbbbbbbbb-bbbbbbbbbbbb
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+Verified 6 files: aaaaaaaaaaaa-aaaaaaaaaaaa
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+{
+  "current": "bbbbbbbbbbbb-bbbbbbbbbbbb",
+  "deleted": [],
+  "skipped": [
+    {
+      "name": "aaaaaaaaaaaa-aaaaaaaaaaaa",
+      "reason": [
+        "open process reference"
+      ]
+    }
+  ],
+  "remaining": [
+    "aaaaaaaaaaaa-aaaaaaaaaaaa",
+    "bbbbbbbbbbbb-bbbbbbbbbbbb"
+  ],
+  "freeBytesBefore": 63253598208,
+  "freeBytesAfter": 63253598208,
+  "completedAt": 1794106149.2040353
+}
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+{
+  "current": "bbbbbbbbbbbb-bbbbbbbbbbbb",
+  "deleted": [],
+  "skipped": [
+    {
+      "name": "aaaaaaaaaaaa-aaaaaaaaaaaa",
+      "reason": "Unexpected file outside web/"
+    }
+  ],
+  "remaining": [
+    "aaaaaaaaaaaa-aaaaaaaaaaaa",
+    "bbbbbbbbbbbb-bbbbbbbbbbbb"
+  ],
+  "freeBytesBefore": 63253590016,
+  "freeBytesAfter": 63253590016,
+  "completedAt": 1794106149.2092514
+}
+.Verified 6 files: aaaaaaaaaaaa-aaaaaaaaaaaa
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+.Verified 6 files: aaaaaaaaaaaa-aaaaaaaaaaaa
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+Verified 6 files: aaaaaaaaaaaa-aaaaaaaaaaaa
+Verified 6 files: aaaaaaaaaaaa-aaaaaaaaaaaa
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+{
+  "current": "bbbbbbbbbbbb-bbbbbbbbbbbb",
+  "deleted": [
+    "aaaaaaaaaaaa-aaaaaaaaaaaa"
+  ],
+  "skipped": [],
+  "remaining": [
+    "bbbbbbbbbbbb-bbbbbbbbbbbb"
+  ],
+  "freeBytesBefore": 63253569536,
+  "freeBytesAfter": 63253577728,
+  "completedAt": 1794106149.244118
+}
+.Verified 6 files: aaaaaaaaaaaa-aaaaaaaaaaaa
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+Activated bbbbbbbbbbbb-bbbbbbbbbbbb
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+Verified 6 files: aaaaaaaaaaaa-aaaaaaaaaaaa
+Verified 6 files: aaaaaaaaaaaa-aaaaaaaaaaaa
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+{
+  "current": "bbbbbbbbbbbb-bbbbbbbbbbbb",
+  "deleted": [
+    "aaaaaaaaaaaa-aaaaaaaaaaaa"
+  ],
+  "skipped": [
+    {
+      "name": "cccccccccccc-cccccccccccc",
+      "reason": "recent unrelated candidate; may be uploading"
+    }
+  ],
+  "remaining": [
+    "bbbbbbbbbbbb-bbbbbbbbbbbb",
+    "cccccccccccc-cccccccccccc"
+  ],
+  "freeBytesBefore": 63253549056,
+  "freeBytesAfter": 63253598208,
+  "completedAt": 1794106149.2659254
+}
+...Verified 5 files: aaaaaaaaaaaa-bbbbbbbbbbbb
+.Restored previous release and configuration; reloading.
+.Restored previous release and configuration; reloading.
+......Verified 3 files: aaaaaaaaaaaa-bbbbbbbbbbbb
+.Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+Verified 6 files: aaaaaaaaaaaa-aaaaaaaaaaaa
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+{
+  "current": "bbbbbbbbbbbb-bbbbbbbbbbbb",
+  "deleted": [],
+  "skipped": [
+    {
+      "name": "aaaaaaaaaaaa-aaaaaaaaaaaa",
+      "reason": [
+        "active service configuration"
+      ]
+    }
+  ],
+  "remaining": [
+    "aaaaaaaaaaaa-aaaaaaaaaaaa",
+    "bbbbbbbbbbbb-bbbbbbbbbbbb"
+  ],
+  "freeBytesBefore": 63253606400,
+  "freeBytesAfter": 63253606400,
+  "completedAt": 1794106149.2858768
+}
+.Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+{
+  "current": "bbbbbbbbbbbb-bbbbbbbbbbbb",
+  "deleted": [],
+  "skipped": [
+    {
+      "name": "aaaaaaaaaaaa-aaaaaaaaaaaa",
+      "reason": "Symlinks and mount points are forbidden inside releases"
+    }
+  ],
+  "remaining": [
+    "aaaaaaaaaaaa-aaaaaaaaaaaa",
+    "bbbbbbbbbbbb-bbbbbbbbbbbb"
+  ],
+  "freeBytesBefore": 63253606400,
+  "freeBytesAfter": 63253606400,
+  "completedAt": 1794106149.2921524
+}
+.Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+Verified 6 files: aaaaaaaaaaaa-aaaaaaaaaaaa
+.Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+--- /tmp/tmpxol0llw6/nginx/conf.d/site.conf
++++ candidate
+@@ -4,10 +4,36 @@
+     location /v1/ { proxy_pass http://127.0.0.1:18090; }
+     location /decks/ { proxy_pass http://127.0.0.1:18090; }
+     location = / {
+-        limit_except GET HEAD { deny all; }
+-        root /usr/share/nginx/html/piclex.v2fy.com;
+-        try_files /index.html =404;
++        return 302 /piclex-web/$is_args$args;
++        add_header Cache-Control "no-cache" always;
+     }
+     location ^~ /public/ { root /home/hermes/piclex; }
++    # BEGIN PICLEX WEB
++    location = /piclex-web { return 308 /piclex-web/; }
++    location ^~ /piclex-web/ {
++        root /tmp/tmpxol0llw6/web/current;
++        index index.html;
++        autoindex off;
++        if ($uri ~ "(^|/)\.") { return 404; }
++        limit_except GET HEAD { deny all; }
++        try_files $uri $uri/ =404;
++        types {
++            text/html html;
++            text/css css;
++            application/javascript js;
++            application/json json;
++            application/octet-stream piclexdeck;
++            image/jpeg jpg jpeg;
++            image/png png;
++            image/svg+xml svg;
++            audio/mpeg mp3;
++            text/plain txt;
++        }
++        default_type application/octet-stream;
++        charset utf-8;
++        add_header Cache-Control "no-cache" always;
++        add_header X-Content-Type-Options "nosniff" always;
++    }
++    # END PICLEX WEB
+     location / { return 404; }
+ }
+Current release: /tmp/tmpxol0llw6/web/releases/aaaaaaaaaaaa-aaaaaaaaaaaa
+Target release: /tmp/tmpxol0llw6/web/releases/bbbbbbbbbbbb-bbbbbbbbbbbb
+Backup: /tmp/tmpxol0llw6/nginx/piclex-web-backup-082622k4
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+Live HTTPS and health verified; pruning historical releases.
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+Verified 6 files: aaaaaaaaaaaa-aaaaaaaaaaaa
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+{
+  "current": "bbbbbbbbbbbb-bbbbbbbbbbbb",
+  "deleted": [],
+  "skipped": [
+    {
+      "name": "aaaaaaaaaaaa-aaaaaaaaaaaa",
+      "reason": [
+        "open process"
+      ]
+    }
+  ],
+  "remaining": [
+    "aaaaaaaaaaaa-aaaaaaaaaaaa",
+    "bbbbbbbbbbbb-bbbbbbbbbbbb"
+  ],
+  "freeBytesBefore": 63253585920,
+  "freeBytesAfter": 63253585920,
+  "completedAt": 1794106149.3088512
+}
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+Verified 6 files: aaaaaaaaaaaa-aaaaaaaaaaaa
+Verified 6 files: aaaaaaaaaaaa-aaaaaaaaaaaa
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+{
+  "current": "bbbbbbbbbbbb-bbbbbbbbbbbb",
+  "deleted": [
+    "aaaaaaaaaaaa-aaaaaaaaaaaa"
+  ],
+  "skipped": [],
+  "remaining": [
+    "bbbbbbbbbbbb-bbbbbbbbbbbb"
+  ],
+  "freeBytesBefore": 63253581824,
+  "freeBytesAfter": 63253630976,
+  "completedAt": 1794106149.315487
+}
+.Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+.Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+--- /tmp/tmpywxevpa1/nginx/conf.d/site.conf
++++ candidate
+@@ -4,10 +4,36 @@
+     location /v1/ { proxy_pass http://127.0.0.1:18090; }
+     location /decks/ { proxy_pass http://127.0.0.1:18090; }
+     location = / {
+-        limit_except GET HEAD { deny all; }
+-        root /usr/share/nginx/html/piclex.v2fy.com;
+-        try_files /index.html =404;
++        return 302 /piclex-web/$is_args$args;
++        add_header Cache-Control "no-cache" always;
+     }
+     location ^~ /public/ { root /home/hermes/piclex; }
++    # BEGIN PICLEX WEB
++    location = /piclex-web { return 308 /piclex-web/; }
++    location ^~ /piclex-web/ {
++        root /tmp/tmpywxevpa1/web/current;
++        index index.html;
++        autoindex off;
++        if ($uri ~ "(^|/)\.") { return 404; }
++        limit_except GET HEAD { deny all; }
++        try_files $uri $uri/ =404;
++        types {
++            text/html html;
++            text/css css;
++            application/javascript js;
++            application/json json;
++            application/octet-stream piclexdeck;
++            image/jpeg jpg jpeg;
++            image/png png;
++            image/svg+xml svg;
++            audio/mpeg mp3;
++            text/plain txt;
++        }
++        default_type application/octet-stream;
++        charset utf-8;
++        add_header Cache-Control "no-cache" always;
++        add_header X-Content-Type-Options "nosniff" always;
++    }
++    # END PICLEX WEB
+     location / { return 404; }
+ }
+Current release: /tmp/tmpywxevpa1/web/releases/aaaaaaaaaaaa-aaaaaaaaaaaa
+Target release: /tmp/tmpywxevpa1/web/releases/bbbbbbbbbbbb-bbbbbbbbbbbb
+.Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+.Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+--- /tmp/tmp2rqe3ak9/nginx/conf.d/site.conf
++++ candidate
+@@ -4,10 +4,36 @@
+     location /v1/ { proxy_pass http://127.0.0.1:18090; }
+     location /decks/ { proxy_pass http://127.0.0.1:18090; }
+     location = / {
+-        limit_except GET HEAD { deny all; }
+-        root /usr/share/nginx/html/piclex.v2fy.com;
+-        try_files /index.html =404;
++        return 302 /piclex-web/$is_args$args;
++        add_header Cache-Control "no-cache" always;
+     }
+     location ^~ /public/ { root /home/hermes/piclex; }
++    # BEGIN PICLEX WEB
++    location = /piclex-web { return 308 /piclex-web/; }
++    location ^~ /piclex-web/ {
++        root /tmp/tmp2rqe3ak9/web/current;
++        index index.html;
++        autoindex off;
++        if ($uri ~ "(^|/)\.") { return 404; }
++        limit_except GET HEAD { deny all; }
++        try_files $uri $uri/ =404;
++        types {
++            text/html html;
++            text/css css;
++            application/javascript js;
++            application/json json;
++            application/octet-stream piclexdeck;
++            image/jpeg jpg jpeg;
++            image/png png;
++            image/svg+xml svg;
++            audio/mpeg mp3;
++            text/plain txt;
++        }
++        default_type application/octet-stream;
++        charset utf-8;
++        add_header Cache-Control "no-cache" always;
++        add_header X-Content-Type-Options "nosniff" always;
++    }
++    # END PICLEX WEB
+     location / { return 404; }
+ }
+Current release: /tmp/tmp2rqe3ak9/web/releases/aaaaaaaaaaaa-aaaaaaaaaaaa
+Target release: /tmp/tmp2rqe3ak9/web/releases/bbbbbbbbbbbb-bbbbbbbbbbbb
+Backup: /tmp/tmp2rqe3ak9/nginx/piclex-web-backup-2ucmdu7h
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+Restored previous release and configuration; reloading.
+.Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+--- /tmp/tmpk7oso_16/nginx/conf.d/site.conf
++++ candidate
+@@ -4,10 +4,36 @@
+     location /v1/ { proxy_pass http://127.0.0.1:18090; }
+     location /decks/ { proxy_pass http://127.0.0.1:18090; }
+     location = / {
+-        limit_except GET HEAD { deny all; }
+-        root /usr/share/nginx/html/piclex.v2fy.com;
+-        try_files /index.html =404;
++        return 302 /piclex-web/$is_args$args;
++        add_header Cache-Control "no-cache" always;
+     }
+     location ^~ /public/ { root /home/hermes/piclex; }
++    # BEGIN PICLEX WEB
++    location = /piclex-web { return 308 /piclex-web/; }
++    location ^~ /piclex-web/ {
++        root /tmp/tmpk7oso_16/web/current;
++        index index.html;
++        autoindex off;
++        if ($uri ~ "(^|/)\.") { return 404; }
++        limit_except GET HEAD { deny all; }
++        try_files $uri $uri/ =404;
++        types {
++            text/html html;
++            text/css css;
++            application/javascript js;
++            application/json json;
++            application/octet-stream piclexdeck;
++            image/jpeg jpg jpeg;
++            image/png png;
++            image/svg+xml svg;
++            audio/mpeg mp3;
++            text/plain txt;
++        }
++        default_type application/octet-stream;
++        charset utf-8;
++        add_header Cache-Control "no-cache" always;
++        add_header X-Content-Type-Options "nosniff" always;
++    }
++    # END PICLEX WEB
+     location / { return 404; }
+ }
+Current release: /tmp/tmpk7oso_16/web/releases/aaaaaaaaaaaa-aaaaaaaaaaaa
+Target release: /tmp/tmpk7oso_16/web/releases/bbbbbbbbbbbb-bbbbbbbbbbbb
+Backup: /tmp/tmpk7oso_16/nginx/piclex-web-backup-dvzw646j
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+Live HTTPS and health verified; pruning historical releases.
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+Verified 6 files: aaaaaaaaaaaa-aaaaaaaaaaaa
+Verified 6 files: cccccccccccc-cccccccccccc
+Verified 6 files: aaaaaaaaaaaa-aaaaaaaaaaaa
+Verified 6 files: cccccccccccc-cccccccccccc
+.Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+Verified 6 files: aaaaaaaaaaaa-aaaaaaaaaaaa
+.Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+--- /tmp/tmpvedpj7hp/nginx/conf.d/site.conf
++++ candidate
+@@ -4,10 +4,36 @@
+     location /v1/ { proxy_pass http://127.0.0.1:18090; }
+     location /decks/ { proxy_pass http://127.0.0.1:18090; }
+     location = / {
+-        limit_except GET HEAD { deny all; }
+-        root /usr/share/nginx/html/piclex.v2fy.com;
+-        try_files /index.html =404;
++        return 302 /piclex-web/$is_args$args;
++        add_header Cache-Control "no-cache" always;
+     }
+     location ^~ /public/ { root /home/hermes/piclex; }
++    # BEGIN PICLEX WEB
++    location = /piclex-web { return 308 /piclex-web/; }
++    location ^~ /piclex-web/ {
++        root /tmp/tmpvedpj7hp/web/current;
++        index index.html;
++        autoindex off;
++        if ($uri ~ "(^|/)\.") { return 404; }
++        limit_except GET HEAD { deny all; }
++        try_files $uri $uri/ =404;
++        types {
++            text/html html;
++            text/css css;
++            application/javascript js;
++            application/json json;
++            application/octet-stream piclexdeck;
++            image/jpeg jpg jpeg;
++            image/png png;
++            image/svg+xml svg;
++            audio/mpeg mp3;
++            text/plain txt;
++        }
++        default_type application/octet-stream;
++        charset utf-8;
++        add_header Cache-Control "no-cache" always;
++        add_header X-Content-Type-Options "nosniff" always;
++    }
++    # END PICLEX WEB
+     location / { return 404; }
+ }
+Current release: /tmp/tmpvedpj7hp/web/releases/bbbbbbbbbbbb-bbbbbbbbbbbb
+Target release: /tmp/tmpvedpj7hp/web/releases/bbbbbbbbbbbb-bbbbbbbbbbbb
+.Preview only; add --apply with sudo after reviewing the diff.
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+.Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+--- /tmp/tmpu009qsro/nginx/conf.d/site.conf
++++ candidate
+@@ -4,10 +4,36 @@
+     location /v1/ { proxy_pass http://127.0.0.1:18090; }
+     location /decks/ { proxy_pass http://127.0.0.1:18090; }
+     location = / {
+-        limit_except GET HEAD { deny all; }
+-        root /usr/share/nginx/html/piclex.v2fy.com;
+-        try_files /index.html =404;
++        return 302 /piclex-web/$is_args$args;
++        add_header Cache-Control "no-cache" always;
+     }
+     location ^~ /public/ { root /home/hermes/piclex; }
++    # BEGIN PICLEX WEB
++    location = /piclex-web { return 308 /piclex-web/; }
++    location ^~ /piclex-web/ {
++        root /tmp/tmpu009qsro/web/current;
++        index index.html;
++        autoindex off;
++        if ($uri ~ "(^|/)\.") { return 404; }
++        limit_except GET HEAD { deny all; }
++        try_files $uri $uri/ =404;
++        types {
++            text/html html;
++            text/css css;
++            application/javascript js;
++            application/json json;
++            application/octet-stream piclexdeck;
++            image/jpeg jpg jpeg;
++            image/png png;
++            image/svg+xml svg;
++            audio/mpeg mp3;
++            text/plain txt;
++        }
++        default_type application/octet-stream;
++        charset utf-8;
++        add_header Cache-Control "no-cache" always;
++        add_header X-Content-Type-Options "nosniff" always;
++    }
++    # END PICLEX WEB
+     location / { return 404; }
+ }
+Current release: /tmp/tmpu009qsro/web/releases/aaaaaaaaaaaa-aaaaaaaaaaaa
+Target release: /tmp/tmpu009qsro/web/releases/bbbbbbbbbbbb-bbbbbbbbbbbb
+Backup: /tmp/tmpu009qsro/nginx/piclex-web-backup-p8hkpnzv
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+Live HTTPS and health verified; pruning historical releases.
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+Verified 6 files: aaaaaaaaaaaa-aaaaaaaaaaaa
+Verified 6 files: aaaaaaaaaaaa-aaaaaaaaaaaa
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+{
+  "current": "bbbbbbbbbbbb-bbbbbbbbbbbb",
+  "deleted": [
+    "aaaaaaaaaaaa-aaaaaaaaaaaa"
+  ],
+  "skipped": [],
+  "remaining": [
+    "bbbbbbbbbbbb-bbbbbbbbbbbb"
+  ],
+  "freeBytesBefore": 63253573632,
+  "freeBytesAfter": 63253622784,
+  "completedAt": 1794106149.3824852
+}
+Published and verified: https://piclex.v2fy.com/piclex-web/; only current retained.
+.Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+Verified 6 files: aaaaaaaaaaaa-aaaaaaaaaaaa
+Verified 6 files: aaaaaaaaaaaa-aaaaaaaaaaaa
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+{
+  "current": "bbbbbbbbbbbb-bbbbbbbbbbbb",
+  "deleted": [
+    "aaaaaaaaaaaa-aaaaaaaaaaaa"
+  ],
+  "skipped": [],
+  "remaining": [
+    "bbbbbbbbbbbb-bbbbbbbbbbbb"
+  ],
+  "freeBytesBefore": 63253594112,
+  "freeBytesAfter": 63253643264,
+  "completedAt": 1794106149.3898351
+}
+.Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+Verified 6 files: aaaaaaaaaaaa-aaaaaaaaaaaa
+Verified 6 files: aaaaaaaaaaaa-aaaaaaaaaaaa
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+{
+  "current": "bbbbbbbbbbbb-bbbbbbbbbbbb",
+  "deleted": [
+    "aaaaaaaaaaaa-aaaaaaaaaaaa"
+  ],
+  "skipped": [
+    {
+      "name": "cccccccccccc-cccccccccccc",
+      "reason": "recent unrelated candidate; may be uploading"
+    }
+  ],
+  "remaining": [
+    "bbbbbbbbbbbb-bbbbbbbbbbbb",
+    "cccccccccccc-cccccccccccc"
+  ],
+  "freeBytesBefore": 63253544960,
+  "freeBytesAfter": 63253594112,
+  "completedAt": 1794106149.3980508
+}
+.Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+Verified 6 files: aaaaaaaaaaaa-aaaaaaaaaaaa
+Verified 6 files: aaaaaaaaaaaa-aaaaaaaaaaaa
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+{
+  "current": "bbbbbbbbbbbb-bbbbbbbbbbbb",
+  "deleted": [
+    "aaaaaaaaaaaa-aaaaaaaaaaaa"
+  ],
+  "skipped": [],
+  "remaining": [
+    "bbbbbbbbbbbb-bbbbbbbbbbbb"
+  ],
+  "freeBytesBefore": 63253594112,
+  "freeBytesAfter": 63253626880,
+  "completedAt": 1794106149.4054732
+}
+.Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+Verified 6 files: aaaaaaaaaaaa-aaaaaaaaaaaa
+Verified 6 files: aaaaaaaaaaaa-aaaaaaaaaaaa
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+{
+  "current": "bbbbbbbbbbbb-bbbbbbbbbbbb",
+  "deleted": [
+    "aaaaaaaaaaaa-aaaaaaaaaaaa"
+  ],
+  "skipped": [
+    {
+      "name": "dddddddddddd-dddddddddddd",
+      "reason": "recent unrelated candidate; may be uploading"
+    },
+    {
+      "name": "uploads",
+      "reason": "not a managed release name"
+    }
+  ],
+  "remaining": [
+    "bbbbbbbbbbbb-bbbbbbbbbbbb",
+    "dddddddddddd-dddddddddddd",
+    "uploads"
+  ],
+  "freeBytesBefore": 63253585920,
+  "freeBytesAfter": 63253635072,
+  "completedAt": 1794106149.4134269
+}
+.Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+Verified 6 files: bbbbbbbbbbbb-bbbbbbbbbbbb
+{
+  "current": "bbbbbbbbbbbb-bbbbbbbbbbbb",
+  "deleted": [],
+  "skipped": [
+    {
+      "name": "aaaaaaaaaaaa-aaaaaaaaaaaa",
+      "reason": "Unexpected file outside web/"
+    }
+  ],
+  "remaining": [
+    "aaaaaaaaaaaa-aaaaaaaaaaaa",
+    "bbbbbbbbbbbb-bbbbbbbbbbbb"
+  ],
+  "freeBytesBefore": 63253590016,
+  "freeBytesAfter": 63253590016,
+  "completedAt": 1794106149.4192026
+}
+.........
+----------------------------------------------------------------------
+Ran 45 tests in 0.347s
+
+OK

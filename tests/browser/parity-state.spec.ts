@@ -35,7 +35,7 @@ test('a warm Learning entry is one-shot and never overrides an explicit listenin
  const spelling=page.getByRole('textbox',{name:'输入英文',exact:true});
  await page.getByRole('tab',{name:'练听力',exact:true}).click();
  await modeOf(page).selectOption('free');await difficultyOf(page).selectOption('hard');
- await fillEnglish(page.getByRole('textbox',{name:'听写句子',exact:true}),'I like');
+ await fillEnglish(page.getByRole('textbox',{name:'听写句子',exact:true}),'Ilike');
  const listeningHash=await page.evaluate(()=>location.hash);
  const [deckPath,query]=listeningHash.split('?'),parameters=new URLSearchParams(query||'');
  const deckID=decodeURIComponent(deckPath.replace(/^#\/deck\//,''));
@@ -107,14 +107,14 @@ test('another dictation round preserves reward dedupe identity and spelling hist
  await finishAssisted(page,5);
  const dictation=page.getByRole('textbox',{name:'听写句子',exact:true});
  await expect(dictation).toHaveValue('');
- await fillEnglish(dictation,cafeLastSentence);
+ await fillEnglish(dictation,cafeLastSentence.replace(/\s/g,''));
  await expect(completion(page)).toBeVisible();
  await expect.poll(()=>experienceTotal(page)).toBeGreaterThan(0);
  const total=await experienceTotal(page);
  await page.getByRole('button',{name:'再听写一轮',exact:true}).click();
  await expect(completion(page)).toHaveCount(0);
  await expect(dictation).toHaveValue('');
- await fillEnglish(dictation,cafeLastSentence);
+ await fillEnglish(dictation,cafeLastSentence.replace(/\s/g,''));
  await expect(completion(page)).toBeVisible();
  await page.waitForTimeout(300);
  expect(await experienceTotal(page)).toBe(total);

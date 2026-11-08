@@ -26,7 +26,7 @@ const EnglishInput=forwardRef<Field,Props>(function EnglishInput({value,onValue,
    const backward=field.selectionDirection==='backward',anchor=backward?end:start,caret=backward?start:end;
    const cursor=event.key==='Home'?0:event.key==='End'?value.length:event.key==='ArrowLeft'?Math.max(0,event.shiftKey?caret-1:start-(start===end?1:0)):Math.min(value.length,event.shiftKey?caret+1:end+(start===end?1:0));
    field.setSelectionRange(event.shiftKey?Math.min(anchor,cursor):cursor,event.shiftKey?Math.max(anchor,cursor):cursor,event.shiftKey&&cursor<anchor?'backward':'forward');return;
-  }if(virtualKeyboardOnly&&!event.metaKey&&!event.ctrlKey&&!event.altKey&&(event.key.length===1||event.key==='Backspace'||event.key==='Delete')){event.preventDefault();if(needsEnglish(event.key)){event.stopPropagation();onWarning(true);return;}onWarning(false);onVirtualKey?.(event.key);return;}onKeyDown?.(event);}
+  }if(virtualKeyboardOnly&&!event.metaKey&&!event.ctrlKey&&!event.altKey&&((event.key.length===1&&event.key!==' ')||event.key==='Backspace'||event.key==='Delete')){event.preventDefault();if(needsEnglish(event.key)){event.stopPropagation();onWarning(true);return;}onWarning(false);onVirtualKey?.(event.key);return;}onKeyDown?.(event);}
  };
  return multiline?<textarea {...attributes}/>:<input {...attributes}/>;
 });
