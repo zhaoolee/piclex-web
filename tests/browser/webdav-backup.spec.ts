@@ -157,3 +157,16 @@ test('deck positions publish navigation and a fresh browser resumes the same wor
  const other=await browser.newContext({ignoreHTTPSErrors:true});try{const receiver=await other.newPage();await connect(receiver);await receiver.goto('/piclex-web/#/settings/data/webdav');await expect(receiver.getByText('等级与学习进度已自动同步',{exact:true})).toBeVisible({timeout:20000});await receiver.goto('/piclex-web/#/deck/'+card.id);await expect.poll(()=>new URLSearchParams(receiver.url().split('?')[1]).get('word')).toBe(target.id);}finally{await other.close();}
  expect(remote.requests.some(r=>r.path.endsWith('.piclexdeck'))).toBe(false);
 });
+
+test('a failed sync worker cannot publish and a fresh worker safely retries',async({page})=>{
+ const remote=await server(page);remote.putProgress(progress);
+ await page.addInitScript(()=>{const NativeWorker=window.Worker;window.Worker=class extends NativeWorker{
+  constructor(url:string|URL,options?:WorkerOptions){super(url,options);if(String(url).includes('progress-worker')&&localStorage.getItem('fixture.worker-recovered')!=='true')setTimeout(()=>this.dispatchEvent(new Event('error')),0);}
+ };});
+ await connect(page);await page.goto('/piclex-web/#/settings/data/webdav');
+ await expect(page.getByText('同步处理未能完成，稍后会自动重试。',{exact:true})).toBeVisible({timeout:20000});
+ expect(remote.requests.some(r=>r.method==='PUT')).toBe(false);
+ await page.evaluate(()=>{localStorage.setItem('fixture.worker-recovered','true');window.dispatchEvent(new Event('online'));});
+ await expect(page.getByText('等级与学习进度已自动同步',{exact:true})).toBeVisible({timeout:20000});
+ await xp(page);expect(remote.requests.some(r=>r.method==='PUT')).toBe(false);
+});
