@@ -15,9 +15,10 @@ export function assessSample(sample){
  need(raw.longTasks.length===0&&raw.longFrames.length===0,'long task or long animation frame');
  need(raw.events.every(n=>n<limits.eventMs),'input event reached 100ms');
  need(raw.errors.length===0,'page error');
+ need(Number.isFinite(sample.environment?.cpuBusyPercent)&&sample.environment.cpuBusyPercent<85,'measurement environment busy or missing');
  if(sample.scenario==='modules')need(['spelling','listening','speaking'].every(k=>actions.modules[k]>=2),'missing module transitions');
  else{need(raw.trustedInputs>=40&&actions.letters>=40,'insufficient real input');need(actions.completed>=(sample.scenario==='dictation'?2:3),'missing completed transitions');if(sample.scenario!=='dictation')need(raw.glyphs>0&&raw.particles>0,'missing full spelling effects');}
- if(sample.scenario==='sync')need(actions.syncUploads>=1&&actions.syncedRows>=limits.historyRows,'no verified large-history sync');
+ if(sample.scenario==='sync'){need(actions.syncUploads>=1&&actions.syncedRows>=limits.historyRows,'no verified large-history sync');need(actions.integrity?.events===limits.historyRows+actions.completed&&actions.integrity?.total===limits.historyRows+actions.completed,'sync lost or duplicated experience');}
  return failures;
 }
 export function assessSuite(report){
