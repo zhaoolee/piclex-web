@@ -199,3 +199,18 @@ test('a legacy completion written after sync starts keeps its word and date',asy
  expect(exported.events).toEqual(content.events);expect(exported.progress).toEqual(content.progress);
  await page.goto('/piclex-web/#/settings/level');await expect(page.locator('.level-page')).toContainText('共 1 经验');
 });
+
+test('automatic sync waits for a typing pause and resumes without changing the current answer',async({page})=>{
+ const remote=await server(page);remote.putProgress(progress);await connect(page);
+ await page.goto('/piclex-web/#/settings/data/webdav');await expect(page.getByText('等级与学习进度已自动同步',{exact:true})).toBeVisible({timeout:20000});
+ const catalog=JSON.parse(fs.readFileSync('apps/public/public/library/catalog.json','utf8'));
+ await page.goto('/piclex-web/#/deck/'+catalog[0].id);
+ const input=page.getByRole('textbox',{name:'输入英文',exact:true});await expect(input).toBeVisible();
+ await input.press('z');const answer=await input.inputValue(),url=page.url(),requests=remote.requests.length;
+ await page.evaluate(()=>window.dispatchEvent(new Event('online')));
+ for(let i=0;i<8;i++){await page.waitForTimeout(200);await input.press('Backspace');await input.press('z');}
+ expect(remote.requests.length).toBe(requests);await expect(input).toHaveValue(answer);expect(page.url()).toBe(url);
+ await expect.poll(()=>remote.requests.slice(requests).some(r=>r.method==='GET'&&r.path.includes('/progress/')),{timeout:10000}).toBe(true);
+ await expect(input).toHaveValue(answer);expect(page.url()).toBe(url);
+ await page.goto('/piclex-web/#/settings/data/webdav');await expect(page.getByText('等级与学习进度已自动同步',{exact:true})).toBeVisible({timeout:20000});await xp(page);
+});

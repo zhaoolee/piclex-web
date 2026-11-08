@@ -18,6 +18,23 @@ function report(next:SyncStatus){status=next;window.dispatchEvent(new Event('pic
 let running=false,applying=false,timer:ReturnType<typeof setTimeout>|undefined,retryAt=0,failures=0;
 let controller:AbortController|undefined;
 let generation=0;
+// Keep automatic sync work outside an active typing/answer-animation burst.
+let lastPracticeInput=-Infinity;
+const inputQuietMs=1200;
+function waitForPracticeIdle(signal:AbortSignal){
+ return new Promise<void>((resolve,reject)=>{
+  let pending:ReturnType<typeof setTimeout>|undefined;
+  const finish=()=>{clearTimeout(pending);signal.removeEventListener('abort',abort);};
+  const abort=()=>{finish();reject(new DOMException('同步已取消。','AbortError'));};
+  const check=()=>{
+   if(signal.aborted){abort();return;}
+   const remaining=inputQuietMs-(performance.now()-lastPracticeInput);
+   if(document.hidden||!document.querySelector('.native-practice')||remaining<=0){finish();resolve();}
+   else pending=setTimeout(check,remaining);
+  };
+  signal.addEventListener('abort',abort,{once:true});check();
+ });
+}
 const enabled=()=>readPreference(autoProgressKey)!=='false';
 
 export async function syncProgress(){
@@ -30,6 +47,8 @@ export async function syncProgress(){
   if(!enabled()||JSON.stringify(savedWebDAV())!==captured)throw Error('同步配置已变化，下次将使用新配置。');
  };
  try{
+  const idle=async()=>{await waitForPracticeIdle(controller!.signal);valid();};
+  await idle();
   report({...status,message:'正在同步等级与学习进度…',error:false});
   const normalized=configuration(settings);
   const destination=await sha256(new TextEncoder().encode(normalized.root+'\n'+normalized.username));
@@ -42,21 +61,21 @@ export async function syncProgress(){
    // Directory XML parsing remains here; aborting the run terminates its worker.
    const request=client.request.bind(client);
    client.request=(method:string,url:string,options:any={})=>method==='GET'||method==='PUT'?work!.call('request',{settings,method,url,options}):request(method,url,options);
-   await work.collect();valid();
+   await idle();await work.collect();valid();
    for(const file of files)if(!seen.has(file.name)){
     const bytes=await client.readProgressBytes(file.name);valid();
-    await work.call('merge',{bytes,name:file.name});valid();
+    await idle();await work.call('merge',{bytes,name:file.name});valid();
    }
-   valid();applying=true;
+   await idle();applying=true;
    try{await work.call('apply');valid();window.dispatchEvent(new Event('piclex-experience'));window.dispatchEvent(new Event('piclex-progress-imported'));}finally{applying=false;}
    // Reread after the transaction: answers written during the download survive.
-   const prepared=await work.collect('prepare');valid();const {name,bytes,hash}=prepared;
+   await idle();const prepared=await work.collect('prepare');valid();const {name,bytes,hash}=prepared;
    if(prepared.hasRows){
     // A listed file only proves presence. Verify content before skipping a PUT.
     if(files.some(f=>f.name===name))await work.verify(await client.readProgressBytes(name),name,hash);
     else await client.uploadProgressBytes(name,bytes,(saved:Uint8Array)=>work!.verify(saved,name,hash));
    }
-   valid();const positionFiles=await client.listPositions();let combined=positions();
+   await idle();const positionFiles=await client.listPositions();let combined=positions();
    for(const file of positionFiles){combined=mergePositions(combined,await client.readPositions(file.name));valid();}
    valid();combined=mergeStoredPositions(combined); // Reread local changes after network awaits.
    if(combined.length){const positionFile=await positionName(encodePositions(combined));valid();if(!positionFiles.some(f=>f.name===positionFile))await client.uploadPositions(combined);}
@@ -70,6 +89,12 @@ export async function syncProgress(){
 }
 function queue(){if(!enabled()||timer||applying)return;timer=setTimeout(()=>{timer=undefined;void syncProgress();},10_000);}
 export function startProgressSync(){
+ const input=(event:Event)=>{
+  const target=event.target as HTMLElement;
+  if(target?.closest?.('.native-practice')||(event.type==='keydown'&&document.querySelector('.native-practice')&&!target?.closest?.('[role=dialog]')))lastPracticeInput=performance.now();
+ };
+ document.addEventListener('keydown',input,true);
+ document.addEventListener('pointerdown',input,true);
  window.addEventListener('piclex-experience',queue);
  window.addEventListener('piclex-progress-changed',queue);
  window.addEventListener('focus',()=>void syncProgress());
