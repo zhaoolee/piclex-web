@@ -50,11 +50,11 @@ test('spelling completion quick toggle saves the shared preference and restarts 
  await expect(completion).not.toContainText('当前已关闭');
  await expect(page.locator('canvas.experience-particles')).toHaveCount(0,{timeout:10000});
  if(await page.getByRole('button',{name:'关闭提示',exact:true}).count())await page.getByRole('button',{name:'关闭提示',exact:true}).click();
- await page.screenshot({path:`/work/previews/quick-off-${info.project.name}.png`,fullPage:true});
+ await page.screenshot({path:info.outputPath(`quick-off-${info.project.name}.png`),fullPage:true});
  await quick.check();
  await expect(quick).toBeChecked();
  await page.waitForTimeout(300);
- await page.screenshot({path:`/work/previews/quick-on-${info.project.name}.png`,fullPage:true});
+ await page.screenshot({path:info.outputPath(`quick-on-${info.project.name}.png`),fullPage:true});
  await expect(completion.locator('.native-completion-quick small')).toHaveCount(1);
  await expect(completion.locator('.native-completion-quick small')).toHaveText('开启快拼后，只拼写曾经错误的字符');
  await expect(completion).not.toContainText('当前已开启');
