@@ -1,0 +1,20 @@
+{
+  "purpose": "Verify the new live confirmation script, not a release or performance acceptance",
+  "scriptCommit": "84c22c3c5e415a873379a23fcfe7ba3b7d880449",
+  "liveRevision": "a8c8e09436e36f35e772e869f736851949017164",
+  "releaseID": "a8c8e09436e3-896a363e2f8b",
+  "verifiedAssets": 13,
+  "checks": [
+    "real HTML/JS/CSS hashes",
+    "fresh isolated cafe import",
+    "spelling input visible",
+    "listening and spelling module navigation"
+  ],
+  "startedAt": "2026-11-08T05:36:29.484668391Z",
+  "finishedAt": "2026-11-08T05:36:36.168328981Z",
+  "elapsedSeconds": 6.684,
+  "environment": "isolated Linux ARM64 Playwright 1.63.0 Chromium; production workflow retains Chrome",
+  "audio": "no host audio devices or TTS service mounted; mute-audio and speechSynthesis isolation",
+  "cleanup": "task container and temporary smoke files removed",
+  "limitation": "This is not a successful timed release and does not prove the 120 second target"
+}
