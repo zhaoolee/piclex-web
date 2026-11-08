@@ -1,0 +1,197 @@
+{
+  "candidate": "9e22eb2fced397468ae32f131a9aa815519a6512",
+  "status": "Modified; sync functional checks pass; desktop performance acceptance incomplete; not published",
+  "browserChecks": {
+    "chromiumDesktop": 7,
+    "chromiumTouchProfile": 7,
+    "webkit": 7
+  },
+  "sourceFileIdentityChecks": 170,
+  "performance": [
+    {
+      "viewport": "desktop",
+      "round": 1,
+      "mainTaskMs": 39.674,
+      "frameGapMs": 50,
+      "eventMs": 96,
+      "failures": [
+        "main-thread task reached 33ms",
+        "animation frame gap reached 50ms"
+      ],
+      "actions": {
+        "letters": 91,
+        "completed": 6,
+        "modules": {
+          "spelling": 0,
+          "listening": 0,
+          "speaking": 0
+        },
+        "syncUploads": 1,
+        "syncedRows": 5006,
+        "integrity": {
+          "events": 5006,
+          "total": 5006
+        }
+      },
+      "largestChildren": [
+        {
+          "name": "EventDispatch",
+          "wallMs": 35.737,
+          "cpuMs": 25.954
+        },
+        {
+          "name": "FunctionCall",
+          "wallMs": 30.376,
+          "cpuMs": 22.422
+        },
+        {
+          "name": "Layout",
+          "wallMs": 4.188,
+          "cpuMs": 4.187
+        }
+      ]
+    },
+    {
+      "viewport": "desktop",
+      "round": 2,
+      "mainTaskMs": 48.271,
+      "frameGapMs": 66.70000000000073,
+      "eventMs": 80,
+      "failures": [
+        "main-thread task reached 33ms",
+        "animation frame gap reached 50ms",
+        "long task or long animation frame"
+      ],
+      "actions": {
+        "letters": 91,
+        "completed": 6,
+        "modules": {
+          "spelling": 0,
+          "listening": 0,
+          "speaking": 0
+        },
+        "syncUploads": 1,
+        "syncedRows": 5006,
+        "integrity": {
+          "events": 5006,
+          "total": 5006
+        }
+      },
+      "largestChildren": [
+        {
+          "name": "Commit",
+          "wallMs": 24.088,
+          "cpuMs": 15.493
+        },
+        {
+          "name": "PrePaint",
+          "wallMs": 2.271,
+          "cpuMs": 2.252
+        },
+        {
+          "name": "Paint",
+          "wallMs": 0.423,
+          "cpuMs": 0.409
+        }
+      ]
+    },
+    {
+      "viewport": "desktop",
+      "round": 3,
+      "mainTaskMs": 31.407,
+      "frameGapMs": 33.30000000000109,
+      "eventMs": 40,
+      "failures": [],
+      "actions": {
+        "letters": 91,
+        "completed": 6,
+        "modules": {
+          "spelling": 0,
+          "listening": 0,
+          "speaking": 0
+        },
+        "syncUploads": 1,
+        "syncedRows": 5006,
+        "integrity": {
+          "events": 5006,
+          "total": 5006
+        }
+      }
+    },
+    {
+      "viewport": "touch",
+      "round": 1,
+      "mainTaskMs": 17.634,
+      "frameGapMs": 16.80000000000291,
+      "eventMs": 48,
+      "failures": [],
+      "actions": {
+        "letters": 91,
+        "completed": 6,
+        "modules": {
+          "spelling": 0,
+          "listening": 0,
+          "speaking": 0
+        },
+        "syncUploads": 1,
+        "syncedRows": 5006,
+        "integrity": {
+          "events": 5006,
+          "total": 5006
+        }
+      }
+    },
+    {
+      "viewport": "touch",
+      "round": 2,
+      "mainTaskMs": 10.731,
+      "frameGapMs": 16.80000000000291,
+      "eventMs": 40,
+      "failures": [],
+      "actions": {
+        "letters": 91,
+        "completed": 6,
+        "modules": {
+          "spelling": 0,
+          "listening": 0,
+          "speaking": 0
+        },
+        "syncUploads": 1,
+        "syncedRows": 5006,
+        "integrity": {
+          "events": 5006,
+          "total": 5006
+        }
+      }
+    },
+    {
+      "viewport": "touch",
+      "round": 3,
+      "mainTaskMs": 10.187,
+      "frameGapMs": 16.80000000000109,
+      "eventMs": 40,
+      "failures": [],
+      "actions": {
+        "letters": 91,
+        "completed": 6,
+        "modules": {
+          "spelling": 0,
+          "listening": 0,
+          "speaking": 0
+        },
+        "syncUploads": 1,
+        "syncedRows": 5006,
+        "integrity": {
+          "events": 5006,
+          "total": 5006
+        }
+      }
+    }
+  ],
+  "rawEvidence": "/Users/zhaoolee/github/PicLex/output/web-autosync-input-2026-11-08",
+  "notes": [
+    "Worker-only six-round failures retained in worker-only.",
+    "Initial 14 Chromium checks could not launch: requested Chrome unavailable. Corrected isolated config to installed Chromium; all 14 passed. WebKit 7 passed on first run.",
+    "Existing full release gate was not run. Scoped diagnostic cannot authorize publication."
+  ]
+}
