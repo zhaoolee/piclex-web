@@ -1,0 +1,432 @@
+{
+  "run": 42452360890,
+  "sourceRevision": "2e2cc76ba0973b8f81673c8bef4b00f4b80199a2",
+  "status": "failed",
+  "failures": [
+    "touch/dictation/1: input event reached 100ms",
+    "touch/sync/2: input event reached 100ms",
+    "touch/sync/3: input event reached 100ms"
+  ],
+  "samples": [
+    {
+      "viewport": "desktop",
+      "scenario": "spelling",
+      "round": 1,
+      "mainTaskMaxMs": 14.338,
+      "frameGapMaxMs": 16.80000000000109,
+      "eventMaxMs": 32,
+      "failures": []
+    },
+    {
+      "viewport": "desktop",
+      "scenario": "spelling",
+      "round": 2,
+      "mainTaskMaxMs": 14.586,
+      "frameGapMaxMs": 16.80000000000109,
+      "eventMaxMs": 48,
+      "failures": []
+    },
+    {
+      "viewport": "desktop",
+      "scenario": "spelling",
+      "round": 3,
+      "mainTaskMaxMs": 9.654,
+      "frameGapMaxMs": 16.80000000000109,
+      "eventMaxMs": 32,
+      "failures": []
+    },
+    {
+      "viewport": "desktop",
+      "scenario": "dictation",
+      "round": 1,
+      "mainTaskMaxMs": 8.535,
+      "frameGapMaxMs": 16.80000000000109,
+      "eventMaxMs": 48,
+      "failures": []
+    },
+    {
+      "viewport": "desktop",
+      "scenario": "dictation",
+      "round": 2,
+      "mainTaskMaxMs": 8.988,
+      "frameGapMaxMs": 16.80000000000109,
+      "eventMaxMs": 32,
+      "failures": []
+    },
+    {
+      "viewport": "desktop",
+      "scenario": "dictation",
+      "round": 3,
+      "mainTaskMaxMs": 8.904,
+      "frameGapMaxMs": 16.80000000000109,
+      "eventMaxMs": 32,
+      "failures": []
+    },
+    {
+      "viewport": "desktop",
+      "scenario": "modules",
+      "round": 1,
+      "mainTaskMaxMs": 10.642,
+      "frameGapMaxMs": 16.80000000000109,
+      "eventMaxMs": 32,
+      "failures": []
+    },
+    {
+      "viewport": "desktop",
+      "scenario": "modules",
+      "round": 2,
+      "mainTaskMaxMs": 11.578,
+      "frameGapMaxMs": 16.80000000000109,
+      "eventMaxMs": 40,
+      "failures": []
+    },
+    {
+      "viewport": "desktop",
+      "scenario": "modules",
+      "round": 3,
+      "mainTaskMaxMs": 9.409,
+      "frameGapMaxMs": 16.80000000000109,
+      "eventMaxMs": 40,
+      "failures": []
+    },
+    {
+      "viewport": "desktop",
+      "scenario": "sync",
+      "round": 1,
+      "mainTaskMaxMs": 17.501,
+      "frameGapMaxMs": 16.80000000000109,
+      "eventMaxMs": 48,
+      "failures": []
+    },
+    {
+      "viewport": "desktop",
+      "scenario": "sync",
+      "round": 2,
+      "mainTaskMaxMs": 12.127,
+      "frameGapMaxMs": 16.80000000000109,
+      "eventMaxMs": 48,
+      "failures": []
+    },
+    {
+      "viewport": "desktop",
+      "scenario": "sync",
+      "round": 3,
+      "mainTaskMaxMs": 12.456,
+      "frameGapMaxMs": 16.80000000000109,
+      "eventMaxMs": 32,
+      "failures": []
+    },
+    {
+      "viewport": "touch",
+      "scenario": "spelling",
+      "round": 1,
+      "mainTaskMaxMs": 9.08,
+      "frameGapMaxMs": 16.80000000000291,
+      "eventMaxMs": 64,
+      "failures": []
+    },
+    {
+      "viewport": "touch",
+      "scenario": "spelling",
+      "round": 2,
+      "mainTaskMaxMs": 9.532,
+      "frameGapMaxMs": 16.80000000000109,
+      "eventMaxMs": 96,
+      "failures": []
+    },
+    {
+      "viewport": "touch",
+      "scenario": "spelling",
+      "round": 3,
+      "mainTaskMaxMs": 23.371,
+      "frameGapMaxMs": 16.80000000000109,
+      "eventMaxMs": 64,
+      "failures": []
+    },
+    {
+      "viewport": "touch",
+      "scenario": "dictation",
+      "round": 1,
+      "mainTaskMaxMs": 7.258,
+      "frameGapMaxMs": 16.80000000000291,
+      "eventMaxMs": 104,
+      "failures": [
+        "input event reached 100ms"
+      ]
+    },
+    {
+      "viewport": "touch",
+      "scenario": "dictation",
+      "round": 2,
+      "mainTaskMaxMs": 7.392,
+      "frameGapMaxMs": 16.80000000000291,
+      "eventMaxMs": 96,
+      "failures": []
+    },
+    {
+      "viewport": "touch",
+      "scenario": "dictation",
+      "round": 3,
+      "mainTaskMaxMs": 7.087,
+      "frameGapMaxMs": 16.80000000000291,
+      "eventMaxMs": 64,
+      "failures": []
+    },
+    {
+      "viewport": "touch",
+      "scenario": "modules",
+      "round": 1,
+      "mainTaskMaxMs": 11.641,
+      "frameGapMaxMs": 16.80000000000109,
+      "eventMaxMs": 32,
+      "failures": []
+    },
+    {
+      "viewport": "touch",
+      "scenario": "modules",
+      "round": 2,
+      "mainTaskMaxMs": 19.703,
+      "frameGapMaxMs": 16.80000000000109,
+      "eventMaxMs": 40,
+      "failures": []
+    },
+    {
+      "viewport": "touch",
+      "scenario": "modules",
+      "round": 3,
+      "mainTaskMaxMs": 10.022,
+      "frameGapMaxMs": 16.80000000000109,
+      "eventMaxMs": 40,
+      "failures": []
+    },
+    {
+      "viewport": "touch",
+      "scenario": "sync",
+      "round": 1,
+      "mainTaskMaxMs": 12.084,
+      "frameGapMaxMs": 16.80000000000291,
+      "eventMaxMs": 64,
+      "failures": []
+    },
+    {
+      "viewport": "touch",
+      "scenario": "sync",
+      "round": 2,
+      "mainTaskMaxMs": 16.392,
+      "frameGapMaxMs": 16.80000000000291,
+      "eventMaxMs": 128,
+      "failures": [
+        "input event reached 100ms"
+      ]
+    },
+    {
+      "viewport": "touch",
+      "scenario": "sync",
+      "round": 3,
+      "mainTaskMaxMs": 12.1,
+      "frameGapMaxMs": 16.80000000000291,
+      "eventMaxMs": 112,
+      "failures": [
+        "input event reached 100ms"
+      ]
+    }
+  ],
+  "files": [
+    {
+      "name": "desktop-dictation-1.json",
+      "sha256": "de7fd391bf2a4fc45d784b8f5cedbdb68f86b700355816ba70fffe46f6d4ec1d"
+    },
+    {
+      "name": "desktop-dictation-1.trace.json.gz",
+      "sha256": "49ae565b0233160d2f7ab52fd48c6ba4f89475d164c1fb90df5f7668c4232bf8"
+    },
+    {
+      "name": "desktop-dictation-2.json",
+      "sha256": "8cdc89d600bc4f30b75e3f5a0c4d62c37b51e5dd477bdf4da2aebcf17be5db57"
+    },
+    {
+      "name": "desktop-dictation-2.trace.json.gz",
+      "sha256": "d02bd4bd180a8d3f4829d8be0a31a4c22043dd1b8b6843c9dbc8bd85c7df1dd4"
+    },
+    {
+      "name": "desktop-dictation-3.json",
+      "sha256": "01502d3e7150055cb0befefa459e6e0e42f4da46d1809413bbad52269669064d"
+    },
+    {
+      "name": "desktop-dictation-3.trace.json.gz",
+      "sha256": "f9fa6912d92e1e4a66745ea40b23c8a99b2cee788b31fc38db2b858954b554a8"
+    },
+    {
+      "name": "desktop-modules-1.json",
+      "sha256": "6ac80f7503579b02eb7deca68f611d124f46e93223ca793e40be916081005674"
+    },
+    {
+      "name": "desktop-modules-1.trace.json.gz",
+      "sha256": "f677fcef057fbdde1b61ebf90f708ab20d217cb0463e71c65afac02a1da09538"
+    },
+    {
+      "name": "desktop-modules-2.json",
+      "sha256": "a3801c066cc77be55dd682da5ae16d8f0a393391b62bb9a584ff360740ac00ac"
+    },
+    {
+      "name": "desktop-modules-2.trace.json.gz",
+      "sha256": "4caf5a62e2c2f9ebe7b6ba6464d12e510558a72cd9abfe9392b6327d535b0763"
+    },
+    {
+      "name": "desktop-modules-3.json",
+      "sha256": "ff384a20812e115ceb8945a78ec8071f21f688aa7d9b181a0900abc14dccb5a4"
+    },
+    {
+      "name": "desktop-modules-3.trace.json.gz",
+      "sha256": "f8e84440a2cfd9debb50204f6c592757c8f445af626487aba74266e9710e286c"
+    },
+    {
+      "name": "desktop-spelling-1.json",
+      "sha256": "978866d0b05562c45b15063af2b2f97b1a3bd96d0d2d7a1db07b6dbe56651d56"
+    },
+    {
+      "name": "desktop-spelling-1.trace.json.gz",
+      "sha256": "b0194212f915b076700dfade2af296e62580b6c595c37bf3c7ddd8b53a29caaa"
+    },
+    {
+      "name": "desktop-spelling-2.json",
+      "sha256": "8e111b10d4b5a300b292c94f376bf7f5a2614c2a2475b02ae2eae6d234a2283b"
+    },
+    {
+      "name": "desktop-spelling-2.trace.json.gz",
+      "sha256": "fd914378a809fbd60451d4997585ffdccb4d7f4b4e24c584ecd28ed94c0004c4"
+    },
+    {
+      "name": "desktop-spelling-3.json",
+      "sha256": "3af74276d2a7439a5a84a5629c960e57f12bb7a81c102cf003351e35715596c9"
+    },
+    {
+      "name": "desktop-spelling-3.trace.json.gz",
+      "sha256": "e90b2b55d12ebe72959e66f49e5a5e8454466fb357c8100e570be01f3369ec75"
+    },
+    {
+      "name": "desktop-sync-1.json",
+      "sha256": "59c89ca919f97e699d3a92fae36de74442d7ec876d659cfb3369c9aa170ceb6d"
+    },
+    {
+      "name": "desktop-sync-1.trace.json.gz",
+      "sha256": "aaa317721d6622880dd7096f152db363e89375b8498f5be10ed958d9b520a768"
+    },
+    {
+      "name": "desktop-sync-2.json",
+      "sha256": "db04deeb28b3c7d48fddcb164dfe9788f7b72736f4622b9dcae41be7ea0a1996"
+    },
+    {
+      "name": "desktop-sync-2.trace.json.gz",
+      "sha256": "7ea5d6833f48b40f4743bfa4a622f7c3abe5ba14b9b4f3185a44e73a0d05bc2f"
+    },
+    {
+      "name": "desktop-sync-3.json",
+      "sha256": "eb716772f99de88e8ffdda818fe32328ae9de6c63c8ae2eac53887430c374058"
+    },
+    {
+      "name": "desktop-sync-3.trace.json.gz",
+      "sha256": "c2f1e1c6bc4c0e719c4528bbe38a7a2860b3f83df2bcbd729b3d7fd83b97d496"
+    },
+    {
+      "name": "report.json",
+      "sha256": "9c921f7b02b87bb80d12e0b81c854fc4722e7d309049f1f3601a50ab17042e32"
+    },
+    {
+      "name": "touch-dictation-1.json",
+      "sha256": "aa84d850ea30d7427ea68b7ba999bed91cc506d9d748efa4ccebf2e22631cde4"
+    },
+    {
+      "name": "touch-dictation-1.trace.json.gz",
+      "sha256": "474f51f17ee6f99d8c5bfed080fc1f4d7ca0405cfb401abd6aee13ca282280c8"
+    },
+    {
+      "name": "touch-dictation-2.json",
+      "sha256": "11a37e519702d935f78176903b40fe21cb801aacbcd4f7b9c796607217cf317d"
+    },
+    {
+      "name": "touch-dictation-2.trace.json.gz",
+      "sha256": "39f7e7e7981658f2bdf8ce3128958141392df22c1e67c0dd497fc32677d4e017"
+    },
+    {
+      "name": "touch-dictation-3.json",
+      "sha256": "668ca43d63681992bab8b54c138bf43236f460e48fb8410532c0d0b01552142b"
+    },
+    {
+      "name": "touch-dictation-3.trace.json.gz",
+      "sha256": "7ac5acfeabbbdc8a76d80b9320e7d7748ec8e87657fb52f73330568eba8ad3f7"
+    },
+    {
+      "name": "touch-modules-1.json",
+      "sha256": "6840b03ded1c5a7e69ae6d54a12396abe8f542f75d0f9060cd6abebf3e52d68d"
+    },
+    {
+      "name": "touch-modules-1.trace.json.gz",
+      "sha256": "4b9a217be1f15b38d51ceedfadfa4092ce0f09c5f4b45e19cdd7e7c667eb94f8"
+    },
+    {
+      "name": "touch-modules-2.json",
+      "sha256": "3a8eb2319aa646fcf768bab9c0279f974c08b490179e28f8b8bb963ddcd97002"
+    },
+    {
+      "name": "touch-modules-2.trace.json.gz",
+      "sha256": "15377fd1fddf00e89e6a669961210c258a84f87b2d32fb4095380da4bc1be427"
+    },
+    {
+      "name": "touch-modules-3.json",
+      "sha256": "47fc7a598b6a44d45b0f2492fe7deedbb7d506f1aaea2e0bf9ac56b5463bf126"
+    },
+    {
+      "name": "touch-modules-3.trace.json.gz",
+      "sha256": "96e7dae294de187d212523d4c7d27768ed2ba406a6f5334fc601a8d6c37c513c"
+    },
+    {
+      "name": "touch-spelling-1.json",
+      "sha256": "f8a0c5124b08bb1005dac0869cf8ef1db3a0206761e99dca1a7dc93689333b48"
+    },
+    {
+      "name": "touch-spelling-1.trace.json.gz",
+      "sha256": "5614500b3ecbe98827d27cdec444b84695ae5e46fe4eb2207cabb9ea54c94fff"
+    },
+    {
+      "name": "touch-spelling-2.json",
+      "sha256": "53f11e7710619f1149818936416f5094d2c1691c659686a3d2b7bb4eead0a3a0"
+    },
+    {
+      "name": "touch-spelling-2.trace.json.gz",
+      "sha256": "531078d20d3a4403fdaff2bf5f7c194632a51c00fc1f8e26f053817207173a84"
+    },
+    {
+      "name": "touch-spelling-3.json",
+      "sha256": "82925d863921e2c23e2321647d7d0ce6b3167a1b38fb6fadeae2430bc35af570"
+    },
+    {
+      "name": "touch-spelling-3.trace.json.gz",
+      "sha256": "7976a6e63d8cb1df3ad2c3da56b8564c4cb82c9a35b0b979d5ce2ca919e38044"
+    },
+    {
+      "name": "touch-sync-1.json",
+      "sha256": "78055bb66259ff50d30e647fd6576a1d43fb41f9d1e18b183386310584edd63d"
+    },
+    {
+      "name": "touch-sync-1.trace.json.gz",
+      "sha256": "ca6cf42c4b516aed497cea8274232007d183ecccf56cd709041453f4023270cf"
+    },
+    {
+      "name": "touch-sync-2.json",
+      "sha256": "e6de673e64ac9797c5777c93bf76b27deb87dc1e683dc4820f4736a07c0c96d8"
+    },
+    {
+      "name": "touch-sync-2.trace.json.gz",
+      "sha256": "86cd46e940281d3d20f6e194c03d7ac5349fbc346e0e9c40758d342ccaa8a384"
+    },
+    {
+      "name": "touch-sync-3.json",
+      "sha256": "0e26fb66325a918c4acd4c81f8b978a9d5762cf92b45aa29f5a09a40bc7b2ce2"
+    },
+    {
+      "name": "touch-sync-3.trace.json.gz",
+      "sha256": "58b940372f00fd78e7730df1e03007aaf373ffffda4590e3b303bcb13fd9ae68"
+    }
+  ]
+}

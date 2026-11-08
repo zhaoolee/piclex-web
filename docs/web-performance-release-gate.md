@@ -23,7 +23,7 @@ npm run test:performance -- --url https://zhaoolee.com/piclex-web/ --source "$RE
 - 拼单词、练听力、练口语连续切换，每个模块至少停稳两次。
 - 5,000条合成答题、5,000条单词进度和对应经验记录下，自动同步同时连续拼写。检查同步上传内容，确保实际处理了历史数据。
 
-使用全新浏览器上下文、合成卡组和隔离存储。WebDAV 只替换远程传输为内存夹具，不替换网页中的数据库读取、合并、编码、哈希、恢复和上传校验，不连接用户账户。网络异常、真实媒体自动播放权限和跨端备份正确性另由完整浏览器套件验收。TTS 的系统发声在这里隔离，不以播放声音作为性能通过条件。
+使用全新浏览器上下文、合成卡组和隔离存储。触屏字符输入和模块切换启用 Chrome `Emulation.setEmitTouchEventsForMouse`，通过 `Input.dispatchMouseEvent` 驱动该浏览器触摸模拟器；浏览器生成真实可信的pointer/touch事件和兼容click，逐轮核对全部数量。鼠标协议的确认在事件被浏览器转换后不会返回，脚本改为等待页面实际收到对应可信touchend和click（5秒超时）；没有输入不能继续。按下/抬起分开50ms，按下/抬起均为可信事件，逐字检查可见、启用和坐标命中；不额外放慢字间隔。原始报告保留触摸时间/目标/可信性、各类可信事件数量和完整 Event Timing 分段字段，触屏模块每轮必须至少9次可信触摸（窄视口鼠标点击不能放行），实际出现的 click 不过滤。旧 `dispatchTouchEvent` 在事件打时间戳后另等合成器同步和异步控件命中，失败trace显示约50ms发生在renderer收到输入前；[Chromium实现](https://raw.githubusercontent.com/chromium/chromium/main/content/browser/devtools/protocol/input_handler.cc)与失败证据已保留，新驱动不改写时间戳、不扣除延迟、不筛掉事件，50ms持续时间取自 [Chrome 合成点击的协议默认值](https://raw.githubusercontent.com/ChromeDevTools/devtools-protocol/master/pdl/domains/Input.pdl)。控制实验必须能抓住120ms真实处理阻塞。WebDAV 只替换远程传输为内存夹具，不替换网页中的数据库读取、合并、编码、哈希、恢复和上传校验，不连接用户账户。网络异常、真实媒体自动播放权限和跨端备份正确性另由完整浏览器套件验收。TTS 的系统发声在这里隔离，不以播放声音作为性能通过条件。
 
 每轮均需至少8秒操作和尾段、120个动画帧、真实页面 Paint 与主线程任务。拼写检查字母动画和粒子调用；困难听写原界面没有拼写粒子，不虚构效果要求。禁止 reduced motion、后台页面、空场景及只打日志没有操作的样本。
 

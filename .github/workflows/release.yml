@@ -48,7 +48,13 @@ jobs:
         with:
           node-version: '24'
       - run: npm ci
-      - run: npx playwright install chrome
+      - name: Use the runner Chrome for the live check
+        run: |
+          if [ -x /opt/google/chrome/chrome ]; then
+            /opt/google/chrome/chrome --version
+          else
+            npx playwright install chrome
+          fi
       - uses: actions/download-artifact@v4
         with:
           name: github-pages

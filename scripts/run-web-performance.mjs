@@ -38,10 +38,12 @@ try{
    await context.route('https://performance-webdav.invalid/**',async route=>{const req=route.request(),p=new URL(req.url()).pathname,method=req.method(),headers={'access-control-allow-origin':'*','access-control-allow-headers':'*','access-control-allow-methods':'*'};let status=200,body='';if(method==='OPTIONS')status=204;else if(method==='MKCOL'){folders.add(p.endsWith('/')?p:p+'/');status=201;}else if(method==='PROPFIND'){const folder=p.endsWith('/')?p:p+'/';if(!folders.has(folder))status=404;else {status=207;body='<d:multistatus xmlns:d="DAV:">'+[folder,...[...files.keys()].filter(n=>n.startsWith(folder)&&!n.slice(folder.length).includes('/'))].map(n=>`<d:response><d:href>${n}</d:href><d:propstat><d:prop><d:resourcetype>${n.endsWith('/')?'<d:collection/>':''}</d:resourcetype></d:prop><d:status>HTTP/1.1 200 OK</d:status></d:propstat></d:response>`).join('')+'</d:multistatus>';}}else if(method==='MOVE'){const target=new URL(req.headers().destination).pathname;if(!files.has(p))status=404;else{files.set(target,files.get(p));files.delete(p);status=201;}}else if(method==='DELETE'){files.delete(p);status=204;}else if(method==='PUT'){files.set(p,req.postDataBuffer());status=201;}else if(method==='GET'){body=files.get(p)||'';if(!files.has(p))status=404;}else status=405;await route.fulfill({status,headers,body});});
    await page.addInitScript(()=>{
     Object.defineProperty(window,'speechSynthesis',{configurable:true,value:{getVoices:()=>[],speak(u){queueMicrotask(()=>{u.onstart?.();u.onend?.();});},cancel(){},pause(){},resume(){},addEventListener(){},removeEventListener(){}}});
-    const p=window.__perf={active:false,frames:[],events:[],longTasks:[],longFrames:[],visibility:[],errors:[],trustedInputs:0,glyphs:0,particles:0,reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches};
-    for(const type of ['longtask','long-animation-frame','event']){if(!PerformanceObserver.supportedEntryTypes.includes(type))throw Error('Missing observer '+type);new PerformanceObserver(list=>{if(!p.active)return;for(const e of list.getEntries())if(e.startTime>=p.start){if(type==='event')p.events.push(e.duration);else p[type==='longtask'?'longTasks':'longFrames'].push(e.toJSON());}}).observe({type,buffered:false,...(type==='event'?{durationThreshold:16}:{})});}
+    const p=window.__perf={active:false,frames:[],events:[],eventDetails:[],touchEvents:[],trustedEventCounts:{},longTasks:[],longFrames:[],visibility:[],errors:[],trustedInputs:0,glyphs:0,particles:0,reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches};
+    for(const type of ['longtask','long-animation-frame','event']){if(!PerformanceObserver.supportedEntryTypes.includes(type))throw Error('Missing observer '+type);new PerformanceObserver(list=>{if(!p.active)return;for(const e of list.getEntries())if(e.startTime>=p.start){if(type==='event'){p.events.push(e.duration);p.eventDetails.push({...e.toJSON(),key:e.target?.getAttribute('data-key')});}else p[type==='longtask'?'longTasks':'longFrames'].push(e.toJSON());}}).observe({type,buffered:false,...(type==='event'?{durationThreshold:16}:{})});}
     let previous;function frame(t){if(p.active){if(previous!==undefined)p.frames.push(t-previous);previous=t;}else previous=undefined;requestAnimationFrame(frame);}requestAnimationFrame(frame);
     for(const event of ['keydown','pointerdown'])addEventListener(event,e=>{if(p.active&&e.isTrusted)p.trustedInputs++;},true);
+    for(const type of ['touchstart','touchend'])addEventListener(type,e=>{if(p.active)p.touchEvents.push({type,time:e.timeStamp,trusted:e.isTrusted,key:e.target?.getAttribute('data-key')});},true);
+    for(const type of ['pointerdown','pointerup','touchstart','touchend','click'])addEventListener(type,e=>{if(p.active&&e.isTrusted)p.trustedEventCounts[type]=(p.trustedEventCounts[type]||0)+1;},true);
     addEventListener('error',e=>{if(p.active)p.errors.push(e.message);});document.addEventListener('visibilitychange',()=>{if(p.active)p.visibility.push(document.visibilityState);});
     const animate=Element.prototype.animate;Element.prototype.animate=function(...a){if(p.active&&this.classList.contains('letter-glyph'))p.glyphs++;return animate.apply(this,a);};const arc=CanvasRenderingContext2D.prototype.arc;CanvasRenderingContext2D.prototype.arc=function(...a){if(p.active&&(this.canvas.classList.contains('character-ripples')||this.canvas.classList.contains('experience-particles')))p.particles++;return arc.apply(this,a);};
    });
@@ -51,17 +53,43 @@ try{
     await page.evaluate(async({content,xp})=>{const open=name=>new Promise((resolve,reject)=>{const r=indexedDB.open(name);r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);});const db=await open('piclex-web-v1');await new Promise((resolve,reject)=>{const t=db.transaction('backupMeta','readwrite');t.objectStore('backupMeta').put(content,'progress');t.oncomplete=resolve;t.onerror=()=>reject(t.error);});db.close();const x=await open('piclex-web-experience-v1');await new Promise((resolve,reject)=>{const t=x.transaction(['events','meta'],'readwrite');for(const row of xp)t.objectStore('events').put(row);const milestones=[];for(let n=1;n*(n+1)<=xp.length;n++)milestones.push({level:n,at:1700000000000+(n*(n+1)-1)*1000});t.objectStore('meta').put({total:xp.length,statistics:{spelling:xp.length},milestones},'account');t.oncomplete=resolve;t.onerror=()=>reject(t.error);});x.close();},{content,xp});await page.goto(learningURL);await expect(page.getByRole('textbox',{name:'输入英文',exact:true})).toBeVisible();
    }
    if(scenario==='dictation'){await page.getByRole('tab',{name:'练听力',exact:true}).click();await page.getByLabel('句子练习模式').selectOption('free');await page.getByLabel('听写难度').selectOption('easy');await expect(page.locator('.guided-input input').first()).toBeVisible();}
-   await page.waitForTimeout(1500);cpuStart=await cpu();cdp=await context.newCDPSession(page);await cdp.send('Tracing.start',{categories:'toplevel,devtools.timeline,blink.user_timing,disabled-by-default-devtools.timeline,disabled-by-default-devtools.timeline.frame',transferMode:'ReturnAsStream'});traceStarted=true;
+   await page.waitForTimeout(1500);cpuStart=await cpu();cdp=await context.newCDPSession(page);if(viewport==='touch')await cdp.send('Emulation.setEmitTouchEventsForMouse',{enabled:true,configuration:'mobile'});await cdp.send('Tracing.start',{categories:'toplevel,devtools.timeline,blink.user_timing,disabled-by-default-devtools.timeline,disabled-by-default-devtools.timeline.frame',transferMode:'ReturnAsStream'});traceStarted=true;
    await page.evaluate(()=>{const p=window.__perf;p.start=performance.now();p.visibility.push(document.visibilityState);p.active=true;performance.mark('piclex-performance-start');});
-   const type=async text=>{for(const letter of text.toLowerCase().replace(/[^a-z]/g,'')){if(viewport==='touch')await page.locator(`.virtual-key[data-key="${letter}"]`).tap();else await page.keyboard.press(letter);sample.actions.letters++;await page.waitForTimeout(65);}};
+   // Chrome's touch emulator preserves trusted touch and compatibility click.
+   // Mouse protocol ACKs do not arrive when the browser consumes them as touch.
+   // Acknowledge actual trusted touchend + click instead; retain all timings.
+   let touchCount=0,touchInputError;
+   const sendTouch=params=>{cdp.send('Input.dispatchMouseEvent',params).catch(error=>{touchInputError=error;});};
+   const tap=async button=>{
+    await expect(button).toBeVisible();await expect(button).toBeEnabled();
+    const box=await button.boundingBox();if(!box)throw Error('Missing touch target bounds');const point={x:Math.round(box.x+box.width/2),y:Math.round(box.y+box.height/2)};
+    if(!await button.evaluate((element,p)=>element.contains(document.elementFromPoint(p.x,p.y)),point))throw Error('Touch target is covered');
+    sendTouch({type:'mousePressed',...point,button:'left',buttons:1,clickCount:1});
+    await new Promise(resolve=>setTimeout(resolve,50));
+    sendTouch({type:'mouseReleased',...point,button:'left',buttons:0,clickCount:1});
+    await page.waitForFunction(count=>window.__perf.trustedEventCounts.touchend===count&&window.__perf.trustedEventCounts.click===count,++touchCount,{timeout:5000});
+    if(touchInputError)throw touchInputError;
+   };
+   const type=async text=>{for(const letter of text.toLowerCase().replace(/[^a-z]/g,'')){
+    if(viewport==='touch')await tap(page.locator(`.virtual-key[data-key="${letter}"]`));else await page.keyboard.press(letter);
+    sample.actions.letters++;await page.waitForTimeout(viewport==='touch'?0:65);
+   }};
    if(scenario==='sync')await page.evaluate(()=>window.dispatchEvent(new Event('online')));
    if(scenario==='spelling'||scenario==='sync'){
     for(let i=0;i<6;i++){const input=page.getByRole('textbox',{name:'输入英文',exact:true}),beforeURL=page.url();await input.focus();await type(words[i]);await expect.poll(()=>page.url()).not.toBe(beforeURL);await expect(input).toHaveValue('',{timeout:5000});sample.actions.completed++;}
    }else if(scenario==='dictation'){
     for(let i=0;i<3;i++){await page.getByLabel('听写难度').selectOption(['easy','medium','hard'][i]);const input=page.locator('.guided-input input,.dictation-input').first();await input.focus();await type(sentences[i]);await expect(input).toHaveValue('',{timeout:5000});sample.actions.completed++;}
-   }else for(let i=0;i<3;i++)for(const [module,name] of [['listening','练听力'],['speaking','练口语'],['spelling','拼单词']]){await page.getByRole('tab',{name,exact:true}).click();await expect(page.locator('.native-practice')).toHaveAttribute('data-module',module);sample.actions.modules[module]++;await page.waitForTimeout(1000);}
+   }else for(let i=0;i<3;i++)for(const [module,name] of [['listening','练听力'],['speaking','练口语'],['spelling','拼单词']]){const tab=page.getByRole('tab',{name,exact:true});if(viewport==='touch')await tap(tab);else await tab.click();await expect(page.locator('.native-practice')).toHaveAttribute('data-module',module);sample.actions.modules[module]++;await page.waitForTimeout(1000);}
    if(scenario==='sync')await expect.poll(()=>[...files.keys()].filter(n=>/\/progress\/PicLex-progress-v1-[a-f0-9]{20}\.json$/.test(n)).length,{timeout:20000}).toBeGreaterThan(0);
-   await page.waitForTimeout(2200);sample.raw=await page.evaluate(()=>{const p=window.__perf;p.end=performance.now();performance.mark('piclex-performance-end');p.active=false;return p;});
+   await page.waitForTimeout(2200);await page.evaluate(()=>{const p=window.__perf;p.end=performance.now();performance.mark('piclex-performance-end');p.active=false;});
+   // Transfer detailed evidence in a separate task after the measurement ends.
+   // Serializing it in the stop-marker task incorrectly charges collection time.
+   sample.raw=await page.evaluate(()=>window.__perf);
+   if(viewport==='touch'){
+    const starts=sample.raw.touchEvents.filter(e=>e.type==='touchstart'),ends=sample.raw.touchEvents.filter(e=>e.type==='touchend');
+    const expectedTouches=scenario==='modules'?9:sample.actions.letters;
+    if(starts.length!==expectedTouches||ends.length!==starts.length||sample.raw.trustedEventCounts.click!==expectedTouches||sample.raw.touchEvents.some(e=>!e.trusted)||starts.some((e,i)=>ends[i].key!==e.key||ends[i].time-e.time<40))throw Error('Missing trusted physical-duration touch gestures');
+   }
    if(scenario==='sync'){for(const [name,bytes] of files)if(/\/progress\/PicLex-progress-v1-[a-f0-9]{20}\.json$/.test(name)){const restored=await decodeProgress(new Uint8Array(bytes));sample.actions.syncUploads++;sample.actions.syncedRows=Math.max(sample.actions.syncedRows,restored.events.length);}sample.actions.integrity=await page.evaluate(async()=>{const db=await new Promise((resolve,reject)=>{const r=indexedDB.open('piclex-web-experience-v1');r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);});try{return await new Promise((resolve,reject)=>{const t=db.transaction(['events','meta'],'readonly'),count=t.objectStore('events').count(),account=t.objectStore('meta').get('account');t.oncomplete=()=>resolve({events:count.result,total:account.result.total});t.onerror=()=>reject(t.error);});}finally{db.close();}});}
   }catch(e){sample.error=e.stack||String(e);}
   finally{

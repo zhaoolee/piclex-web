@@ -1,0 +1,15 @@
+{
+  "run": 42451135082,
+  "sourceRevision": "50bb3810bf11f8ef79f6d9de12a779bea5d76466",
+  "conclusion": "failed",
+  "performance": "all24passed; raw traces recomputed",
+  "browserFailure": {
+    "project": "mobile-webkit",
+    "shard": 2,
+    "test": "three imported photos become one default deck and survive photo navigation and reload",
+    "reason": "30s aggregate test deadline after successful 3-photo export, at photo2 click; visible enabled stable target",
+    "fix": "2 real-import user journeys, all assertions retained; 6 targeted browser cases pass; timeout unchanged"
+  },
+  "nextExactCandidate": "2e2cc76ba0973b8f81673c8bef4b00f4b80199a2",
+  "nextRun": 42452360890
+}

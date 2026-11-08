@@ -1,0 +1,769 @@
+{
+  "sourceRevision": "50bb3810bf11f8ef79f6d9de12a779bea5d76466",
+  "status": "raw-traces-verified",
+  "startedAt": "2026-11-08T05:34:26.265Z",
+  "finishedAt": "2026-11-08T05:42:07.845Z",
+  "harness": {
+    "runnerSHA256": "797e4d4ee9127a36bdd863dd2e6ef393c9f7d6be47148a49c0ac822e807e3a69",
+    "policySHA256": "425942dda2626a55e6906752d855a626aac1666b62f638497fee8c88c33df36a",
+    "diagnosticScenario": null
+  },
+  "artifact": {
+    "releaseID": "50bb3810bf11-696eefc2d066",
+    "base": "http://127.0.0.1:33551/piclex-web/",
+    "assets": [
+      {
+        "path": "index.html",
+        "sha256": "227dd7af99ab6019744add0a44086c0d5484e3ee092fb3e06b57e6e865e26142"
+      },
+      {
+        "path": "assets/main-np9MLrF1.js",
+        "sha256": "e1867206e338bc860e45b9f24ced5cc14ce9dc5a8a4cf40367b91ecce4b85e74"
+      },
+      {
+        "path": "assets/modulepreload-polyfill-B5Qt9EMX.js",
+        "sha256": "d2a32840421496e872ade591618d2fa5c33797605d1aec04301717e5a90757d0"
+      },
+      {
+        "path": "assets/experience-store-B_mwPK_h.js",
+        "sha256": "820229c7b038fdd037787d34a13d2c28f78a8736a8b8250e70f593661f9cc8ce"
+      },
+      {
+        "path": "assets/main-D6YtTART.css",
+        "sha256": "590d35c934ac9121f3872b2d01e9ca703643efb064fb799c36efd7d7df2deaaf"
+      },
+      {
+        "path": "assets/lab-BIjv1P6V.css",
+        "sha256": "8380a7fbad17453457f4866f782ccff332c8fd982e616139c3a625bb104b3445"
+      },
+      {
+        "path": "assets/lab-CW8S-fcb.js",
+        "sha256": "c615286bc5d658cda3df13d46696110f1aab7500c4f5215450be592d2acb0fae"
+      },
+      {
+        "path": "assets/main-BdxGuby5.js",
+        "sha256": "ffab4bc5d72c95e486e2e4225af7c3cbaa53fc19162a7515e8a773db5e205a30"
+      },
+      {
+        "path": "assets/progress-worker-DJDuh4qR.js",
+        "sha256": "5706bd70f51a3aadafcfcac0a9afac2ff4c4d997a8c27e2c8e075ebd73e1332d"
+      },
+      {
+        "path": "assets/subscribe-CgjdP79_.css",
+        "sha256": "2992dc2dacb3068a11e2f769b9d335030b8d6d15737e5d054fa76ff81e171d0b"
+      },
+      {
+        "path": "assets/subscribe-D3VMIW3x.js",
+        "sha256": "7c02d8804ff0d274ee29527e10879f73d384161268fd94b307d8d03028a0778f"
+      }
+    ]
+  },
+  "peakMainTaskMs": 30.061,
+  "peakFrameGapMs": 33.399999999999636,
+  "peakMeasuredEventMs": 96,
+  "rounds": [
+    {
+      "case": "desktop-spelling-1",
+      "mainTaskMaxMs": 9.383,
+      "frameGapMaxMs": 16.80000000000109,
+      "eventMaxMs": 32,
+      "frames": 647,
+      "actions": {
+        "letters": 91,
+        "completed": 6,
+        "modules": {
+          "spelling": 0,
+          "listening": 0,
+          "speaking": 0
+        },
+        "syncUploads": 0,
+        "syncedRows": 0
+      }
+    },
+    {
+      "case": "desktop-spelling-2",
+      "mainTaskMaxMs": 9.584,
+      "frameGapMaxMs": 16.80000000000109,
+      "eventMaxMs": 48,
+      "frames": 646,
+      "actions": {
+        "letters": 91,
+        "completed": 6,
+        "modules": {
+          "spelling": 0,
+          "listening": 0,
+          "speaking": 0
+        },
+        "syncUploads": 0,
+        "syncedRows": 0
+      }
+    },
+    {
+      "case": "desktop-spelling-3",
+      "mainTaskMaxMs": 9.237,
+      "frameGapMaxMs": 16.80000000000109,
+      "eventMaxMs": 48,
+      "frames": 648,
+      "actions": {
+        "letters": 91,
+        "completed": 6,
+        "modules": {
+          "spelling": 0,
+          "listening": 0,
+          "speaking": 0
+        },
+        "syncUploads": 0,
+        "syncedRows": 0
+      }
+    },
+    {
+      "case": "desktop-dictation-1",
+      "mainTaskMaxMs": 7.843,
+      "frameGapMaxMs": 16.80000000000109,
+      "eventMaxMs": 48,
+      "frames": 773,
+      "actions": {
+        "letters": 98,
+        "completed": 3,
+        "modules": {
+          "spelling": 0,
+          "listening": 0,
+          "speaking": 0
+        },
+        "syncUploads": 0,
+        "syncedRows": 0
+      }
+    },
+    {
+      "case": "desktop-dictation-2",
+      "mainTaskMaxMs": 8.355,
+      "frameGapMaxMs": 16.80000000000109,
+      "eventMaxMs": 48,
+      "frames": 771,
+      "actions": {
+        "letters": 98,
+        "completed": 3,
+        "modules": {
+          "spelling": 0,
+          "listening": 0,
+          "speaking": 0
+        },
+        "syncUploads": 0,
+        "syncedRows": 0
+      }
+    },
+    {
+      "case": "desktop-dictation-3",
+      "mainTaskMaxMs": 8.046,
+      "frameGapMaxMs": 16.80000000000109,
+      "eventMaxMs": 48,
+      "frames": 771,
+      "actions": {
+        "letters": 98,
+        "completed": 3,
+        "modules": {
+          "spelling": 0,
+          "listening": 0,
+          "speaking": 0
+        },
+        "syncUploads": 0,
+        "syncedRows": 0
+      }
+    },
+    {
+      "case": "desktop-modules-1",
+      "mainTaskMaxMs": 9.434,
+      "frameGapMaxMs": 16.80000000000109,
+      "eventMaxMs": 56,
+      "frames": 694,
+      "actions": {
+        "letters": 0,
+        "completed": 0,
+        "modules": {
+          "spelling": 3,
+          "listening": 3,
+          "speaking": 3
+        },
+        "syncUploads": 0,
+        "syncedRows": 0
+      }
+    },
+    {
+      "case": "desktop-modules-2",
+      "mainTaskMaxMs": 9.402,
+      "frameGapMaxMs": 16.80000000000109,
+      "eventMaxMs": 40,
+      "frames": 697,
+      "actions": {
+        "letters": 0,
+        "completed": 0,
+        "modules": {
+          "spelling": 3,
+          "listening": 3,
+          "speaking": 3
+        },
+        "syncUploads": 0,
+        "syncedRows": 0
+      }
+    },
+    {
+      "case": "desktop-modules-3",
+      "mainTaskMaxMs": 10.057,
+      "frameGapMaxMs": 16.80000000000109,
+      "eventMaxMs": 48,
+      "frames": 696,
+      "actions": {
+        "letters": 0,
+        "completed": 0,
+        "modules": {
+          "spelling": 3,
+          "listening": 3,
+          "speaking": 3
+        },
+        "syncUploads": 0,
+        "syncedRows": 0
+      }
+    },
+    {
+      "case": "desktop-sync-1",
+      "mainTaskMaxMs": 13.421,
+      "frameGapMaxMs": 16.80000000000109,
+      "eventMaxMs": 48,
+      "frames": 658,
+      "actions": {
+        "letters": 91,
+        "completed": 6,
+        "modules": {
+          "spelling": 0,
+          "listening": 0,
+          "speaking": 0
+        },
+        "syncUploads": 2,
+        "syncedRows": 5005,
+        "integrity": {
+          "events": 5006,
+          "total": 5006
+        }
+      }
+    },
+    {
+      "case": "desktop-sync-2",
+      "mainTaskMaxMs": 16.527,
+      "frameGapMaxMs": 16.80000000000109,
+      "eventMaxMs": 48,
+      "frames": 655,
+      "actions": {
+        "letters": 91,
+        "completed": 6,
+        "modules": {
+          "spelling": 0,
+          "listening": 0,
+          "speaking": 0
+        },
+        "syncUploads": 2,
+        "syncedRows": 5005,
+        "integrity": {
+          "events": 5006,
+          "total": 5006
+        }
+      }
+    },
+    {
+      "case": "desktop-sync-3",
+      "mainTaskMaxMs": 14.919,
+      "frameGapMaxMs": 16.80000000000109,
+      "eventMaxMs": 48,
+      "frames": 657,
+      "actions": {
+        "letters": 91,
+        "completed": 6,
+        "modules": {
+          "spelling": 0,
+          "listening": 0,
+          "speaking": 0
+        },
+        "syncUploads": 2,
+        "syncedRows": 5005,
+        "integrity": {
+          "events": 5006,
+          "total": 5006
+        }
+      }
+    },
+    {
+      "case": "touch-spelling-1",
+      "mainTaskMaxMs": 9.927,
+      "frameGapMaxMs": 16.80000000000291,
+      "eventMaxMs": 96,
+      "frames": 1104,
+      "actions": {
+        "letters": 91,
+        "completed": 6,
+        "modules": {
+          "spelling": 0,
+          "listening": 0,
+          "speaking": 0
+        },
+        "syncUploads": 0,
+        "syncedRows": 0
+      }
+    },
+    {
+      "case": "touch-spelling-2",
+      "mainTaskMaxMs": 9.498,
+      "frameGapMaxMs": 16.80000000000291,
+      "eventMaxMs": 64,
+      "frames": 997,
+      "actions": {
+        "letters": 91,
+        "completed": 6,
+        "modules": {
+          "spelling": 0,
+          "listening": 0,
+          "speaking": 0
+        },
+        "syncUploads": 0,
+        "syncedRows": 0
+      }
+    },
+    {
+      "case": "touch-spelling-3",
+      "mainTaskMaxMs": 9.703,
+      "frameGapMaxMs": 16.80000000000109,
+      "eventMaxMs": 80,
+      "frames": 996,
+      "actions": {
+        "letters": 91,
+        "completed": 6,
+        "modules": {
+          "spelling": 0,
+          "listening": 0,
+          "speaking": 0
+        },
+        "syncUploads": 0,
+        "syncedRows": 0
+      }
+    },
+    {
+      "case": "touch-dictation-1",
+      "mainTaskMaxMs": 6.779,
+      "frameGapMaxMs": 16.80000000000291,
+      "eventMaxMs": 64,
+      "frames": 1159,
+      "actions": {
+        "letters": 98,
+        "completed": 3,
+        "modules": {
+          "spelling": 0,
+          "listening": 0,
+          "speaking": 0
+        },
+        "syncUploads": 0,
+        "syncedRows": 0
+      }
+    },
+    {
+      "case": "touch-dictation-2",
+      "mainTaskMaxMs": 6.863,
+      "frameGapMaxMs": 16.80000000000109,
+      "eventMaxMs": 64,
+      "frames": 1158,
+      "actions": {
+        "letters": 98,
+        "completed": 3,
+        "modules": {
+          "spelling": 0,
+          "listening": 0,
+          "speaking": 0
+        },
+        "syncUploads": 0,
+        "syncedRows": 0
+      }
+    },
+    {
+      "case": "touch-dictation-3",
+      "mainTaskMaxMs": 7.15,
+      "frameGapMaxMs": 16.80000000000291,
+      "eventMaxMs": 80,
+      "frames": 1157,
+      "actions": {
+        "letters": 98,
+        "completed": 3,
+        "modules": {
+          "spelling": 0,
+          "listening": 0,
+          "speaking": 0
+        },
+        "syncUploads": 0,
+        "syncedRows": 0
+      }
+    },
+    {
+      "case": "touch-modules-1",
+      "mainTaskMaxMs": 15.619,
+      "frameGapMaxMs": 16.80000000000109,
+      "eventMaxMs": 40,
+      "frames": 695,
+      "actions": {
+        "letters": 0,
+        "completed": 0,
+        "modules": {
+          "spelling": 3,
+          "listening": 3,
+          "speaking": 3
+        },
+        "syncUploads": 0,
+        "syncedRows": 0
+      }
+    },
+    {
+      "case": "touch-modules-2",
+      "mainTaskMaxMs": 10.528,
+      "frameGapMaxMs": 16.80000000000109,
+      "eventMaxMs": 40,
+      "frames": 692,
+      "actions": {
+        "letters": 0,
+        "completed": 0,
+        "modules": {
+          "spelling": 3,
+          "listening": 3,
+          "speaking": 3
+        },
+        "syncUploads": 0,
+        "syncedRows": 0
+      }
+    },
+    {
+      "case": "touch-modules-3",
+      "mainTaskMaxMs": 10.386,
+      "frameGapMaxMs": 16.80000000000109,
+      "eventMaxMs": 56,
+      "frames": 690,
+      "actions": {
+        "letters": 0,
+        "completed": 0,
+        "modules": {
+          "spelling": 3,
+          "listening": 3,
+          "speaking": 3
+        },
+        "syncUploads": 0,
+        "syncedRows": 0
+      }
+    },
+    {
+      "case": "touch-sync-1",
+      "mainTaskMaxMs": 10.976,
+      "frameGapMaxMs": 16.80000000000109,
+      "eventMaxMs": 64,
+      "frames": 1007,
+      "actions": {
+        "letters": 91,
+        "completed": 6,
+        "modules": {
+          "spelling": 0,
+          "listening": 0,
+          "speaking": 0
+        },
+        "syncUploads": 2,
+        "syncedRows": 5003,
+        "integrity": {
+          "events": 5006,
+          "total": 5006
+        }
+      }
+    },
+    {
+      "case": "touch-sync-2",
+      "mainTaskMaxMs": 17.805,
+      "frameGapMaxMs": 16.80000000000291,
+      "eventMaxMs": 72,
+      "frames": 1015,
+      "actions": {
+        "letters": 91,
+        "completed": 6,
+        "modules": {
+          "spelling": 0,
+          "listening": 0,
+          "speaking": 0
+        },
+        "syncUploads": 2,
+        "syncedRows": 5003,
+        "integrity": {
+          "events": 5006,
+          "total": 5006
+        }
+      }
+    },
+    {
+      "case": "touch-sync-3",
+      "mainTaskMaxMs": 30.061,
+      "frameGapMaxMs": 33.399999999999636,
+      "eventMaxMs": 80,
+      "frames": 941,
+      "actions": {
+        "letters": 91,
+        "completed": 6,
+        "modules": {
+          "spelling": 0,
+          "listening": 0,
+          "speaking": 0
+        },
+        "syncUploads": 2,
+        "syncedRows": 5003,
+        "integrity": {
+          "events": 5006,
+          "total": 5006
+        }
+      }
+    }
+  ],
+  "files": [
+    {
+      "name": "desktop-dictation-1.json",
+      "size": 134513,
+      "sha256": "aae15a99afef2e85d5d518b97daf9df1a3eef1c04103f0bba066a06e50641c76"
+    },
+    {
+      "name": "desktop-dictation-1.trace.json.gz",
+      "size": 4380326,
+      "sha256": "225e61efe0326d3f6299e76317b7a9f6e6f116c82c03f7f9c661c8f1cb347d4c"
+    },
+    {
+      "name": "desktop-dictation-2.json",
+      "size": 134174,
+      "sha256": "8b2054c1ebeffa7bb1005aca942ef17838abd2688c8fe90603abcdc25abebb95"
+    },
+    {
+      "name": "desktop-dictation-2.trace.json.gz",
+      "size": 4391239,
+      "sha256": "ee0f61e35e79ea1149831d0fdf72faa750f1268b821e5486cb596580aebd19b2"
+    },
+    {
+      "name": "desktop-dictation-3.json",
+      "size": 134343,
+      "sha256": "2157ce5bdcc0cfd39a42a47a0ef31dff614aeefe0f86b4f792203820a2c495b6"
+    },
+    {
+      "name": "desktop-dictation-3.trace.json.gz",
+      "size": 4352759,
+      "sha256": "49224eccdbd1a76a8d52887a51828a2bcaa40b5718cca72f086f9bbcbbccf44a"
+    },
+    {
+      "name": "desktop-modules-1.json",
+      "size": 80536,
+      "sha256": "d9c696ad13df158e6185a19cdde8b7e4b94c4957b03e1859480e21f5f2ea41b3"
+    },
+    {
+      "name": "desktop-modules-1.trace.json.gz",
+      "size": 2035706,
+      "sha256": "02c13bc40f70e60680e4965e302d462b1a2375dc356dfaae6a6a440d69ff1555"
+    },
+    {
+      "name": "desktop-modules-2.json",
+      "size": 80492,
+      "sha256": "6994cd8ebd783ff916178c20e481104dcc0cace7848b0b8e574107c2a0782772"
+    },
+    {
+      "name": "desktop-modules-2.trace.json.gz",
+      "size": 2081789,
+      "sha256": "7c44e72b7cf1f2b97e1ef583108e69fe18500270392c6bf8f6fa7d7e069b6d35"
+    },
+    {
+      "name": "desktop-modules-3.json",
+      "size": 80661,
+      "sha256": "4bdb9098c9166b1389c35372a2e687d6f84bf8c17eb33e8c93db943b87d51377"
+    },
+    {
+      "name": "desktop-modules-3.trace.json.gz",
+      "size": 2081867,
+      "sha256": "010768970e6958392c9c42c94ddbc1b228b1cf6c5abdd6446fbaccc638922e3c"
+    },
+    {
+      "name": "desktop-spelling-1.json",
+      "size": 137350,
+      "sha256": "d694a6886705feeecdfa31fb4581b3988150eb94a98d1640dfbf59694a81a728"
+    },
+    {
+      "name": "desktop-spelling-1.trace.json.gz",
+      "size": 4725601,
+      "sha256": "d8314b72168ac9a012ba94b5235e169bc73f2e414cecb8bedb04f0735d80d8a0"
+    },
+    {
+      "name": "desktop-spelling-2.json",
+      "size": 136748,
+      "sha256": "99a076dad1fa0eeb2c9f18fa0de49f86d88d7d2851e68b11e2874e739b8c54d9"
+    },
+    {
+      "name": "desktop-spelling-2.trace.json.gz",
+      "size": 4678452,
+      "sha256": "4e9ce8d21cf21f4fc9da4e69ae5614eda6a939fee53cecf7d2f56cc7b22e144c"
+    },
+    {
+      "name": "desktop-spelling-3.json",
+      "size": 136817,
+      "sha256": "edd9544c0229db1a32fd4fa8253ea1f2c6469f94dda0e8cce33ea2aee27f35a6"
+    },
+    {
+      "name": "desktop-spelling-3.trace.json.gz",
+      "size": 4693099,
+      "sha256": "7d3310492394e47c6245094e58496bcb62f70e639bc2f5ce7fb243701575df98"
+    },
+    {
+      "name": "desktop-sync-1.json",
+      "size": 142146,
+      "sha256": "1f2d4e0142dd6f186cc1862f461b8082aae1360fbb8d7a00bdaab932bba57bff"
+    },
+    {
+      "name": "desktop-sync-1.trace.json.gz",
+      "size": 5117078,
+      "sha256": "1af467e7b0c21d5dda0c9dc499d8773af1e090a92a80c053791384b1e59d6628"
+    },
+    {
+      "name": "desktop-sync-2.json",
+      "size": 141098,
+      "sha256": "0bce7bd1cabb72ff1386cb409e6cb924e5117dd38e24e594cfe1ae82f37ceb5b"
+    },
+    {
+      "name": "desktop-sync-2.trace.json.gz",
+      "size": 5067915,
+      "sha256": "7be04a903c2377a17431402d039346558ea9798b765b20e092ad01035d654f63"
+    },
+    {
+      "name": "desktop-sync-3.json",
+      "size": 144107,
+      "sha256": "c267ec0eaa67075db95aba0fbf3a2630cd9cbb496d97fc1087f9722c3b306cbc"
+    },
+    {
+      "name": "desktop-sync-3.trace.json.gz",
+      "size": 5083951,
+      "sha256": "2302350547550165774d94a215ab184b39e559922c6a05fd7de185849a7c377b"
+    },
+    {
+      "name": "report.json",
+      "size": 4952032,
+      "sha256": "257d25216f944ecd17a1eda650f14a55d34979558157ce7706e168ba88ac8cdb"
+    },
+    {
+      "name": "touch-dictation-1.json",
+      "size": 229468,
+      "sha256": "990ac83bc902db55cf4e2f92b13854961ca4c8e225a6a301bd990e6a88eb5c18"
+    },
+    {
+      "name": "touch-dictation-1.trace.json.gz",
+      "size": 6692532,
+      "sha256": "ab894fb2a52846e6ef8d33e800d98a33b21718101a405b3acbaffcc400e785f0"
+    },
+    {
+      "name": "touch-dictation-2.json",
+      "size": 228841,
+      "sha256": "9f974314d38f2c24b38e5393a3320e166d1448b14e5948500f2c42240e8d3f2a"
+    },
+    {
+      "name": "touch-dictation-2.trace.json.gz",
+      "size": 6633444,
+      "sha256": "edb8463b94d0545e1021bbb5d0950aaf8330c73a8744709d871937efe3a19f7e"
+    },
+    {
+      "name": "touch-dictation-3.json",
+      "size": 228386,
+      "sha256": "85c3b7080efa7bf17ee0f58a0f82d06994f0b6eaa7dfa05199a4199c61b1caa1"
+    },
+    {
+      "name": "touch-dictation-3.trace.json.gz",
+      "size": 6648058,
+      "sha256": "200ef960e0583e55e24d0b97ea527809568a2edf69cf39d36e937a990cd82571"
+    },
+    {
+      "name": "touch-modules-1.json",
+      "size": 82587,
+      "sha256": "07d7db17079a59f973a1f29cf63f6d099fbd36bb55969f033ce77e63e76a1b38"
+    },
+    {
+      "name": "touch-modules-1.trace.json.gz",
+      "size": 2031776,
+      "sha256": "e45fcaf269d068a6dcf4e585f96adaa2662bf719636c15e8c789af3f1cd95efe"
+    },
+    {
+      "name": "touch-modules-2.json",
+      "size": 82023,
+      "sha256": "5b29a7125c4fc90f229cf1b67c282f0ce9f073230539e54a872b9e44f1cb6d32"
+    },
+    {
+      "name": "touch-modules-2.trace.json.gz",
+      "size": 2056738,
+      "sha256": "3ce178a8a18151b0ac31d60c05766cffd991846b80433469195630f72eca5161"
+    },
+    {
+      "name": "touch-modules-3.json",
+      "size": 81449,
+      "sha256": "da30b1c5f4fd156ca7151a762bad36d09b1540822f2ac116c7f1325afec4bdf3"
+    },
+    {
+      "name": "touch-modules-3.trace.json.gz",
+      "size": 2023310,
+      "sha256": "d459842b461c058c190cce7c770d2c6babb1cfea2f42800f0862b82169192d7f"
+    },
+    {
+      "name": "touch-spelling-1.json",
+      "size": 241116,
+      "sha256": "2565a0bd0efac3a39e7cd49eae9e86bdaca69fb895658b968ea57b898eb01421"
+    },
+    {
+      "name": "touch-spelling-1.trace.json.gz",
+      "size": 7302977,
+      "sha256": "c79ea86dd39631d2ee5c405af9321b50d3ea8c8ebf4a0be3e5130f64dd36c30f"
+    },
+    {
+      "name": "touch-spelling-2.json",
+      "size": 228854,
+      "sha256": "84b9f4442bc57e001ce5032eb6d80645237f77031b96702a8f9df88deb3a06db"
+    },
+    {
+      "name": "touch-spelling-2.trace.json.gz",
+      "size": 7051310,
+      "sha256": "b1f3f292caa0198cef17331b73a47649ea3c10e0d6e3b56740d0f109a754139f"
+    },
+    {
+      "name": "touch-spelling-3.json",
+      "size": 227887,
+      "sha256": "7f12682cc20b24cb3e444c82c409719752f6fe0b9a1256f6d0bec263a6573426"
+    },
+    {
+      "name": "touch-spelling-3.trace.json.gz",
+      "size": 7039077,
+      "sha256": "e6c8758af23fb771a6b1c6cae920d1b7f5f8919c13a36b2116e43a9f62745b5f"
+    },
+    {
+      "name": "touch-sync-1.json",
+      "size": 238940,
+      "sha256": "33334092b870792ec541ed64dece3ca123f66e21dfc241a0b7d785de695fd58d"
+    },
+    {
+      "name": "touch-sync-1.trace.json.gz",
+      "size": 7559138,
+      "sha256": "efae8c099a03ea2f15900573e3ddb320382e8fa6851a8962d87927d4531bbda3"
+    },
+    {
+      "name": "touch-sync-2.json",
+      "size": 235333,
+      "sha256": "d8ce5de54240aaa7548d96c468cd4c1583e6bb2b8a1073aedc74ea6dc5fd90b7"
+    },
+    {
+      "name": "touch-sync-2.trace.json.gz",
+      "size": 7545223,
+      "sha256": "6ac91802b1c1b2440b656845b627c329050fb139b5845f092f8cc95750ff74a9"
+    },
+    {
+      "name": "touch-sync-3.json",
+      "size": 232405,
+      "sha256": "726de886cb0092e49a157c70203a1de073a9423dbed3a83de5582219e75a2148"
+    },
+    {
+      "name": "touch-sync-3.trace.json.gz",
+      "size": 7284281,
+      "sha256": "127070803657cb2dc0a2f95785ed7fc1c2e2094c60f257001c208fe8008faa34"
+    }
+  ]
+}

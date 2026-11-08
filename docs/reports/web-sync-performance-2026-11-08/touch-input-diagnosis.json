@@ -1,0 +1,159 @@
+{
+  "productionCodeUnchanged": true,
+  "chromeProtocol": "https://raw.githubusercontent.com/ChromeDevTools/devtools-protocol/master/pdl/domains/Input.pdl",
+  "playwrightTap": "Concurrent touchStart/touchEnd; failed trace timestamps only0.031ms apart",
+  "cssProbe": "manipulation96ms vs none88ms maximum, none worse median; no product CSS changed",
+  "native200TapMaxMs": 48,
+  "trusted20TapCounts": {
+    "pointerdown": 20,
+    "pointerup": 20,
+    "touchstart": 20,
+    "touchend": 20,
+    "click": 0
+  },
+  "injectedProcessingBlockMs": 120,
+  "observedNegativeEventMs": 136,
+  "cadenceMs": {
+    "originalControl": 133.7,
+    "nativeControl": 134.1,
+    "originalFullDictation": 150.086,
+    "nativeFullDictation": 151,
+    "originalFullSync": 133.5615,
+    "nativeFullSync": 133.3
+  },
+  "fullSync": {
+    "letters": 91,
+    "completed": 6,
+    "events": 5006,
+    "xp": 5006,
+    "maxTaskMs": 30.5,
+    "maxEventMs": 40
+  },
+  "dictationCollectionFix": {
+    "initialFailedTaskMs": 68.792,
+    "traceStack": "blink.mojom.DevToolsSession; detailed evidence serialization in stop-marker task",
+    "fix": "stop in one task; retrieve evidence in the following task",
+    "validatedTaskMaxMs": 9.4,
+    "validatedFrameMaxMs": 16.8,
+    "letters": 98,
+    "completed": 3
+  },
+  "releaseStatus": "Diagnostic only; all24 sameSHA CI still required",
+  "rawDirectory": "/Users/zhaoolee/github/PicLex/output/web-performance-2026-11-08",
+  "previousNativeGestureStatus": "Rejected: no compatibility click; not final release driver",
+  "finalDriver": {
+    "protocol": "Emulation.setEmitTouchEventsForMouse + Input.dispatchMouseEvent",
+    "acknowledgement": "wait for actual trusted touchend and click, 5 second timeout",
+    "controls": {
+      "pointerdown": 20,
+      "pointerup": 20,
+      "touchstart": 20,
+      "touchend": 20,
+      "click": 20,
+      "allTrusted": true,
+      "minHoldMs": 49.6,
+      "medianInputCadenceMs": 68.6,
+      "normalMaxEventMs": 32,
+      "injectedBlockMs": 120,
+      "detectedEventMs": 128
+    },
+    "timestampAdjustment": false,
+    "eventFiltering": false,
+    "thresholdChanges": false,
+    "targetedJourneys": [
+      {
+        "scenario": "modules",
+        "actions": {
+          "letters": 0,
+          "completed": 0,
+          "modules": {
+            "spelling": 3,
+            "listening": 3,
+            "speaking": 3
+          },
+          "syncUploads": 0,
+          "syncedRows": 0
+        },
+        "failures": [],
+        "maxTaskMs": 12.627,
+        "maxFrameMs": 16.80000000000109,
+        "maxEventMs": 48,
+        "trustedEvents": {
+          "pointerdown": 9,
+          "touchstart": 9,
+          "pointerup": 9,
+          "touchend": 9,
+          "click": 9
+        }
+      },
+      {
+        "scenario": "dictation",
+        "actions": {
+          "letters": 98,
+          "completed": 3,
+          "modules": {
+            "spelling": 0,
+            "listening": 0,
+            "speaking": 0
+          },
+          "syncUploads": 0,
+          "syncedRows": 0
+        },
+        "failures": [
+          "main-thread task reached 33ms",
+          "animation frame gap reached 50ms",
+          "long task or long animation frame",
+          "input event reached 100ms"
+        ],
+        "maxTaskMs": 73.957,
+        "maxFrameMs": 66.69999999999982,
+        "maxEventMs": 136,
+        "trustedEvents": {
+          "pointerdown": 98,
+          "touchstart": 98,
+          "pointerup": 98,
+          "touchend": 98,
+          "click": 98
+        }
+      },
+      {
+        "scenario": "sync",
+        "actions": {
+          "letters": 91,
+          "completed": 6,
+          "modules": {
+            "spelling": 0,
+            "listening": 0,
+            "speaking": 0
+          },
+          "syncUploads": 2,
+          "syncedRows": 5004,
+          "integrity": {
+            "events": 5006,
+            "total": 5006
+          }
+        },
+        "failures": [],
+        "maxTaskMs": 16.819,
+        "maxFrameMs": 33.30000000000018,
+        "maxEventMs": 40,
+        "trustedEvents": {
+          "pointerdown": 91,
+          "touchstart": 91,
+          "pointerup": 91,
+          "touchend": 91,
+          "click": 91
+        }
+      }
+    ],
+    "remainingLocalFailure": {
+      "scenario": "dictation",
+      "wallTaskMs": 73.957,
+      "cpuTaskMs": 3.899,
+      "child": "Commit",
+      "childWallMs": 70.709,
+      "childCpuMs": 0.919,
+      "status": "Retained failure; exact candidate full isolated CI required"
+    }
+  }
+}
