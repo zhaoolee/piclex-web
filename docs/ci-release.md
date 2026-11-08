@@ -5,8 +5,8 @@
 ## 推送前
 
 1. 检查远程 main、当前工作区以及正在运行的 Actions；保留其他任务的未提交修改。同一批修复集中验证后推送，不用推送试错。
-2. 在独立候选源码中使用锁定依赖运行与 `.github/workflows/pages.yml` 一致的检查。正式 CI 使用 Ubuntu、Node 24，以及 Playwright 锁定版本对应的 Chrome/WebKit；本机 Mac 定向检查不能替代 Linux 浏览器回归。
-3. 涉及浏览器、测试或兼容性问题时，先在对应 Linux 环境复现失败用例，修复后完成全量回归。不要跳过失败测试、降低有效断言或靠连续重跑碰运气。
+2. 在独立候选源码中使用锁定依赖，完成改动及相邻流程的定向检查。完整功能和性能验收由同一次正式 `Check release candidate` 执行，默认不在本地复制完整套件。正式 CI 使用 Ubuntu、Node 24，以及 Playwright 锁定版本对应的 Chrome/WebKit；本机 Mac 定向检查不能替代它。
+3. 涉及浏览器、测试或兼容性问题时，先在隔离、静音的 Linux 环境复现失败用例，修复后验证原用例及相邻流程。候选收敛后集中推送，运行完整回归；不跳过失败测试、降低有效断言或靠连续重跑碰运气。
 
 ```sh
 npm ci
@@ -17,15 +17,19 @@ npm run test:deploy
 npm run content:build
 npm run build
 npx playwright install --with-deps chrome webkit
-CI=1 npm run test:browser
+# 按改动选择对应用例；这里以备份和同步为例。
+CI=1 npm run test:browser -- tests/browser/webdav-backup.spec.ts
 ```
+
+上面是开发阶段的准备与定向检查示例。流程为：**构建一次 → 完整功能检查与独立卡顿测量并行 → 保存合格网页及镜像 → 发布时复用同一产物 → 线上版本及相关行为确认**。卡顿门禁按 [性能验收要求](web-performance-release-gate.md) 完成全部24轮，不能用本地定向检查、功能测试或旧版本结果代替。
 
 ## 推送与收尾
 
 - 推送前再次核对远程是否被其他任务更新；有更新则核对差异并验证受影响部分，不强制推送。
 - 同一批改动集中推送一次，记录精确提交 SHA。已有同提交完整验证可以复用，不重复触发。
-- 等待该提交的 `Check and publish` 中 build 和 deploy 均成功，以及适用的 `Publish Docker image` 成功；只看到编译通过或队列启动不算完成。
+- 等待该提交的 `Check release candidate` 中 build、全部六个浏览器分片、`Performance release gate` 和镜像准备全部成功，产物及证据未过期后才可上线。候选准备完成不等于网站已更新。
 - 对照正式 Pages 页面及其脚本、样式资源，记录完整测试数量、既有跳过项及结果链接。
+- 两站的版本、资源和改动及相邻行为确认可并行；复用同提交的完整功能和性能证据，不再复制整套验收。期间若版本变化，必须重新核对证据对应关系。
 - 失败时先下载具体失败日志和 trace，在对应环境复现；有已验证的修复再推送，不边等失败边继续推同一问题的尝试。
 - 不关闭失败通知来代替修复。测试已显式声明的平台不适用项与新失败要分别记录。
 - 收尾记录放在现有工作流忽略的 `docs/`、`memory/` 等路径内；先核对实际差异，避免记录提交再次触发部署。
@@ -39,9 +43,20 @@ CI=1 npm run test:browser
 - 按平台选择浏览器启动参数；Linux WebKit 不接受 Mac 的 `--mute-audio` 参数。
 - 界面结构变化后更新定位方式，保留原本要保护的交互、布局、数据及缓存行为。
 
-## 构建复用与并行检查（2026-11-06）
+## 构建复用与并行检查（2026-11-08）
 
-- 应用和公开卡组只在 `build` 中生成一次，上传同一份 `github-pages` 产物。三个 browser job 下载它，分别运行 `--shard=1/3`、`2/3`、`3/3`；每台仍使用现有的两个 worker，避免增加单机负载。所有分片成功后才允许发布，测试断言、重试设置和既有跳过条件不变。
-- Docker 主线发布由 Pages 工作流调用，逐文件核对同提交产物的大小与 SHA256 后直接打包 Nginx 镜像，不再次下载卡组或编译。容器集成检查与 AMD64/ARM64 发布保留。标签及手动 Docker 构建仍可使用源码 Dockerfile。
+- 应用和公开卡组只在 `build` 中生成一次，上传同一份 `github-pages` 产物。desktop、mobile、mobile-webkit 各自执行 `--shard=1/2` 和 `2/2`，共六台独立 runner；每台仍两个 worker、零重试，只安装所需浏览器。测试断言、用例及既有跳过条件不变。
+- `Performance release gate` 使用另一个独立 runner 和同一份产物，完整执行桌面/触屏各四场景三轮。功能测试不与性能测量争用同一台机器；任何一轮失败、缺项或版本错误都阻止候选资格和后续上线。
+- Docker 主线发布由 Pages 工作流调用，逐文件核对同提交产物的大小与 SHA256 后直接打包 Nginx 镜像，不再次下载卡组或编译。容器集成检查与 AMD64/ARM64 发布保留。标签及手动 Docker 入口只复用同提交已经通过全部六分片及性能门禁的产物；缺少有效证据时拒绝发布。
 - 仅工作流、测试、文档及上述 CI 打包辅助文件变更时，仍运行完整分片与容器验证，但不重新部署 Pages、不推送 Docker 镜像；应用、内容和常规运行配置变更照常发布。`workflow_dispatch` 可显式进行正式发布。分类逻辑与产物校验有独立测试。
-- 每个分片保留自己的截图、trace 和 blob 报告（`browser-results-1` 至 `3`）。正式完成需三个分片全部成功，不以某一个分片通过代替全套。
+- 每个分片保留独立的 `browser-results-<project>-<shard>` 截图、trace 和 blob 报告；性能原始记录保存在 `performance-results`。正式完成需六个分片及性能作业全部成功，不以局部通过代替全套。
+
+## 已验收产物的快速发布
+
+候选流水线只准备网页与带SHA的双架构镜像，不切换Pages或Docker latest。正式发布使用 `Release verified build`，输入候选的完整40位提交SHA。它验证全部六分片、24轮性能、容器验证以及产物有效期；网页逐文件校验后部署，Docker按不可变digest切换latest，不重新编译镜像。两项并行，随后检查实际网页资源/导入与模块切换及镜像digest/架构。
+
+```sh
+gh workflow run release.yml --ref main -f revision="$RELEASE_SHA"
+```
+
+目标是发布触发到所需线上确认完成不超过120秒，包含GitHub排队；实测前不保证该数字。完整候选准备时间单列，未准备好时不允许发布，不将失败检查排除计时后冒充成功。国内站仍使用现有标准更新器和完整文件/安全清理校验；当前sudo要求密码且没有CI部署凭据，此部分尚未自动化，不能将Pages/Docker成功称作双站目标达成。

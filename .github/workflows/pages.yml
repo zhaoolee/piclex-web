@@ -1,4 +1,4 @@
-name: Check and publish
+name: Check release candidate
 on:
   push:
     branches: [main]
@@ -43,6 +43,7 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
+          retention-days: 7
   browser:
     name: Browser ${{ matrix.project }} ${{ matrix.shard }}/2
     needs: build
@@ -116,19 +117,6 @@ jobs:
     with:
       verified-artifact: true
       performance-verified: true
+      candidate-only: true
       publish: ${{ needs.build.outputs.publish == 'true' }}
     secrets: inherit
-  deploy:
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && needs.build.outputs.publish == 'true'
-    needs: [build, browser, performance]
-    runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy
-        id: deployment
-        uses: actions/deploy-pages@v4
