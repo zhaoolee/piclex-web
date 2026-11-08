@@ -3,6 +3,7 @@ export const scenarios=['spelling','dictation','modules','sync'];
 export function assessSample(sample){
  const failures=[],{raw,actions,trace}=sample;
  const need=(condition,message)=>{if(!condition)failures.push(message);};
+ need(sample.error==null,'sample execution failed');
  need(raw&&actions&&trace,'missing raw evidence');if(!raw||!actions||!trace)return failures;
  const finite=a=>Array.isArray(a)&&a.every(n=>Number.isFinite(n)&&n>=0);
  need(finite(raw.frames)&&finite(trace.tasks)&&finite(raw.events),'invalid numeric samples');
@@ -23,7 +24,7 @@ export function assessSample(sample){
 }
 export function assessSuite(report){
  const failures=[];if(!/^[a-f0-9]{40}$/.test(report.sourceRevision||''))failures.push('missing source revision');
- const keys=new Set();for(const sample of report.samples||[]){const key=[sample.viewport,sample.scenario,sample.round].join('/');if(keys.has(key))failures.push('duplicate '+key);keys.add(key);for(const reason of assessSample(sample))failures.push(key+': '+reason);}
+ const keys=new Set();for(const sample of report.samples||[]){const key=[sample.viewport,sample.scenario,sample.round].join('/');if(!['desktop','touch'].includes(sample.viewport)||!scenarios.includes(sample.scenario)||!Number.isInteger(sample.round)||sample.round<1||sample.round>limits.rounds)failures.push('unexpected '+key);if(keys.has(key))failures.push('duplicate '+key);keys.add(key);for(const reason of assessSample(sample))failures.push(key+': '+reason);}
  for(const view of ['desktop','touch'])for(const scenario of scenarios)for(let round=1;round<=limits.rounds;round++)if(!keys.has([view,scenario,round].join('/')))failures.push(`missing ${view}/${scenario}/${round}`);
  return failures;
 }
