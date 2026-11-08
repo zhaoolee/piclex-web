@@ -1,0 +1,880 @@
+{
+  "config": {
+    "argv": [
+      "/usr/bin/node",
+      "/work/node_modules/.bin/playwright",
+      "test",
+      "--config=playwright.worker-focus.config.ts",
+      "webdav-backup.spec.ts",
+      "--grep",
+      "automatic progress|corrupt standalone progress|deck positions|failed sync worker"
+    ],
+    "configFile": "/work/playwright.worker-focus.config.ts",
+    "rootDir": "/work/tests/browser",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 2
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/evidence/worker-focused-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "id": "desktop",
+        "name": "desktop",
+        "testDir": "/work/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/evidence/worker-focused-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "id": "mobile",
+        "name": "mobile",
+        "testDir": "/work/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/evidence/worker-focused-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "id": "mobile-webkit",
+        "name": "mobile-webkit",
+        "testDir": "/work/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "deck-subscription-themes.spec.ts",
+          "deck-subscriptions.spec.ts",
+          "audio-unlock-speech.spec.ts",
+          "spelling-letter-color.spec.ts",
+          "parity-state.spec.ts",
+          "parity-speaking.spec.ts",
+          "parity-subscriptions.spec.ts",
+          "guided-no-eyes.spec.ts",
+          "word-peek.spec.ts",
+          "capture-grouping.spec.ts",
+          "learning-parity.spec.ts",
+          "http-crypto.spec.ts",
+          "subscription-poster.spec.ts",
+          "input-performance.spec.ts",
+          "loading.spec.ts",
+          "photo-prefetch.spec.ts",
+          "spelling-feedback.spec.ts",
+          "speech-voice.spec.ts",
+          "capture-render.spec.ts",
+          "visible-focus.spec.ts",
+          "focus-ambience.spec.ts",
+          "ai-settings.spec.ts",
+          "large-backup.spec.ts",
+          "webdav-backup.spec.ts",
+          "ui-assets.spec.ts",
+          "capture-mobile-fit.spec.ts",
+          "learning-url.spec.ts",
+          "spelling-revisit.spec.ts",
+          "visual-viewport.spec.ts",
+          "deck-picker-audio.spec.ts",
+          "keyboard-viewport.spec.ts",
+          "touch-spelling.spec.ts",
+          "learning-keyboard-shortcuts.spec.ts",
+          "playback-parity.spec.ts",
+          "interaction-audit.spec.ts",
+          "camera-parity.spec.ts",
+          "camera-surface.spec.ts",
+          "glass-tabs.spec.ts",
+          "settings-parity.spec.ts",
+          "layout-audit.spec.ts",
+          "alignment-extension.spec.ts",
+          "word-completion.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "line",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "/evidence/worker-focused-report.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 2,
+    "webServer": {
+      "command": "npm run preview",
+      "url": "http://127.0.0.1:18120",
+      "reuseExistingServer": false
+    }
+  },
+  "suites": [
+    {
+      "title": "webdav-backup.spec.ts",
+      "file": "webdav-backup.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "automatic progress imports native XP without photos and unchanged sync never uploads a deck",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 760,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T04:09:44.854Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "874c6f3c53d99fc516cd-599e1199f60f5703ccf1",
+          "file": "webdav-backup.spec.ts",
+          "line": 65,
+          "column": 1
+        },
+        {
+          "title": "automatic progress merges offline web and native receipts once and retries failed uploads",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 881,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T04:09:45.689Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "874c6f3c53d99fc516cd-60b15fd6b4e01d8abd19",
+          "file": "webdav-backup.spec.ts",
+          "line": 79,
+          "column": 1
+        },
+        {
+          "title": "automatic progress merges concurrent native snapshots and opt out stops transfers",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 789,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T04:09:46.579Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "874c6f3c53d99fc516cd-cae7a0724f67b389eaaf",
+          "file": "webdav-backup.spec.ts",
+          "line": 107,
+          "column": 1
+        },
+        {
+          "title": "corrupt standalone progress is rejected without publishing or replacing local records",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 878,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T04:09:47.375Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "874c6f3c53d99fc516cd-af819373cc34dd6331ee",
+          "file": "webdav-backup.spec.ts",
+          "line": 123,
+          "column": 1
+        },
+        {
+          "title": "deck positions receive native anchors without changing XP and defer while typing",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1543,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T04:09:48.261Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "874c6f3c53d99fc516cd-36309ba9f0bd90a0856c",
+          "file": "webdav-backup.spec.ts",
+          "line": 132,
+          "column": 1
+        },
+        {
+          "title": "deck positions publish navigation and a fresh browser resumes the same word",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2838,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T04:09:49.708Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "874c6f3c53d99fc516cd-a3daa4ea92ff6fc17244",
+          "file": "webdav-backup.spec.ts",
+          "line": 148,
+          "column": 1
+        },
+        {
+          "title": "a failed sync worker cannot publish and a fresh worker safely retries",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 547,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T04:09:52.553Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "874c6f3c53d99fc516cd-6d73a70aa926d8f0d30e",
+          "file": "webdav-backup.spec.ts",
+          "line": 161,
+          "column": 1
+        },
+        {
+          "title": "automatic progress imports native XP without photos and unchanged sync never uploads a deck",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile",
+              "projectName": "mobile",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 830,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T04:09:44.857Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "874c6f3c53d99fc516cd-2a329ef70dd826bd1dce",
+          "file": "webdav-backup.spec.ts",
+          "line": 65,
+          "column": 1
+        },
+        {
+          "title": "automatic progress merges offline web and native receipts once and retries failed uploads",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile",
+              "projectName": "mobile",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 925,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T04:09:45.749Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "874c6f3c53d99fc516cd-ebca620dbde934a01866",
+          "file": "webdav-backup.spec.ts",
+          "line": 79,
+          "column": 1
+        },
+        {
+          "title": "automatic progress merges concurrent native snapshots and opt out stops transfers",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile",
+              "projectName": "mobile",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 695,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T04:09:46.682Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "874c6f3c53d99fc516cd-6ba7c37dfcd74ba1f7b5",
+          "file": "webdav-backup.spec.ts",
+          "line": 107,
+          "column": 1
+        },
+        {
+          "title": "corrupt standalone progress is rejected without publishing or replacing local records",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile",
+              "projectName": "mobile",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 846,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T04:09:47.385Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "874c6f3c53d99fc516cd-d30f1cbeea0c1620e4c6",
+          "file": "webdav-backup.spec.ts",
+          "line": 123,
+          "column": 1
+        },
+        {
+          "title": "deck positions receive native anchors without changing XP and defer while typing",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile",
+              "projectName": "mobile",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 1177,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T04:09:48.240Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "874c6f3c53d99fc516cd-df78a20ebbc0e877def7",
+          "file": "webdav-backup.spec.ts",
+          "line": 132,
+          "column": 1
+        },
+        {
+          "title": "deck positions publish navigation and a fresh browser resumes the same word",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile",
+              "projectName": "mobile",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 3298,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T04:09:49.424Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "874c6f3c53d99fc516cd-9460bfd3d24e33fa37a3",
+          "file": "webdav-backup.spec.ts",
+          "line": 148,
+          "column": 1
+        },
+        {
+          "title": "a failed sync worker cannot publish and a fresh worker safely retries",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile",
+              "projectName": "mobile",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 688,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T04:09:52.623Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "874c6f3c53d99fc516cd-bc13e88a9cca17294cbf",
+          "file": "webdav-backup.spec.ts",
+          "line": 161,
+          "column": 1
+        },
+        {
+          "title": "automatic progress imports native XP without photos and unchanged sync never uploads a deck",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-webkit",
+              "projectName": "mobile-webkit",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1631,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T04:09:53.440Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "874c6f3c53d99fc516cd-39fff4d868d82981e612",
+          "file": "webdav-backup.spec.ts",
+          "line": 65,
+          "column": 1
+        },
+        {
+          "title": "automatic progress merges offline web and native receipts once and retries failed uploads",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-webkit",
+              "projectName": "mobile-webkit",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1675,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T04:09:55.139Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "874c6f3c53d99fc516cd-7f7655be1921ed7d597c",
+          "file": "webdav-backup.spec.ts",
+          "line": 79,
+          "column": 1
+        },
+        {
+          "title": "automatic progress merges concurrent native snapshots and opt out stops transfers",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-webkit",
+              "projectName": "mobile-webkit",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1453,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T04:09:56.825Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "874c6f3c53d99fc516cd-ced2ae89e2f549592a3a",
+          "file": "webdav-backup.spec.ts",
+          "line": 107,
+          "column": 1
+        },
+        {
+          "title": "corrupt standalone progress is rejected without publishing or replacing local records",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-webkit",
+              "projectName": "mobile-webkit",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1274,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T04:09:58.285Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "874c6f3c53d99fc516cd-e5bcab510d71d4f17a55",
+          "file": "webdav-backup.spec.ts",
+          "line": 123,
+          "column": 1
+        },
+        {
+          "title": "deck positions receive native anchors without changing XP and defer while typing",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-webkit",
+              "projectName": "mobile-webkit",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2066,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T04:09:59.566Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "874c6f3c53d99fc516cd-675bb86b21e62f67bfeb",
+          "file": "webdav-backup.spec.ts",
+          "line": 132,
+          "column": 1
+        },
+        {
+          "title": "deck positions publish navigation and a fresh browser resumes the same word",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-webkit",
+              "projectName": "mobile-webkit",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5542,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T04:10:01.638Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "874c6f3c53d99fc516cd-06b29732c7aa908571fa",
+          "file": "webdav-backup.spec.ts",
+          "line": 148,
+          "column": 1
+        },
+        {
+          "title": "a failed sync worker cannot publish and a fresh worker safely retries",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-webkit",
+              "projectName": "mobile-webkit",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1319,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T04:10:07.187Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "874c6f3c53d99fc516cd-489d9302a386aa9fd86b",
+          "file": "webdav-backup.spec.ts",
+          "line": 161,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-08T04:09:44.054Z",
+    "duration": 24596.464,
+    "expected": 21,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

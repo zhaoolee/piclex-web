@@ -1,5 +1,5 @@
 {
-  "status": "local full checks passed; CI and publication pending",
+  "status": "Feature release passed formal CI and is present on both live origins; separate Worker performance fix pending",
   "date": "2026-11-08",
   "base": "81c3fa07d5eeb5133a8412308d297f4c9056d707",
   "scope": [
@@ -46,13 +46,34 @@
     "userData": "Fresh browser contexts and repository fixtures only",
     "simulator": "not used"
   },
-  "ci": null,
-  "live": null,
-  "docker": null,
+  "ci": {
+    "sourceRevision": "287d1d6fb848ad67717cab3aebff879542de7ecf",
+    "url": "https://github.com/zhaoolee/piclex-web/actions/runs/42442419281",
+    "status": "success",
+    "unitPassed": 303,
+    "deploymentChecksPassed": 45,
+    "browserPassed": 611,
+    "browserSkipped": 4
+  },
+  "live": {
+    "sourceRevision": "a8c8e09436e36f35e772e869f736851949017164",
+    "releaseID": "a8c8e09436e3-896a363e2f8b",
+    "resourceChecks": "both origins HTML and four entry JS/CSS SHA256 match manifest",
+    "pagesFeatureBrowserChecks": 45,
+    "domesticFeatureBrowserChecks": "Pending targeted followup in unified release; resources match verified build",
+    "rootDeployment": "Not executed after automatic approval rejection; user chose manual sudo standard script"
+  },
+  "docker": {
+    "shaTag": "sha-287d1d6",
+    "digest": "sha256:b01a6fefceb7e310fa6218e0c1fd71dd1d61c16744f4f8bd0a16e5ec0890bc6e",
+    "architectures": [
+      "linux/amd64",
+      "linux/arm64"
+    ],
+    "status": "published; latest has advanced to a subsequent release"
+  },
   "outstanding": [
-    "Formal exact-commit CI including Pages and Docker",
-    "Domestic standard release activation",
-    "Both live origins resource and interaction verification",
-    "Cleanup and final records push"
+    "Separate Worker fix and new performance release gate are in unified final CI",
+    "Targeted live acceptance and task artifact cleanup will follow unified release"
   ]
 }

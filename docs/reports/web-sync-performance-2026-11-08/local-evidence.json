@@ -1,0 +1,3453 @@
+{
+  "date": "2026-11-08",
+  "status": "New Worker performance not yet verified; formal CI required",
+  "rawEvidenceDirectory": "/Users/zhaoolee/github/PicLex/output/web-performance-2026-11-08",
+  "immutableInputs": [
+    {
+      "path": "app-performance-gate-check.json",
+      "bytes": 769,
+      "sha256": "f76b96121172231179cef0a30d91be67d407a841ced0dee3faf5397e097dec88"
+    },
+    {
+      "path": "baseline-final-launcher.log",
+      "bytes": 1134,
+      "sha256": "509fad976de2303b648d4a2b9ba28c56729443074934e252bfb067897ddefa4d"
+    },
+    {
+      "path": "ci-result.json",
+      "bytes": 3977,
+      "sha256": "8d276e5686eb114e188ee008d80bef7c7b13f5b0981b8a58fb2d7780050b2e06"
+    },
+    {
+      "path": "final-unit.log",
+      "bytes": 29915,
+      "sha256": "08525992ade6032a1c320390e1a33d335a332f70c7c748fe5c9d05c090b5573a"
+    },
+    {
+      "path": "final-validation.log",
+      "bytes": 1185,
+      "sha256": "be12eaddb51c7fc11cd0eeaa70600810a24278f5182c4bb450b9c3559a57ab4d"
+    },
+    {
+      "path": "host-load-final.json",
+      "bytes": 38274,
+      "sha256": "b1d95f4e252e2e8940f9b96a2d7b09da2db7cecfa8ee0faa17dee1bb26657a36"
+    },
+    {
+      "path": "live-a8-resources.json",
+      "bytes": 2222,
+      "sha256": "86a2e761eb70388975779b13725646bb75a397f770143410d2bc948237b072da"
+    },
+    {
+      "path": "pages-live-report.json",
+      "bytes": 52082,
+      "sha256": "533931b186361019fb31d95e2fadd4724ed8159f9d1fe169fc4de3b0adabc07f"
+    },
+    {
+      "path": "pages-live.log",
+      "bytes": 7383,
+      "sha256": "d7fa66cae6984cf4e3e3f18934358b22b07160f3736b954b67e5ef1138897cd0"
+    },
+    {
+      "path": "performance-baseline-consistent/desktop-sync-1.json",
+      "bytes": 163222,
+      "sha256": "520b07e0a2f224925345c65ff1f83ab11d54cbb6f81ddd959620d2be231ae8f9"
+    },
+    {
+      "path": "performance-baseline-consistent/desktop-sync-1.trace.json.gz",
+      "bytes": 5169856,
+      "sha256": "05b4efb89156fd4a0906d16f5173c174fe60f3378d9100bb9256409656a758fc"
+    },
+    {
+      "path": "performance-baseline-consistent/desktop-sync-2.json",
+      "bytes": 165066,
+      "sha256": "a35aad67256098b0037a343c4b68fe18c2deb2aa05468acb0185925ccc65f90e"
+    },
+    {
+      "path": "performance-baseline-consistent/desktop-sync-2.trace.json.gz",
+      "bytes": 5243517,
+      "sha256": "072d1194ed42808d5293e0749813551ac82c17769cd2e3c89bc9eef37cca21e6"
+    },
+    {
+      "path": "performance-baseline-consistent/desktop-sync-3.json",
+      "bytes": 171312,
+      "sha256": "33e608d16c9cc410dfedf53cdf27d0aea1ff309c3f7808986fa72f7d62a9d6b3"
+    },
+    {
+      "path": "performance-baseline-consistent/desktop-sync-3.trace.json.gz",
+      "bytes": 5330704,
+      "sha256": "b3c0c80214d98cc694532156e22c4c82bf096dd24c19b885dedf382a23431527"
+    },
+    {
+      "path": "performance-baseline-consistent/report.json",
+      "bytes": 1685411,
+      "sha256": "742ac710a42bbf74452ca37ca96ab16d0dc114c45157808f757e57a0700f875a"
+    },
+    {
+      "path": "performance-baseline-consistent/touch-sync-1.json",
+      "bytes": 266858,
+      "sha256": "e882d29a810e81b251812beef2835728dc8f28ac18f9522f452a84766ff7cb1e"
+    },
+    {
+      "path": "performance-baseline-consistent/touch-sync-1.trace.json.gz",
+      "bytes": 7762290,
+      "sha256": "8b7109432757ac06a2c7efb1d0ece899b0678b32a32d0cc3feed82c571cc34c0"
+    },
+    {
+      "path": "performance-baseline-consistent/touch-sync-2.json",
+      "bytes": 279914,
+      "sha256": "29669ac249f93b7bcedc2017270f3b360ab7e81e2870e33966cb3d59f07403cd"
+    },
+    {
+      "path": "performance-baseline-consistent/touch-sync-2.trace.json.gz",
+      "bytes": 7886535,
+      "sha256": "305faab5969940816e894ceaebd21553c7b5341f7540df22846becdbb79c4acd"
+    },
+    {
+      "path": "performance-baseline-consistent/touch-sync-3.json",
+      "bytes": 255715,
+      "sha256": "2f5ead4fb5fa065a86bb4f7067d3c7f0dd0fb4f60bf55d6def66a82923cf8b4d"
+    },
+    {
+      "path": "performance-baseline-consistent/touch-sync-3.trace.json.gz",
+      "bytes": 7467529,
+      "sha256": "cee0535e81d0de8596a6ba9d91c2e3332c673717999d38a3d37be29f86b61f02"
+    },
+    {
+      "path": "performance-baseline-final/desktop-sync-1.json",
+      "bytes": 153920,
+      "sha256": "83a8124de242741578071b1b878214c946e183e9afbc73c743cde997e96a3dea"
+    },
+    {
+      "path": "performance-baseline-final/desktop-sync-1.trace.json.gz",
+      "bytes": 4893102,
+      "sha256": "5aab07d8638020822ac9fe301e75d2009d4ebe18a67adf444c15be4640e94fd1"
+    },
+    {
+      "path": "performance-baseline-final/desktop-sync-2.json",
+      "bytes": 156335,
+      "sha256": "abb1b67b6624dae7886c6d7317b530a2d305939f02b3f6d6bcd752d6746923c0"
+    },
+    {
+      "path": "performance-baseline-final/desktop-sync-2.trace.json.gz",
+      "bytes": 4958367,
+      "sha256": "beb190774d16f45739f8a9cd8d957456f06a7f28862057d88042f25a0142fd58"
+    },
+    {
+      "path": "performance-baseline-final/desktop-sync-3.json",
+      "bytes": 156578,
+      "sha256": "1c21e232ed42631a715bacfcac5292016d61e600b67b47cf24bfcca2a1f8ca24"
+    },
+    {
+      "path": "performance-baseline-final/desktop-sync-3.trace.json.gz",
+      "bytes": 4879646,
+      "sha256": "dc5cc51d3a473c2e924b049f9c344df1fb91307cfc50e2b7c84f02914e2bfc21"
+    },
+    {
+      "path": "performance-baseline-final/report.json",
+      "bytes": 1564596,
+      "sha256": "fe63f79802bf5dd414bf9ddb9a1332999432ed1cd1b231104edae5d5b8990507"
+    },
+    {
+      "path": "performance-baseline-final/touch-sync-1.json",
+      "bytes": 249483,
+      "sha256": "d578612e16f293e0aa8ec2ce095ac372a7e5d5ab5a6d8d1e50fecc726f655861"
+    },
+    {
+      "path": "performance-baseline-final/touch-sync-1.trace.json.gz",
+      "bytes": 7306607,
+      "sha256": "17c0e77356d820389203a671543d1c3daaddcf16f86b779fd89c8286c07e6822"
+    },
+    {
+      "path": "performance-baseline-final/touch-sync-2.json",
+      "bytes": 249565,
+      "sha256": "30721ef426a51e3e3bb7dfbbf1d60331a7bef752573a23032963d8d15a5abf2b"
+    },
+    {
+      "path": "performance-baseline-final/touch-sync-2.trace.json.gz",
+      "bytes": 7308622,
+      "sha256": "519a2707dff6bd32c35d3ddf57db9150be1d4e62d78906407ca84eca1c41dab6"
+    },
+    {
+      "path": "performance-baseline-final/touch-sync-3.json",
+      "bytes": 247677,
+      "sha256": "dfa6b48233990a0944df0687ba4ba9b1d834461acd6f988ef0e125826a0bdc72"
+    },
+    {
+      "path": "performance-baseline-final/touch-sync-3.trace.json.gz",
+      "bytes": 7401677,
+      "sha256": "85985edd6afecd63264696ecbf313d7de4f5a355d902a65850b0eec1c3faf6da"
+    },
+    {
+      "path": "performance-candidate/desktop-dictation-1.json",
+      "bytes": 231639,
+      "sha256": "c8c73d533da601deb36549a9a7ab1e421b1c659ed3f7ac2df90b841bbce4ffe3"
+    },
+    {
+      "path": "performance-candidate/desktop-dictation-1.trace.json.gz",
+      "bytes": 4212392,
+      "sha256": "5c79495bc0a5dc5f6362554a969260dec36c3a245a5265bab5d48f97cfea799a"
+    },
+    {
+      "path": "performance-candidate/desktop-dictation-2.json",
+      "bytes": 231680,
+      "sha256": "56c853a044cfc73e78a51225e1239f15aa12021270828100d4171351c96df0cb"
+    },
+    {
+      "path": "performance-candidate/desktop-dictation-2.trace.json.gz",
+      "bytes": 4188059,
+      "sha256": "f8b6ab18a4406aac79707ef9d618dbb7d31283093e36be52a52ec8683f73c6ed"
+    },
+    {
+      "path": "performance-candidate/desktop-dictation-3.json",
+      "bytes": 231603,
+      "sha256": "546e3bee35d0c6c27b333795c1ebe43aa5d0920196e6da26fb15935a2f43a8ab"
+    },
+    {
+      "path": "performance-candidate/desktop-dictation-3.trace.json.gz",
+      "bytes": 4192837,
+      "sha256": "9a0cb0f63611bbf38a7a124973dd5bea4e840c9c25604b464a0d9c386be3168c"
+    },
+    {
+      "path": "performance-candidate/desktop-modules-1.json",
+      "bytes": 131853,
+      "sha256": "8233f4981e78cc0603e35dc8c3e67fdcd5fee24866f42ac5ff096c286c4fa9e6"
+    },
+    {
+      "path": "performance-candidate/desktop-modules-1.trace.json.gz",
+      "bytes": 1988373,
+      "sha256": "d21d06909b09b9da8c88e3349b67f548a5f2ad8c02185d1af67bbc81026591d8"
+    },
+    {
+      "path": "performance-candidate/desktop-modules-2.json",
+      "bytes": 131614,
+      "sha256": "f01c6c1268dda7e8eec6c1a4358530bb429f47e6c0ab955e16464a41882ab05b"
+    },
+    {
+      "path": "performance-candidate/desktop-modules-2.trace.json.gz",
+      "bytes": 1994898,
+      "sha256": "37c07038141ad0fa03bbdf21ee455bffa8a1ee1d641d20c10390f64cffbdbf77"
+    },
+    {
+      "path": "performance-candidate/desktop-modules-3.json",
+      "bytes": 130783,
+      "sha256": "4d2740319524d076f0aacc5551ffb62b59a77b38616f9cee0c253c6a97a95629"
+    },
+    {
+      "path": "performance-candidate/desktop-modules-3.trace.json.gz",
+      "bytes": 1980637,
+      "sha256": "5597ffb80a51ed83b30282dcfdaf38d9eb518c071c8f3e1ed5d4e45e25f7b099"
+    },
+    {
+      "path": "performance-candidate/desktop-spelling-1.json",
+      "bytes": 277110,
+      "sha256": "5eb2aa3a225755d15bd76efcdb8a7a638556b15d84e2b66075194d3f86a2f200"
+    },
+    {
+      "path": "performance-candidate/desktop-spelling-1.trace.json.gz",
+      "bytes": 4562754,
+      "sha256": "67a99a9015572c2e5d2b07c41fa025d5a37cfd1f00bd8a0594423dcd97fcb33b"
+    },
+    {
+      "path": "performance-candidate/desktop-spelling-2.json",
+      "bytes": 279843,
+      "sha256": "4e7a44839cc8896c1724da6eb471b906759f9ac73271f850a9b144ccd585b226"
+    },
+    {
+      "path": "performance-candidate/desktop-spelling-2.trace.json.gz",
+      "bytes": 4559538,
+      "sha256": "d59d1ccd149937d0787c5e7a1e6812f68f339c47e8452bb6d5de45e80ad9b661"
+    },
+    {
+      "path": "performance-candidate/desktop-spelling-3.json",
+      "bytes": 276195,
+      "sha256": "60c837adfd3748ee04b41627d8f58c325af78cbdc8ea558645978d2518530d01"
+    },
+    {
+      "path": "performance-candidate/desktop-spelling-3.trace.json.gz",
+      "bytes": 4544473,
+      "sha256": "3e853577ac0673c3ecc61446ff739d99c9538216b396e8b92750f406f588afc9"
+    },
+    {
+      "path": "performance-candidate/desktop-sync-1.json",
+      "bytes": 414466,
+      "sha256": "7409198d8abf6cea433e3058570c7145391a132598ec64288c2992a640010750"
+    },
+    {
+      "path": "performance-candidate/desktop-sync-1.trace.json.gz",
+      "bytes": 5138180,
+      "sha256": "0cf8fd4cef0174a7efd19d52cb484d5ac3f89706017b5724dd0b75cbbc96dd8e"
+    },
+    {
+      "path": "performance-candidate/desktop-sync-2.json",
+      "bytes": 417855,
+      "sha256": "7f771146751363f7d10671cc61418e356c294d702f3d103656fefd6d8cdf728f"
+    },
+    {
+      "path": "performance-candidate/desktop-sync-2.trace.json.gz",
+      "bytes": 5178206,
+      "sha256": "a0a7e8b1c0ef870370d4e8eef3836530e5239a6675cff5e7ec441186ec6c982c"
+    },
+    {
+      "path": "performance-candidate/desktop-sync-3.json",
+      "bytes": 426976,
+      "sha256": "f3393422e7fcfa131d2ec32ba5339f8425d148178011d1a3906830fd69e30579"
+    },
+    {
+      "path": "performance-candidate/desktop-sync-3.trace.json.gz",
+      "bytes": 5196056,
+      "sha256": "00a37befdd0c356efaa9ff44d9daed0d16d85c05680899b79e7640fd4c978a19"
+    },
+    {
+      "path": "performance-candidate/report.json",
+      "bytes": 9962979,
+      "sha256": "47d665ba8f3fd0a2d94cc51421ad993c4aa34901fee511eede0757be604c846c"
+    },
+    {
+      "path": "performance-candidate/touch-dictation-1.json",
+      "bytes": 372185,
+      "sha256": "a7216a596861289427cb2dc78f1c317afac5729b1097276ae852f9ddeafe39f5"
+    },
+    {
+      "path": "performance-candidate/touch-dictation-1.trace.json.gz",
+      "bytes": 6347496,
+      "sha256": "81cf4c3b49688fa7bb271f31d6602d9c7e0b5ceb85504f1128fe6a43a47e0e4e"
+    },
+    {
+      "path": "performance-candidate/touch-dictation-2.json",
+      "bytes": 373428,
+      "sha256": "d0dcf253566ccb191c517f6b01461194d6cd5e79117ca8e8b80e1011abcf1c45"
+    },
+    {
+      "path": "performance-candidate/touch-dictation-2.trace.json.gz",
+      "bytes": 6429677,
+      "sha256": "b70a50dce2e0869aed20463b77e00fe70fc1c0ceeb99e0559d12b1e76dfc3bd0"
+    },
+    {
+      "path": "performance-candidate/touch-dictation-3.json",
+      "bytes": 373690,
+      "sha256": "29d92634aa80fb2f256f866d3d5a15d84b6669e98855d86c7b6b8ceadd391325"
+    },
+    {
+      "path": "performance-candidate/touch-dictation-3.trace.json.gz",
+      "bytes": 6432642,
+      "sha256": "b5e848715adef45b4f9838bb256ba185f7e1e28851d044d030d692769d2d60ea"
+    },
+    {
+      "path": "performance-candidate/touch-modules-1.json",
+      "bytes": 131731,
+      "sha256": "e7935f7e476efdc0491f4bbd3ff4fe8f1345418f660f1574f8855c183d1f077d"
+    },
+    {
+      "path": "performance-candidate/touch-modules-1.trace.json.gz",
+      "bytes": 1934762,
+      "sha256": "fca86b9074a1d34e67397e78883d2a2642d979b08e4d836e53d5a59d4e88e748"
+    },
+    {
+      "path": "performance-candidate/touch-modules-2.json",
+      "bytes": 131845,
+      "sha256": "de77bb0502344a3da0b5149dfe425d45497d315deac30b10aa94231b752e6aa2"
+    },
+    {
+      "path": "performance-candidate/touch-modules-2.trace.json.gz",
+      "bytes": 1962652,
+      "sha256": "33dcc112261d2c57ea5dc8b30bf064d0adbaa1ad8f4d28fc124c4ddcb662603b"
+    },
+    {
+      "path": "performance-candidate/touch-modules-3.json",
+      "bytes": 131759,
+      "sha256": "e23ead6b1724bfa129778f2ad4bee8b0f6d40bbb706b96df55e57ebe79aad39c"
+    },
+    {
+      "path": "performance-candidate/touch-modules-3.trace.json.gz",
+      "bytes": 1955950,
+      "sha256": "02b0bc2c98370a53f8c6f2ccf7c528a8a748776a540dfc7ca311d88659ace221"
+    },
+    {
+      "path": "performance-candidate/touch-spelling-1.json",
+      "bytes": 436164,
+      "sha256": "0f593da5d11a94f4bc001e6a22d7b879dfb01e4f47b6467b07666539c89a1b4b"
+    },
+    {
+      "path": "performance-candidate/touch-spelling-1.trace.json.gz",
+      "bytes": 6924711,
+      "sha256": "11f66fd5c74f43a0e85f74c693c9b41c0dabf6f9bbff24b2e43f5458d85f9e34"
+    },
+    {
+      "path": "performance-candidate/touch-spelling-2.json",
+      "bytes": 419038,
+      "sha256": "e80ee26293fed6b600b229140f1dca64b5e2fb31ea53fa6ae9ba71df6b5ac11b"
+    },
+    {
+      "path": "performance-candidate/touch-spelling-2.trace.json.gz",
+      "bytes": 6911834,
+      "sha256": "c52417120d88b671c98a8a8f98eddca9efcd659a35eb94f4e50d6f5c4a69ff62"
+    },
+    {
+      "path": "performance-candidate/touch-spelling-3.json",
+      "bytes": 427482,
+      "sha256": "1f2ad6bdb0034b889f42722a091d8fa9822eb93599a8fb8edea28ef20d508667"
+    },
+    {
+      "path": "performance-candidate/touch-spelling-3.trace.json.gz",
+      "bytes": 6941360,
+      "sha256": "ddaf75b4985037fb29fbe2daff8920a111e924cc5a5060362dba8520a6c4bff1"
+    },
+    {
+      "path": "performance-candidate/touch-sync-1.json",
+      "bytes": 556974,
+      "sha256": "af62bcec512fe890258691101722b2eac5caffa9fd46a3d1f8c43aa97210ad50"
+    },
+    {
+      "path": "performance-candidate/touch-sync-1.trace.json.gz",
+      "bytes": 7635265,
+      "sha256": "0b2e82e201058fb1345d6224bb123fb87294d836cd9ba251088b8092eb556a49"
+    },
+    {
+      "path": "performance-candidate/touch-sync-2.json",
+      "bytes": 584564,
+      "sha256": "04ac1dd679c3a59a1750255f0b1f903c5b9e14da2a60ee6537692c38e9bba5fb"
+    },
+    {
+      "path": "performance-candidate/touch-sync-2.trace.json.gz",
+      "bytes": 7849590,
+      "sha256": "4d2cad77e16cccfc8431863acf18d6495dbaf91af24f4221a3c5c5a9b72e78e1"
+    },
+    {
+      "path": "performance-candidate/touch-sync-3.json",
+      "bytes": 543691,
+      "sha256": "ead7b5b442675435e31a9832b490138e6c5da620570fec6b4f8609b34dcea40e"
+    },
+    {
+      "path": "performance-candidate/touch-sync-3.trace.json.gz",
+      "bytes": 7514370,
+      "sha256": "8fa8d742e238343b094a4bd33d16757173baae5b10d0f20126aa36a1c8054af1"
+    },
+    {
+      "path": "performance-final/report.json",
+      "bytes": 78477,
+      "sha256": "bbb163a32a802a13edbcb2c76c6e3d92190cce0aeca664ea42703ddb2373847e"
+    },
+    {
+      "path": "performance-final-launcher.log",
+      "bytes": 3506,
+      "sha256": "2831d886012590aff17987b9b753530bcf41aa8a182f4cd7fafd2735d176594a"
+    },
+    {
+      "path": "performance-initial/desktop-dictation-1.json",
+      "bytes": 230863,
+      "sha256": "f298768f917e790254f24c39479fdcfb5b1e29c9046b732199be8c6396c3bfa0"
+    },
+    {
+      "path": "performance-initial/desktop-dictation-1.trace.json.gz",
+      "bytes": 4122679,
+      "sha256": "174bc1a41c79b7f215a252ab8d18d1f3529448d1fe0c41e217bcc3078b1dd4c8"
+    },
+    {
+      "path": "performance-initial/desktop-dictation-2.json",
+      "bytes": 227780,
+      "sha256": "4a1f28ff8d7a7d8dea7d1e608210a3a2bad071465691f007de1953b9a9f37f47"
+    },
+    {
+      "path": "performance-initial/desktop-dictation-2.trace.json.gz",
+      "bytes": 4060112,
+      "sha256": "ceaaee7b83ea2564f015e210fd598858c8ac3245591094689b724fb5205d5c4b"
+    },
+    {
+      "path": "performance-initial/desktop-dictation-3.json",
+      "bytes": 229540,
+      "sha256": "48604651396a9d399b1d1ed5ad020a86fe02ef09746c11ac70fb5815e4093cdc"
+    },
+    {
+      "path": "performance-initial/desktop-dictation-3.trace.json.gz",
+      "bytes": 4199254,
+      "sha256": "a3c584ebfae10922998c7a4dd50b57c1f1a4acd118009b2c496479746245c0a9"
+    },
+    {
+      "path": "performance-initial/desktop-modules-1.json",
+      "bytes": 139986,
+      "sha256": "0fa7ee80933133150e031fda429d4a3347d741fbb7c4a74d947d0031a11ca3df"
+    },
+    {
+      "path": "performance-initial/desktop-modules-1.trace.json.gz",
+      "bytes": 2059743,
+      "sha256": "a6ba618f8b379ef222b8e351c84fbc4c59fc237a5e5092135c7f8fafa710831d"
+    },
+    {
+      "path": "performance-initial/desktop-modules-2.json",
+      "bytes": 146224,
+      "sha256": "3cd66cdf709b31e03961177d492deb515513927dd12205096c8872ed1ed70859"
+    },
+    {
+      "path": "performance-initial/desktop-modules-2.trace.json.gz",
+      "bytes": 2168208,
+      "sha256": "f25b044c25c96d08950cdce4e7458ebb7fc2c5c2bbb20c10fc186c3ce6193538"
+    },
+    {
+      "path": "performance-initial/desktop-modules-3.json",
+      "bytes": 140178,
+      "sha256": "0ee637771a6c37b1348b859a3b731cf5b86466f5d884ea2804d6a95127ee35f0"
+    },
+    {
+      "path": "performance-initial/desktop-modules-3.trace.json.gz",
+      "bytes": 2072997,
+      "sha256": "e552c8c49f161382748b1ec062c46e89ce56d3902730715e910b0393dce79c6b"
+    },
+    {
+      "path": "performance-initial/desktop-spelling-1.json",
+      "bytes": 275125,
+      "sha256": "f846e8ac48bf9d8db122d4203e8875ba60dc278b9901b44726237308fb04adab"
+    },
+    {
+      "path": "performance-initial/desktop-spelling-1.trace.json.gz",
+      "bytes": 4537302,
+      "sha256": "ad0da211751b78f431dc09a47937f487e3b183d41d66a325933a13d6067235a5"
+    },
+    {
+      "path": "performance-initial/desktop-spelling-2.json",
+      "bytes": 341657,
+      "sha256": "a68f38f2fc5d8cc49aff10d6043b48bb6275fd9b83b258199813284dae2192e0"
+    },
+    {
+      "path": "performance-initial/desktop-spelling-2.trace.json.gz",
+      "bytes": 5102149,
+      "sha256": "b665c611d5a00b539d20eae4675b32ce3a5c59a6ace6d0ff35ef86adb29bdabd"
+    },
+    {
+      "path": "performance-initial/desktop-spelling-3.json",
+      "bytes": 286524,
+      "sha256": "695ab77fafdef2864835ca2535056f683b38ad2b1de845214c94deae1ea02e42"
+    },
+    {
+      "path": "performance-initial/desktop-spelling-3.trace.json.gz",
+      "bytes": 4597693,
+      "sha256": "57747a56a674e0d9ff7353dc54dace09f05bc728b4d3f6db1881070d99098078"
+    },
+    {
+      "path": "performance-initial/desktop-sync-1.json",
+      "bytes": 1593,
+      "sha256": "a696f77b02bd4c35df5628eaaa92bf2af0e4d17b22ea4f7333af352ae5c11efd"
+    },
+    {
+      "path": "performance-initial/desktop-sync-2.json",
+      "bytes": 1593,
+      "sha256": "1e01b24ae004dec3f13d5f99378b1f3cfda97a6907da891f9370a41b17e8c30f"
+    },
+    {
+      "path": "performance-initial/desktop-sync-3.json",
+      "bytes": 1593,
+      "sha256": "a9f58acb7f26e1393692752bb46011fabc9baf4c7e6b09b2baa23d838e73ffaa"
+    },
+    {
+      "path": "performance-initial/report.json",
+      "bytes": 6223688,
+      "sha256": "c2a0c120162cb879aff017710d16b171c940a2d8b61e2e6ac874074591344176"
+    },
+    {
+      "path": "performance-initial/touch-dictation-1.json",
+      "bytes": 379969,
+      "sha256": "3dd77f672ccbd95e94bff7e3a9b8e6b0d613dff9532e18d8189e993772cf81df"
+    },
+    {
+      "path": "performance-initial/touch-dictation-1.trace.json.gz",
+      "bytes": 6433224,
+      "sha256": "284e056039d73b103a5b9cc02e6e0ef92072725ec5be98963d1c86c49f6b6e79"
+    },
+    {
+      "path": "performance-initial/touch-dictation-2.json",
+      "bytes": 355761,
+      "sha256": "bb4216eddf2363d2d4373aba0db3ab984397166f812ffb8100c73dec6f79e2f9"
+    },
+    {
+      "path": "performance-initial/touch-dictation-2.trace.json.gz",
+      "bytes": 5922248,
+      "sha256": "f857298cf0b70193f32014bcc16006d07d59e604a7c816c749b9c8f5bd04cfa3"
+    },
+    {
+      "path": "performance-initial/touch-dictation-3.json",
+      "bytes": 352453,
+      "sha256": "4e5f48fac0dabcdbd630c13c7a1ad91eac94bbaaa70eed4598283bc7daadd60e"
+    },
+    {
+      "path": "performance-initial/touch-dictation-3.trace.json.gz",
+      "bytes": 5816676,
+      "sha256": "d2955d8d1dbaffd312d79d4ff6764482fcd7d89333507f4644fd8d849a3d3596"
+    },
+    {
+      "path": "performance-initial/touch-modules-1.json",
+      "bytes": 148624,
+      "sha256": "6761634e2abe9bb40adca4cf9361bfa87c2352f14ee1f79ca090153aa760642d"
+    },
+    {
+      "path": "performance-initial/touch-modules-1.trace.json.gz",
+      "bytes": 2111478,
+      "sha256": "5e478c1eb3caf1f46ca9a48b3252d1e695279c66bcfb751d6b17e897a84c3f52"
+    },
+    {
+      "path": "performance-initial/touch-modules-2.json",
+      "bytes": 145590,
+      "sha256": "9b94d64c86e0b92174a541020ff289c45267ff8b6a19da1c63b95e9f62bfff07"
+    },
+    {
+      "path": "performance-initial/touch-modules-2.trace.json.gz",
+      "bytes": 2059292,
+      "sha256": "562450272e8610f8de2989eb317e910153396d1d9cc2af0a74708d8cd752efab"
+    },
+    {
+      "path": "performance-initial/touch-modules-3.json",
+      "bytes": 143092,
+      "sha256": "d2f7efb3134593b25349ec2f7709d3cebcf9dd67ca4f6146b8b9679b478ed504"
+    },
+    {
+      "path": "performance-initial/touch-modules-3.trace.json.gz",
+      "bytes": 1965440,
+      "sha256": "2f65b2994f736a8f1a477e8e144da2afc5ee3e2b2d735464cbfb5b85449e5225"
+    },
+    {
+      "path": "performance-initial/touch-spelling-1.json",
+      "bytes": 393769,
+      "sha256": "bf6a9e221189627972725e7ad31ff0fe08257b1fdf409aeed5fdab0e40365d62"
+    },
+    {
+      "path": "performance-initial/touch-spelling-1.trace.json.gz",
+      "bytes": 6490738,
+      "sha256": "bb929b3d3a4403628597857018c01a3952930abb239166b07839f72b944877b9"
+    },
+    {
+      "path": "performance-initial/touch-spelling-2.json",
+      "bytes": 432424,
+      "sha256": "a80a3066239d6f09e0c157cfc1ff7925c4844fd576d54e40ce59884b3537f325"
+    },
+    {
+      "path": "performance-initial/touch-spelling-2.trace.json.gz",
+      "bytes": 6897159,
+      "sha256": "eb44552b79d56a2c411cdd24f21075f6cb8794a0b3908d8798419e807b3173c7"
+    },
+    {
+      "path": "performance-initial/touch-spelling-3.json",
+      "bytes": 406296,
+      "sha256": "60907c8afcb6d67005bc2e3e1fc53ee59b30797dc25a1b9522ce71c9e3d4095e"
+    },
+    {
+      "path": "performance-initial/touch-spelling-3.trace.json.gz",
+      "bytes": 6468830,
+      "sha256": "12bf001dcb409c122000bd954c0db3f7ba2c65577d13ac490a68478aef186271"
+    },
+    {
+      "path": "performance-initial/touch-sync-1.json",
+      "bytes": 1591,
+      "sha256": "d26094893da5c1aa4330c23e5dfcddc73a25258a92fe30c42eb086fd1a9f9b31"
+    },
+    {
+      "path": "performance-initial/touch-sync-2.json",
+      "bytes": 1591,
+      "sha256": "3fcc9792b61a4808a7900c8806d5d078d0065b9189b0c399700b5cd4d90ad84f"
+    },
+    {
+      "path": "performance-initial/touch-sync-3.json",
+      "bytes": 1591,
+      "sha256": "00631900ce51c60a7e21cb9c2b8e72b0bec856ccf8d11a4f1160faca7f47fc98"
+    },
+    {
+      "path": "performance-worker/desktop-dictation-1.json",
+      "bytes": 232756,
+      "sha256": "df8da33c44e149e1c891ebc2cf5d34866f05578cb2940b23322c03c955b6cac1"
+    },
+    {
+      "path": "performance-worker/desktop-dictation-1.trace.json.gz",
+      "bytes": 4234601,
+      "sha256": "e10a4580d53c667fabab5789aad99e98220e1986195f6bc9cde94c0228edc906"
+    },
+    {
+      "path": "performance-worker/desktop-dictation-2.json",
+      "bytes": 231048,
+      "sha256": "73c8b534329c9dd4fc6cf6df2e0804cb2ef01f67939820e4a1fdd62f3f618702"
+    },
+    {
+      "path": "performance-worker/desktop-dictation-2.trace.json.gz",
+      "bytes": 4172766,
+      "sha256": "3d52244d041dbc8a20a883e002b6f728e0751c524dcbb6fa4589815efb8ff1da"
+    },
+    {
+      "path": "performance-worker/desktop-dictation-3.json",
+      "bytes": 232146,
+      "sha256": "e3db958a367b24bdf410261c650e2a0f016b6793a2a410f5e42a5c1804079fbe"
+    },
+    {
+      "path": "performance-worker/desktop-dictation-3.trace.json.gz",
+      "bytes": 4205405,
+      "sha256": "7571f3342d4a9739efde6ec5df7e803a61f75171d03df6a7424c584a08e271cd"
+    },
+    {
+      "path": "performance-worker/desktop-modules-1.json",
+      "bytes": 136947,
+      "sha256": "ddc588a87450679b9d736dba609fbc241e27ecf1955df2cfda41ab932ad9d528"
+    },
+    {
+      "path": "performance-worker/desktop-modules-1.trace.json.gz",
+      "bytes": 2029336,
+      "sha256": "19ab6f3aaa039f8773a8ff028489cb9107bc0bddf19da76948328a764c6466f8"
+    },
+    {
+      "path": "performance-worker/desktop-modules-2.json",
+      "bytes": 132257,
+      "sha256": "0e34627e60eb5c6e7ff463dd5c18297319502cafbb57a0a7010cb4eecd8bbe7a"
+    },
+    {
+      "path": "performance-worker/desktop-modules-2.trace.json.gz",
+      "bytes": 1969765,
+      "sha256": "7965cacd50db9ca433753edd17c849aa724f077fc869e60163f228bcb297fefb"
+    },
+    {
+      "path": "performance-worker/desktop-modules-3.json",
+      "bytes": 133145,
+      "sha256": "7e7b08b0b54838c9106db264142a2a96b56c8370c761a4b67c03f21e6e33389b"
+    },
+    {
+      "path": "performance-worker/desktop-modules-3.trace.json.gz",
+      "bytes": 1992604,
+      "sha256": "fd5e756e6232a270a4682a9026d4f444274c5905da4f6ead487e4bb28a2932ae"
+    },
+    {
+      "path": "performance-worker/desktop-spelling-1.json",
+      "bytes": 260855,
+      "sha256": "5530cac8f4f6b0715499986e093c930b94d674d4d68e2798f7f454023e9db88e"
+    },
+    {
+      "path": "performance-worker/desktop-spelling-1.trace.json.gz",
+      "bytes": 4590592,
+      "sha256": "a8d8d1dc9f3c1fdd4e5e0a70f68154e2d9d0261389d8afef346883066433488b"
+    },
+    {
+      "path": "performance-worker/desktop-spelling-2.json",
+      "bytes": 263905,
+      "sha256": "cad94a0b4f69db636e531469e2dee5b1c7ef209fbc3ca492e693b052f9f8a9b0"
+    },
+    {
+      "path": "performance-worker/desktop-spelling-2.trace.json.gz",
+      "bytes": 4581606,
+      "sha256": "31a80f347424c5a23b878fff0d8479ff944002112d6d2e967bfef68d84ca5d04"
+    },
+    {
+      "path": "performance-worker/desktop-spelling-3.json",
+      "bytes": 270455,
+      "sha256": "9270bb789f2965f9cb5a738a7acfc380e72873959eff480aceb490887b4f67f6"
+    },
+    {
+      "path": "performance-worker/desktop-spelling-3.trace.json.gz",
+      "bytes": 4596398,
+      "sha256": "f25bd3393f7337f0c70a454e2b248379777ce87d53f63554f317794420074285"
+    },
+    {
+      "path": "performance-worker/desktop-sync-1.json",
+      "bytes": 262635,
+      "sha256": "6968ea42f6021560570bd2d71e4e533b4cd0863cd08776eeb7969dc20779e16d"
+    },
+    {
+      "path": "performance-worker/desktop-sync-1.trace.json.gz",
+      "bytes": 5405538,
+      "sha256": "0aec8555e6a3307f217c9b65618e397d8f63385f8c437bac735910054cddf04d"
+    },
+    {
+      "path": "performance-worker/desktop-sync-2.json",
+      "bytes": 262072,
+      "sha256": "0d2f4fbe096135cbc8a134b3c18ae42e35133f256cbd21c24781f56b4750b3e0"
+    },
+    {
+      "path": "performance-worker/desktop-sync-2.trace.json.gz",
+      "bytes": 5300853,
+      "sha256": "82f3cd4189910cf33d7d79342c3216c67d078ef3762be276ce4cecd4882428cd"
+    },
+    {
+      "path": "performance-worker/desktop-sync-3.json",
+      "bytes": 258028,
+      "sha256": "128747e4bfd6ff57d605fbd74e2480f4a821ee9728454d58816f909eebda560c"
+    },
+    {
+      "path": "performance-worker/desktop-sync-3.trace.json.gz",
+      "bytes": 5360770,
+      "sha256": "2aa095ad79f6e2dbe3e182b847d6966eb17a8433205dc35782230b5433ef51ea"
+    },
+    {
+      "path": "performance-worker/report.json",
+      "bytes": 8909702,
+      "sha256": "5ef6b49d453f0d69e71861a3fe0e983c33822f1fb4fa5c97d2efd6962483515e"
+    },
+    {
+      "path": "performance-worker/touch-dictation-1.json",
+      "bytes": 375424,
+      "sha256": "eda47567f894ad42b5c815c9406007bbe0cff5b462ed37cc66a3919500ca3c23"
+    },
+    {
+      "path": "performance-worker/touch-dictation-1.trace.json.gz",
+      "bytes": 6437689,
+      "sha256": "03a7a85e0fc292ad0082081fcb4a27861f3e29a0daa94e24a16eef3c8c6db5e3"
+    },
+    {
+      "path": "performance-worker/touch-dictation-2.json",
+      "bytes": 390864,
+      "sha256": "4de286ca6c054b2d85524a9c1eb88d4fa691e7cd06c85a0a17b6c9114f265946"
+    },
+    {
+      "path": "performance-worker/touch-dictation-2.trace.json.gz",
+      "bytes": 6542981,
+      "sha256": "c1357786a999316a347add321b3a6a2a89bf1fa6928f701e76efe642c462ad26"
+    },
+    {
+      "path": "performance-worker/touch-dictation-3.json",
+      "bytes": 392529,
+      "sha256": "20097d06194c6adf290d6c57e2ef2842279c4840c8553451a1fde817d5473dbc"
+    },
+    {
+      "path": "performance-worker/touch-dictation-3.trace.json.gz",
+      "bytes": 6499084,
+      "sha256": "b5983f3c45de8e49e99ecadcefd917278d3e77882eebeeac3a6b2f7081289edb"
+    },
+    {
+      "path": "performance-worker/touch-modules-1.json",
+      "bytes": 134305,
+      "sha256": "aab59caf8d4564d169628c83730c35c759cd1c32ebec62f84143ceed5ecb149b"
+    },
+    {
+      "path": "performance-worker/touch-modules-1.trace.json.gz",
+      "bytes": 1937632,
+      "sha256": "e3020f0467aa03e33739883fcc95c307cdfe982520a8251633e666c686ef1c22"
+    },
+    {
+      "path": "performance-worker/touch-modules-2.json",
+      "bytes": 133086,
+      "sha256": "1bd5f76f1c6ec4c34c47faad41f23b4733820a51cc62fa9e35465d1cfc0f779d"
+    },
+    {
+      "path": "performance-worker/touch-modules-2.trace.json.gz",
+      "bytes": 1901196,
+      "sha256": "05cf04a0d80572b9c3727e8388b18c42da360b3c4aea116306ee5d19e90b0fd5"
+    },
+    {
+      "path": "performance-worker/touch-modules-3.json",
+      "bytes": 132453,
+      "sha256": "0b0246364dc30e8ad327d2ace1d20da1b6034a3605cd0b087095e3b08932810f"
+    },
+    {
+      "path": "performance-worker/touch-modules-3.trace.json.gz",
+      "bytes": 1918730,
+      "sha256": "adbd422cce652eb016c2ccb3e46718b4cd7ea65c657bba48db28f8700e47a96a"
+    },
+    {
+      "path": "performance-worker/touch-spelling-1.json",
+      "bytes": 445657,
+      "sha256": "97490fffa21c12227b1f811a43dcfad0cfd94bb3e5cfe4aab2aca60968ed3c53"
+    },
+    {
+      "path": "performance-worker/touch-spelling-1.trace.json.gz",
+      "bytes": 7439497,
+      "sha256": "3327e30d795de5b873356d58127c9694355cb47a4fe1d87fe1e78665c51c3edd"
+    },
+    {
+      "path": "performance-worker/touch-spelling-2.json",
+      "bytes": 421886,
+      "sha256": "1256572cc2359edcdc3b4935b120a4bfc5a140b8ac9d20b9dc380c583d128ff8"
+    },
+    {
+      "path": "performance-worker/touch-spelling-2.trace.json.gz",
+      "bytes": 7140191,
+      "sha256": "eed3f814989c3c421f2ba6463f14de3f3640e4fce78a558532accec732218a72"
+    },
+    {
+      "path": "performance-worker/touch-spelling-3.json",
+      "bytes": 438173,
+      "sha256": "2a1e88153c90347e74ee821bab94f858b7ac1befa9e7c993c7ed64f0af932439"
+    },
+    {
+      "path": "performance-worker/touch-spelling-3.trace.json.gz",
+      "bytes": 7072773,
+      "sha256": "c15e58e6a33cc8bc371f6842e1fcca74972f20bed0aba8cf5e06fb3110773e04"
+    },
+    {
+      "path": "performance-worker/touch-sync-1.json",
+      "bytes": 430313,
+      "sha256": "b28eff76562d499dd42fc6495e8bb529212665f0ecafa7f3a3ebf5d55e397f87"
+    },
+    {
+      "path": "performance-worker/touch-sync-1.trace.json.gz",
+      "bytes": 8020848,
+      "sha256": "9aaa9febcb62bf63e3c0c0b69128c7e3d03a1bb2626087d3dac3cea66df96fb9"
+    },
+    {
+      "path": "performance-worker/touch-sync-2.json",
+      "bytes": 417967,
+      "sha256": "efd9a7adf095f4bea425810993a4d8fb6d7965c3fb20b49165a1d758299f2952"
+    },
+    {
+      "path": "performance-worker/touch-sync-2.trace.json.gz",
+      "bytes": 7945699,
+      "sha256": "b04c661f5bff2635d11cafc7c9d1a298cfc53a2a0c54ac787f68a75dda07903f"
+    },
+    {
+      "path": "performance-worker/touch-sync-3.json",
+      "bytes": 460757,
+      "sha256": "0a259b8104e653800d8fcd847c13cc0b4027ebd07aa3d05041e2504fcc39f083"
+    },
+    {
+      "path": "performance-worker/touch-sync-3.trace.json.gz",
+      "bytes": 8270471,
+      "sha256": "de43600b275e08f8c3c53fd5150f91a1877ccc6a03f4f972e114b09f14d486fa"
+    },
+    {
+      "path": "worker-build.log",
+      "bytes": 3499,
+      "sha256": "edd85c2cfc42ac3b9c65217737fc77cbb5f8db795988397de6af9a269e9b67a8"
+    },
+    {
+      "path": "worker-deploy.log",
+      "bytes": 20688,
+      "sha256": "be27e13c51e2cef0e0a856507f1529b2761e6754270c21e738fc1384e0aea2a1"
+    },
+    {
+      "path": "worker-focused-report.json",
+      "bytes": 27262,
+      "sha256": "ca5514e8ee07a45ffa8d6da3645137aa1750687a4c59c5458a5da06a87679666"
+    },
+    {
+      "path": "worker-focused.log",
+      "bytes": 3439,
+      "sha256": "9bacc5c2ed1e914e8c18d9e599ca01f45dc722bf7865e7468a38c092098e702d"
+    }
+  ],
+  "measurements": [
+    {
+      "name": "performance-initial",
+      "note": "Diagnostic harness had DAV status and dictation-effects errors; invalid for release.",
+      "status": "failed",
+      "sourceRevision": "287d1d6fb848ad67717cab3aebff879542de7ecf",
+      "harness": null,
+      "limits": {
+        "mainTaskMs": 33,
+        "frameGapMs": 50,
+        "eventMs": 100,
+        "minDurationMs": 8000,
+        "minFrames": 120,
+        "rounds": 3,
+        "historyRows": 5000
+      },
+      "fixture": null,
+      "error": null,
+      "samples": [
+        {
+          "viewport": "desktop",
+          "scenario": "spelling",
+          "round": 1,
+          "actions": {
+            "letters": 91,
+            "completed": 6,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [],
+          "error": null,
+          "maxMainTaskMs": 20.091,
+          "maxFrameGapMs": 16.80000000000109,
+          "maxReportedEventMs": 56,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 631
+        },
+        {
+          "viewport": "desktop",
+          "scenario": "spelling",
+          "round": 2,
+          "actions": {
+            "letters": 91,
+            "completed": 6,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [],
+          "error": null,
+          "maxMainTaskMs": 24.438,
+          "maxFrameGapMs": 33.399999999999636,
+          "maxReportedEventMs": 80,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 627
+        },
+        {
+          "viewport": "desktop",
+          "scenario": "spelling",
+          "round": 3,
+          "actions": {
+            "letters": 91,
+            "completed": 6,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [],
+          "error": null,
+          "maxMainTaskMs": 8.764,
+          "maxFrameGapMs": 16.80000000000109,
+          "maxReportedEventMs": 56,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 632
+        },
+        {
+          "viewport": "desktop",
+          "scenario": "dictation",
+          "round": 1,
+          "actions": {
+            "letters": 98,
+            "completed": 3,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [
+            "missing full input effects"
+          ],
+          "error": null,
+          "maxMainTaskMs": 5.689,
+          "maxFrameGapMs": 16.80000000000109,
+          "maxReportedEventMs": 40,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 786
+        },
+        {
+          "viewport": "desktop",
+          "scenario": "dictation",
+          "round": 2,
+          "actions": {
+            "letters": 98,
+            "completed": 3,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [
+            "missing full input effects"
+          ],
+          "error": null,
+          "maxMainTaskMs": 4.216,
+          "maxFrameGapMs": 16.80000000000109,
+          "maxReportedEventMs": 40,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 782
+        },
+        {
+          "viewport": "desktop",
+          "scenario": "dictation",
+          "round": 3,
+          "actions": {
+            "letters": 98,
+            "completed": 3,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [
+            "missing full input effects"
+          ],
+          "error": null,
+          "maxMainTaskMs": 7.227,
+          "maxFrameGapMs": 16.80000000000109,
+          "maxReportedEventMs": 40,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 782
+        },
+        {
+          "viewport": "desktop",
+          "scenario": "modules",
+          "round": 1,
+          "actions": {
+            "letters": 0,
+            "completed": 0,
+            "modules": {
+              "spelling": 3,
+              "listening": 3,
+              "speaking": 3
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [],
+          "error": null,
+          "maxMainTaskMs": 11.511,
+          "maxFrameGapMs": 16.80000000000109,
+          "maxReportedEventMs": 32,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 699
+        },
+        {
+          "viewport": "desktop",
+          "scenario": "modules",
+          "round": 2,
+          "actions": {
+            "letters": 0,
+            "completed": 0,
+            "modules": {
+              "spelling": 3,
+              "listening": 3,
+              "speaking": 3
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [],
+          "error": null,
+          "maxMainTaskMs": 10.675,
+          "maxFrameGapMs": 16.80000000000109,
+          "maxReportedEventMs": 40,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 697
+        },
+        {
+          "viewport": "desktop",
+          "scenario": "modules",
+          "round": 3,
+          "actions": {
+            "letters": 0,
+            "completed": 0,
+            "modules": {
+              "spelling": 3,
+              "listening": 3,
+              "speaking": 3
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [],
+          "error": null,
+          "maxMainTaskMs": 13.73,
+          "maxFrameGapMs": 16.80000000000109,
+          "maxReportedEventMs": 32,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 699
+        },
+        {
+          "viewport": "desktop",
+          "scenario": "sync",
+          "round": 1,
+          "actions": {
+            "letters": 0,
+            "completed": 0,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [
+            "Error: expect(locator).toBeVisible() failed\n\nLocator: getByText('连接成功', { exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"toBeVisible\" getByText('连接成功', { exact: true }) with timeout 5000ms\n  - waiting for getByText('连接成功', { exact: true })\n\n    at captureRawStack (/work/node_modules/playwright-core/lib/coreBundle.js:8588:17)\n    at callMatcherAsStep (/work/node_modules/playwright/lib/matchers/expect.js:13310:57)\n    at Object.toBeVisible (/work/node_modules/playwright/lib/matchers/expect.js:13302:23)\n    at /work/scripts/run-web-performance.mjs:42:384"
+          ],
+          "error": "Error: expect(locator).toBeVisible() failed\n\nLocator: getByText('连接成功', { exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"toBeVisible\" getByText('连接成功', { exact: true }) with timeout 5000ms\n  - waiting for getByText('连接成功', { exact: true })\n\n    at captureRawStack (/work/node_modules/playwright-core/lib/coreBundle.js:8588:17)\n    at callMatcherAsStep (/work/node_modules/playwright/lib/matchers/expect.js:13310:57)\n    at Object.toBeVisible (/work/node_modules/playwright/lib/matchers/expect.js:13302:23)\n    at /work/scripts/run-web-performance.mjs:42:384",
+          "maxMainTaskMs": 0,
+          "maxFrameGapMs": 0,
+          "maxReportedEventMs": null,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 0
+        },
+        {
+          "viewport": "desktop",
+          "scenario": "sync",
+          "round": 2,
+          "actions": {
+            "letters": 0,
+            "completed": 0,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [
+            "Error: expect(locator).toBeVisible() failed\n\nLocator: getByText('连接成功', { exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"toBeVisible\" getByText('连接成功', { exact: true }) with timeout 5000ms\n  - waiting for getByText('连接成功', { exact: true })\n\n    at captureRawStack (/work/node_modules/playwright-core/lib/coreBundle.js:8588:17)\n    at callMatcherAsStep (/work/node_modules/playwright/lib/matchers/expect.js:13310:57)\n    at Object.toBeVisible (/work/node_modules/playwright/lib/matchers/expect.js:13302:23)\n    at /work/scripts/run-web-performance.mjs:42:384"
+          ],
+          "error": "Error: expect(locator).toBeVisible() failed\n\nLocator: getByText('连接成功', { exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"toBeVisible\" getByText('连接成功', { exact: true }) with timeout 5000ms\n  - waiting for getByText('连接成功', { exact: true })\n\n    at captureRawStack (/work/node_modules/playwright-core/lib/coreBundle.js:8588:17)\n    at callMatcherAsStep (/work/node_modules/playwright/lib/matchers/expect.js:13310:57)\n    at Object.toBeVisible (/work/node_modules/playwright/lib/matchers/expect.js:13302:23)\n    at /work/scripts/run-web-performance.mjs:42:384",
+          "maxMainTaskMs": 0,
+          "maxFrameGapMs": 0,
+          "maxReportedEventMs": null,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 0
+        },
+        {
+          "viewport": "desktop",
+          "scenario": "sync",
+          "round": 3,
+          "actions": {
+            "letters": 0,
+            "completed": 0,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [
+            "Error: expect(locator).toBeVisible() failed\n\nLocator: getByText('连接成功', { exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"toBeVisible\" getByText('连接成功', { exact: true }) with timeout 5000ms\n  - waiting for getByText('连接成功', { exact: true })\n\n    at captureRawStack (/work/node_modules/playwright-core/lib/coreBundle.js:8588:17)\n    at callMatcherAsStep (/work/node_modules/playwright/lib/matchers/expect.js:13310:57)\n    at Object.toBeVisible (/work/node_modules/playwright/lib/matchers/expect.js:13302:23)\n    at /work/scripts/run-web-performance.mjs:42:384"
+          ],
+          "error": "Error: expect(locator).toBeVisible() failed\n\nLocator: getByText('连接成功', { exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"toBeVisible\" getByText('连接成功', { exact: true }) with timeout 5000ms\n  - waiting for getByText('连接成功', { exact: true })\n\n    at captureRawStack (/work/node_modules/playwright-core/lib/coreBundle.js:8588:17)\n    at callMatcherAsStep (/work/node_modules/playwright/lib/matchers/expect.js:13310:57)\n    at Object.toBeVisible (/work/node_modules/playwright/lib/matchers/expect.js:13302:23)\n    at /work/scripts/run-web-performance.mjs:42:384",
+          "maxMainTaskMs": 0,
+          "maxFrameGapMs": 0,
+          "maxReportedEventMs": null,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 0
+        },
+        {
+          "viewport": "touch",
+          "scenario": "spelling",
+          "round": 1,
+          "actions": {
+            "letters": 91,
+            "completed": 6,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [],
+          "error": null,
+          "maxMainTaskMs": 7.396,
+          "maxFrameGapMs": 16.80000000000109,
+          "maxReportedEventMs": 40,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 894
+        },
+        {
+          "viewport": "touch",
+          "scenario": "spelling",
+          "round": 2,
+          "actions": {
+            "letters": 91,
+            "completed": 6,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [],
+          "error": null,
+          "maxMainTaskMs": 7.28,
+          "maxFrameGapMs": 16.80000000000109,
+          "maxReportedEventMs": 72,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 982
+        },
+        {
+          "viewport": "touch",
+          "scenario": "spelling",
+          "round": 3,
+          "actions": {
+            "letters": 91,
+            "completed": 6,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [],
+          "error": null,
+          "maxMainTaskMs": 5.038,
+          "maxFrameGapMs": 16.80000000000109,
+          "maxReportedEventMs": 40,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 892
+        },
+        {
+          "viewport": "touch",
+          "scenario": "dictation",
+          "round": 1,
+          "actions": {
+            "letters": 98,
+            "completed": 3,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [
+            "missing full input effects"
+          ],
+          "error": null,
+          "maxMainTaskMs": 5.784,
+          "maxFrameGapMs": 16.80000000000291,
+          "maxReportedEventMs": 72,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 1157
+        },
+        {
+          "viewport": "touch",
+          "scenario": "dictation",
+          "round": 2,
+          "actions": {
+            "letters": 98,
+            "completed": 3,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [
+            "missing full input effects"
+          ],
+          "error": null,
+          "maxMainTaskMs": 6.802,
+          "maxFrameGapMs": 16.80000000000291,
+          "maxReportedEventMs": 40,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 1056
+        },
+        {
+          "viewport": "touch",
+          "scenario": "dictation",
+          "round": 3,
+          "actions": {
+            "letters": 98,
+            "completed": 3,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [
+            "missing full input effects"
+          ],
+          "error": null,
+          "maxMainTaskMs": 4.673,
+          "maxFrameGapMs": 16.80000000000291,
+          "maxReportedEventMs": 40,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 1053
+        },
+        {
+          "viewport": "touch",
+          "scenario": "modules",
+          "round": 1,
+          "actions": {
+            "letters": 0,
+            "completed": 0,
+            "modules": {
+              "spelling": 3,
+              "listening": 3,
+              "speaking": 3
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [],
+          "error": null,
+          "maxMainTaskMs": 10.914,
+          "maxFrameGapMs": 16.80000000000109,
+          "maxReportedEventMs": 16,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 695
+        },
+        {
+          "viewport": "touch",
+          "scenario": "modules",
+          "round": 2,
+          "actions": {
+            "letters": 0,
+            "completed": 0,
+            "modules": {
+              "spelling": 3,
+              "listening": 3,
+              "speaking": 3
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [],
+          "error": null,
+          "maxMainTaskMs": 10.733,
+          "maxFrameGapMs": 16.80000000000109,
+          "maxReportedEventMs": 32,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 698
+        },
+        {
+          "viewport": "touch",
+          "scenario": "modules",
+          "round": 3,
+          "actions": {
+            "letters": 0,
+            "completed": 0,
+            "modules": {
+              "spelling": 3,
+              "listening": 3,
+              "speaking": 3
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [],
+          "error": null,
+          "maxMainTaskMs": 12.801,
+          "maxFrameGapMs": 16.80000000000109,
+          "maxReportedEventMs": 24,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 699
+        },
+        {
+          "viewport": "touch",
+          "scenario": "sync",
+          "round": 1,
+          "actions": {
+            "letters": 0,
+            "completed": 0,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [
+            "Error: expect(locator).toBeVisible() failed\n\nLocator: getByText('连接成功', { exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"toBeVisible\" getByText('连接成功', { exact: true }) with timeout 5000ms\n  - waiting for getByText('连接成功', { exact: true })\n\n    at captureRawStack (/work/node_modules/playwright-core/lib/coreBundle.js:8588:17)\n    at callMatcherAsStep (/work/node_modules/playwright/lib/matchers/expect.js:13310:57)\n    at Object.toBeVisible (/work/node_modules/playwright/lib/matchers/expect.js:13302:23)\n    at /work/scripts/run-web-performance.mjs:42:384"
+          ],
+          "error": "Error: expect(locator).toBeVisible() failed\n\nLocator: getByText('连接成功', { exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"toBeVisible\" getByText('连接成功', { exact: true }) with timeout 5000ms\n  - waiting for getByText('连接成功', { exact: true })\n\n    at captureRawStack (/work/node_modules/playwright-core/lib/coreBundle.js:8588:17)\n    at callMatcherAsStep (/work/node_modules/playwright/lib/matchers/expect.js:13310:57)\n    at Object.toBeVisible (/work/node_modules/playwright/lib/matchers/expect.js:13302:23)\n    at /work/scripts/run-web-performance.mjs:42:384",
+          "maxMainTaskMs": 0,
+          "maxFrameGapMs": 0,
+          "maxReportedEventMs": null,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 0
+        },
+        {
+          "viewport": "touch",
+          "scenario": "sync",
+          "round": 2,
+          "actions": {
+            "letters": 0,
+            "completed": 0,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [
+            "Error: expect(locator).toBeVisible() failed\n\nLocator: getByText('连接成功', { exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"toBeVisible\" getByText('连接成功', { exact: true }) with timeout 5000ms\n  - waiting for getByText('连接成功', { exact: true })\n\n    at captureRawStack (/work/node_modules/playwright-core/lib/coreBundle.js:8588:17)\n    at callMatcherAsStep (/work/node_modules/playwright/lib/matchers/expect.js:13310:57)\n    at Object.toBeVisible (/work/node_modules/playwright/lib/matchers/expect.js:13302:23)\n    at /work/scripts/run-web-performance.mjs:42:384"
+          ],
+          "error": "Error: expect(locator).toBeVisible() failed\n\nLocator: getByText('连接成功', { exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"toBeVisible\" getByText('连接成功', { exact: true }) with timeout 5000ms\n  - waiting for getByText('连接成功', { exact: true })\n\n    at captureRawStack (/work/node_modules/playwright-core/lib/coreBundle.js:8588:17)\n    at callMatcherAsStep (/work/node_modules/playwright/lib/matchers/expect.js:13310:57)\n    at Object.toBeVisible (/work/node_modules/playwright/lib/matchers/expect.js:13302:23)\n    at /work/scripts/run-web-performance.mjs:42:384",
+          "maxMainTaskMs": 0,
+          "maxFrameGapMs": 0,
+          "maxReportedEventMs": null,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 0
+        },
+        {
+          "viewport": "touch",
+          "scenario": "sync",
+          "round": 3,
+          "actions": {
+            "letters": 0,
+            "completed": 0,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [
+            "Error: expect(locator).toBeVisible() failed\n\nLocator: getByText('连接成功', { exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"toBeVisible\" getByText('连接成功', { exact: true }) with timeout 5000ms\n  - waiting for getByText('连接成功', { exact: true })\n\n    at captureRawStack (/work/node_modules/playwright-core/lib/coreBundle.js:8588:17)\n    at callMatcherAsStep (/work/node_modules/playwright/lib/matchers/expect.js:13310:57)\n    at Object.toBeVisible (/work/node_modules/playwright/lib/matchers/expect.js:13302:23)\n    at /work/scripts/run-web-performance.mjs:42:384"
+          ],
+          "error": "Error: expect(locator).toBeVisible() failed\n\nLocator: getByText('连接成功', { exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"toBeVisible\" getByText('连接成功', { exact: true }) with timeout 5000ms\n  - waiting for getByText('连接成功', { exact: true })\n\n    at captureRawStack (/work/node_modules/playwright-core/lib/coreBundle.js:8588:17)\n    at callMatcherAsStep (/work/node_modules/playwright/lib/matchers/expect.js:13310:57)\n    at Object.toBeVisible (/work/node_modules/playwright/lib/matchers/expect.js:13302:23)\n    at /work/scripts/run-web-performance.mjs:42:384",
+          "maxMainTaskMs": 0,
+          "maxFrameGapMs": 0,
+          "maxReportedEventMs": null,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 0
+        }
+      ]
+    },
+    {
+      "name": "performance-candidate",
+      "note": "Original production baseline; sync stalls reproduced, early fixture metadata later corrected.",
+      "status": "failed",
+      "sourceRevision": "287d1d6fb848ad67717cab3aebff879542de7ecf",
+      "harness": null,
+      "limits": {
+        "mainTaskMs": 33,
+        "frameGapMs": 50,
+        "eventMs": 100,
+        "minDurationMs": 8000,
+        "minFrames": 120,
+        "rounds": 3,
+        "historyRows": 5000
+      },
+      "fixture": null,
+      "error": null,
+      "samples": [
+        {
+          "viewport": "desktop",
+          "scenario": "spelling",
+          "round": 1,
+          "actions": {
+            "letters": 91,
+            "completed": 6,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [],
+          "error": null,
+          "maxMainTaskMs": 7.203,
+          "maxFrameGapMs": 16.80000000000109,
+          "maxReportedEventMs": 40,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 654
+        },
+        {
+          "viewport": "desktop",
+          "scenario": "spelling",
+          "round": 2,
+          "actions": {
+            "letters": 91,
+            "completed": 6,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [],
+          "error": null,
+          "maxMainTaskMs": 19.326,
+          "maxFrameGapMs": 33.29999999999927,
+          "maxReportedEventMs": 64,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 655
+        },
+        {
+          "viewport": "desktop",
+          "scenario": "spelling",
+          "round": 3,
+          "actions": {
+            "letters": 91,
+            "completed": 6,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [],
+          "error": null,
+          "maxMainTaskMs": 8.429,
+          "maxFrameGapMs": 16.80000000000109,
+          "maxReportedEventMs": 40,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 654
+        },
+        {
+          "viewport": "desktop",
+          "scenario": "dictation",
+          "round": 1,
+          "actions": {
+            "letters": 98,
+            "completed": 3,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [],
+          "error": null,
+          "maxMainTaskMs": 6.165,
+          "maxFrameGapMs": 16.80000000000109,
+          "maxReportedEventMs": 40,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 782
+        },
+        {
+          "viewport": "desktop",
+          "scenario": "dictation",
+          "round": 2,
+          "actions": {
+            "letters": 98,
+            "completed": 3,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [],
+          "error": null,
+          "maxMainTaskMs": 6.264,
+          "maxFrameGapMs": 16.80000000000109,
+          "maxReportedEventMs": 40,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 782
+        },
+        {
+          "viewport": "desktop",
+          "scenario": "dictation",
+          "round": 3,
+          "actions": {
+            "letters": 98,
+            "completed": 3,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [],
+          "error": null,
+          "maxMainTaskMs": 7.239,
+          "maxFrameGapMs": 16.80000000000109,
+          "maxReportedEventMs": 40,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 782
+        },
+        {
+          "viewport": "desktop",
+          "scenario": "modules",
+          "round": 1,
+          "actions": {
+            "letters": 0,
+            "completed": 0,
+            "modules": {
+              "spelling": 3,
+              "listening": 3,
+              "speaking": 3
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [],
+          "error": null,
+          "maxMainTaskMs": 12.887,
+          "maxFrameGapMs": 16.80000000000109,
+          "maxReportedEventMs": 40,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 700
+        },
+        {
+          "viewport": "desktop",
+          "scenario": "modules",
+          "round": 2,
+          "actions": {
+            "letters": 0,
+            "completed": 0,
+            "modules": {
+              "spelling": 3,
+              "listening": 3,
+              "speaking": 3
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [],
+          "error": null,
+          "maxMainTaskMs": 9.798,
+          "maxFrameGapMs": 16.80000000000109,
+          "maxReportedEventMs": 56,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 699
+        },
+        {
+          "viewport": "desktop",
+          "scenario": "modules",
+          "round": 3,
+          "actions": {
+            "letters": 0,
+            "completed": 0,
+            "modules": {
+              "spelling": 3,
+              "listening": 3,
+              "speaking": 3
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [],
+          "error": null,
+          "maxMainTaskMs": 10.231,
+          "maxFrameGapMs": 16.80000000000109,
+          "maxReportedEventMs": 40,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 698
+        },
+        {
+          "viewport": "desktop",
+          "scenario": "sync",
+          "round": 1,
+          "actions": {
+            "letters": 91,
+            "completed": 6,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 2,
+            "syncedRows": 5005
+          },
+          "environment": null,
+          "failures": [
+            "main-thread task reached 33ms",
+            "animation frame gap reached 50ms",
+            "long task or long animation frame",
+            "input event reached 100ms"
+          ],
+          "error": null,
+          "maxMainTaskMs": 245.988,
+          "maxFrameGapMs": 250,
+          "maxReportedEventMs": 256,
+          "longTasks": 9,
+          "longAnimationFrames": 9,
+          "frames": 653
+        },
+        {
+          "viewport": "desktop",
+          "scenario": "sync",
+          "round": 2,
+          "actions": {
+            "letters": 91,
+            "completed": 6,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 2,
+            "syncedRows": 5005
+          },
+          "environment": null,
+          "failures": [
+            "main-thread task reached 33ms",
+            "animation frame gap reached 50ms",
+            "long task or long animation frame",
+            "input event reached 100ms"
+          ],
+          "error": null,
+          "maxMainTaskMs": 247.718,
+          "maxFrameGapMs": 249.9000000000001,
+          "maxReportedEventMs": 216,
+          "longTasks": 9,
+          "longAnimationFrames": 10,
+          "frames": 662
+        },
+        {
+          "viewport": "desktop",
+          "scenario": "sync",
+          "round": 3,
+          "actions": {
+            "letters": 91,
+            "completed": 6,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 2,
+            "syncedRows": 5005
+          },
+          "environment": null,
+          "failures": [
+            "main-thread task reached 33ms",
+            "animation frame gap reached 50ms",
+            "long task or long animation frame",
+            "input event reached 100ms"
+          ],
+          "error": null,
+          "maxMainTaskMs": 249.267,
+          "maxFrameGapMs": 266.7000000000007,
+          "maxReportedEventMs": 208,
+          "longTasks": 9,
+          "longAnimationFrames": 9,
+          "frames": 661
+        },
+        {
+          "viewport": "touch",
+          "scenario": "spelling",
+          "round": 1,
+          "actions": {
+            "letters": 91,
+            "completed": 6,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [],
+          "error": null,
+          "maxMainTaskMs": 12.504,
+          "maxFrameGapMs": 16.80000000000291,
+          "maxReportedEventMs": 88,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 1012
+        },
+        {
+          "viewport": "touch",
+          "scenario": "spelling",
+          "round": 2,
+          "actions": {
+            "letters": 91,
+            "completed": 6,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [],
+          "error": null,
+          "maxMainTaskMs": 9.117,
+          "maxFrameGapMs": 16.80000000000109,
+          "maxReportedEventMs": 72,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 1002
+        },
+        {
+          "viewport": "touch",
+          "scenario": "spelling",
+          "round": 3,
+          "actions": {
+            "letters": 91,
+            "completed": 6,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [],
+          "error": null,
+          "maxMainTaskMs": 10.153,
+          "maxFrameGapMs": 16.80000000000109,
+          "maxReportedEventMs": 80,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 1007
+        },
+        {
+          "viewport": "touch",
+          "scenario": "dictation",
+          "round": 1,
+          "actions": {
+            "letters": 98,
+            "completed": 3,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [],
+          "error": null,
+          "maxMainTaskMs": 8.98,
+          "maxFrameGapMs": 16.80000000000109,
+          "maxReportedEventMs": 72,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 1161
+        },
+        {
+          "viewport": "touch",
+          "scenario": "dictation",
+          "round": 2,
+          "actions": {
+            "letters": 98,
+            "completed": 3,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [],
+          "error": null,
+          "maxMainTaskMs": 4.833,
+          "maxFrameGapMs": 16.80000000000291,
+          "maxReportedEventMs": 72,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 1168
+        },
+        {
+          "viewport": "touch",
+          "scenario": "dictation",
+          "round": 3,
+          "actions": {
+            "letters": 98,
+            "completed": 3,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [],
+          "error": null,
+          "maxMainTaskMs": 7.54,
+          "maxFrameGapMs": 33.29999999999927,
+          "maxReportedEventMs": 96,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 1167
+        },
+        {
+          "viewport": "touch",
+          "scenario": "modules",
+          "round": 1,
+          "actions": {
+            "letters": 0,
+            "completed": 0,
+            "modules": {
+              "spelling": 3,
+              "listening": 3,
+              "speaking": 3
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [],
+          "error": null,
+          "maxMainTaskMs": 9.378,
+          "maxFrameGapMs": 16.80000000000109,
+          "maxReportedEventMs": 32,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 699
+        },
+        {
+          "viewport": "touch",
+          "scenario": "modules",
+          "round": 2,
+          "actions": {
+            "letters": 0,
+            "completed": 0,
+            "modules": {
+              "spelling": 3,
+              "listening": 3,
+              "speaking": 3
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [],
+          "error": null,
+          "maxMainTaskMs": 13.577,
+          "maxFrameGapMs": 16.80000000000109,
+          "maxReportedEventMs": 40,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 698
+        },
+        {
+          "viewport": "touch",
+          "scenario": "modules",
+          "round": 3,
+          "actions": {
+            "letters": 0,
+            "completed": 0,
+            "modules": {
+              "spelling": 3,
+              "listening": 3,
+              "speaking": 3
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [],
+          "error": null,
+          "maxMainTaskMs": 10.573,
+          "maxFrameGapMs": 16.80000000000109,
+          "maxReportedEventMs": 40,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 700
+        },
+        {
+          "viewport": "touch",
+          "scenario": "sync",
+          "round": 1,
+          "actions": {
+            "letters": 91,
+            "completed": 6,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 2,
+            "syncedRows": 5003
+          },
+          "environment": null,
+          "failures": [
+            "main-thread task reached 33ms",
+            "animation frame gap reached 50ms",
+            "long task or long animation frame",
+            "input event reached 100ms"
+          ],
+          "error": null,
+          "maxMainTaskMs": 246.169,
+          "maxFrameGapMs": 250,
+          "maxReportedEventMs": 312,
+          "longTasks": 11,
+          "longAnimationFrames": 11,
+          "frames": 1020
+        },
+        {
+          "viewport": "touch",
+          "scenario": "sync",
+          "round": 2,
+          "actions": {
+            "letters": 91,
+            "completed": 6,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 2,
+            "syncedRows": 5002
+          },
+          "environment": null,
+          "failures": [
+            "main-thread task reached 33ms",
+            "animation frame gap reached 50ms",
+            "long task or long animation frame",
+            "input event reached 100ms"
+          ],
+          "error": null,
+          "maxMainTaskMs": 255.014,
+          "maxFrameGapMs": 250.10000000000036,
+          "maxReportedEventMs": 280,
+          "longTasks": 11,
+          "longAnimationFrames": 11,
+          "frames": 1064
+        },
+        {
+          "viewport": "touch",
+          "scenario": "sync",
+          "round": 3,
+          "actions": {
+            "letters": 91,
+            "completed": 6,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 2,
+            "syncedRows": 5003
+          },
+          "environment": null,
+          "failures": [
+            "main-thread task reached 33ms",
+            "animation frame gap reached 50ms",
+            "long task or long animation frame",
+            "input event reached 100ms"
+          ],
+          "error": null,
+          "maxMainTaskMs": 250.968,
+          "maxFrameGapMs": 250,
+          "maxReportedEventMs": 312,
+          "longTasks": 9,
+          "longAnimationFrames": 9,
+          "frames": 1016
+        }
+      ]
+    },
+    {
+      "name": "performance-worker",
+      "note": "Worker candidate measured under concurrent browser and Swift compilation load; failed, no pass claimed.",
+      "status": "failed",
+      "sourceRevision": "b61c0daa1dc8458cde1ae07b526ad604d93079d8",
+      "harness": null,
+      "limits": {
+        "mainTaskMs": 33,
+        "frameGapMs": 50,
+        "eventMs": 100,
+        "minDurationMs": 8000,
+        "minFrames": 120,
+        "rounds": 3,
+        "historyRows": 5000
+      },
+      "fixture": null,
+      "error": null,
+      "samples": [
+        {
+          "viewport": "desktop",
+          "scenario": "spelling",
+          "round": 1,
+          "actions": {
+            "letters": 91,
+            "completed": 6,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [
+            "main-thread task reached 33ms",
+            "animation frame gap reached 50ms",
+            "long task or long animation frame",
+            "input event reached 100ms"
+          ],
+          "error": null,
+          "maxMainTaskMs": 54.215,
+          "maxFrameGapMs": 50,
+          "maxReportedEventMs": 112,
+          "longTasks": 1,
+          "longAnimationFrames": 1,
+          "frames": 651
+        },
+        {
+          "viewport": "desktop",
+          "scenario": "spelling",
+          "round": 2,
+          "actions": {
+            "letters": 91,
+            "completed": 6,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [],
+          "error": null,
+          "maxMainTaskMs": 8.575,
+          "maxFrameGapMs": 16.80000000000109,
+          "maxReportedEventMs": 40,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 656
+        },
+        {
+          "viewport": "desktop",
+          "scenario": "spelling",
+          "round": 3,
+          "actions": {
+            "letters": 91,
+            "completed": 6,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [],
+          "error": null,
+          "maxMainTaskMs": 8.991,
+          "maxFrameGapMs": 16.80000000000109,
+          "maxReportedEventMs": 56,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 655
+        },
+        {
+          "viewport": "desktop",
+          "scenario": "dictation",
+          "round": 1,
+          "actions": {
+            "letters": 98,
+            "completed": 3,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [],
+          "error": null,
+          "maxMainTaskMs": 4.917,
+          "maxFrameGapMs": 16.80000000000109,
+          "maxReportedEventMs": 40,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 781
+        },
+        {
+          "viewport": "desktop",
+          "scenario": "dictation",
+          "round": 2,
+          "actions": {
+            "letters": 98,
+            "completed": 3,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [],
+          "error": null,
+          "maxMainTaskMs": 11.975,
+          "maxFrameGapMs": 16.80000000000109,
+          "maxReportedEventMs": 56,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 779
+        },
+        {
+          "viewport": "desktop",
+          "scenario": "dictation",
+          "round": 3,
+          "actions": {
+            "letters": 98,
+            "completed": 3,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [],
+          "error": null,
+          "maxMainTaskMs": 8.796,
+          "maxFrameGapMs": 16.80000000000109,
+          "maxReportedEventMs": 40,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 782
+        },
+        {
+          "viewport": "desktop",
+          "scenario": "modules",
+          "round": 1,
+          "actions": {
+            "letters": 0,
+            "completed": 0,
+            "modules": {
+              "spelling": 3,
+              "listening": 3,
+              "speaking": 3
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [
+            "main-thread task reached 33ms",
+            "long task or long animation frame"
+          ],
+          "error": null,
+          "maxMainTaskMs": 48.207,
+          "maxFrameGapMs": 33.399999999999636,
+          "maxReportedEventMs": 80,
+          "longTasks": 0,
+          "longAnimationFrames": 2,
+          "frames": 712
+        },
+        {
+          "viewport": "desktop",
+          "scenario": "modules",
+          "round": 2,
+          "actions": {
+            "letters": 0,
+            "completed": 0,
+            "modules": {
+              "spelling": 3,
+              "listening": 3,
+              "speaking": 3
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [],
+          "error": null,
+          "maxMainTaskMs": 13.381,
+          "maxFrameGapMs": 16.80000000000109,
+          "maxReportedEventMs": 48,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 698
+        },
+        {
+          "viewport": "desktop",
+          "scenario": "modules",
+          "round": 3,
+          "actions": {
+            "letters": 0,
+            "completed": 0,
+            "modules": {
+              "spelling": 3,
+              "listening": 3,
+              "speaking": 3
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [
+            "main-thread task reached 33ms",
+            "long task or long animation frame"
+          ],
+          "error": null,
+          "maxMainTaskMs": 58.939,
+          "maxFrameGapMs": 33.399999999999636,
+          "maxReportedEventMs": 80,
+          "longTasks": 1,
+          "longAnimationFrames": 0,
+          "frames": 701
+        },
+        {
+          "viewport": "desktop",
+          "scenario": "sync",
+          "round": 1,
+          "actions": {
+            "letters": 91,
+            "completed": 6,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 2,
+            "syncedRows": 5005
+          },
+          "environment": null,
+          "failures": [
+            "main-thread task reached 33ms",
+            "long task or long animation frame"
+          ],
+          "error": null,
+          "maxMainTaskMs": 45.683,
+          "maxFrameGapMs": 33.29999999999927,
+          "maxReportedEventMs": 56,
+          "longTasks": 0,
+          "longAnimationFrames": 1,
+          "frames": 696
+        },
+        {
+          "viewport": "desktop",
+          "scenario": "sync",
+          "round": 2,
+          "actions": {
+            "letters": 91,
+            "completed": 6,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 2,
+            "syncedRows": 5005
+          },
+          "environment": null,
+          "failures": [
+            "main-thread task reached 33ms",
+            "animation frame gap reached 50ms",
+            "long task or long animation frame"
+          ],
+          "error": null,
+          "maxMainTaskMs": 56.734,
+          "maxFrameGapMs": 50,
+          "maxReportedEventMs": 64,
+          "longTasks": 0,
+          "longAnimationFrames": 2,
+          "frames": 682
+        },
+        {
+          "viewport": "desktop",
+          "scenario": "sync",
+          "round": 3,
+          "actions": {
+            "letters": 91,
+            "completed": 6,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 2,
+            "syncedRows": 5005
+          },
+          "environment": null,
+          "failures": [
+            "main-thread task reached 33ms"
+          ],
+          "error": null,
+          "maxMainTaskMs": 43.238,
+          "maxFrameGapMs": 33.399999999999636,
+          "maxReportedEventMs": 56,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 689
+        },
+        {
+          "viewport": "touch",
+          "scenario": "spelling",
+          "round": 1,
+          "actions": {
+            "letters": 91,
+            "completed": 6,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [
+            "main-thread task reached 33ms",
+            "long task or long animation frame",
+            "input event reached 100ms"
+          ],
+          "error": null,
+          "maxMainTaskMs": 45.751,
+          "maxFrameGapMs": 33.400000000001455,
+          "maxReportedEventMs": 112,
+          "longTasks": 0,
+          "longAnimationFrames": 1,
+          "frames": 1139
+        },
+        {
+          "viewport": "touch",
+          "scenario": "spelling",
+          "round": 2,
+          "actions": {
+            "letters": 91,
+            "completed": 6,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [
+            "main-thread task reached 33ms",
+            "animation frame gap reached 50ms",
+            "long task or long animation frame",
+            "input event reached 100ms"
+          ],
+          "error": null,
+          "maxMainTaskMs": 34.487,
+          "maxFrameGapMs": 50,
+          "maxReportedEventMs": 152,
+          "longTasks": 0,
+          "longAnimationFrames": 1,
+          "frames": 1067
+        },
+        {
+          "viewport": "touch",
+          "scenario": "spelling",
+          "round": 3,
+          "actions": {
+            "letters": 91,
+            "completed": 6,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [
+            "main-thread task reached 33ms",
+            "animation frame gap reached 50ms",
+            "long task or long animation frame",
+            "input event reached 100ms"
+          ],
+          "error": null,
+          "maxMainTaskMs": 51.354,
+          "maxFrameGapMs": 83.29999999999927,
+          "maxReportedEventMs": 168,
+          "longTasks": 1,
+          "longAnimationFrames": 1,
+          "frames": 1060
+        },
+        {
+          "viewport": "touch",
+          "scenario": "dictation",
+          "round": 1,
+          "actions": {
+            "letters": 98,
+            "completed": 3,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [],
+          "error": null,
+          "maxMainTaskMs": 13.921,
+          "maxFrameGapMs": 16.80000000000291,
+          "maxReportedEventMs": 72,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 1174
+        },
+        {
+          "viewport": "touch",
+          "scenario": "dictation",
+          "round": 2,
+          "actions": {
+            "letters": 98,
+            "completed": 3,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [
+            "main-thread task reached 33ms",
+            "animation frame gap reached 50ms",
+            "long task or long animation frame",
+            "input event reached 100ms"
+          ],
+          "error": null,
+          "maxMainTaskMs": 61.676,
+          "maxFrameGapMs": 50.09999999999991,
+          "maxReportedEventMs": 112,
+          "longTasks": 0,
+          "longAnimationFrames": 2,
+          "frames": 1256
+        },
+        {
+          "viewport": "touch",
+          "scenario": "dictation",
+          "round": 3,
+          "actions": {
+            "letters": 98,
+            "completed": 3,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [
+            "animation frame gap reached 50ms",
+            "long task or long animation frame",
+            "input event reached 100ms"
+          ],
+          "error": null,
+          "maxMainTaskMs": 27.784,
+          "maxFrameGapMs": 50,
+          "maxReportedEventMs": 160,
+          "longTasks": 0,
+          "longAnimationFrames": 1,
+          "frames": 1266
+        },
+        {
+          "viewport": "touch",
+          "scenario": "modules",
+          "round": 1,
+          "actions": {
+            "letters": 0,
+            "completed": 0,
+            "modules": {
+              "spelling": 3,
+              "listening": 3,
+              "speaking": 3
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [
+            "main-thread task reached 33ms"
+          ],
+          "error": null,
+          "maxMainTaskMs": 39.645,
+          "maxFrameGapMs": 33.299999999999955,
+          "maxReportedEventMs": 56,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 704
+        },
+        {
+          "viewport": "touch",
+          "scenario": "modules",
+          "round": 2,
+          "actions": {
+            "letters": 0,
+            "completed": 0,
+            "modules": {
+              "spelling": 3,
+              "listening": 3,
+              "speaking": 3
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [],
+          "error": null,
+          "maxMainTaskMs": 10.724,
+          "maxFrameGapMs": 16.80000000000109,
+          "maxReportedEventMs": 32,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 699
+        },
+        {
+          "viewport": "touch",
+          "scenario": "modules",
+          "round": 3,
+          "actions": {
+            "letters": 0,
+            "completed": 0,
+            "modules": {
+              "spelling": 3,
+              "listening": 3,
+              "speaking": 3
+            },
+            "syncUploads": 0,
+            "syncedRows": 0
+          },
+          "environment": null,
+          "failures": [],
+          "error": null,
+          "maxMainTaskMs": 13.691,
+          "maxFrameGapMs": 16.80000000000109,
+          "maxReportedEventMs": 32,
+          "longTasks": 0,
+          "longAnimationFrames": 0,
+          "frames": 700
+        },
+        {
+          "viewport": "touch",
+          "scenario": "sync",
+          "round": 1,
+          "actions": {
+            "letters": 91,
+            "completed": 6,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 2,
+            "syncedRows": 5003
+          },
+          "environment": null,
+          "failures": [
+            "main-thread task reached 33ms",
+            "animation frame gap reached 50ms",
+            "long task or long animation frame",
+            "input event reached 100ms"
+          ],
+          "error": null,
+          "maxMainTaskMs": 54.724,
+          "maxFrameGapMs": 50,
+          "maxReportedEventMs": 152,
+          "longTasks": 1,
+          "longAnimationFrames": 2,
+          "frames": 1063
+        },
+        {
+          "viewport": "touch",
+          "scenario": "sync",
+          "round": 2,
+          "actions": {
+            "letters": 91,
+            "completed": 6,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 2,
+            "syncedRows": 5002
+          },
+          "environment": null,
+          "failures": [
+            "main-thread task reached 33ms",
+            "long task or long animation frame",
+            "input event reached 100ms"
+          ],
+          "error": null,
+          "maxMainTaskMs": 55.104,
+          "maxFrameGapMs": 49.900000000000546,
+          "maxReportedEventMs": 128,
+          "longTasks": 0,
+          "longAnimationFrames": 1,
+          "frames": 1088
+        },
+        {
+          "viewport": "touch",
+          "scenario": "sync",
+          "round": 3,
+          "actions": {
+            "letters": 91,
+            "completed": 6,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 2,
+            "syncedRows": 5003
+          },
+          "environment": null,
+          "failures": [
+            "main-thread task reached 33ms",
+            "animation frame gap reached 50ms",
+            "long task or long animation frame",
+            "input event reached 100ms"
+          ],
+          "error": null,
+          "maxMainTaskMs": 46.499,
+          "maxFrameGapMs": 66.60000000000036,
+          "maxReportedEventMs": 128,
+          "longTasks": 0,
+          "longAnimationFrames": 1,
+          "frames": 1112
+        }
+      ]
+    },
+    {
+      "name": "performance-baseline-consistent",
+      "note": "Corrected fixture IDs/XP; diagnostic sync only under contention, not a release certificate.",
+      "status": "failed",
+      "sourceRevision": "287d1d6fb848ad67717cab3aebff879542de7ecf",
+      "harness": {
+        "runnerSHA256": "ee96902541fb1c72c90d188c053abdd69cdbc5adb5d7a709f9ea574e0d687ad7",
+        "policySHA256": "ff8c8574228c928c91e4fc4cf05625eda7c032fbee63f2cf40bd3ad67de6e494",
+        "diagnosticScenario": "sync"
+      },
+      "limits": {
+        "mainTaskMs": 33,
+        "frameGapMs": 50,
+        "eventMs": 100,
+        "minDurationMs": 8000,
+        "minFrames": 120,
+        "rounds": 3,
+        "historyRows": 5000
+      },
+      "fixture": null,
+      "error": null,
+      "samples": [
+        {
+          "viewport": "desktop",
+          "scenario": "sync",
+          "round": 1,
+          "actions": {
+            "letters": 91,
+            "completed": 6,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 2,
+            "syncedRows": 5002,
+            "integrity": {
+              "events": 5006,
+              "total": 5006
+            }
+          },
+          "environment": {
+            "cpuBusyPercent": 64.76329471859891,
+            "load": 7.03
+          },
+          "failures": [
+            "main-thread task reached 33ms",
+            "animation frame gap reached 50ms",
+            "long task or long animation frame",
+            "input event reached 100ms"
+          ],
+          "error": null,
+          "maxMainTaskMs": 390.154,
+          "maxFrameGapMs": 400.10000000000036,
+          "maxReportedEventMs": 408,
+          "longTasks": 8,
+          "longAnimationFrames": 11,
+          "frames": 717
+        },
+        {
+          "viewport": "desktop",
+          "scenario": "sync",
+          "round": 2,
+          "actions": {
+            "letters": 91,
+            "completed": 6,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 2,
+            "syncedRows": 5004,
+            "integrity": {
+              "events": 5006,
+              "total": 5006
+            }
+          },
+          "environment": {
+            "cpuBusyPercent": 70.300444767178,
+            "load": 10.17
+          },
+          "failures": [
+            "main-thread task reached 33ms",
+            "animation frame gap reached 50ms",
+            "long task or long animation frame",
+            "input event reached 100ms"
+          ],
+          "error": null,
+          "maxMainTaskMs": 388.576,
+          "maxFrameGapMs": 383.3000000000011,
+          "maxReportedEventMs": 280,
+          "longTasks": 8,
+          "longAnimationFrames": 10,
+          "frames": 736
+        },
+        {
+          "viewport": "desktop",
+          "scenario": "sync",
+          "round": 3,
+          "actions": {
+            "letters": 91,
+            "completed": 6,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 2,
+            "syncedRows": 5003,
+            "integrity": {
+              "events": 5006,
+              "total": 5006
+            }
+          },
+          "environment": {
+            "cpuBusyPercent": 80.88363954505687,
+            "load": 10.7
+          },
+          "failures": [
+            "main-thread task reached 33ms",
+            "animation frame gap reached 50ms",
+            "long task or long animation frame",
+            "input event reached 100ms"
+          ],
+          "error": null,
+          "maxMainTaskMs": 501.096,
+          "maxFrameGapMs": 533.4000000000015,
+          "maxReportedEventMs": 480,
+          "longTasks": 10,
+          "longAnimationFrames": 13,
+          "frames": 744
+        },
+        {
+          "viewport": "touch",
+          "scenario": "sync",
+          "round": 1,
+          "actions": {
+            "letters": 91,
+            "completed": 6,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 2,
+            "syncedRows": 5002,
+            "integrity": {
+              "events": 5006,
+              "total": 5006
+            }
+          },
+          "environment": {
+            "cpuBusyPercent": 81.31437865188845,
+            "load": 9.77
+          },
+          "failures": [
+            "main-thread task reached 33ms",
+            "animation frame gap reached 50ms",
+            "long task or long animation frame",
+            "input event reached 100ms"
+          ],
+          "error": null,
+          "maxMainTaskMs": 391.102,
+          "maxFrameGapMs": 399.90000000000055,
+          "maxReportedEventMs": 240,
+          "longTasks": 11,
+          "longAnimationFrames": 13,
+          "frames": 1104
+        },
+        {
+          "viewport": "touch",
+          "scenario": "sync",
+          "round": 2,
+          "actions": {
+            "letters": 91,
+            "completed": 6,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 3,
+            "syncedRows": 5005,
+            "integrity": {
+              "events": 5006,
+              "total": 5006
+            }
+          },
+          "environment": {
+            "cpuBusyPercent": 76.0260370697264,
+            "load": 11.7
+          },
+          "failures": [
+            "main-thread task reached 33ms",
+            "animation frame gap reached 50ms",
+            "long task or long animation frame",
+            "input event reached 100ms"
+          ],
+          "error": null,
+          "maxMainTaskMs": 1140.25,
+          "maxFrameGapMs": 1183.3000000000002,
+          "maxReportedEventMs": 576,
+          "longTasks": 14,
+          "longAnimationFrames": 16,
+          "frames": 1187
+        },
+        {
+          "viewport": "touch",
+          "scenario": "sync",
+          "round": 3,
+          "actions": {
+            "letters": 91,
+            "completed": 6,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 2,
+            "syncedRows": 5002,
+            "integrity": {
+              "events": 5006,
+              "total": 5006
+            }
+          },
+          "environment": {
+            "cpuBusyPercent": 81.1276120383756,
+            "load": 11.24
+          },
+          "failures": [
+            "main-thread task reached 33ms",
+            "animation frame gap reached 50ms",
+            "long task or long animation frame",
+            "input event reached 100ms"
+          ],
+          "error": null,
+          "maxMainTaskMs": 311.581,
+          "maxFrameGapMs": 316.59999999999945,
+          "maxReportedEventMs": 320,
+          "longTasks": 11,
+          "longAnimationFrames": 13,
+          "frames": 1049
+        }
+      ]
+    },
+    {
+      "name": "performance-baseline-final",
+      "note": "Original production with corrected fixture; load arose after startup; reproduction only, no cross-machine speedup claim.",
+      "status": "failed",
+      "sourceRevision": "287d1d6fb848ad67717cab3aebff879542de7ecf",
+      "harness": {
+        "runnerSHA256": "2b73d7b81d6a5c46a7ec57c593151072bd45eed1a3e87950ab0f14889baa37bb",
+        "policySHA256": "ff8c8574228c928c91e4fc4cf05625eda7c032fbee63f2cf40bd3ad67de6e494",
+        "diagnosticScenario": "sync"
+      },
+      "limits": {
+        "mainTaskMs": 33,
+        "frameGapMs": 50,
+        "eventMs": 100,
+        "minDurationMs": 8000,
+        "minFrames": 120,
+        "rounds": 3,
+        "historyRows": 5000
+      },
+      "fixture": {
+        "historyRows": 5000,
+        "historySHA256": "81555f7d9310e5a88527feb15b1aae6bd45b491e1b89d1a7f9b1a5089f3d754b",
+        "words": [
+          "glass partition",
+          "coffee machine",
+          "wooden cupboard",
+          "comfortable chair",
+          "colorful painting",
+          "delicious croissant",
+          "ceramic coffee cup",
+          "beautiful window"
+        ],
+        "sentences": [
+          "The glass partition is beside the table.",
+          "The coffee machine is beside the table.",
+          "The wooden cupboard is beside the table.",
+          "The comfortable chair is beside the table.",
+          "The colorful painting is beside the table.",
+          "The delicious croissant is beside the table.",
+          "The ceramic coffee cup is beside the table.",
+          "The beautiful window is beside the table."
+        ]
+      },
+      "error": null,
+      "samples": [
+        {
+          "viewport": "desktop",
+          "scenario": "sync",
+          "round": 1,
+          "actions": {
+            "letters": 91,
+            "completed": 6,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 2,
+            "syncedRows": 5004,
+            "integrity": {
+              "events": 5006,
+              "total": 5006
+            }
+          },
+          "environment": {
+            "cpuBusyPercent": 62.712388013592836,
+            "load": 4.56
+          },
+          "failures": [
+            "main-thread task reached 33ms",
+            "animation frame gap reached 50ms",
+            "long task or long animation frame",
+            "input event reached 100ms"
+          ],
+          "error": null,
+          "maxMainTaskMs": 281.823,
+          "maxFrameGapMs": 300,
+          "maxReportedEventMs": 288,
+          "longTasks": 8,
+          "longAnimationFrames": 8,
+          "frames": 669
+        },
+        {
+          "viewport": "desktop",
+          "scenario": "sync",
+          "round": 2,
+          "actions": {
+            "letters": 91,
+            "completed": 6,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 2,
+            "syncedRows": 5004,
+            "integrity": {
+              "events": 5006,
+              "total": 5006
+            }
+          },
+          "environment": {
+            "cpuBusyPercent": 66.09329151067489,
+            "load": 6.15
+          },
+          "failures": [
+            "main-thread task reached 33ms",
+            "animation frame gap reached 50ms",
+            "long task or long animation frame",
+            "input event reached 100ms"
+          ],
+          "error": null,
+          "maxMainTaskMs": 309.144,
+          "maxFrameGapMs": 316.6999999999998,
+          "maxReportedEventMs": 304,
+          "longTasks": 8,
+          "longAnimationFrames": 9,
+          "frames": 677
+        },
+        {
+          "viewport": "desktop",
+          "scenario": "sync",
+          "round": 3,
+          "actions": {
+            "letters": 91,
+            "completed": 6,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 2,
+            "syncedRows": 5004,
+            "integrity": {
+              "events": 5006,
+              "total": 5006
+            }
+          },
+          "environment": {
+            "cpuBusyPercent": 63.13437282749032,
+            "load": 6.39
+          },
+          "failures": [
+            "main-thread task reached 33ms",
+            "animation frame gap reached 50ms",
+            "long task or long animation frame",
+            "input event reached 100ms"
+          ],
+          "error": null,
+          "maxMainTaskMs": 277.519,
+          "maxFrameGapMs": 283.3000000000002,
+          "maxReportedEventMs": 280,
+          "longTasks": 8,
+          "longAnimationFrames": 9,
+          "frames": 660
+        },
+        {
+          "viewport": "touch",
+          "scenario": "sync",
+          "round": 1,
+          "actions": {
+            "letters": 91,
+            "completed": 6,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 2,
+            "syncedRows": 5002,
+            "integrity": {
+              "events": 5006,
+              "total": 5006
+            }
+          },
+          "environment": {
+            "cpuBusyPercent": 67.62258441647755,
+            "load": 7.4
+          },
+          "failures": [
+            "main-thread task reached 33ms",
+            "animation frame gap reached 50ms",
+            "long task or long animation frame",
+            "input event reached 100ms"
+          ],
+          "error": null,
+          "maxMainTaskMs": 305.096,
+          "maxFrameGapMs": 300,
+          "maxReportedEventMs": 192,
+          "longTasks": 10,
+          "longAnimationFrames": 12,
+          "frames": 1020
+        },
+        {
+          "viewport": "touch",
+          "scenario": "sync",
+          "round": 2,
+          "actions": {
+            "letters": 91,
+            "completed": 6,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 2,
+            "syncedRows": 5002,
+            "integrity": {
+              "events": 5006,
+              "total": 5006
+            }
+          },
+          "environment": {
+            "cpuBusyPercent": 72.9120398411737,
+            "load": 7.89
+          },
+          "failures": [
+            "main-thread task reached 33ms",
+            "animation frame gap reached 50ms",
+            "long task or long animation frame",
+            "input event reached 100ms"
+          ],
+          "error": null,
+          "maxMainTaskMs": 294.875,
+          "maxFrameGapMs": 316.60000000000036,
+          "maxReportedEventMs": 352,
+          "longTasks": 10,
+          "longAnimationFrames": 11,
+          "frames": 1023
+        },
+        {
+          "viewport": "touch",
+          "scenario": "sync",
+          "round": 3,
+          "actions": {
+            "letters": 91,
+            "completed": 6,
+            "modules": {
+              "spelling": 0,
+              "listening": 0,
+              "speaking": 0
+            },
+            "syncUploads": 2,
+            "syncedRows": 5002,
+            "integrity": {
+              "events": 5006,
+              "total": 5006
+            }
+          },
+          "environment": {
+            "cpuBusyPercent": 69.75750805020701,
+            "load": 6.89
+          },
+          "failures": [
+            "main-thread task reached 33ms",
+            "animation frame gap reached 50ms",
+            "long task or long animation frame",
+            "input event reached 100ms"
+          ],
+          "error": null,
+          "maxMainTaskMs": 299.604,
+          "maxFrameGapMs": 316.60000000000036,
+          "maxReportedEventMs": 368,
+          "longTasks": 10,
+          "longAnimationFrames": 11,
+          "frames": 1026
+        }
+      ]
+    },
+    {
+      "name": "performance-final",
+      "note": "Candidate never measured: idle preflight rejected sustained CPU load after 10 minutes.",
+      "status": "error",
+      "sourceRevision": "55617f6a525a42c09bcb441a20dba130d7352b84",
+      "harness": {
+        "runnerSHA256": "2b73d7b81d6a5c46a7ec57c593151072bd45eed1a3e87950ab0f14889baa37bb",
+        "policySHA256": "ff8c8574228c928c91e4fc4cf05625eda7c032fbee63f2cf40bd3ad67de6e494",
+        "diagnosticScenario": null
+      },
+      "limits": {
+        "mainTaskMs": 33,
+        "frameGapMs": 50,
+        "eventMs": 100,
+        "minDurationMs": 8000,
+        "minFrames": 120,
+        "rounds": 3,
+        "historyRows": 5000
+      },
+      "fixture": {
+        "historyRows": 5000,
+        "historySHA256": "81555f7d9310e5a88527feb15b1aae6bd45b491e1b89d1a7f9b1a5089f3d754b",
+        "words": [
+          "glass partition",
+          "coffee machine",
+          "wooden cupboard",
+          "comfortable chair",
+          "colorful painting",
+          "delicious croissant",
+          "ceramic coffee cup",
+          "beautiful window"
+        ],
+        "sentences": [
+          "The glass partition is beside the table.",
+          "The coffee machine is beside the table.",
+          "The wooden cupboard is beside the table.",
+          "The comfortable chair is beside the table.",
+          "The colorful painting is beside the table.",
+          "The delicious croissant is beside the table.",
+          "The ceramic coffee cup is beside the table.",
+          "The beautiful window is beside the table."
+        ]
+      },
+      "error": "Error: Environment remained busy; no performance certificate created\n    at waitForIdle (file:///work/scripts/run-web-performance.mjs:17:558)\n    at async file:///work/scripts/run-web-performance.mjs:32:38",
+      "samples": []
+    }
+  ]
+}

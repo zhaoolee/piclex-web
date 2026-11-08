@@ -1,0 +1,56 @@
+{
+  "conclusion": "success",
+  "headSha": "287d1d6fb848ad67717cab3aebff879542de7ecf",
+  "jobs": [
+    {
+      "name": "build",
+      "conclusion": "success",
+      "status": "completed",
+      "startedAt": "2026-11-08T03:22:07Z",
+      "completedAt": "2026-11-08T03:23:09Z",
+      "url": "https://github.com/zhaoolee/piclex-web/actions/runs/42442419281/job/128614259143"
+    },
+    {
+      "name": "Browser shard 3/3",
+      "conclusion": "success",
+      "status": "completed",
+      "startedAt": "2026-11-08T03:23:11Z",
+      "completedAt": "2026-11-08T03:34:23Z",
+      "url": "https://github.com/zhaoolee/piclex-web/actions/runs/42442419281/job/128614483577"
+    },
+    {
+      "name": "Browser shard 2/3",
+      "conclusion": "success",
+      "status": "completed",
+      "startedAt": "2026-11-08T03:23:11Z",
+      "completedAt": "2026-11-08T03:30:54Z",
+      "url": "https://github.com/zhaoolee/piclex-web/actions/runs/42442419281/job/128614483580"
+    },
+    {
+      "name": "Browser shard 1/3",
+      "conclusion": "success",
+      "status": "completed",
+      "startedAt": "2026-11-08T03:23:12Z",
+      "completedAt": "2026-11-08T03:32:05Z",
+      "url": "https://github.com/zhaoolee/piclex-web/actions/runs/42442419281/job/128614483595"
+    },
+    {
+      "name": "deploy",
+      "conclusion": "success",
+      "status": "completed",
+      "startedAt": "2026-11-08T03:34:27Z",
+      "completedAt": "2026-11-08T03:34:48Z",
+      "url": "https://github.com/zhaoolee/piclex-web/actions/runs/42442419281/job/128616837055"
+    },
+    {
+      "name": "docker / publish",
+      "conclusion": "success",
+      "status": "completed",
+      "startedAt": "2026-11-08T03:34:25Z",
+      "completedAt": "2026-11-08T03:38:28Z",
+      "url": "https://github.com/zhaoolee/piclex-web/actions/runs/42442419281/job/128616837220"
+    }
+  ],
+  "status": "completed",
+  "url": "https://github.com/zhaoolee/piclex-web/actions/runs/42442419281"
+}

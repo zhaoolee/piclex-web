@@ -1,0 +1,74 @@
+
+> piclex-web@0.1.0 build
+> tsc --noEmit && vite build
+
+vite v7.3.6 building client environment for production...
+transforming...
+
+/piclex-web/lab/assets/hero.png referenced in /piclex-web/lab/assets/hero.png didn't resolve at build time, it will remain unchanged to be resolved at runtime
+
+/piclex-web/lab/assets/items.png referenced in /piclex-web/lab/assets/items.png didn't resolve at build time, it will remain unchanged to be resolved at runtime
+
+/piclex-web/lab/assets/coin.png referenced in /piclex-web/lab/assets/coin.png didn't resolve at build time, it will remain unchanged to be resolved at runtime
+✓ 297 modules transformed.
+rendering chunks...
+computing gzip size...
+../../dist/subscribe/index.html                           3.24 kB │ gzip:     1.68 kB
+../../dist/lab/index.html                                 6.67 kB │ gzip:     2.81 kB
+../../dist/index.html                                    13.44 kB │ gzip:     3.15 kB
+../../dist/assets/camera-soft-dunes-BP4g9rUR.webp        21.07 kB
+../../dist/assets/progress-worker-CV9mxU4-.js           106.63 kB
+../../dist/assets/subscribe-CgjdP79_.css                  2.16 kB │ gzip:     0.95 kB
+../../dist/assets/lab-BIjv1P6V.css                       58.72 kB │ gzip:    12.42 kB
+../../dist/assets/main-D6YtTART.css                     103.60 kB │ gzip:    20.36 kB
+../../dist/assets/modulepreload-polyfill-B5Qt9EMX.js      0.71 kB │ gzip:     0.40 kB
+../../dist/assets/lab-CW8S-fcb.js                         2.71 kB │ gzip:     1.39 kB
+../../dist/assets/experience-store-B_mwPK_h.js            6.77 kB │ gzip:     2.96 kB
+../../dist/assets/subscribe-D3VMIW3x.js                  32.52 kB │ gzip:    13.37 kB
+../../dist/assets/main-Cq-tJMaJ.js                      710.92 kB │ gzip:   257.63 kB
+../../dist/assets/main-BdxGuby5.js                    2,805.64 kB │ gzip: 1,811.17 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 3.02s
+fatal: detected dubious ownership in repository at '/work'
+To add an exception for this directory, call:
+
+	git config --global --add safe.directory /work
+node:internal/errors:986
+  const err = new Error(message);
+              ^
+
+Error: Command failed: git rev-parse HEAD
+fatal: detected dubious ownership in repository at '/work'
+To add an exception for this directory, call:
+
+	git config --global --add safe.directory /work
+
+    at genericNodeError (node:internal/errors:986:15)
+    at wrappedFn (node:internal/errors:540:14)
+    at checkExecSyncError (node:child_process:942:11)
+    at execFileSync (node:child_process:978:15)
+    at file:///work/scripts/write-public-release-manifest.mjs:19:22 {
+  status: 128,
+  signal: null,
+  output: [
+    null,
+    '',
+    "fatal: detected dubious ownership in repository at '/work'\n" +
+      'To add an exception for this directory, call:\n' +
+      '\n' +
+      '\tgit config --global --add safe.directory /work\n'
+  ],
+  pid: 55326,
+  stdout: '',
+  stderr: "fatal: detected dubious ownership in repository at '/work'\n" +
+    'To add an exception for this directory, call:\n' +
+    '\n' +
+    '\tgit config --global --add safe.directory /work\n'
+}
+
+Node.js v24.20.0
+Public release manifest: 06da718d9de6-2b6ebdde7243 (1171 files)

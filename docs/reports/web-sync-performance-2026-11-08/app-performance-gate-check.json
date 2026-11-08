@@ -1,0 +1,17 @@
+{
+  "date": "2026-11-08",
+  "scope": "existing App release gate verification; no App install or release",
+  "unitChecks": 25,
+  "unitResult": "passed",
+  "isolationChecks": "passed",
+  "backupWorkerHeartbeatChecks": "passed",
+  "pairedPhysicalDevice": {
+    "type": "iPhone",
+    "tunnelState": "unavailable"
+  },
+  "physicalSampling": "No new physical sample in this task; existing authorized App acceptance remains in progress.",
+  "lastRecordedSuite": "0/9 passing; prior failed traces retained by App performance task",
+  "simulatorUsed": false,
+  "userDataTouched": false,
+  "laterConcurrentTask": "Existing deck-progress acceptance task reports physical connection restored and is preparing an isolated Release archive; do not start competing device sampling."
+}

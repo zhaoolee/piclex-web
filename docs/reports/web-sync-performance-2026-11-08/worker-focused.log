@@ -1,0 +1,29 @@
+
+> piclex-web@0.1.0 test:browser
+> playwright test --config=playwright.worker-focus.config.ts webdav-backup.spec.ts --grep automatic progress|corrupt standalone progress|deck positions|failed sync worker
+
+
+Running 21 tests using 2 workers
+
+[1/21] [desktop] › tests/browser/webdav-backup.spec.ts:65:1 › automatic progress imports native XP without photos and unchanged sync never uploads a deck
+[2/21] [mobile] › tests/browser/webdav-backup.spec.ts:65:1 › automatic progress imports native XP without photos and unchanged sync never uploads a deck
+[3/21] [desktop] › tests/browser/webdav-backup.spec.ts:79:1 › automatic progress merges offline web and native receipts once and retries failed uploads
+[4/21] [mobile] › tests/browser/webdav-backup.spec.ts:79:1 › automatic progress merges offline web and native receipts once and retries failed uploads
+[5/21] [desktop] › tests/browser/webdav-backup.spec.ts:107:1 › automatic progress merges concurrent native snapshots and opt out stops transfers
+[6/21] [mobile] › tests/browser/webdav-backup.spec.ts:107:1 › automatic progress merges concurrent native snapshots and opt out stops transfers
+[7/21] [desktop] › tests/browser/webdav-backup.spec.ts:123:1 › corrupt standalone progress is rejected without publishing or replacing local records
+[8/21] [mobile] › tests/browser/webdav-backup.spec.ts:123:1 › corrupt standalone progress is rejected without publishing or replacing local records
+[9/21] [mobile] › tests/browser/webdav-backup.spec.ts:132:1 › deck positions receive native anchors without changing XP and defer while typing
+[10/21] [desktop] › tests/browser/webdav-backup.spec.ts:132:1 › deck positions receive native anchors without changing XP and defer while typing
+[11/21] [mobile] › tests/browser/webdav-backup.spec.ts:148:1 › deck positions publish navigation and a fresh browser resumes the same word
+[12/21] [desktop] › tests/browser/webdav-backup.spec.ts:148:1 › deck positions publish navigation and a fresh browser resumes the same word
+[13/21] [desktop] › tests/browser/webdav-backup.spec.ts:161:1 › a failed sync worker cannot publish and a fresh worker safely retries
+[14/21] [mobile] › tests/browser/webdav-backup.spec.ts:161:1 › a failed sync worker cannot publish and a fresh worker safely retries
+[15/21] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:65:1 › automatic progress imports native XP without photos and unchanged sync never uploads a deck
+[16/21] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:79:1 › automatic progress merges offline web and native receipts once and retries failed uploads
+[17/21] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:107:1 › automatic progress merges concurrent native snapshots and opt out stops transfers
+[18/21] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:123:1 › corrupt standalone progress is rejected without publishing or replacing local records
+[19/21] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:132:1 › deck positions receive native anchors without changing XP and defer while typing
+[20/21] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:148:1 › deck positions publish navigation and a fresh browser resumes the same word
+[21/21] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:161:1 › a failed sync worker cannot publish and a fresh worker safely retries
+  21 passed (24.6s)
