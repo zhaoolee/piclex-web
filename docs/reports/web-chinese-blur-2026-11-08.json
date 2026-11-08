@@ -1,0 +1,137 @@
+{
+  "sourceRevision": "7a9d5b0a8dbdd36a4ceba7c33b9f0fc04d98fb47",
+  "releaseID": "7a9d5b0a8dbd-30ca999444a3",
+  "ci": {
+    "sourceRevision": "7a9d5b0a8dbdd36a4ceba7c33b9f0fc04d98fb47",
+    "url": "https://github.com/zhaoolee/piclex-web/actions/runs/42479218892",
+    "jobs": [
+      {
+        "name": "build",
+        "conclusion": "success"
+      },
+      {
+        "name": "Browser mobile-webkit 1/2",
+        "conclusion": "success",
+        "passed": 97,
+        "skipped": 0,
+        "failed": 0
+      },
+      {
+        "name": "Browser mobile-webkit 2/2",
+        "conclusion": "success",
+        "passed": 96,
+        "skipped": 1,
+        "failed": 0
+      },
+      {
+        "name": "Browser desktop 2/2",
+        "conclusion": "success",
+        "passed": 121,
+        "skipped": 1,
+        "failed": 0
+      },
+      {
+        "name": "Browser mobile 1/2",
+        "conclusion": "success",
+        "passed": 121,
+        "skipped": 2,
+        "failed": 0
+      },
+      {
+        "name": "Browser mobile 2/2",
+        "conclusion": "success",
+        "passed": 122,
+        "skipped": 0,
+        "failed": 0
+      },
+      {
+        "name": "Browser desktop 1/2",
+        "conclusion": "success",
+        "passed": 123,
+        "skipped": 0,
+        "failed": 0
+      },
+      {
+        "name": "Performance release gate",
+        "conclusion": "success",
+        "roundsPassed": 24,
+        "maxTaskMs": 17.6,
+        "maxFrameMs": 16.8
+      },
+      {
+        "name": "docker / publish",
+        "conclusion": "success"
+      }
+    ],
+    "browserPassed": 680,
+    "browserSkipped": 4,
+    "performance": {
+      "name": "Performance release gate",
+      "conclusion": "success",
+      "roundsPassed": 24,
+      "maxTaskMs": 17.6,
+      "maxFrameMs": 16.8
+    }
+  },
+  "releaseWorkflow": {
+    "createdAt": "2026-11-08T12:27:33Z",
+    "databaseId": 42480349401,
+    "event": "workflow_dispatch",
+    "headBranch": "main",
+    "headSha": "7a9d5b0a8dbdd36a4ceba7c33b9f0fc04d98fb47",
+    "url": "https://github.com/zhaoolee/piclex-web/actions/runs/42480349401"
+  },
+  "liveBrowser": {
+    "pages": {
+      "startTime": "2026-11-08T12:30:12.598Z",
+      "duration": 26658.666999999998,
+      "expected": 4,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "domestic": {
+      "verifiedFlows": 4,
+      "firstAttempt": {
+        "startTime": "2026-11-08T12:30:41.963Z",
+        "duration": 49027.066,
+        "expected": 3,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      },
+      "isolatedFailedFlow": {
+        "startTime": "2026-11-08T12:32:58.666Z",
+        "duration": 19798.952999999998,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "note": "Initial light WebKit reload catalog request exceeded the unchanged 5s UI wait. Isolated single-worker verification passed with original assertions; failure trace retained, no claim of permanently faster network."
+    }
+  },
+  "liveAssets": [
+    {
+      "base": "https://zhaoolee.com/piclex-web/",
+      "count": 14
+    },
+    {
+      "base": "https://piclex.v2fy.com/piclex-web/",
+      "count": 14
+    }
+  ],
+  "docker": {
+    "sourceRevision": "7a9d5b0a8dbdd36a4ceba7c33b9f0fc04d98fb47",
+    "image": "zhaoolee/piclex-web",
+    "digest": "sha256:6fcffbd0cf9046e4e304b332cdc766c0493307f38224e30febaf44b22449f1c1"
+  },
+  "failedCandidates": [
+    "42473557440",
+    "42475008781",
+    "42476668943",
+    "42477711335"
+  ],
+  "evidenceDirectory": "/Users/zhaoolee/github/PicLex/docs/reports/web-chinese-blur-2026-11-08",
+  "cleanup": "Linux test container, dependency volume and VM scratch copy removed. Local release checkout and auxiliary files will be removed immediately after the record push; final receipt in PicLex memory."
+}
