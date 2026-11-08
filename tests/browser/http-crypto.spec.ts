@@ -1,36 +1,27 @@
-import {test,expect} from '@playwright/test';
+import {test as base,expect} from '@playwright/test';
 import fs from 'node:fs';
-import {resolve} from 'node:path';
 import {unzipSync,zipSync} from 'fflate';
 import {decodeProgress,stableID} from '../../packages/backup/src/progress.mjs';
 
-const origin='http://piclex-http.test',dist=resolve('dist');
+import {startInsecureHTTP} from '../support/insecure-http-server.mjs';
+const test=base.extend<{insecureOrigin:string}>({
+ insecureOrigin:async({baseURL},use)=>{const server=await startInsecureHTTP(baseURL);try{await use(server.origin);}finally{await server.close();}},
+});
 const catalog=JSON.parse(fs.readFileSync('apps/public/public/library/catalog.json','utf8'));
 const first=catalog[0],deck=JSON.parse(fs.readFileSync('apps/public/public/'+first.payload,'utf8'));
 const fixture=fs.readFileSync('tests/fixtures/demo/decks/cafe.piclexdeck');
-test.beforeEach(async({page})=>{
- // Serve the same production build bytes under the real insecure HTTP origin without
- // a second network hop, so fulfilling cannot race a cancelled navigation.
- await page.route(origin+'/**',async route=>{
-  const pathname=decodeURIComponent(new URL(route.request().url()).pathname);
-  if(!pathname.startsWith('/piclex-web/'))throw Error('Unexpected insecure-origin path '+pathname);
-  const file=resolve(dist,pathname.slice('/piclex-web/'.length)||'index.html');
-  if(file!==dist&&!file.startsWith(dist+'/'))throw Error('Unexpected insecure-origin path '+pathname);
-  await route.fulfill({path:file});
- });
-});
 // Drain in-flight handlers before the context closes, so no route is fulfilled after disposal.
 test.afterEach(async({page})=>{await page.unrouteAll({behavior:'wait'});});
 async function insecure(page:import('@playwright/test').Page){
  expect(await page.evaluate(()=>({secure:isSecureContext,subtle:typeof crypto.subtle}))).toEqual({secure:false,subtle:'undefined'});
 }
-test('HTTP official deck opens and reloads without WebCrypto',async({page})=>{
+test('HTTP official deck opens and reloads without WebCrypto',async({page,insecureOrigin:origin})=>{
  await page.goto(origin+'/piclex-web/#/learn');await insecure(page);
  await expect(page.getByRole('heading',{name:deck.words[0].chinese,exact:true})).toBeVisible();
  await expect(page.getByRole('textbox',{name:'输入英文',exact:true})).toBeVisible();
  await page.reload();await expect(page.getByRole('heading',{name:deck.words[0].chinese,exact:true})).toBeVisible();
 });
-test('HTTP local import works and corrupt archives cannot replace it',async({page})=>{
+test('HTTP local import works and corrupt archives cannot replace it',async({page,insecureOrigin:origin})=>{
  await page.goto(origin+'/piclex-web/#/decks');await insecure(page);
  await page.getByLabel('选择照片卡组文件').setInputFiles({name:'cafe.piclexdeck',mimeType:'application/octet-stream',buffer:fixture});
  await expect(page.getByRole('heading',{name:'牛角包',exact:true})).toBeVisible();
@@ -42,7 +33,7 @@ test('HTTP local import works and corrupt archives cannot replace it',async({pag
  await expect(page.getByRole('heading',{name:'牛角包',exact:true})).toBeVisible();
 });
 
-test('HTTP automatic progress reads and publishes verified snapshots without secure-only crypto',async({page})=>{
+test('HTTP automatic progress reads and publishes verified snapshots without secure-only crypto',async({page,insecureOrigin:origin})=>{
  const dav='https://dav-http.example.test',folder='/dav/PicLex/progress/';
  const native=fs.readFileSync('tests/fixtures/backup/native-progress.json');
  const name='PicLex-progress-v1-'+JSON.parse(native.toString()).contentSHA256.slice(0,20)+'.json';
