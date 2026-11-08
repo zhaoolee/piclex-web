@@ -16,6 +16,7 @@ on:
         default: true
 permissions:
   contents: read
+  actions: read
 concurrency:
   group: docker-${{ github.ref }}
   cancel-in-progress: false
@@ -25,22 +26,32 @@ jobs:
     env:
       IMAGE_CONTEXT: .
     steps:
-      - name: Require the performance-tested candidate
-        if: ${{ !inputs.verified-artifact || !inputs.performance-verified }}
-        run: |
-          echo 'Publishing requires Check and publish to verify the exact artifact, including the performance gate.'
-          exit 1
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
+      - name: Require the caller performance gate
+        if: ${{ inputs.verified-artifact && !inputs.performance-verified }}
+        run: exit 1
+      - name: Find the exact previously verified artifact
+        if: ${{ !inputs.verified-artifact }}
+        id: verified
+        run: node scripts/find-performance-artifact.mjs
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        if: ${{ !inputs.verified-artifact }}
+        with:
+          name: github-pages
+          path: ${{ runner.temp }}/pages-artifact
+          github-token: ${{ github.token }}
+          run-id: ${{ steps.verified.outputs.run-id }}
       - uses: actions/download-artifact@v4
         if: inputs.verified-artifact
         with:
           name: github-pages
           path: ${{ runner.temp }}/pages-artifact
       - name: Prepare verified image without rebuilding the application
-        if: inputs.verified-artifact
         run: |
           mkdir dist
           tar -xf "$RUNNER_TEMP/pages-artifact/artifact.tar" -C dist

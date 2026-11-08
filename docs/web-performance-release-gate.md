@@ -42,4 +42,4 @@ npm run test:performance -- --url https://zhaoolee.com/piclex-web/ --source "$RE
 
 每轮 `*.trace.json.gz` 是原始 Chrome trace；`*.json` 保存逐帧间隔、Event Timing、长任务、真实动作与效果覆盖。`report.json` 汇总版本、资源哈希、环境和每轮结果。非零退出表示不能发布；失败证据必须保留，诊断修复后对新候选测量。
 
-`Performance release gate` 与完整浏览器检查一起作为 Pages 和 Docker 的依赖。Docker 仅接收完整 `Check and publish` 验证的产物；独立 tag／手工入口不能绕过该门禁。门禁自身的反例测试通过 `npm test` 执行，包括单个峰值、无效数值、空采样、少操作、关闭特效、缺同步、重复和缺失轮次。
+`Performance release gate` 与完整浏览器检查一起作为 Pages 和 Docker 的依赖。Docker 仅接收完整 `Check and publish` 验证的产物；独立 tag／手工入口先查找同一提交已成功的全部分片与性能检查，复用其未过期构建；找不到则阻止发布，不关闭这些入口，也不能绕过门禁。门禁自身的反例测试通过 `npm test` 执行，包括单个峰值、无效数值、空采样、少操作、关闭特效、缺同步、重复和缺失轮次。
