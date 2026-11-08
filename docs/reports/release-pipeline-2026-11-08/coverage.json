@@ -1,0 +1,15 @@
+{
+  "baseline": 618,
+  "partitioned": 618,
+  "shards": {
+    "desktop 1/2": 112,
+    "desktop 2/2": 111,
+    "mobile 1/2": 112,
+    "mobile 2/2": 111,
+    "mobile-webkit 1/2": 86,
+    "mobile-webkit 2/2": 86
+  },
+  "missing": 0,
+  "duplicates": 0,
+  "browserExecution": "not performed; discovery only"
+}

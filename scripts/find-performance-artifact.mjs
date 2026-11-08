@@ -2,7 +2,7 @@ import {appendFileSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 export function verifiedRun(run,jobs,revision,repository){
- const required=['build','Browser shard 1/3','Browser shard 2/3','Browser shard 3/3','Performance release gate'];
+ const required=['build','Performance release gate',...['desktop','mobile','mobile-webkit'].flatMap(project=>[1,2].map(shard=>`Browser ${project} ${shard}/2`))];
  return run.head_sha===revision&&run.status==='completed'&&run.conclusion==='success'&&['push','workflow_dispatch'].includes(run.event)&&run.head_repository?.full_name===repository&&run.path?.split('@')[0]==='.github/workflows/pages.yml'&&required.every(name=>jobs.some(job=>job.name===name&&job.status==='completed'&&job.conclusion==='success'));
 }
 export async function findArtifact({repository,revision,token}){

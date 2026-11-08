@@ -44,13 +44,14 @@ jobs:
         with:
           path: dist
   browser:
-    name: Browser shard ${{ matrix.shard }}/3
+    name: Browser ${{ matrix.project }} ${{ matrix.shard }}/2
     needs: build
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3]
+        project: [desktop, mobile, mobile-webkit]
+        shard: [1, 2]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -72,12 +73,12 @@ jobs:
           if [ -f /etc/apt/apt-mirrors.txt ] && grep -q 'azure.archive.ubuntu.com' /etc/apt/apt-mirrors.txt; then
             sudo sed -i 's#http://azure.archive.ubuntu.com/ubuntu#https://archive.ubuntu.com/ubuntu#g' /etc/apt/apt-mirrors.txt
           fi
-      - run: npx playwright install --with-deps chrome webkit
-      - run: npm run test:browser -- --shard=${{ matrix.shard }}/3 --reporter=line,blob
+      - run: npx playwright install --with-deps ${{ matrix.project == 'mobile-webkit' && 'webkit' || 'chrome' }}
+      - run: npm run test:browser -- --project=${{ matrix.project }} --shard=${{ matrix.shard }}/2 --reporter=line,blob
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: browser-results-${{ matrix.shard }}
+          name: browser-results-${{ matrix.project }}-${{ matrix.shard }}
           path: |
             test-results/
             blob-report/
