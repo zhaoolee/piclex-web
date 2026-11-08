@@ -5,7 +5,7 @@ import usePositionSync from './usePositionSync';
 import {PhotoCache} from '../../../packages/learning-ui/src/photo-cache';
 import {upcomingPhotos} from '../../../packages/practice/src/upcoming-photos.mjs';
 import DeckPicker from './DeckPicker';
-import {recordPortableStudy,portableHistory} from './backup-store';
+import {recordPortableStudy,portableHistory} from './practice-progress';
 import {applyLearningURL,learningHash,parseLearningURL} from '../../../packages/practice/src/learning-url.mjs';
 import usePageViewport from './usePageViewport';
 import useSentenceAmbience from './SentenceAmbience';

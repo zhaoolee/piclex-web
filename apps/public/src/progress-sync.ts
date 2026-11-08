@@ -37,7 +37,12 @@ export async function syncProgress(){
    valid();const client=new WebDAV(settings,{signal:controller!.signal});
    const seen=new Set(await progressSyncReceipts(destination));
    const files=await client.listProgress();
-   work=new ProgressWork(controller!.signal);await work.collect();valid();
+   work=new ProgressWork(controller!.signal);
+   // Large upload bodies and download buffers must stay off the UI thread too.
+   // Directory XML parsing remains here; aborting the run terminates its worker.
+   const request=client.request.bind(client);
+   client.request=(method:string,url:string,options:any={})=>method==='GET'||method==='PUT'?work!.call('request',{settings,method,url,options}):request(method,url,options);
+   await work.collect();valid();
    for(const file of files)if(!seen.has(file.name)){
     const bytes=await client.readProgressBytes(file.name);valid();
     await work.call('merge',{bytes,name:file.name});valid();

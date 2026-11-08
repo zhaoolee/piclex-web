@@ -1,5 +1,7 @@
 import {currentProgress,mergeSyncedProgress} from './backup-service';
 import {decodeProgress,encodeProgress,mergeProgress} from '../../../packages/backup/src/progress.mjs';
+import {WebDAV} from '../../../packages/backup/src/webdav.mjs';
+import {recordPortableStudy,portableHistory} from './backup-store';
 let content:any;
 let studiesRequest:{resolve:(studies:string[])=>void;reject:(error:Error)=>void}|undefined;
 const readStudies=()=>new Promise<string[]>((resolve,reject)=>{studiesRequest={resolve,reject};(globalThis as any).postMessage({type:'read-studies'});});
@@ -9,6 +11,9 @@ async function checked(bytes:Uint8Array,name:string,hash?:string){
  return value;
 }
 async function execute(operation:string,args:any){
+ if(operation==='request')return new WebDAV(args.settings).request(args.method,args.url,args.options);
+ if(operation==='record')return recordPortableStudy(args.deck,args.state);
+ if(operation==='history')return portableHistory(args.deck);
  if(operation==='collect'){content=await currentProgress(readStudies);return;}
  if(operation==='merge'){content=mergeProgress(content,await checked(args.bytes,args.name));return;}
  if(operation==='apply'){await mergeSyncedProgress(content);content=undefined;return;}
