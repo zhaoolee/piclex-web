@@ -5,9 +5,10 @@ import {readPhotos,writePhotos} from '../../../packages/backup/src/photos.mjs';
 import {hashBlob,bytesOf,checkSize,MAX_MANIFEST_BYTES,MAX_PROGRESS_BYTES} from '../../../packages/backup/src/streaming.mjs';
 import {experienceEvents,mergeBackupExperience} from '../../../packages/practice/src/experience-store.mjs';
 export type CompleteFiles=Record<string,Blob|Uint8Array>;
-export async function currentProgress(studies?:string[]){
+type ReadStudies=()=>string[]|Promise<string[]>;
+export async function currentProgress(readStudies?:ReadStudies){
  const state=await backupState(false);
- return mergeProgress(state.content,await experienceContent([],state.content,studies));
+ return mergeProgress(state.content,await experienceContent([],state.content,readStudies));
 }
 export async function mergeSyncedProgress(remote:any){
  await mergePortableProgress(remote);
@@ -15,8 +16,11 @@ export async function mergeSyncedProgress(remote:any){
  globalThis.dispatchEvent(new Event('piclex-progress-imported'));
 }
 function legacyStudies(){const values:string[]=[];for(let i=0;i<localStorage.length;i++){const key=localStorage.key(i)!;if(key.startsWith('piclex-web.study.v2.'))values.push(localStorage.getItem(key)!);}return values;}
-async function experienceContent(photos:BackupPhoto[],existing:any,studies=legacyStudies()){
+async function experienceContent(photos:BackupPhoto[],existing:any,readStudies:ReadStudies=legacyStudies){
  const rows=(await experienceEvents() as any[]).sort((a,b)=>a.at-b.at),content:any=emptyProgress(),words=new Map<string,any>(),drafts=new Map<string,any>(),histories=new Map<string,any>();
+ // Read legacy drafts after XP: a completion written during the IDB await must
+ // not be paired with an older localStorage snapshot and lose its word name.
+ const studies=await readStudies();
  content.readingEvents=[];content.laboratoryExperienceEvents=[];
  for(const p of photos)for(const [index,label] of p.meta.labels.entries())words.set(`${p.meta.id}:${index}`,{english:label.english,occurrenceID:label.learning?.occurrenceID});
  // Older Web versions retained terminal drafts and XP dates, but no portable records.

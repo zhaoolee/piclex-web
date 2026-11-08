@@ -32,7 +32,8 @@ async function server(page:Page,options:{failPut?:boolean;corruptReadback?:boole
  return {async putPositions(rows:any[]){const bytes=encodePositions(rows),name=await positionName(bytes);fs.mkdirSync(absolute(root+'positions/'),{recursive:true});files.set(root+'positions/'+name,Buffer.from(bytes));return name;},putProgress(bytes:Buffer){const name='PicLex-progress-v1-'+JSON.parse(bytes.toString()).contentSHA256.slice(0,20)+'.json';fs.mkdirSync(absolute(root+'progress/'),{recursive:true});files.set(root+'progress/'+name,bytes);return name;},files,stats:remote.stats,requests:remote.requests,get directories(){return new Set([base,root,...fs.readdirSync(path.join(directory,'PicLex')).map(n=>root+n+'/')]);}};
 }
 async function connect(page:Page){await page.goto('/piclex-web/#/settings/data/webdav/connection');await page.getByLabel('服务器地址',{exact:true}).fill(origin+base);await page.getByLabel('账号',{exact:true}).fill('test-account');await page.getByLabel('密码',{exact:true}).fill('test-secret');await page.getByRole('button',{name:'保存并连接',exact:true}).click();await expect(page.getByText('连接成功',{exact:true})).toBeVisible();}
-async function restore(page:Page){await page.goto('/piclex-web/#/settings/data/webdav/restore');await page.getByRole('button',{name:'刷新备份列表',exact:true}).click();await page.getByRole('button',{name:nativeName,exact:true}).click();await expect(page.getByRole('dialog',{name:'恢复完整备份？'})).toBeVisible();await Promise.all([page.waitForEvent('domcontentloaded'),page.getByRole('button',{name:'恢复照片和学习进度',exact:true}).click()]);await expect(page.getByRole('dialog')).toHaveCount(0);await expect(page.locator('.photo-data-page')).toBeVisible();}
+// The restore reload must finish before a follow-up full navigation in WebKit.
+async function restore(page:Page){await page.goto('/piclex-web/#/settings/data/webdav/restore');await page.getByRole('button',{name:'刷新备份列表',exact:true}).click();await page.getByRole('button',{name:nativeName,exact:true}).click();await expect(page.getByRole('dialog',{name:'恢复完整备份？'})).toBeVisible();await Promise.all([page.waitForEvent('load'),page.getByRole('button',{name:'恢复照片和学习进度',exact:true}).click()]);await expect(page.getByRole('dialog')).toHaveCount(0);await expect(page.locator('.photo-data-page')).toBeVisible();}
 async function xp(page:Page){await page.goto('/piclex-web/#/settings/level');await expect(page.locator('.level-page')).toContainText('共 5 经验');}
 test('App backup restores into Web, duplicate restore is idempotent, and Web publishes App-compatible progress',async({page},info)=>{
  const remote=await server(page);await connect(page);await page.reload();await expect(page.getByLabel('密码',{exact:true})).toHaveValue('test-secret');expect(await page.evaluate(()=>JSON.parse(localStorage.getItem('piclex-web.webdav.connection')!).password)).toBe('');
@@ -169,4 +170,32 @@ test('a failed sync worker cannot publish and a fresh worker safely retries',asy
  await page.evaluate(()=>{localStorage.setItem('fixture.worker-recovered','true');window.dispatchEvent(new Event('online'));});
  await expect(page.getByText('等级与学习进度已自动同步',{exact:true})).toBeVisible({timeout:20000});
  await xp(page);expect(remote.requests.some(r=>r.method==='PUT')).toBe(false);
+});
+
+test('a legacy completion written after sync starts keeps its word and date',async({page})=>{
+ const remote=await server(page),at=1600000000000,wordID=photoID+':0',fingerprint='concurrent-legacy',id=`spell:${fingerprint}:0:${wordID}`;
+ await page.addInitScript(()=>{
+  const NativeWorker=window.Worker;let held=false;
+  window.Worker=class extends NativeWorker{
+   postMessage(message:any){
+    if(message.operation==='collect'&&!held){held=true;(window as any).releaseLegacySync=()=>super.postMessage(message);return;}
+    super.postMessage(message);
+   }
+  };
+ });
+ await connect(page);
+ await expect.poll(()=>page.evaluate(()=>typeof (window as any).releaseLegacySync)).toBe('function');
+ await page.evaluate(async({at,wordID,fingerprint,id})=>{
+  localStorage.setItem('piclex-web.study.v2.'+fingerprint,JSON.stringify({version:2,fingerprint,round:0,words:{[wordID]:{input:'camera',result:'correct',quickIndices:null}},history:{[wordID]:{mastered:true,mistakes:[]}}}));
+  const db=await new Promise<IDBDatabase>((resolve,reject)=>{const r=indexedDB.open('piclex-web-experience-v1',1);r.onupgradeneeded=()=>{r.result.createObjectStore('events',{keyPath:'id'});r.result.createObjectStore('meta');};r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);});
+  await new Promise<void>((resolve,reject)=>{const t=db.transaction(['events','meta'],'readwrite');t.objectStore('events').put({id,kind:'spelling',credit:1,at});t.objectStore('meta').put({total:1,statistics:{spelling:1},milestones:[]},'account');t.oncomplete=()=>resolve();t.onerror=()=>reject(t.error);});db.close();
+  (window as any).releaseLegacySync();
+ },{at,wordID,fingerprint,id});
+ await page.goto('/piclex-web/#/settings/data/webdav');await expect(page.getByText('等级与学习进度已自动同步',{exact:true})).toBeVisible();
+ const snapshots=[...remote.files].filter(([p])=>p.startsWith(root+'progress/')&&p.endsWith('.json'));expect(snapshots).toHaveLength(1);
+ const content=await decodeProgress(new Uint8Array(snapshots[0][1]));expect(content.progress[0]).toMatchObject({wordKey:'camera',attempts:1,lastPracticedAt:at});expect(content.events).toHaveLength(1);expect(content.events[0]).toMatchObject({wordKey:'camera',completedAt:at});
+ await page.getByRole('button',{name:'创建完整备份',exact:true}).click();await expect(page.getByText('WebDAV 完整备份完成。',{exact:true})).toBeVisible();
+ const folder=[...remote.directories].find(p=>p.startsWith(root+'PicLex-Backup-')&&p!==root+nativeName+'/')!,exported=await decodeProgress(new Uint8Array(remote.files.get(folder+'learning-progress.json')!));
+ expect(exported.events).toEqual(content.events);expect(exported.progress).toEqual(content.progress);
+ await page.goto('/piclex-web/#/settings/level');await expect(page.locator('.level-page')).toContainText('共 1 经验');
 });
