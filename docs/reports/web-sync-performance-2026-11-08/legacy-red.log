@@ -1,0 +1,129 @@
+
+> piclex-web@0.1.0 test:browser
+> playwright test --config=playwright.legacy-red.config.ts tests/browser/webdav-backup.spec.ts --grep a legacy completion written after sync starts
+
+
+Running 3 tests using 2 workers
+
+[1/3] [desktop] › tests/browser/webdav-backup.spec.ts:174:1 › a legacy completion written after sync starts keeps its word and date
+[2/3] [mobile] › tests/browser/webdav-backup.spec.ts:174:1 › a legacy completion written after sync starts keeps its word and date
+  1) [mobile] › tests/browser/webdav-backup.spec.ts:174:1 › a legacy completion written after sync starts keeps its word and date 
+
+    Error: expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "completedAt": 1600000000000,
+    -   "wordKey": "camera",
+    +   "wordKey": "web-history",
+      }
+
+      193 |  await page.goto('/piclex-web/#/settings/data/webdav');await expect(page.getByText('等级与学习进度已自动同步',{exact:true})).toBeVisible();
+      194 |  const snapshots=[...remote.files].filter(([p])=>p.startsWith(root+'progress/')&&p.endsWith('.json'));expect(snapshots).toHaveLength(1);
+    > 195 |  const content=await decodeProgress(new Uint8Array(snapshots[0][1]));expect(content.progress[0]).toMatchObject({wordKey:'camera',attempts:1,lastPracticedAt:at});expect(content.events).toHaveLength(1);expect(content.events[0]).toMatchObject({wordKey:'camera',completedAt:at});
+          |                                                                                                                                                                                                                                   ^
+      196 |  await page.getByRole('button',{name:'创建完整备份',exact:true}).click();await expect(page.getByText('WebDAV 完整备份完成。',{exact:true})).toBeVisible();
+      197 |  const folder=[...remote.directories].find(p=>p.startsWith(root+'PicLex-Backup-')&&p!==root+nativeName+'/')!,exported=await decodeProgress(new Uint8Array(remote.files.get(folder+'learning-progress.json')!));
+      198 |  expect(exported.events).toEqual(content.events);expect(exported.progress).toEqual(content.progress);
+        at /work/tests/browser/webdav-backup.spec.ts:195:227
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../evidence/legacy-red-results/webdav-backup-a-legacy-com-9db46-rts-keeps-its-word-and-date-mobile/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../evidence/legacy-red-results/webdav-backup-a-legacy-com-9db46-rts-keeps-its-word-and-date-mobile/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../evidence/legacy-red-results/webdav-backup-a-legacy-com-9db46-rts-keeps-its-word-and-date-mobile/trace.zip
+    Usage:
+
+        npx playwright show-trace ../evidence/legacy-red-results/webdav-backup-a-legacy-com-9db46-rts-keeps-its-word-and-date-mobile/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+  2) [desktop] › tests/browser/webdav-backup.spec.ts:174:1 › a legacy completion written after sync starts keeps its word and date 
+
+    Error: expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "completedAt": 1600000000000,
+    -   "wordKey": "camera",
+    +   "wordKey": "web-history",
+      }
+
+      193 |  await page.goto('/piclex-web/#/settings/data/webdav');await expect(page.getByText('等级与学习进度已自动同步',{exact:true})).toBeVisible();
+      194 |  const snapshots=[...remote.files].filter(([p])=>p.startsWith(root+'progress/')&&p.endsWith('.json'));expect(snapshots).toHaveLength(1);
+    > 195 |  const content=await decodeProgress(new Uint8Array(snapshots[0][1]));expect(content.progress[0]).toMatchObject({wordKey:'camera',attempts:1,lastPracticedAt:at});expect(content.events).toHaveLength(1);expect(content.events[0]).toMatchObject({wordKey:'camera',completedAt:at});
+          |                                                                                                                                                                                                                                   ^
+      196 |  await page.getByRole('button',{name:'创建完整备份',exact:true}).click();await expect(page.getByText('WebDAV 完整备份完成。',{exact:true})).toBeVisible();
+      197 |  const folder=[...remote.directories].find(p=>p.startsWith(root+'PicLex-Backup-')&&p!==root+nativeName+'/')!,exported=await decodeProgress(new Uint8Array(remote.files.get(folder+'learning-progress.json')!));
+      198 |  expect(exported.events).toEqual(content.events);expect(exported.progress).toEqual(content.progress);
+        at /work/tests/browser/webdav-backup.spec.ts:195:227
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../evidence/legacy-red-results/webdav-backup-a-legacy-com-9db46-rts-keeps-its-word-and-date-desktop/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../evidence/legacy-red-results/webdav-backup-a-legacy-com-9db46-rts-keeps-its-word-and-date-desktop/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../evidence/legacy-red-results/webdav-backup-a-legacy-com-9db46-rts-keeps-its-word-and-date-desktop/trace.zip
+    Usage:
+
+        npx playwright show-trace ../evidence/legacy-red-results/webdav-backup-a-legacy-com-9db46-rts-keeps-its-word-and-date-desktop/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[3/3] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:174:1 › a legacy completion written after sync starts keeps its word and date
+  3) [mobile-webkit] › tests/browser/webdav-backup.spec.ts:174:1 › a legacy completion written after sync starts keeps its word and date 
+
+    Error: expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "completedAt": 1600000000000,
+    -   "wordKey": "camera",
+    +   "wordKey": "web-history",
+      }
+
+      193 |  await page.goto('/piclex-web/#/settings/data/webdav');await expect(page.getByText('等级与学习进度已自动同步',{exact:true})).toBeVisible();
+      194 |  const snapshots=[...remote.files].filter(([p])=>p.startsWith(root+'progress/')&&p.endsWith('.json'));expect(snapshots).toHaveLength(1);
+    > 195 |  const content=await decodeProgress(new Uint8Array(snapshots[0][1]));expect(content.progress[0]).toMatchObject({wordKey:'camera',attempts:1,lastPracticedAt:at});expect(content.events).toHaveLength(1);expect(content.events[0]).toMatchObject({wordKey:'camera',completedAt:at});
+          |                                                                                                                                                                                                                                   ^
+      196 |  await page.getByRole('button',{name:'创建完整备份',exact:true}).click();await expect(page.getByText('WebDAV 完整备份完成。',{exact:true})).toBeVisible();
+      197 |  const folder=[...remote.directories].find(p=>p.startsWith(root+'PicLex-Backup-')&&p!==root+nativeName+'/')!,exported=await decodeProgress(new Uint8Array(remote.files.get(folder+'learning-progress.json')!));
+      198 |  expect(exported.events).toEqual(content.events);expect(exported.progress).toEqual(content.progress);
+        at /work/tests/browser/webdav-backup.spec.ts:195:227
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../evidence/legacy-red-results/webdav-backup-a-legacy-com-9db46-rts-keeps-its-word-and-date-mobile-webkit/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../evidence/legacy-red-results/webdav-backup-a-legacy-com-9db46-rts-keeps-its-word-and-date-mobile-webkit/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../evidence/legacy-red-results/webdav-backup-a-legacy-com-9db46-rts-keeps-its-word-and-date-mobile-webkit/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../evidence/legacy-red-results/webdav-backup-a-legacy-com-9db46-rts-keeps-its-word-and-date-mobile-webkit/trace.zip
+    Usage:
+
+        npx playwright show-trace ../evidence/legacy-red-results/webdav-backup-a-legacy-com-9db46-rts-keeps-its-word-and-date-mobile-webkit/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+  3 failed
+    [desktop] › tests/browser/webdav-backup.spec.ts:174:1 › a legacy completion written after sync starts keeps its word and date 
+    [mobile] › tests/browser/webdav-backup.spec.ts:174:1 › a legacy completion written after sync starts keeps its word and date 
+    [mobile-webkit] › tests/browser/webdav-backup.spec.ts:174:1 › a legacy completion written after sync starts keeps its word and date 

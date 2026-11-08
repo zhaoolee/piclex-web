@@ -1,0 +1,203 @@
+{
+  "failedCI": {
+    "run": 42448844930,
+    "sourceRevision": "45849785af755f093bcc02bfb679bc4c108be257",
+    "performance": "18 ordinary rounds passed, all6 sync rounds failed: 49.7–60.7ms main tasks",
+    "functional": "legacy completion word lost in three browsers",
+    "published": false,
+    "rawDirectory": "/Users/zhaoolee/github/PicLex/output/release-pipeline-2026-11-08/performance"
+  },
+  "migrationFix": {
+    "commit": "39e02f6",
+    "red": "new deterministic test failed on all3 old browsers with camera becoming web-history",
+    "green": "old/new migration passed all3; adjacent backup test initially hit WebKit navigation before restore load completed; load boundary fixed, affected15/15 passed without weakened data assertions"
+  },
+  "remainingHotspotFix": {
+    "commit": "6b9fa616c716472ae97331dee9afddbc9935725b",
+    "changes": "Move GET/PUT and practice history IDB work off UI thread; retain metadata-only bridge, checks, transactional merges and abort cleanup",
+    "browser": "71 passed/1 existing skip; backup, migration, sync, photo grouping and spelling revisit",
+    "diagnosticStatus": "3 of6 samples pass,3 fail; no release certificate. Largest48ms task is compositor Commit (21.6ms thread CPU), original PUT/IDB main hotspots no longer present. No UI effects or thresholds changed. Exact final CI still required",
+    "samples": [
+      {
+        "viewport": "desktop",
+        "round": 1,
+        "maxMainTaskMs": 26.703,
+        "maxFrameGapMs": 50.100000000000364,
+        "longTasks": 0,
+        "longAnimationFrames": 0,
+        "actions": {
+          "letters": 91,
+          "completed": 6,
+          "modules": {
+            "spelling": 0,
+            "listening": 0,
+            "speaking": 0
+          },
+          "syncUploads": 2,
+          "syncedRows": 5005,
+          "integrity": {
+            "events": 5006,
+            "total": 5006
+          }
+        },
+        "environment": {
+          "cpuBusyPercent": 23.15848214285714,
+          "load": 2.94
+        },
+        "failures": [
+          "animation frame gap reached 50ms"
+        ]
+      },
+      {
+        "viewport": "desktop",
+        "round": 2,
+        "maxMainTaskMs": 48,
+        "maxFrameGapMs": 66.70000000000073,
+        "longTasks": 1,
+        "longAnimationFrames": 0,
+        "actions": {
+          "letters": 91,
+          "completed": 6,
+          "modules": {
+            "spelling": 0,
+            "listening": 0,
+            "speaking": 0
+          },
+          "syncUploads": 2,
+          "syncedRows": 5005,
+          "integrity": {
+            "events": 5006,
+            "total": 5006
+          }
+        },
+        "environment": {
+          "cpuBusyPercent": 22.83333333333334,
+          "load": 2.75
+        },
+        "failures": [
+          "main-thread task reached 33ms",
+          "animation frame gap reached 50ms",
+          "long task or long animation frame",
+          "input event reached 100ms"
+        ]
+      },
+      {
+        "viewport": "desktop",
+        "round": 3,
+        "maxMainTaskMs": 13.858,
+        "maxFrameGapMs": 33.29999999999927,
+        "longTasks": 0,
+        "longAnimationFrames": 0,
+        "actions": {
+          "letters": 91,
+          "completed": 6,
+          "modules": {
+            "spelling": 0,
+            "listening": 0,
+            "speaking": 0
+          },
+          "syncUploads": 2,
+          "syncedRows": 5005,
+          "integrity": {
+            "events": 5006,
+            "total": 5006
+          }
+        },
+        "environment": {
+          "cpuBusyPercent": 21.601208459214504,
+          "load": 2.43
+        },
+        "failures": []
+      },
+      {
+        "viewport": "touch",
+        "round": 1,
+        "maxMainTaskMs": 15.145,
+        "maxFrameGapMs": 50,
+        "longTasks": 0,
+        "longAnimationFrames": 1,
+        "actions": {
+          "letters": 91,
+          "completed": 6,
+          "modules": {
+            "spelling": 0,
+            "listening": 0,
+            "speaking": 0
+          },
+          "syncUploads": 3,
+          "syncedRows": 5006,
+          "integrity": {
+            "events": 5006,
+            "total": 5006
+          }
+        },
+        "environment": {
+          "cpuBusyPercent": 20.614657210401887,
+          "load": 1.95
+        },
+        "failures": [
+          "animation frame gap reached 50ms",
+          "long task or long animation frame",
+          "input event reached 100ms"
+        ]
+      },
+      {
+        "viewport": "touch",
+        "round": 2,
+        "maxMainTaskMs": 24.444,
+        "maxFrameGapMs": 33.30000000000291,
+        "longTasks": 0,
+        "longAnimationFrames": 0,
+        "actions": {
+          "letters": 91,
+          "completed": 6,
+          "modules": {
+            "spelling": 0,
+            "listening": 0,
+            "speaking": 0
+          },
+          "syncUploads": 2,
+          "syncedRows": 5003,
+          "integrity": {
+            "events": 5006,
+            "total": 5006
+          }
+        },
+        "environment": {
+          "cpuBusyPercent": 21.40151515151515,
+          "load": 1.79
+        },
+        "failures": []
+      },
+      {
+        "viewport": "touch",
+        "round": 3,
+        "maxMainTaskMs": 10.317,
+        "maxFrameGapMs": 33.30000000000018,
+        "longTasks": 0,
+        "longAnimationFrames": 0,
+        "actions": {
+          "letters": 91,
+          "completed": 6,
+          "modules": {
+            "spelling": 0,
+            "listening": 0,
+            "speaking": 0
+          },
+          "syncUploads": 2,
+          "syncedRows": 5003,
+          "integrity": {
+            "events": 5006,
+            "total": 5006
+          }
+        },
+        "environment": {
+          "cpuBusyPercent": 22.073035780154925,
+          "load": 1.49
+        },
+        "failures": []
+      }
+    ],
+    "rawDirectory": "/Users/zhaoolee/github/PicLex/output/web-performance-2026-11-08/performance-background-io"
+  }
+}

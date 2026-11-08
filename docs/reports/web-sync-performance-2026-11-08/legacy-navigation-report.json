@@ -1,0 +1,676 @@
+{
+  "config": {
+    "argv": [
+      "/usr/bin/node",
+      "/work/node_modules/.bin/playwright",
+      "test",
+      "--config=playwright.legacy-navigation.config.ts",
+      "tests/browser/webdav-backup.spec.ts",
+      "--grep",
+      "quota and native|legacy.*completion|App backup restores|local complete ZIP"
+    ],
+    "configFile": "/work/playwright.legacy-navigation.config.ts",
+    "rootDir": "/work/tests/browser",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 2
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/evidence/legacy-navigation-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "id": "desktop",
+        "name": "desktop",
+        "testDir": "/work/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/evidence/legacy-navigation-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "id": "mobile",
+        "name": "mobile",
+        "testDir": "/work/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/evidence/legacy-navigation-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "id": "mobile-webkit",
+        "name": "mobile-webkit",
+        "testDir": "/work/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "deck-subscription-themes.spec.ts",
+          "deck-subscriptions.spec.ts",
+          "audio-unlock-speech.spec.ts",
+          "spelling-letter-color.spec.ts",
+          "parity-state.spec.ts",
+          "parity-speaking.spec.ts",
+          "parity-subscriptions.spec.ts",
+          "guided-no-eyes.spec.ts",
+          "word-peek.spec.ts",
+          "capture-grouping.spec.ts",
+          "learning-parity.spec.ts",
+          "http-crypto.spec.ts",
+          "subscription-poster.spec.ts",
+          "input-performance.spec.ts",
+          "loading.spec.ts",
+          "photo-prefetch.spec.ts",
+          "spelling-feedback.spec.ts",
+          "speech-voice.spec.ts",
+          "capture-render.spec.ts",
+          "visible-focus.spec.ts",
+          "focus-ambience.spec.ts",
+          "ai-settings.spec.ts",
+          "large-backup.spec.ts",
+          "webdav-backup.spec.ts",
+          "ui-assets.spec.ts",
+          "capture-mobile-fit.spec.ts",
+          "learning-url.spec.ts",
+          "spelling-revisit.spec.ts",
+          "visual-viewport.spec.ts",
+          "deck-picker-audio.spec.ts",
+          "keyboard-viewport.spec.ts",
+          "touch-spelling.spec.ts",
+          "learning-keyboard-shortcuts.spec.ts",
+          "playback-parity.spec.ts",
+          "interaction-audit.spec.ts",
+          "camera-parity.spec.ts",
+          "camera-surface.spec.ts",
+          "glass-tabs.spec.ts",
+          "settings-parity.spec.ts",
+          "layout-audit.spec.ts",
+          "alignment-extension.spec.ts",
+          "word-completion.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "line",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "/evidence/legacy-navigation-report.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 2,
+    "webServer": {
+      "command": "npm run preview",
+      "url": "http://127.0.0.1:18120",
+      "reuseExistingServer": false
+    }
+  },
+  "suites": [
+    {
+      "title": "webdav-backup.spec.ts",
+      "file": "webdav-backup.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "App backup restores into Web, duplicate restore is idempotent, and Web publishes App-compatible progress",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2822,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T05:10:18.061Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "874c6f3c53d99fc516cd-fdfddf8f8eb51f2ec7d7",
+          "file": "webdav-backup.spec.ts",
+          "line": 38,
+          "column": 1
+        },
+        {
+          "title": "local complete ZIP restores idempotently and recycled photos can return to practice",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1841,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T05:10:20.714Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "874c6f3c53d99fc516cd-db9f66ef4543890e40c6",
+          "file": "webdav-backup.spec.ts",
+          "line": 55,
+          "column": 1
+        },
+        {
+          "title": "legacy Web completion exports its original word and date without awarding restored answers again",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1144,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T05:10:22.563Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "874c6f3c53d99fc516cd-72d0d9c5a4d2d73babe6",
+          "file": "webdav-backup.spec.ts",
+          "line": 56,
+          "column": 1
+        },
+        {
+          "title": "quota and native 20 GiB limit failures leave existing data intact and clean temporary files",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1589,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T05:10:23.713Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "874c6f3c53d99fc516cd-4052a28e03ecbc92a3a1",
+          "file": "webdav-backup.spec.ts",
+          "line": 60,
+          "column": 1
+        },
+        {
+          "title": "a legacy completion written after sync starts keeps its word and date",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1028,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T05:10:25.309Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "874c6f3c53d99fc516cd-d546b465f30341158599",
+          "file": "webdav-backup.spec.ts",
+          "line": 175,
+          "column": 1
+        },
+        {
+          "title": "App backup restores into Web, duplicate restore is idempotent, and Web publishes App-compatible progress",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile",
+              "projectName": "mobile",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 2738,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T05:10:18.052Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "874c6f3c53d99fc516cd-6a70e7552fe8f9784add",
+          "file": "webdav-backup.spec.ts",
+          "line": 38,
+          "column": 1
+        },
+        {
+          "title": "local complete ZIP restores idempotently and recycled photos can return to practice",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile",
+              "projectName": "mobile",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 1793,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T05:10:20.634Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "874c6f3c53d99fc516cd-a8ed37be57fcef37819a",
+          "file": "webdav-backup.spec.ts",
+          "line": 55,
+          "column": 1
+        },
+        {
+          "title": "legacy Web completion exports its original word and date without awarding restored answers again",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile",
+              "projectName": "mobile",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 1314,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T05:10:22.437Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "874c6f3c53d99fc516cd-fd78bca02547123988e5",
+          "file": "webdav-backup.spec.ts",
+          "line": 56,
+          "column": 1
+        },
+        {
+          "title": "quota and native 20 GiB limit failures leave existing data intact and clean temporary files",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile",
+              "projectName": "mobile",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 1427,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T05:10:23.761Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "874c6f3c53d99fc516cd-0f940463092568907e66",
+          "file": "webdav-backup.spec.ts",
+          "line": 60,
+          "column": 1
+        },
+        {
+          "title": "a legacy completion written after sync starts keeps its word and date",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile",
+              "projectName": "mobile",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 1196,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T05:10:25.197Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "874c6f3c53d99fc516cd-8f9019fddd76603f1828",
+          "file": "webdav-backup.spec.ts",
+          "line": 175,
+          "column": 1
+        },
+        {
+          "title": "App backup restores into Web, duplicate restore is idempotent, and Web publishes App-compatible progress",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-webkit",
+              "projectName": "mobile-webkit",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5538,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T05:10:26.682Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "874c6f3c53d99fc516cd-5eac1d229d5a53092063",
+          "file": "webdav-backup.spec.ts",
+          "line": 38,
+          "column": 1
+        },
+        {
+          "title": "local complete ZIP restores idempotently and recycled photos can return to practice",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-webkit",
+              "projectName": "mobile-webkit",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4939,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T05:10:32.057Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "874c6f3c53d99fc516cd-7ed46d4393e6059c9b1c",
+          "file": "webdav-backup.spec.ts",
+          "line": 55,
+          "column": 1
+        },
+        {
+          "title": "legacy Web completion exports its original word and date without awarding restored answers again",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-webkit",
+              "projectName": "mobile-webkit",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2432,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T05:10:37.008Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "874c6f3c53d99fc516cd-f85a055fcda972af8dde",
+          "file": "webdav-backup.spec.ts",
+          "line": 56,
+          "column": 1
+        },
+        {
+          "title": "quota and native 20 GiB limit failures leave existing data intact and clean temporary files",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-webkit",
+              "projectName": "mobile-webkit",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3058,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T05:10:39.447Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "874c6f3c53d99fc516cd-4bae8333db6b07ef9c7b",
+          "file": "webdav-backup.spec.ts",
+          "line": 60,
+          "column": 1
+        },
+        {
+          "title": "a legacy completion written after sync starts keeps its word and date",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile-webkit",
+              "projectName": "mobile-webkit",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2441,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-08T05:10:42.254Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "874c6f3c53d99fc516cd-7fd7e4a459d68a4ffd1a",
+          "file": "webdav-backup.spec.ts",
+          "line": 175,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-08T05:10:17.047Z",
+    "duration": 28465.912,
+    "expected": 15,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

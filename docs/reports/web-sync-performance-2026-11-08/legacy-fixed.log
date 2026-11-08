@@ -1,0 +1,103 @@
+
+> piclex-web@0.1.0 test:browser
+> playwright test --config=playwright.legacy-fixed.config.ts tests/browser/webdav-backup.spec.ts
+
+
+Running 57 tests using 2 workers
+
+[1/57] [mobile] › tests/browser/webdav-backup.spec.ts:37:1 › App backup restores into Web, duplicate restore is idempotent, and Web publishes App-compatible progress
+[2/57] [desktop] › tests/browser/webdav-backup.spec.ts:37:1 › App backup restores into Web, duplicate restore is idempotent, and Web publishes App-compatible progress
+[3/57] [desktop] › tests/browser/webdav-backup.spec.ts:47:1 › corrupt remote progress is rejected before saving photos or credits; password field stays masked
+[4/57] [mobile] › tests/browser/webdav-backup.spec.ts:47:1 › corrupt remote progress is rejected before saving photos or credits; password field stays masked
+[5/57] [desktop] › tests/browser/webdav-backup.spec.ts:48:1 › native photo-data hierarchy fits small screens and short viewports with usable configuration controls
+[6/57] [mobile] › tests/browser/webdav-backup.spec.ts:48:1 › native photo-data hierarchy fits small screens and short viewports with usable configuration controls
+[7/57] [desktop] › tests/browser/webdav-backup.spec.ts:50:1 › failed upload cleans only its own staging directory and retains existing backups
+[8/57] [mobile] › tests/browser/webdav-backup.spec.ts:50:1 › failed upload cleans only its own staging directory and retains existing backups
+[9/57] [desktop] › tests/browser/webdav-backup.spec.ts:51:1 › successful PUT and MOVE are not reported as a valid backup when readback is corrupt
+[10/57] [mobile] › tests/browser/webdav-backup.spec.ts:51:1 › successful PUT and MOVE are not reported as a valid backup when readback is corrupt
+[11/57] [desktop] › tests/browser/webdav-backup.spec.ts:54:1 › local complete ZIP restores idempotently and recycled photos can return to practice
+[12/57] [mobile] › tests/browser/webdav-backup.spec.ts:54:1 › local complete ZIP restores idempotently and recycled photos can return to practice
+[13/57] [desktop] › tests/browser/webdav-backup.spec.ts:55:1 › legacy Web completion exports its original word and date without awarding restored answers again
+[14/57] [mobile] › tests/browser/webdav-backup.spec.ts:55:1 › legacy Web completion exports its original word and date without awarding restored answers again
+[15/57] [desktop] › tests/browser/webdav-backup.spec.ts:56:1 › authentication is not forwarded to a redirected WebDAV host
+[16/57] [desktop] › tests/browser/webdav-backup.spec.ts:59:1 › quota and native 20 GiB limit failures leave existing data intact and clean temporary files
+[17/57] [mobile] › tests/browser/webdav-backup.spec.ts:56:1 › authentication is not forwarded to a redirected WebDAV host
+[18/57] [mobile] › tests/browser/webdav-backup.spec.ts:59:1 › quota and native 20 GiB limit failures leave existing data intact and clean temporary files
+[19/57] [desktop] › tests/browser/webdav-backup.spec.ts:60:1 › cancel download and upload removes only operation files and keeps photos and progress
+[20/57] [mobile] › tests/browser/webdav-backup.spec.ts:60:1 › cancel download and upload removes only operation files and keeps photos and progress
+[21/57] [desktop] › tests/browser/webdav-backup.spec.ts:62:1 › conservative storage estimates do not reject valid backups
+[22/57] [mobile] › tests/browser/webdav-backup.spec.ts:62:1 › conservative storage estimates do not reject valid backups
+[23/57] [desktop] › tests/browser/webdav-backup.spec.ts:65:1 › automatic progress imports native XP without photos and unchanged sync never uploads a deck
+[24/57] [mobile] › tests/browser/webdav-backup.spec.ts:65:1 › automatic progress imports native XP without photos and unchanged sync never uploads a deck
+[25/57] [desktop] › tests/browser/webdav-backup.spec.ts:79:1 › automatic progress merges offline web and native receipts once and retries failed uploads
+[26/57] [mobile] › tests/browser/webdav-backup.spec.ts:79:1 › automatic progress merges offline web and native receipts once and retries failed uploads
+[27/57] [desktop] › tests/browser/webdav-backup.spec.ts:107:1 › automatic progress merges concurrent native snapshots and opt out stops transfers
+[28/57] [desktop] › tests/browser/webdav-backup.spec.ts:123:1 › corrupt standalone progress is rejected without publishing or replacing local records
+[29/57] [mobile] › tests/browser/webdav-backup.spec.ts:107:1 › automatic progress merges concurrent native snapshots and opt out stops transfers
+[30/57] [desktop] › tests/browser/webdav-backup.spec.ts:132:1 › deck positions receive native anchors without changing XP and defer while typing
+[31/57] [mobile] › tests/browser/webdav-backup.spec.ts:123:1 › corrupt standalone progress is rejected without publishing or replacing local records
+[32/57] [mobile] › tests/browser/webdav-backup.spec.ts:132:1 › deck positions receive native anchors without changing XP and defer while typing
+[33/57] [desktop] › tests/browser/webdav-backup.spec.ts:148:1 › deck positions publish navigation and a fresh browser resumes the same word
+[34/57] [mobile] › tests/browser/webdav-backup.spec.ts:148:1 › deck positions publish navigation and a fresh browser resumes the same word
+[35/57] [desktop] › tests/browser/webdav-backup.spec.ts:161:1 › a failed sync worker cannot publish and a fresh worker safely retries
+[36/57] [desktop] › tests/browser/webdav-backup.spec.ts:174:1 › a legacy completion written after sync starts keeps its word and date
+[37/57] [mobile] › tests/browser/webdav-backup.spec.ts:161:1 › a failed sync worker cannot publish and a fresh worker safely retries
+[38/57] [mobile] › tests/browser/webdav-backup.spec.ts:174:1 › a legacy completion written after sync starts keeps its word and date
+[39/57] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:37:1 › App backup restores into Web, duplicate restore is idempotent, and Web publishes App-compatible progress
+[40/57] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:47:1 › corrupt remote progress is rejected before saving photos or credits; password field stays masked
+[41/57] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:48:1 › native photo-data hierarchy fits small screens and short viewports with usable configuration controls
+[42/57] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:50:1 › failed upload cleans only its own staging directory and retains existing backups
+[43/57] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:51:1 › successful PUT and MOVE are not reported as a valid backup when readback is corrupt
+[44/57] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:54:1 › local complete ZIP restores idempotently and recycled photos can return to practice
+[45/57] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:55:1 › legacy Web completion exports its original word and date without awarding restored answers again
+[46/57] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:56:1 › authentication is not forwarded to a redirected WebDAV host
+[47/57] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:59:1 › quota and native 20 GiB limit failures leave existing data intact and clean temporary files
+  1) [mobile-webkit] › tests/browser/webdav-backup.spec.ts:59:1 › quota and native 20 GiB limit failures leave existing data intact and clean temporary files 
+
+    Error: page.goto: WebKit encountered an internal error
+    Call log:
+      - navigating to "http://127.0.0.1:18120/piclex-web/#/settings/data/webdav/restore", waiting until "load"
+
+
+      57 |
+      58 | async function temporaryFiles(page:Page){return page.evaluate(async(testStarted)=>{const root=await navigator.storage.getDirectory();try{const parent=await root.getDirectoryHandle('piclex-backup-transfers');let count=0;for await(const [name,dir]of (parent as any).entries())if(Number(name.split('-')[1])>=testStarted)for await(const _ of dir.entries())count++;return count;}catch(e){if(e.name==='NotFoundError')return 0;throw e;}},testStarted);}
+    > 59 | test('quota and native 20 GiB limit failures leave existing data intact and clean temporary files',async({page})=>{const remote=await server(page);await connect(page);await restore(page);await page.goto('/piclex-web/#/settings/data/webdav/restore');await page.evaluate(()=>Object.defineProperty(FileSystemFileHandle.prototype,'createWritable',{configurable:true,value:async()=>{throw new DOMException('Test quota exceeded','QuotaExceededError');}}));await page.getByRole('button',{name:'刷新备份列表',exact:true}).click();await page.getByRole('button',{name:nativeName,exact:true}).click();await expect(page.getByRole('alert')).toContainText('空间不足');await expect.poll(()=>temporaryFiles(page)).toBe(1);await page.reload();remote.stats.oversize=true;await page.getByRole('button',{name:'刷新备份列表',exact:true}).click();await page.getByRole('button',{name:nativeName,exact:true}).click();await expect(page.getByRole('alert')).toContainText('20 GB');await expect.poll(()=>temporaryFiles(page)).toBe(1);await xp(page);await page.goto('/piclex-web/#/settings/data');await expect(page.getByRole('button',{name:'已拍照片 1',exact:true})).toBeVisible();});
+         |                                                                                                                                                                                                       ^
+      60 | test('cancel download and upload removes only operation files and keeps photos and progress',async({page})=>{const remote=await server(page);await connect(page);await restore(page);remote.stats.slow=true;await page.goto('/piclex-web/#/settings/data/webdav/restore');await page.getByRole('button',{name:'刷新备份列表',exact:true}).click();await page.getByRole('button',{name:nativeName,exact:true}).click();await page.getByRole('button',{name:'取消',exact:true}).click();await expect(page.getByRole('alert')).toContainText('取消');await expect.poll(()=>temporaryFiles(page)).toBe(1);remote.stats.slow=false;remote.stats.slowPut=true;await page.goto('/piclex-web/#/settings/data/webdav');await page.getByRole('button',{name:'创建完整备份',exact:true}).click();await expect.poll(()=>remote.requests.some(r=>r.method==='PUT')).toBe(true);await page.getByRole('button',{name:'取消',exact:true}).click();await expect(page.getByRole('alert')).toContainText('取消');await expect.poll(()=>remote.requests.filter(r=>r.method==='DELETE').length).toBe(1);await expect.poll(()=>temporaryFiles(page)).toBe(1);expect([...remote.directories].some(p=>p.includes('.complete-uploading-'))).toBe(false);expect(remote.files.has(root+nativeName+'/photos.piclexdeck')).toBe(true);await xp(page);});
+      61 |
+      62 | test('conservative storage estimates do not reject valid backups',async({page})=>{await server(page);await connect(page);await page.evaluate(()=>Object.defineProperty(Object.getPrototypeOf(navigator.storage),'estimate',{configurable:true,value:async()=>({usage:1,quota:2})}));await restore(page);await xp(page);await page.goto('/piclex-web/#/settings/data');await expect(page.getByRole('button',{name:'已拍照片 1',exact:true})).toBeVisible();});
+        at /work/tests/browser/webdav-backup.spec.ts:59:199
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../evidence/legacy-fixed-results/webdav-backup-quota-and-na-c8ac5-t-and-clean-temporary-files-mobile-webkit/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../evidence/legacy-fixed-results/webdav-backup-quota-and-na-c8ac5-t-and-clean-temporary-files-mobile-webkit/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../evidence/legacy-fixed-results/webdav-backup-quota-and-na-c8ac5-t-and-clean-temporary-files-mobile-webkit/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../evidence/legacy-fixed-results/webdav-backup-quota-and-na-c8ac5-t-and-clean-temporary-files-mobile-webkit/trace.zip
+    Usage:
+
+        npx playwright show-trace ../evidence/legacy-fixed-results/webdav-backup-quota-and-na-c8ac5-t-and-clean-temporary-files-mobile-webkit/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+[48/57] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:60:1 › cancel download and upload removes only operation files and keeps photos and progress
+[49/57] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:62:1 › conservative storage estimates do not reject valid backups
+[50/57] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:65:1 › automatic progress imports native XP without photos and unchanged sync never uploads a deck
+[51/57] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:79:1 › automatic progress merges offline web and native receipts once and retries failed uploads
+[52/57] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:107:1 › automatic progress merges concurrent native snapshots and opt out stops transfers
+[53/57] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:123:1 › corrupt standalone progress is rejected without publishing or replacing local records
+[54/57] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:132:1 › deck positions receive native anchors without changing XP and defer while typing
+[55/57] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:148:1 › deck positions publish navigation and a fresh browser resumes the same word
+[56/57] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:161:1 › a failed sync worker cannot publish and a fresh worker safely retries
+[57/57] [mobile-webkit] › tests/browser/webdav-backup.spec.ts:174:1 › a legacy completion written after sync starts keeps its word and date
+  1 failed
+    [mobile-webkit] › tests/browser/webdav-backup.spec.ts:59:1 › quota and native 20 GiB limit failures leave existing data intact and clean temporary files 
+  1 skipped
+  55 passed (1.3m)
