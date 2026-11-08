@@ -1,0 +1,51 @@
+{
+  "baselineRun": 42452360890,
+  "baselineRevision": "2e2cc76ba0973b8f81673c8bef4b00f4b80199a2",
+  "baselineBrowser": "620 passed, 4 existing skipped; six jobs verified via GitHub API",
+  "baselinePerformance": "failed; not reused as approval",
+  "focusedTests": {
+    "passed": 18,
+    "failed": 0
+  },
+  "enumerationOnly": {
+    "learning": {
+      "mode": "scoped",
+      "specs": 40,
+      "testCount": 485,
+      "shardsChecked": true
+    },
+    "capture": {
+      "mode": "scoped",
+      "specs": 15,
+      "testCount": 234,
+      "shardsChecked": false
+    },
+    "game": {
+      "mode": "scoped",
+      "specs": 4,
+      "testCount": 69,
+      "shardsChecked": true
+    },
+    "singleTest": {
+      "mode": "scoped",
+      "specs": 1,
+      "testCount": 12,
+      "shardsChecked": true
+    },
+    "shared": {
+      "mode": "full",
+      "specs": 53,
+      "testCount": 624,
+      "shardsChecked": false
+    },
+    "current": {
+      "mode": "reuse",
+      "specs": 0,
+      "testCount": 0,
+      "shardsChecked": false
+    }
+  },
+  "browserExecution": false,
+  "performanceSampling": false,
+  "ciStatus": "pending"
+}

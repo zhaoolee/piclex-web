@@ -5,6 +5,11 @@ on:
     paths-ignore: ["docs/**", "memory/**", "README.md", "ASSET_LICENSES.md", "deploy/README.md"]
   pull_request:
   workflow_dispatch:
+    inputs:
+      full-browser:
+        description: Run all browser tests instead of reusing unchanged baseline coverage
+        type: boolean
+        default: false
 permissions:
   contents: read
   actions: read
@@ -16,6 +21,8 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       publish: ${{ steps.scope.outputs.publish }}
+      performance: ${{ steps.scope.outputs.performance }}
+      browser-scope: ${{ steps.browser-scope.outputs.plan }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -24,6 +31,15 @@ jobs:
         with:
           node-version: '24'
           cache: npm
+      - id: browser-scope
+        run: node scripts/browser-test-scope.mjs
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          FULL_BROWSER: ${{ inputs.full-browser || false }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: browser-scope
+          path: browser-scope.json
       - id: scope
         run: node scripts/ci-release-scope.mjs
       - run: npm ci
@@ -48,6 +64,8 @@ jobs:
     name: Browser ${{ matrix.project }} ${{ matrix.shard }}/2
     needs: build
     runs-on: ubuntu-latest
+    env:
+      BROWSER_SCOPE: ${{ needs.build.outputs.browser-scope }}
     strategy:
       fail-fast: false
       matrix:
@@ -56,28 +74,34 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
+        if: fromJSON(needs.build.outputs.browser-scope).mode != 'reuse'
         with:
           node-version: '24'
           cache: npm
       - run: npm ci
+        if: fromJSON(needs.build.outputs.browser-scope).mode != 'reuse'
       - uses: actions/download-artifact@v4
+        if: fromJSON(needs.build.outputs.browser-scope).mode != 'reuse'
         with:
           name: github-pages
           path: ${{ runner.temp }}/pages-artifact
       - name: Restore the single built artifact and test fixtures
+        if: fromJSON(needs.build.outputs.browser-scope).mode != 'reuse'
         run: |
           mkdir dist
           tar -xf "$RUNNER_TEMP/pages-artifact/artifact.tar" -C dist
           ln -s "$PWD/dist/library" apps/public/public/library
       - name: Use responsive Ubuntu package mirror
+        if: fromJSON(needs.build.outputs.browser-scope).mode != 'reuse'
         run: |
           if [ -f /etc/apt/apt-mirrors.txt ] && grep -q 'azure.archive.ubuntu.com' /etc/apt/apt-mirrors.txt; then
             sudo sed -i 's#http://azure.archive.ubuntu.com/ubuntu#https://archive.ubuntu.com/ubuntu#g' /etc/apt/apt-mirrors.txt
           fi
       - run: npx playwright install --with-deps ${{ matrix.project == 'mobile-webkit' && 'webkit' || 'chrome' }}
-      - run: npm run test:browser -- --project=${{ matrix.project }} --shard=${{ matrix.shard }}/2 --reporter=line,blob
+        if: fromJSON(needs.build.outputs.browser-scope).mode != 'reuse'
+      - run: node scripts/browser-test-scope.mjs --run --project=${{ matrix.project }} --shard=${{ matrix.shard }}/2 --reporter=line,blob
       - uses: actions/upload-artifact@v4
-        if: always()
+        if: always() && fromJSON(needs.build.outputs.browser-scope).mode != 'reuse'
         with:
           name: browser-results-${{ matrix.project }}-${{ matrix.shard }}
           path: |
@@ -86,6 +110,7 @@ jobs:
   performance:
     name: Performance release gate
     needs: build
+    if: needs.build.outputs.performance == 'true'
     runs-on: ubuntu-latest
     container: mcr.microsoft.com/playwright:v1.63.0-noble
     steps:
