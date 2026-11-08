@@ -1,4 +1,4 @@
-import {useEffect,useState} from 'react';
+import {useEffect,useState,type CSSProperties} from 'react';
 import {levelProgress,rewards} from '../../../packages/practice/src/experience.mjs';
 import {experienceReport,subscribeExperience} from '../../../packages/practice/src/experience-store.mjs';
 import {NativeIcon as Icon} from '../../../packages/learning-ui/src/NativeIcon';
@@ -6,7 +6,7 @@ import './level.css';
 export function useExperience(){const [value,setValue]=useState<any>(()=>({...levelProgress(0),statistics:{},milestones:[]}));const [error,setError]=useState('');useEffect(()=>{experienceReport().then(setValue).catch(e=>setError(e.message));return subscribeExperience(setValue);},[]);return {...value,error};}
 export function ExperienceMeter({open}:{open?:()=>void}){const xp=useExperience(),Tag=open?'button':'div';return <Tag className="experience-meter" onClick={open} aria-label={`等级 LV${xp.level}，${xp.total} 经验`}><strong>LV{xp.level}</strong><span className="learning-experience" role="progressbar" aria-label="等级经验" aria-valuenow={Math.round(xp.fraction*100)} aria-valuemin={0} aria-valuemax={100}><i style={{width:`${xp.fraction*100}%`}}/></span><small>{xp.earned} / {xp.required}</small></Tag>;}
 export function PracticeProgress({deckTitle,position,count,openLevel,openDeck}:{deckTitle:string;position:number;count:number;openLevel:()=>void;openDeck:()=>void}){
- const xp=useExperience();return <div className="practice-progress-battery">
+ const xp=useExperience(),deckProgress=count>0?Math.min(1,Math.max(0,position/count)):0;return <div className="practice-progress-battery">
   <button className="practice-level-target" onClick={openLevel} aria-label={`等级 LV${xp.level}，${xp.total} 经验`}>
    <span className="practice-player-avatar"><img src={`${import.meta.env.BASE_URL}lab/assets/hero.png`} alt=""/><strong>LV{xp.level}</strong></span>
   </button>
@@ -14,7 +14,7 @@ export function PracticeProgress({deckTitle,position,count,openLevel,openDeck}:{
    <span className="practice-experience-target">
    <span className="learning-experience" role="progressbar" aria-label="等级经验" aria-valuenow={Math.round(xp.fraction*100)} aria-valuemin={0} aria-valuemax={100}><i style={{width:`${xp.fraction*100}%`}}/><b>{(xp.fraction*100).toFixed(2)}%</b></span>
    </span>
-   <span className="practice-deck-lane"><span>{deckTitle}</span><i aria-hidden="true">▾</i></span>
+   <span className="practice-deck-lane" style={{'--deck-progress':deckProgress} as CSSProperties}><span>{deckTitle}</span><i aria-hidden="true">▾</i></span>
   </button>
   <span className="sr-only" role="progressbar" aria-label="本轮练习进度" aria-valuenow={position} aria-valuemin={0} aria-valuemax={count}/>
  </div>;

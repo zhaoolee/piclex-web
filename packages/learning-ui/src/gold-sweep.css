@@ -1,0 +1,36 @@
+/* PracticeGoldSweepStyle palette: clear -> bronze -> amber -> gold -> cream -> amber -> bronze -> clear.
+   The sweep is a moving background band clipped to the real glyphs and their underlines; no
+   duplicate text nodes are added, so the answer board keeps its exact layout and text. */
+.answer-slots.gold-sweep{--gold-sweep-gradient:linear-gradient(103deg,rgba(0,0,0,0) 0%,#91501a 14.29%,#e8992b 28.57%,#ffd96b 42.86%,#fff7c4 57.14%,#ffc74a 71.43%,#b0611c 85.71%,rgba(0,0,0,0) 100%)}
+.answer-slots.gold-sweep .letter-glyph{position:relative}
+.answer-slots.gold-sweep .letter-glyph::before{
+ content:attr(data-gold);position:absolute;left:0;top:0;width:100%;
+ font:inherit;line-height:inherit;letter-spacing:inherit;white-space:pre;
+ color:transparent;-webkit-text-fill-color:transparent;
+ background-image:var(--gold-sweep-gradient);background-repeat:no-repeat;
+ background-size:calc(var(--gold-word,0px) * 1.24) 100%;
+ background-position:calc(var(--gold-word,0px) * -1.32 - var(--gold-offset,0px)) 0;
+ -webkit-background-clip:text;background-clip:text;
+ /* PracticeGoldSweepStyle.innerGlow radius 4, outerGlow radius 10. */
+ filter:drop-shadow(0 0 4px rgba(255,201,71,.78)) drop-shadow(0 0 10px rgba(224,122,26,.58));
+ pointer-events:none;
+ animation:letter-gold-sweep 230ms cubic-bezier(.18,.7,.22,1) both,letter-gold-fade 50ms ease-out 230ms both;
+}
+/* The capsule under each letter is part of the native gold layer, but was never a gradient target. */
+.answer-slots.gold-sweep .letter-slot:not(.fixed)::after{
+ content:"";position:absolute;left:0;right:0;bottom:0;height:1.5px;
+ background-image:var(--gold-sweep-gradient);background-repeat:no-repeat;
+ background-size:calc(var(--gold-word,0px) * 1.24) 100%;
+ background-position:calc(var(--gold-word,0px) * -1.32 - var(--gold-offset,0px)) 0;
+ filter:drop-shadow(0 0 4px rgba(255,201,71,.78)) drop-shadow(0 0 10px rgba(224,122,26,.58));
+ pointer-events:none;
+ animation:letter-gold-sweep 230ms cubic-bezier(.18,.7,.22,1) both,letter-gold-fade 50ms ease-out 230ms both;
+}
+@keyframes letter-gold-sweep{
+ from{background-position:calc(var(--gold-word,0px) * -1.32 - var(--gold-offset,0px)) 0}
+ to{background-position:calc(var(--gold-word,0px) * 1.08 - var(--gold-offset,0px)) 0}
+}
+@keyframes letter-gold-fade{from{opacity:1}to{opacity:0}}
+@media(prefers-reduced-motion:reduce){
+ .answer-slots.gold-sweep .letter-glyph::before,.answer-slots.gold-sweep .letter-slot:not(.fixed)::after{content:none;animation:none}
+}

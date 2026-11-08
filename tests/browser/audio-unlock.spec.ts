@@ -85,20 +85,19 @@ test('one real tap on the virtual F unlocks, keeps f, and a second tap never rep
  }finally{await close();}
 });
 
-test('changing module grants interaction permission, hides the icon and never replays stale audio',async({playwright},testInfo)=>{
+test('module navigation keeps unconfirmed permission visible and never replays stale audio',async({playwright},testInfo)=>{
  const {page,cdp,close}=await launchPractice(playwright,testInfo,instrumentMedia);
  try{
   await page.goto('/piclex-web/#/deck/'+song.id);
   await until<Awaited<ReturnType<typeof mediaState>>>(cdp,`(()=>({attempts:__mediaAttempts,played:__mediaPlayed,errors:__mediaErrors.slice(),paused:__media.every(a=>a.paused),icon:!!document.querySelector('.audio-unlock'),active:navigator.userActivation?.hasBeenActive}))()`,value=>value.icon&&value.attempts>0,'blocked before module change');
   await page.getByRole('tab',{name:'练听力',exact:true}).click();
   await expect(page.locator('.native-practice')).toHaveAttribute('data-module','listening');
-  // The navigation gesture grants interaction permission while the old
-  // spelling request is discarded; its icon must not linger.
-  await expect(page.locator('.audio-unlock')).toHaveCount(0);
+  // Navigation discards the old request but cannot prove playback permission.
+  await expect(page.locator('.audio-unlock')).toHaveCount(1);
   const settled=await mediaState(cdp);await sleep(500);const later=await mediaState(cdp);
   expect(later.attempts).toBe(settled.attempts);
   expect(later.errors.filter(error=>!['NotAllowedError','AbortError'].includes(error))).toEqual([]);
-  expect(later.paused).toBe(true);expect(later.icon).toBe(false);
+  expect(later.paused).toBe(true);expect(later.icon).toBe(true);
   await page.locator('.playback-button').click();
   const retried=await until<Awaited<ReturnType<typeof mediaState>>>(cdp,`(()=>({attempts:__mediaAttempts,played:__mediaPlayed,errors:__mediaErrors.slice(),paused:__media.every(a=>a.paused),icon:!!document.querySelector('.audio-unlock'),active:navigator.userActivation?.hasBeenActive}))()`,value=>value.played===1&&!value.icon,'fallback retries current exercise');
   expect(retried.attempts).toBe(settled.attempts+1);

@@ -74,3 +74,38 @@ test('automatic service failure stays quiet and explicit errors belong only to t
  await expect(page.getByRole('alert')).toContainText('朗读暂时不可用');await expect(page.getByRole('button',{name:'重新准备',exact:true})).toBeVisible();
  await page.getByRole('button',{name:'下一句',exact:true}).click();await expect(page.getByRole('alert')).toHaveCount(0);await expect(page.getByRole('button',{name:'播放',exact:true})).toBeVisible();
 });
+
+test('silent startup retries in first typing gesture, then next word plays after refresh',async({page})=>{
+ await mockSpeech(page,'hold');
+ await page.goto('/piclex-web/#/deck/'+plain.id);
+ await page.reload();
+ const icon=page.getByRole('button',{name:'开启声音，播放当前内容',exact:true});
+ await expect(icon).toBeVisible();
+ await expect.poll(()=>page.evaluate(()=>(window as any).__speechAttempts)).toBe(1);
+ await page.evaluate(()=>{(window as any).__speechMode='allowed';});
+ const field=page.getByRole('textbox',{name:'输入英文',exact:true});
+ const letters=plainDeck.words[0].english.replace(/[^a-z]/gi,'');
+ await field.press(letters[0]);
+ await expect(field).toHaveValue(letters[0]);
+ await expect(icon).toHaveCount(0);
+ await expect.poll(()=>page.evaluate(()=>(window as any).__started)).toBeGreaterThan(0);
+ // Old accepted-but-never-started callback cannot restore the previous request.
+ await page.evaluate(()=>{const u=(window as any).__held[0];u.onstart?.();u.onerror?.({error:'not-allowed'});});
+ await expect(icon).toHaveCount(0);
+ for(const letter of letters.slice(1))await field.press(letter);
+ await expect(field).toHaveValue('');
+ await expect.poll(()=>page.evaluate(()=>(window as any).__spoken)).toContain(plainDeck.words[1].example);
+ await expect(page.locator('.playback-label')).not.toContainText('准备音频');
+});
+
+test('no speech callback leaves preparation and remains retryable',async({page})=>{
+ await mockSpeech(page,'hold');await page.goto('/piclex-web/#/deck/'+plain.id);
+ const icon=page.getByRole('button',{name:'开启声音，播放当前内容',exact:true});
+ await expect(icon).toBeVisible();await icon.click();
+ await expect.poll(()=>page.evaluate(()=>(window as any).__speechAttempts)).toBe(2);
+ await expect(page.locator('.playback-label')).not.toContainText('准备音频',{timeout:6500});
+ await expect(icon).toBeVisible();
+ await page.evaluate(()=>{(window as any).__speechMode='allowed';});await icon.click();
+ await expect(icon).toHaveCount(0);
+ await expect.poll(()=>page.evaluate(()=>(window as any).__started)).toBeGreaterThan(0);
+});

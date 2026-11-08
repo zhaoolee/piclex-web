@@ -7,7 +7,8 @@ type PlayRequest={texts:string[];rate:number;onEnd?:()=>void;offset:number;clip?
 const policyError=(error:unknown)=>error instanceof DOMException?error.name==='NotAllowedError':(error as {name?:string})?.name==='NotAllowedError';
 export function useSpeech(notify:(s:string)=>void){
  const generation=useRef(0),timer=useRef<ReturnType<typeof setTimeout>|undefined>(undefined),media=useRef<HTMLAudioElement|null>(null),blob=useRef('');
- const blockedRequest=useRef<PlayRequest|null>(null),retrying=useRef(false);
+ const blockedRequest=useRef<PlayRequest|null>(null),retrying=useRef(false),gestureRetry=useRef(false),confirmed=useRef(false);
+ const startupTimer=useRef<ReturnType<typeof setTimeout>|undefined>(undefined);
  const [playing,setPlaying]=useState(false),[preparing,setPreparing]=useState(false),[position,setPosition]=useState(-1),[blocked,setBlocked]=useState(false);
  const mediaClock=useRef<ReturnType<typeof setInterval>|undefined>(undefined);
  const speechClock=useRef<ReturnType<typeof setInterval>|undefined>(undefined);
@@ -24,7 +25,7 @@ export function useSpeech(notify:(s:string)=>void){
  const cancelPlayback=useCallback(()=>{
   // Invalidate callbacks before cancel(): a late onstart/onend must not revive
   // a request that was blocked or replaced.
-  generation.current++;clearTimeout(timer.current);clearInterval(speechClock.current);speechClock.current=undefined;clearMedia();window.speechSynthesis?.cancel();
+  generation.current++;clearTimeout(startupTimer.current);clearTimeout(timer.current);clearInterval(speechClock.current);speechClock.current=undefined;clearMedia();window.speechSynthesis?.cancel();
  },[clearMedia]);
  const stop=useCallback(()=>{
   cancelPlayback();blockedRequest.current=null;retrying.current=false;
@@ -35,7 +36,8 @@ export function useSpeech(notify:(s:string)=>void){
  const start=useCallback((next:PlayRequest)=>{
   cancelPlayback();
   setError('');const id=generation.current,queue=next.texts.filter(text=>text.trim());
-  blockedRequest.current=next;retrying.current=true;
+  blockedRequest.current=next;retrying.current=true;gestureRetry.current=!!next.automatic;
+  if(!confirmed.current)setBlocked(true);
   setPlaying(false);setPreparing(queue.length>0);setPosition(-1);progress.update(0);
   const valid=()=>id===generation.current&&!document.hidden;
   // Queue progress is weighted by text length. Original audio uses its media
@@ -47,13 +49,13 @@ export function useSpeech(notify:(s:string)=>void){
    const value=total?(before+(queue[i]?.length||0)*Math.min(1,Math.max(0,fraction)))/total:0;
    progress.update(Math.max(progress.getSnapshot().value,estimated?Math.min(.99,value):value),indeterminate);
   };
-  const fail=(message?:string)=>{if(!valid())return;stop();blockedRequest.current=null;retrying.current=false;setBlocked(false);if(message&&!next.automatic){setError(message);notify(message);}};
+  const fail=(message?:string)=>{if(!valid())return;stop();blockedRequest.current=null;retrying.current=false;setBlocked(!confirmed.current);if(message&&!next.automatic){setError(message);notify(message);}};
   // Autoplay policy retains only the segment that was actually denied. A clip
   // that already finished must not replay when the following TTS word blocks.
   const block=(i:number)=>{
    if(!valid())return;
    const pending={...next,texts:queue.slice(i),clip:i===0?next.clip:undefined,offset:i===0?next.offset:0,startFraction:i===0?next.startFraction:0};
-   cancelPlayback();blockedRequest.current=pending;retrying.current=false;
+   cancelPlayback();blockedRequest.current=pending;retrying.current=false;confirmed.current=false;
    setBlocked(true);setPlaying(false);setPreparing(false);setPosition(-1);progress.update(0);
   };
   const nextSegment=(i:number)=>{
@@ -61,8 +63,15 @@ export function useSpeech(notify:(s:string)=>void){
    if(i===queue.length){stop();next.onEnd?.();return;}
    let finished=false;
    const current=()=>valid()&&!finished;
-   const started=()=>{if(current()){retrying.current=false;blockedRequest.current=null;setBlocked(false);setPreparing(false);setPlaying(true);}};
-   const ended=(settle=0)=>{if(!current())return;finished=true;clearInterval(speechClock.current);speechClock.current=undefined;update(i,1);setPosition(-1);timer.current=setTimeout(()=>nextSegment(i+1),i<queue.length-1?180:settle);};
+   const started=()=>{if(current()){clearTimeout(startupTimer.current);confirmed.current=true;gestureRetry.current=false;retrying.current=false;blockedRequest.current=null;setBlocked(false);setPreparing(false);setPlaying(true);}};
+   const ended=(settle=0)=>{if(!current())return;finished=true;clearTimeout(startupTimer.current);clearInterval(speechClock.current);speechClock.current=undefined;update(i,1);setPosition(-1);timer.current=setTimeout(()=>nextSegment(i+1),i<queue.length-1?180:settle);};
+   // Some engines accept speak()/play() without start or error. Preserve a
+   // retryable current segment and leave preparation instead of hanging forever.
+   startupTimer.current=setTimeout(()=>{
+    if(!current())return;
+    block(i);
+    if(!next.automatic){const message='音频未能开始，请点击喇叭重试。';setError(message);notify(message);}
+   },i===0&&next.clip?12000:4000);
    // Original audio belongs to this sentence occurrence only; the following word uses TTS.
    if(i===0&&next.clip){
     try{
@@ -122,11 +131,12 @@ export function useSpeech(notify:(s:string)=>void){
  },[start]);
  const retryBlocked=useCallback(()=>{
   const pending=blockedRequest.current;if(!pending)return false;
-  if(retrying.current)return true;
+  if(retrying.current&&!gestureRetry.current)return true;
+  gestureRetry.current=false;
   start({...pending,automatic:false});return true;
  },[start]);
  const clearError=useCallback(()=>setError(''),[]);
- const acknowledgeGesture=useCallback(()=>{if(!blockedRequest.current)setBlocked(false);},[]);
+ const acknowledgeGesture=useCallback(()=>{/* A gesture alone is not evidence of playback permission. */},[]);
  useEffect(()=>{const hide=()=>{if(document.hidden)stop();};document.addEventListener('visibilitychange',hide);window.addEventListener('pagehide',stop);return ()=>{stop();document.removeEventListener('visibilitychange',hide);window.removeEventListener('pagehide',stop);};},[stop]);
  return {blocked,error,clearError,playing,preparing,position,progress,readProgress,play,retryBlocked,acknowledgeGesture,stop};
 }

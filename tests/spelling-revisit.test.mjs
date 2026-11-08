@@ -74,6 +74,23 @@ test('quick still skips mastered words and reopens a reviewed word from its mist
  assert.equal(s.index,3);assert.deepEqual(s.words.d,empty);
 });
 
+test('restart in quick mode prepares the first unmastered word from its mistakes',()=>{
+ const history={a:{mastered:true,mistakes:[]},b:{mastered:false,mistakes:[1]},c:{mastered:true,mistakes:[]},d:{mastered:false,mistakes:[0,2]}};
+ let s={...newStudy(deck),quick:true,index:deck.words.length,history};
+ s=act(s,{type:'restart'});
+ assert.equal(s.index,1);assert.equal(s.quick,true);
+ assert.deepEqual(s.history,history);
+ assert.deepEqual(s.words.b,{input:'',hadMistake:false,result:null,quickIndices:[1]});
+});
+
+test('quick restart on an all-mastered deck stays complete without an empty word',()=>{
+ const history=Object.fromEntries(deck.words.map(word=>[word.id,{mastered:true,mistakes:[]}]));
+ let s={...newStudy(deck),quick:true,index:deck.words.length,history};
+ s=act(s,{type:'restart'});
+ assert.equal(s.index,deck.words.length);assert.equal(s.quick,true);
+ assert.deepEqual(s.history,history);assert.deepEqual(s.words,{});
+});
+
 for(const result of ['correct','reviewed','revealed'])test(`next reopens a ${result} target without mutating saved history`,()=>{
  const s=finishAll();s.index=0;s.round=7;
  s.words.b={input:'bed',hadMistake:result==='reviewed',result,quickIndices:null};
