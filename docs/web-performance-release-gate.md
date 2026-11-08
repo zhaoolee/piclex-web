@@ -23,7 +23,7 @@ npm run test:performance -- --url https://zhaoolee.com/piclex-web/ --source "$RE
 - 拼单词、练听力、练口语连续切换，每个模块至少停稳两次。
 - 5,000条合成答题、5,000条单词进度和对应经验记录下，自动同步同时连续拼写。检查同步上传内容，确保实际处理了历史数据。
 
-使用全新浏览器上下文、合成卡组和隔离存储。触屏字符输入和模块切换启用 Chrome `Emulation.setEmitTouchEventsForMouse`，通过 `Input.dispatchMouseEvent` 驱动该浏览器触摸模拟器；浏览器生成真实可信的pointer/touch事件和兼容click，逐轮核对全部数量。鼠标协议的确认在事件被浏览器转换后不会返回，脚本改为等待页面实际收到对应可信touchend和click（5秒超时）；没有输入不能继续。按下/抬起分开50ms，按下/抬起均为可信事件，逐字检查可见、启用和坐标命中；不额外放慢字间隔。原始报告保留触摸时间/目标/可信性、各类可信事件数量和完整 Event Timing 分段字段，触屏模块每轮必须至少9次可信触摸（窄视口鼠标点击不能放行），实际出现的 click 不过滤。旧 `dispatchTouchEvent` 在事件打时间戳后另等合成器同步和异步控件命中，失败trace显示约50ms发生在renderer收到输入前；[Chromium实现](https://raw.githubusercontent.com/chromium/chromium/main/content/browser/devtools/protocol/input_handler.cc)与失败证据已保留，新驱动不改写时间戳、不扣除延迟、不筛掉事件，50ms持续时间取自 [Chrome 合成点击的协议默认值](https://raw.githubusercontent.com/ChromeDevTools/devtools-protocol/master/pdl/domains/Input.pdl)。控制实验必须能抓住120ms真实处理阻塞。WebDAV 只替换远程传输为内存夹具，不替换网页中的数据库读取、合并、编码、哈希、恢复和上传校验，不连接用户账户。网络异常、真实媒体自动播放权限和跨端备份正确性另由完整浏览器套件验收。TTS 的系统发声在这里隔离，不以播放声音作为性能通过条件。
+使用全新浏览器上下文、合成卡组和隔离存储。触屏字符输入和模块切换启用 Chrome `Emulation.setEmitTouchEventsForMouse`，通过 `Input.dispatchMouseEvent` 驱动该浏览器触摸模拟器；浏览器生成真实可信的pointer/touch事件和兼容click，逐轮核对全部数量。鼠标协议的确认在事件被浏览器转换后不会返回，脚本改为等待页面实际收到对应可信touchend和click（5秒超时）；没有输入不能继续。先等待页面确认收到真实可信touchstart，再保持50ms后抬起，避免协议传输延迟把实际按压缩短；按下/抬起均为可信事件，逐字检查可见、启用和坐标命中；不额外放慢字间隔。原始报告保留触摸时间/目标/可信性、各类可信事件数量和完整 Event Timing 分段字段，触屏模块每轮必须至少9次可信触摸（窄视口鼠标点击不能放行），实际出现的 click 不过滤。旧 `dispatchTouchEvent` 在事件打时间戳后另等合成器同步和异步控件命中，失败trace显示约50ms发生在renderer收到输入前；[Chromium实现](https://raw.githubusercontent.com/chromium/chromium/main/content/browser/devtools/protocol/input_handler.cc)与失败证据已保留，新驱动不改写时间戳、不扣除延迟、不筛掉事件，50ms持续时间取自 [Chrome 合成点击的协议默认值](https://raw.githubusercontent.com/ChromeDevTools/devtools-protocol/master/pdl/domains/Input.pdl)。控制实验必须能抓住120ms真实处理阻塞。WebDAV 只替换远程传输为内存夹具，不替换网页中的数据库读取、合并、编码、哈希、恢复和上传校验，不连接用户账户。网络异常、真实媒体自动播放权限和跨端备份正确性另由完整浏览器套件验收。TTS 的系统发声在这里隔离，不以播放声音作为性能通过条件。
 
 每轮均需至少8秒操作和尾段、120个动画帧、真实页面 Paint 与主线程任务。拼写检查字母动画和粒子调用；困难听写原界面没有拼写粒子，不虚构效果要求。禁止 reduced motion、后台页面、空场景及只打日志没有操作的样本。
 
@@ -43,3 +43,5 @@ npm run test:performance -- --url https://zhaoolee.com/piclex-web/ --source "$RE
 每轮 `*.trace.json.gz` 是原始 Chrome trace；`*.json` 保存逐帧间隔、Event Timing、长任务、真实动作与效果覆盖。`report.json` 汇总版本、资源哈希、环境和每轮结果。非零退出表示不能发布；失败证据必须保留，诊断修复后对新候选测量。
 
 `Performance release gate` 与完整浏览器检查一起作为 Pages 和 Docker 的依赖。Docker 仅接收完整 `Check and publish` 验证的产物；独立 tag／手工入口先查找同一提交已成功的全部分片与性能检查，复用其未过期构建；找不到则阻止发布，不关闭这些入口，也不能绕过门禁。门禁自身的反例测试通过 `npm test` 执行，包括单个峰值、无效数值、空采样、少操作、关闭特效、缺同步、重复和缺失轮次。
+
+触摸驱动延迟回归：在独立Linux中运行 `node scripts/check-performance-touch.mjs`。脚本直接执行发布采样器中的tap函数，只给按下指令增加35ms传输延迟，验证三次真实可信触摸/点击和每次不少于40ms的原有按压要求；不修改浏览器事件时间戳或性能阈值。可传入旧版runner文件作失败对照。

@@ -65,6 +65,8 @@ try{
     const box=await button.boundingBox();if(!box)throw Error('Missing touch target bounds');const point={x:Math.round(box.x+box.width/2),y:Math.round(box.y+box.height/2)};
     if(!await button.evaluate((element,p)=>element.contains(document.elementFromPoint(p.x,p.y)),point))throw Error('Touch target is covered');
     sendTouch({type:'mousePressed',...point,button:'left',buttons:1,clickCount:1});
+    // Physical press duration counts from the browser receiving touchstart.
+    await page.waitForFunction(count=>window.__perf.trustedEventCounts.touchstart===count,touchCount+1,{timeout:5000});
     await new Promise(resolve=>setTimeout(resolve,50));
     sendTouch({type:'mouseReleased',...point,button:'left',buttons:0,clickCount:1});
     await page.waitForFunction(count=>window.__perf.trustedEventCounts.touchend===count&&window.__perf.trustedEventCounts.click===count,++touchCount,{timeout:5000});
