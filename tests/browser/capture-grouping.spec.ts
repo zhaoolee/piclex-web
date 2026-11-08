@@ -1,9 +1,14 @@
-import {test,expect,type Page} from '@playwright/test';
+import {test as base,expect,type Page} from '@playwright/test';
 import path from 'node:path';
 import fs from 'node:fs';
 import {parseArchive} from '../../packages/deck-format/src/archive.mjs';
 import {newStudy} from '../../packages/practice/src/study.mjs';
 import {createPhotoDeck} from '../../packages/deck-format/src/create.mjs';
+
+const test=base.extend<{importedPhotoGroup:Page}>({
+ // Test fixtures are set up before beforeEach hooks, so the init script is applied here before the imports navigate.
+ importedPhotoGroup:[async({page},use)=>{await page.addInitScript(()=>localStorage.setItem('piclex-web.import-animation','false'));await threeImportedPhotos(page);await use(page);},{timeout:30000}],
+});
 
 test.use({launchOptions:{args:process.platform==='darwin'?['--mute-audio']:[]}});
 const api='https://piclex.v2fy.com/v1/web/analyze';
@@ -77,8 +82,7 @@ test('three imported photos become one default deck in learning settings',async(
  await expect(page.getByRole('textbox',{name:'输入英文',exact:true})).toBeVisible();
 });
 
-test('an imported photo group exports all photos and keeps navigation after reload',async({page},info)=>{
- await threeImportedPhotos(page);
+test('an imported photo group exports all photos and keeps navigation after reload',async({importedPhotoGroup:page},info)=>{
  await page.getByRole('button',{name:'选择照片',exact:true}).click();
  const gallery=page.getByRole('dialog',{name:'选择照片'});
  await expect(gallery.getByRole('button',{name:/^照片 \d+$/})).toHaveCount(3);
