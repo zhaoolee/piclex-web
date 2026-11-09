@@ -159,14 +159,18 @@ def authorize_cutover(request, read=github, now=lambda: datetime.now(timezone.ut
         raise ValueError('Candidate must be ahead of the current mirror release')
     path = f'/actions/runs/{run_id}'
     title = f"Release {revision} candidate {request['candidateRun']}"
-    deadline = clock() + 60
-    while clock() < deadline:
+
+    def verify_release_run():
         run = read(path)
         age = (now() - datetime.fromisoformat(run['created_at'].replace('Z', '+00:00'))).total_seconds()
         if (not same_workflow(run, run_id, 'release') or run.get('event') != 'workflow_dispatch'
                 or run.get('display_title') != title or not -10 <= age <= 300
                 or run.get('run_attempt') != 1 or run.get('conclusion') not in (None, 'success')):
             raise ValueError('Missing fresh, authorized GitHub production release')
+
+    verify_release_run()
+    deadline = clock() + 60
+    while clock() < deadline:
         # The protected environment must have admitted the release job and its gate.
         for job in read(path + '/jobs?per_page=100')['jobs']:
             if job.get('name') != 'release' or job.get('status') not in ('in_progress', 'completed'):
@@ -175,6 +179,7 @@ def authorize_cutover(request, read=github, now=lambda: datetime.now(timezone.ut
                 raise ValueError('GitHub production release failed')
             if any(step.get('name') == 'Require the exact fully verified candidate'
                    and step.get('conclusion') == 'success' for step in job.get('steps', [])):
+                verify_release_run()
                 return
-        sleep(1)
+        sleep(2)
     raise TimeoutError('Protected GitHub release job did not pass its candidate gate')

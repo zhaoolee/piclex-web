@@ -6,7 +6,7 @@ import pathlib
 import tempfile
 import unittest
 from unittest.mock import patch
-from contextlib import ExitStack
+from contextlib import ExitStack, contextmanager
 import activate
 import release_lifecycle as lifecycle
 import release_state
@@ -172,6 +172,44 @@ class AutoUpdateLifecycleTests(ReleaseFixture):
         self.live.side_effect=RuntimeError('HTTPS failed')
         with self.assertRaisesRegex(RuntimeError,'HTTPS failed'):auto.main()
         self.assertFalse((self.root/'current').is_symlink())
+
+    def test_parallel_candidate_copies_delta_and_records_the_exact_cutover(self):
+        previous = self.old
+        source = self.new
+        manifest = self.manifest
+        digest = hashlib.sha256(json.dumps(manifest['files'], separators=(',', ':')).encode()).hexdigest()
+        manifest['releaseID'] = manifest['sourceRevision'][:12] + '-' + digest[:12]
+        # A staged bundle lives outside releases so the cleaner cannot mistake it for history.
+        staged = self.root / 'incoming' / 'fixture'
+        source.rename(staged)
+        request = {'candidateRun': 10, 'releaseRun': 11, 'revision': manifest['sourceRevision'],
+                   'previousRevision': 'a' * 40}
+
+        @contextmanager
+        def candidate(*_):
+            fd = os.open(staged, os.O_DIRECTORY)
+            try:
+                yield manifest, fd
+            finally:
+                os.close(fd)
+
+        target = self.root / 'releases' / manifest['releaseID']
+        with patch.object(auto, 'read_request', return_value=request), \
+                patch.object(auto, 'staged_candidate', candidate), \
+                patch.object(auto, 'authorize_cutover') as authorize, \
+                patch.object(auto, 'fetch', side_effect=AssertionError('Pages fallback forbidden')):
+            auto.main()
+        authorize.assert_called_once_with(request)
+        self.assertEqual((self.root / 'current').resolve(), target)
+        self.assertEqual((target / 'piclex-web/assets/main.js').read_bytes(), b'code-b')
+        self.assertFalse(previous.exists())
+        timing = json.loads((self.root / 'reports/parallel-timing-11.json').read_text())
+        self.assertEqual(timing['request'], request)
+        self.assertEqual(timing['status'], 'passed')
+        self.assertEqual(set(timing['phases']), {
+            'candidate', 'lock', 'previous', 'populate', 'hashes', 'isolatedNginx',
+            'authorization', 'installCandidate', 'cutover', 'liveHttp', 'cleanup'})
+        self.assertTrue(all(phase['seconds'] >= 0 for phase in timing['phases'].values()))
 
     def test_nonroot_apply_fails_before_download_or_cutover_but_check_is_allowed(self):
         with patch.object(auto.os,'geteuid',return_value=1000):
