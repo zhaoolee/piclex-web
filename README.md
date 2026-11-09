@@ -31,10 +31,7 @@
 </table>
 
 
-## 通过本项目，希望朋友们能学到纯正的伦敦音！Are You OK？
-
-<p><img src="./README.assets/3f9a5b958ef0676e8899431b8615197cdc2c8f865ff102ae58d84d6531b596ea.jpg" alt="" width="100%"></p>
-
+## 通过本项目，希望朋友们能学到纯正的伦敦音！
 
 
 <p><img src="./README.assets/65018b1d8a4ba8bb2fdf2bb924a8abb99ede16539b93e3e6a6645550aacdf2ad.gif" alt="" width="100%"></p>
@@ -56,11 +53,10 @@
 
 
 
-|  |  |
-| --- | --- |
+
 | <img src="./README.assets/aef076c7edfbbfeefc02c6d2b13dbc5ef85a1b58832affacd353f74d693848b4.jpg" alt="" width="231"> | 人家还等着您学外语呢 |
-| <img src="./README.assets/9bf26ecec404b9e078c44ea3f4a243d2f5bd6c1776b80b348a48f80ce0b3ace0.jpg" alt="" height="231"> | 一定要学！ |
-| <img src="./README.assets/ccadefdd901712a70e2031f15b284f360d1829470e9a2934ee7b0f1849d42010.jpg" alt="" height="231"> | Everyone God Bless you |
+| --- | --- |
+| <img src="./README.assets/9bf26ecec404b9e078c44ea3f4a243d2f5bd6c1776b80b348a48f80ce0b3ace0.jpg" alt="" height="231"> | 我爱学习，我要学外语 |
 
 
 
@@ -141,6 +137,7 @@ docker pull zhaoolee/piclex-web:latest && (if docker container inspect piclex-we
 
 代码使用 [MIT](LICENSE)；卡组内容按原来源授权，详见[素材说明](ASSET_LICENSES.md)。
 
+
 ## 如何看待学英语？
 
 | 头像 | 言论与出处 |
@@ -157,11 +154,10 @@ docker pull zhaoolee/piclex-web:latest && (if docker container inspect piclex-we
 
 ## 感谢
 
-|  |  |
-| --- | --- |
 | <img src="./README.assets/21701c8b4b8c7ba11b0f89dbc3129fa9a9af53c7a617d7679332fc8708105e8b.png" alt="大苦茶籽" width="180"> | 感谢抽象艺术家 [大苦茶籽](https://www.xiaohongshu.com/user/profile/5b72c4bbd1dd410001707460) 贡献的表情包！ |
+| --- | --- |
 | <img src="./README.assets/f5c5a37071cc9aa92fe90d2bd90782655abef87ea968e3c21e0df62295aecf06.jpg" alt="@realchendahuang" width="180"> | 感谢 [@realchendahuang](https://x.com/realchendahuang/status/2112176188924068208) 对 PicLex 的支持。 |
 | <img src="./README.assets/f6c6d8160c592c39a6e6f26c4783ffe9db65d7421b9f8fbf0be65f14e849bffd.jpg" alt="@GitHub_Daily" width="180"> | 感谢 [@GitHub_Daily](https://x.com/GitHub_Daily/status/2118848428583297370) 对 PicLex 的支持。 |
 | <img src="./README.assets/976879ecd70ebb58d5d4c93de27bb9d67316373e66569db7fa4bbdcb185ba239.png" alt="V2EX 社区" width="180"> | 感谢 [V2EX 社区](https://www.v2ex.com/t/1254876) 对 PicLex 的支持和反馈。 |
 | <img src="./README.assets/6065c24c7833983a194d4c5f67ec626ce782b66a46ce1612134b923e8aa66b86.png" alt="掘金" width="137"> | 感谢 [掘金](https://juejin.cn/pin/7704580987243151375) 对 PicLex 的支持和反馈。 |
-| <img src="./README.assets/d01d56a4655ef0a9b2599486e7fc09b63a85e784fe15add67fc5f35658649257.png" alt="LINUX DO 社区" width="180"> | 感谢 [LINUX DO 社区](https://linux.do/) 对开源项目的支持。 |
+| <img src="./README.assets/d01d56a4655ef0a9b2599486e7fc09b63a85e784fe15add67fc5f35658649257.png" alt="LINUX DO 社区" width="180"> | 感谢 [LINUX DO 社区](https://linux.do/) 对开源项目的支持。|
