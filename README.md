@@ -5,27 +5,6 @@
 [在线体验](https://piclex.v2fy.com/piclex-web/) · [GitHub Pages 镜像](https://zhaoolee.com/piclex-web/) · [iPhone App](https://apps.apple.com/cn/app/id6808490052)
 
 
-
-## 通过本项目，希望朋友们能学到纯正的伦敦音！Are You OK？
-
-<p><img src="./README.assets/3f9a5b958ef0676e8899431b8615197cdc2c8f865ff102ae58d84d6531b596ea.jpg" alt="" width="100%"></p>
-
-<p><img src="./README.assets/65018b1d8a4ba8bb2fdf2bb924a8abb99ede16539b93e3e6a6645550aacdf2ad.gif" alt="" width="100%"></p>
-
-
-
-
-
-
-|  |  |
-| --- | --- |
-| <img src="./README.assets/aef076c7edfbbfeefc02c6d2b13dbc5ef85a1b58832affacd353f74d693848b4.jpg" alt="" width="231"> | 人家还等着您学外语呢 |
-| <img src="./README.assets/9bf26ecec404b9e078c44ea3f4a243d2f5bd6c1776b80b348a48f80ce0b3ace0.jpg" alt="" height="231"> | 一定要学！ |
-| <img src="./README.assets/ccadefdd901712a70e2031f15b284f360d1829470e9a2934ee7b0f1849d42010.jpg" alt="" height="231"> | Everyone God Bless you |
-
-
-
-
 ## 从喜欢的电影，记住一句英语
 
 《阿甘正传》《教父》《星球大战》……在熟悉的画面里记单词，用经典台词练听说。
@@ -51,6 +30,17 @@
   </tr>
 </table>
 
+
+## 通过本项目，希望朋友们能学到纯正的伦敦音！Are You OK？
+
+<p><img src="./README.assets/3f9a5b958ef0676e8899431b8615197cdc2c8f865ff102ae58d84d6531b596ea.jpg" alt="" width="100%"></p>
+
+
+
+<p><img src="./README.assets/65018b1d8a4ba8bb2fdf2bb924a8abb99ede16539b93e3e6a6645550aacdf2ad.gif" alt="" width="100%"></p>
+
+
+
 ## 选一套喜欢的卡组
 
 从经典电影台词开始，也有经典英语歌曲、日常生活、程序员英语、摄影等主题。支持导入自己的 `.piclexdeck`，或分享公开卡组的练习链接。
@@ -62,6 +52,18 @@
     <td><img src="docs/readme/movie-gallery-dark.png" width="320" alt="深色经典电影卡组：浏览电影画面并选择练习照片"></td>
   </tr>
 </table>
+
+
+
+
+|  |  |
+| --- | --- |
+| <img src="./README.assets/aef076c7edfbbfeefc02c6d2b13dbc5ef85a1b58832affacd353f74d693848b4.jpg" alt="" width="231"> | 人家还等着您学外语呢 |
+| <img src="./README.assets/9bf26ecec404b9e078c44ea3f4a243d2f5bd6c1776b80b348a48f80ce0b3ace0.jpg" alt="" height="231"> | 一定要学！ |
+| <img src="./README.assets/ccadefdd901712a70e2031f15b284f360d1829470e9a2934ee7b0f1849d42010.jpg" alt="" height="231"> | Everyone God Bless you |
+
+
+
 
 ## 薯薯求生：拼出单词，守住花园
 
@@ -138,6 +140,12 @@ docker pull zhaoolee/piclex-web:latest && (if docker container inspect piclex-we
 [使用与开发说明](docs/web-guide.md) · [发布自己的卡组](docs/publishing-decks.md) · [部署说明](deploy/README.md) · [二维码分享封面](docs/subscription-qr/README.md)
 
 代码使用 [MIT](LICENSE)；卡组内容按原来源授权，详见[素材说明](ASSET_LICENSES.md)。
+
+
+
+
+
+
 
 ## 感谢
 
