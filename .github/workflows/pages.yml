@@ -96,14 +96,19 @@ jobs:
           mkdir dist
           tar -xf "$RUNNER_TEMP/pages-artifact/artifact.tar" -C dist
           ln -s "$PWD/dist/library" apps/public/public/library
-      - name: Use responsive Ubuntu package mirror
+      - name: Bound Ubuntu package mirror requests
         if: fromJSON(needs.build.outputs.browser-scope).mode != 'reuse'
         run: |
-          if [ -f /etc/apt/apt-mirrors.txt ] && grep -q 'azure.archive.ubuntu.com' /etc/apt/apt-mirrors.txt; then
-            sudo sed -i 's#http://azure.archive.ubuntu.com/ubuntu#https://archive.ubuntu.com/ubuntu#g' /etc/apt/apt-mirrors.txt
+          if [ -f /etc/apt/apt-mirrors.txt ]; then
+            # Keep signed Ubuntu packages while using the mirror that responded
+            # during the stalled archive.ubuntu.com install.
+            sudo sed -Ei 's#https?://(azure\.)?archive\.ubuntu\.com/ubuntu#https://security.ubuntu.com/ubuntu#g' /etc/apt/apt-mirrors.txt
           fi
+          printf '%s\n' 'Acquire::http::Timeout "15";' 'Acquire::https::Timeout "15";' 'Acquire::Retries "1";' \
+            | sudo tee /etc/apt/apt.conf.d/99-piclex-ci-network >/dev/null
       - run: npx playwright install --with-deps ${{ matrix.project == 'mobile-webkit' && 'webkit' || 'chrome' }}
         if: fromJSON(needs.build.outputs.browser-scope).mode != 'reuse'
+        timeout-minutes: 5
       - run: node scripts/browser-test-scope.mjs --run --project=${{ matrix.project }} --shard=${{ matrix.shard }}/2 --reporter=line,blob
       - uses: actions/upload-artifact@v4
         if: always() && fromJSON(needs.build.outputs.browser-scope).mode != 'reuse'

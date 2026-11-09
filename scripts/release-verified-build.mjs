@@ -17,7 +17,7 @@ export async function releaseVerifiedBuild({run, now = Date.now, signal}) {
   };
   const tasks = [
     stage('pages', process.execPath, ['scripts/deploy-verified-pages.mjs']),
-    stage('dependencies', 'npm', ['ci', '--no-audit', '--no-fund']),
+    stage('dependencies', 'npm', ['ci', '--ignore-scripts', '--no-audit', '--no-fund']),
     stage('docker', process.execPath, ['scripts/promote-verified-image.mjs', 'candidate/verified-image.json']),
   ];
   tasks.push(Promise.all(tasks.slice(0, 2)).then(() => stage('live', process.execPath,
