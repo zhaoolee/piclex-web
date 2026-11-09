@@ -12,7 +12,7 @@ import useSentenceAmbience from './SentenceAmbience';
 import {listeningPlaylist,listeningNeighbor,repeatModes} from '../../../packages/practice/src/listening.mjs';
 import Dialog from './Dialog';
 import DeckDownload from './DeckDownload';
-import {createSynchronizedCompletionSound,prepareCompletionSound,playCompletionSound,stopCompletionSound} from '../../../packages/learning-ui/src/completion-sound';
+import {createCompletionSound} from '../../../packages/learning-ui/src/completion-sound';
 import {usePhotoPalette} from './usePhotoPalette';
 import {NativeIcon as Icon} from '../../../packages/learning-ui/src/NativeIcon';
 import {playTypingSound,stopTypingSound,prepareTypingSound} from '../../../packages/learning-ui/src/typing-sound';
@@ -208,27 +208,26 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,loadP
  // Only a fresh answer transition earns the cue; restored/revealed answers are silent.
  const completionResult=freeDictation?sentenceResult:draft.result;
  const completionState=useRef({key,result:completionResult});
- const dictationCue=useMemo(createSynchronizedCompletionSound,[]);
- useEffect(()=>{if(active&&state.module==='spelling')prepareCompletionSound();else stopCompletionSound();},[active,state.module]);
+ const completionCue=useMemo(createCompletionSound,[]);
  useLayoutEffect(()=>{
-  if(!active||!freeDictation)return;
-  void dictationCue.prepare();
+  if(!active||!(state.module==='spelling'||freeDictation))return;
+  void completionCue.prepare();
   const unlock=(event:Event)=>{
-   if(event.isTrusted&&navigator.userActivation?.isActive!==false&&event.target instanceof Node&&layoutRoot.current?.contains(event.target))dictationCue.unlock();
+   if(event.isTrusted&&navigator.userActivation?.isActive!==false&&event.target instanceof Node&&layoutRoot.current?.contains(event.target))completionCue.unlock();
   };
   const gestures=['pointerup','click','keydown'];
   for(const gesture of gestures)document.addEventListener(gesture,unlock,true);
-  return ()=>{for(const gesture of gestures)document.removeEventListener(gesture,unlock,true);dictationCue.stop();};
- },[active,freeDictation,dictationCue]);
+  return ()=>{for(const gesture of gestures)document.removeEventListener(gesture,unlock,true);completionCue.stop();};
+ },[active,freeDictation,state.module,completionCue]);
  useEffect(()=>{
   const previous=completionState.current;completionState.current={key,result:completionResult};
   if(!active||previous.key!==key||previous.result)return;
-  if(state.module==='spelling'&&(completionResult==='correct'||completionResult==='reviewed'))playCompletionSound();
+  if(state.module==='spelling'&&(completionResult==='correct'||completionResult==='reviewed'))return completionCue.start(playCue=>playCue());
   if(freeDictation&&completionResult==='correct'&&sentence?.pending==='free'){
    const board=layoutRoot.current?.querySelector<HTMLElement>('.guided-input,.hard-dictation-peek');
    if(!board)return;
    let stopSweep:(()=>void)|undefined;
-   const cancel=dictationCue.start(playCue=>{
+   const cancel=completionCue.start(playCue=>{
     const feedback=()=>{
      playCue();
      if(board.matches('.guided-input'))emitExperience([board.getBoundingClientRect()],true,true,particleEffect);
@@ -238,8 +237,8 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,loadP
    });
    return ()=>{cancel();stopSweep?.();};
   }
- },[key,completionResult,active,state.module,freeDictation,dictationCue]);
- useEffect(()=>{const stop=()=>{stopCompletionSound();dictationCue.stop();};window.addEventListener('pagehide',stop);return()=>{window.removeEventListener('pagehide',stop);stop();};},[dictationCue]);
+ },[key,completionResult,active,state.module,freeDictation,completionCue]);
+ useEffect(()=>{window.addEventListener('pagehide',completionCue.stop);return()=>window.removeEventListener('pagehide',completionCue.stop);},[completionCue]);
  const sentenceEffects=useRef(new Set<string>());
  useEffect(()=>{if(!active||state.module!=='listening'||state.mode!=='chunks'||sentence?.outcomes.chunks!=='correct')return;const stamp=`${key}:chunks`;if(sentenceEffects.current.has(stamp))return;sentenceEffects.current.add(stamp);if(sentence.pending!=='chunks')return;const sources=[...document.querySelectorAll('.selected-chunk')].map(n=>n.getBoundingClientRect());emitExperience(sources,true,true,particleEffect);},[key,state.mode,sentence?.outcomes,state.module,active]);
  useEffect(()=>{if(!active)clearExperienceEffects();},[active]);
