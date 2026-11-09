@@ -1,6 +1,6 @@
 # 摄影学英语 Web
 
-**把眼前的生活，变成英语。** 用经典电影画面练拼写、听力和口语，也能拍照制作自己的卡片。打开浏览器即可开始，无需登录。
+**把眼前的生活，变成英语。** 用经典电影画面练拼写、听力和口语，也能拍照制作自己的卡片。**打开浏览器即可开始，无需登录**。
 
 [在线体验](https://piclex.v2fy.com/piclex-web/) · [GitHub Pages 镜像](https://zhaoolee.com/piclex-web/) · [iPhone App](https://apps.apple.com/cn/app/id6808490052)
 
@@ -61,11 +61,13 @@
 
 
 
-## 薯薯求生：拼出单词，守住花园
+## 肉鸽游戏背单词：《薯薯求生》
 
-[立即游玩「薯薯求生」](https://piclex.v2fy.com/piclex-web/#/settings/lab)
+[点击进入《薯薯求生》在线版](https://piclex.v2fy.com/piclex-web/#/settings/lab)
 
-「薯薯求生」把卡组单词带进一场横屏小冒险：移动小土豆，武器自动攻击；每波结束走进路边小店，拼对卡组单词才能把装备带走。游戏与学习共用经验。
+核心玩法是，限时关卡杀怪物，获得经验，金币，购买强大的道具（购买道具时，把单词正确填入孔槽，即可解锁道具，否则就只扣款不发货），再杀下一轮更强大的怪物，直到撑到 20 轮，解锁更强大的道具与角色。
+
+如果不想在游戏中拼词，可以在 App 内拍照生成单词，拼写单词，获取经验，经验可以在游戏中，免拼获取道具
 
 <p align="center">
   <img src="docs/readme/game-entry.png" width="380" alt="「我的等级」页面中的薯薯求生入口，显示等级经验、游戏入口与等级奖励">
@@ -154,7 +156,7 @@ docker pull zhaoolee/piclex-web:latest && (if docker container inspect piclex-we
 
 ## 感谢
 
-| <img src="./README.assets/21701c8b4b8c7ba11b0f89dbc3129fa9a9af53c7a617d7679332fc8708105e8b.png" alt="大苦茶籽" width="180"> | 感谢抽象艺术家 [大苦茶籽](https://www.xiaohongshu.com/user/profile/5b72c4bbd1dd410001707460) 贡献的表情包！ |
+| <img src="./README.assets/21701c8b4b8c7ba11b0f89dbc3129fa9a9af53c7a617d7679332fc8708105e8b.png" alt="大苦茶籽" width="180"> | 艺术家 [大苦茶籽](https://www.xiaohongshu.com/user/profile/5b72c4bbd1dd410001707460) 镇楼 |
 | --- | --- |
 | <img src="./README.assets/f5c5a37071cc9aa92fe90d2bd90782655abef87ea968e3c21e0df62295aecf06.jpg" alt="@realchendahuang" width="180"> | 感谢 [@realchendahuang](https://x.com/realchendahuang/status/2112176188924068208) 对 PicLex 的支持。 |
 | <img src="./README.assets/f6c6d8160c592c39a6e6f26c4783ffe9db65d7421b9f8fbf0be65f14e849bffd.jpg" alt="@GitHub_Daily" width="180"> | 感谢 [@GitHub_Daily](https://x.com/GitHub_Daily/status/2118848428583297370) 对 PicLex 的支持。 |
