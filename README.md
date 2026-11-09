@@ -4,6 +4,12 @@
 
 [在线体验](https://piclex.v2fy.com/piclex-web/) · [GitHub Pages 镜像](https://zhaoolee.com/piclex-web/) · [iPhone App](https://apps.apple.com/cn/app/id6808490052)
 
+## ARE YOU OK？
+
+![](./README.assets/3f9a5b958ef0676e8899431b8615197cdc2c8f865ff102ae58d84d6531b596ea.jpg)
+
+![](./README.assets/65018b1d8a4ba8bb2fdf2bb924a8abb99ede16539b93e3e6a6645550aacdf2ad.gif)
+
 ## 本项目一经推出，好评如潮！
 
 | 知名抽象艺术家[大苦茶籽](https://www.xiaohongshu.com/user/profile/5b72c4bbd1dd410001707460) 倾情推荐！ | 知名外语求学者陈清泉表示**一定要学**！ |
