@@ -12,9 +12,11 @@
 
 ## 本项目一经推出，好评如潮！
 
-| 知名抽象艺术家[大苦茶籽](https://www.xiaohongshu.com/user/profile/5b72c4bbd1dd410001707460) 倾情推荐！ | 知名外语求学者陈清泉表示**一定要学**！ |
+| 图片 | 文字 |
 | --- | --- |
-| <img src="./README.assets/21701c8b4b8c7ba11b0f89dbc3129fa9a9af53c7a617d7679332fc8708105e8b.png" alt="" height="231"> |  <img src="./README.assets/9bf26ecec404b9e078c44ea3f4a243d2f5bd6c1776b80b348a48f80ce0b3ace0.jpg" alt="" height="231"> |
+| <img src="./README.assets/21701c8b4b8c7ba11b0f89dbc3129fa9a9af53c7a617d7679332fc8708105e8b.png" alt="" height="231"> | 抽象艺术家[大苦茶籽](https://www.xiaohongshu.com/user/profile/5b72c4bbd1dd410001707460) 推荐！ |
+| <img src="./README.assets/9bf26ecec404b9e078c44ea3f4a243d2f5bd6c1776b80b348a48f80ce0b3ace0.jpg" alt="" height="231"> | 陈清泉 表示**一定要学**！ |
+| <img src="./README.assets/aef076c7edfbbfeefc02c6d2b13dbc5ef85a1b58832affacd353f74d693848b4.jpg" alt="" width="231"> | |
 
 ## 从喜欢的电影，记住一句英语
 
