@@ -13,14 +13,24 @@ concurrency:
   group: release-production
   cancel-in-progress: false
 jobs:
-  ready:
+  release:
     runs-on: ubuntu-latest
-    outputs:
-      run-id: ${{ steps.verified.outputs.run-id }}
+    permissions:
+      contents: read
+      actions: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: https://zhaoolee.com/piclex-web/
     steps:
       - name: Use the protected production workflow
         run: test "$GITHUB_REF" = refs/heads/main
       - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            scripts
+            tests/fixtures/demo/decks
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
@@ -31,65 +41,32 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           RELEASE_REVISION: ${{ inputs.revision }}
           REQUIRE_READY_RELEASE: 'true'
-  pages:
-    needs: ready
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      actions: read
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/download-artifact@v4
         with:
-          node-version: '24'
-      - run: npm ci
-      - name: Use the runner Chrome for the live check
+          pattern: '{release-manifest,verified-image}'
+          merge-multiple: true
+          path: candidate
+          github-token: ${{ github.token }}
+          run-id: ${{ steps.verified.outputs.run-id }}
+      - name: Require the runner Chrome and registry-only Buildx client
         run: |
-          if [ -x /opt/google/chrome/chrome ]; then
-            /opt/google/chrome/chrome --version
-          else
-            npx playwright install chrome
-          fi
-      - uses: actions/download-artifact@v4
-        with:
-          name: release-manifest
-          path: candidate
-          github-token: ${{ github.token }}
-          run-id: ${{ needs.ready.outputs.run-id }}
-      - name: Deploy the immutable verified Pages artifact
-        id: deployment
-        run: node scripts/deploy-verified-pages.mjs
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-          RELEASE_REVISION: ${{ inputs.revision }}
-          VERIFIED_RUN_ID: ${{ needs.ready.outputs.run-id }}
-      - name: Verify the live release and application assets
-        env:
-          REVISION: ${{ inputs.revision }}
-        run: node scripts/verify-live-release.mjs https://zhaoolee.com/piclex-web/ "$REVISION" candidate/release.json --smoke
-  docker:
-    needs: ready
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
-        with:
-          name: verified-image
-          path: candidate
-          github-token: ${{ github.token }}
-          run-id: ${{ needs.ready.outputs.run-id }}
-      - uses: docker/setup-buildx-action@v3
+          /opt/google/chrome/chrome --version
+          docker buildx version
       - uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Promote and verify the immutable tested image
+      - name: Deploy, promote and verify the same immutable candidate
+        run: node scripts/release-verified-build.mjs
         env:
+          GITHUB_TOKEN: ${{ github.token }}
+          RELEASE_REVISION: ${{ inputs.revision }}
+          VERIFIED_RUN_ID: ${{ steps.verified.outputs.run-id }}
           REVISION: ${{ inputs.revision }}
           IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/piclex-web
-        run: node scripts/promote-verified-image.mjs candidate/verified-image.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: release-timing
+          path: release-timing.json
+          if-no-files-found: ignore

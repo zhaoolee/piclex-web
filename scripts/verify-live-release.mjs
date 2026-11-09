@@ -28,7 +28,9 @@ if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){
    await expect(page.getByRole('textbox',{name:'输入英文',exact:true})).toBeVisible();
    await page.getByRole('tab',{name:'练听力',exact:true}).click();await expect(page.locator('.native-practice')).toHaveAttribute('data-module','listening');
    await page.getByRole('tab',{name:'拼单词',exact:true}).click();await expect(page.locator('.native-practice')).toHaveAttribute('data-module','spelling');
-   result.smoke='import and module navigation passed in fresh isolated storage';
+   await page.reload();await expect(page.getByRole('heading',{name:'牛角包',exact:true})).toBeVisible();
+   await expect(page.locator('.native-practice')).toHaveAttribute('data-module','spelling');
+   result.smoke='import, module navigation and reload persistence passed in fresh isolated storage';
   }finally{await browser.close();}
  }
  console.log(JSON.stringify(result));

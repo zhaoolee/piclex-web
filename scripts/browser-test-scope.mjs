@@ -44,7 +44,7 @@ const tooling = new Set([
   'scripts/browser-test-scope.mjs', 'scripts/ci-release-scope.mjs',
   'deploy/verify-remote-release.py', 'deploy/test_remote_release.py',
   'deploy/release_lifecycle.py', 'deploy/test_release_lifecycle.py',
-  'scripts/deploy-verified-pages.mjs', 'scripts/performance-shards.mjs', 'scripts/run-web-performance.mjs', 'scripts/web-performance-policy.mjs',
+  'scripts/release-verified-build.mjs', 'scripts/deploy-verified-pages.mjs', 'scripts/performance-shards.mjs', 'scripts/run-web-performance.mjs', 'scripts/web-performance-policy.mjs',
   'scripts/find-performance-artifact.mjs', 'scripts/prepare-verified-image.mjs',
   'scripts/promote-verified-image.mjs', 'scripts/verify-live-release.mjs',
   '.github/workflows/release.yml', '.github/workflows/docker-publish.yml',

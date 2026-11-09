@@ -6,7 +6,7 @@ import {findArtifact} from './find-performance-artifact.mjs';
 // Same Pages API/OIDC contract as actions/deploy-pages. GitHub stores the
 // immutable artifact: deploy its verified ID instead of downloading/reuploading it.
 export async function deployVerifiedPages({repository, revision, token, ref, oidcURL, oidcToken, expectedRun,
-  request = fetch, sleep = ms => new Promise(r => setTimeout(r, ms)), now = Date.now}) {
+  request = fetch, sleep = ms => new Promise(r => setTimeout(r, ms)), now = Date.now, onStatus = () => {}}) {
   if (ref !== 'refs/heads/main') throw Error('Pages deployment requires protected main workflow');
   const receipt = await findArtifact({repository, revision, token, ready: true, details: true});
   if (String(receipt.runID) !== String(expectedRun)) throw Error('Verified candidate run changed');
@@ -33,12 +33,14 @@ export async function deployVerifiedPages({repository, revision, token, ref, oid
   const signal = () => {cancel().finally(() => process.exit(1));};
   process.once('SIGTERM', signal); process.once('SIGINT', signal);
   try {
-    const start = now();
+    const start = now(); let previousStatus;
+    onStatus({deploymentID: id, status: 'created', elapsedMs: 0});
     while (now() - start < 600000) {
       const state = await api(`/pages/deployments/${id}`);
+      if (state.status !== previousStatus) {onStatus({deploymentID: id, status: state.status, elapsedMs: now() - start}); previousStatus = state.status;}
       if (state.status === 'succeed') {complete = true; return {...receipt, deploymentID: id, pageURL: deployment.page_url};}
       if (['deployment_failed', 'deployment_perms_error', 'deployment_content_failed', 'deployment_cancelled', 'deployment_lost'].includes(state.status)) throw Error(`Pages deployment: ${state.status}`);
-      await sleep(2000);
+      await sleep(1000);
     }
     throw Error('Pages deployment timed out');
   } finally {
@@ -48,7 +50,8 @@ export async function deployVerifiedPages({repository, revision, token, ref, oid
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const result = await deployVerifiedPages({repository: process.env.GITHUB_REPOSITORY, revision: process.env.RELEASE_REVISION,
     token: process.env.GITHUB_TOKEN, ref: process.env.GITHUB_REF, expectedRun: process.env.VERIFIED_RUN_ID,
-    oidcURL: process.env.ACTIONS_ID_TOKEN_REQUEST_URL, oidcToken: process.env.ACTIONS_ID_TOKEN_REQUEST_TOKEN});
+    oidcURL: process.env.ACTIONS_ID_TOKEN_REQUEST_URL, oidcToken: process.env.ACTIONS_ID_TOKEN_REQUEST_TOKEN,
+    onStatus: status => console.log(JSON.stringify(status))});
   appendFileSync(process.env.GITHUB_OUTPUT, `page_url=${result.pageURL}\n`);
   console.log(JSON.stringify(result));
 }
