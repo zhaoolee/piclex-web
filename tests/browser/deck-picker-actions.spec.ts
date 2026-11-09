@@ -109,7 +109,7 @@ test('one update action checks, retries a corrupt subscription and keeps the cur
  await expect(reopened.getByRole('status')).toHaveText('已是最新版本');
 });
 
-test('public update replaces only a verified newer payload and keeps the same practice',async({page})=>{
+test('public update replaces only a verified newer payload and keeps the same practice',async({page},info)=>{
  const value=load(first);
  const initial={...first,version:1},fingerprint='f'.repeat(64),changedTitle=first.title+'新版';
  const payload=JSON.stringify({...value,fingerprint,title:changedTitle});
@@ -123,15 +123,54 @@ test('public update replaces only a verified newer payload and keeps the same pr
  await fillSpelling(page,'x');const draft=await input.inputValue(),url=page.url();
  const dialog=await picker(page);
  const menu=dialog.getByRole('button',{name:first.title+'的更多操作'});
+ const cards=dialog.locator('.practice-deck-item');
+ const targetCard=cards.nth(0),sameRowCard=cards.nth(1),nextRowCard=cards.nth(2);
+ const footer=targetCard.locator('.practice-deck-footer');
+ const percent=footer.locator('.practice-deck-percent');
+ const more=footer.locator('.practice-deck-more>button');
+ await expect(dialog.getByRole('status')).toHaveCount(0);
+ const layout=async()=>({cover:(await targetCard.locator('.practice-deck-option').boundingBox())!,
+  target:(await targetCard.boundingBox())!,sameRow:(await sameRowCard.boundingBox())!,nextRow:(await nextRowCard.boundingBox())!});
+ const baseline=await layout();
+ async function expectFooterOnlyStatus(label:string){
+  const now=await layout();
+  for(const key of ['target','sameRow','nextRow'] as const){
+   expect(now[key].y,label+' '+key+' y').toBeCloseTo(baseline[key].y,0);
+   expect(now[key].height,label+' '+key+' height').toBeCloseTo(baseline[key].height,0);
+  }
+  const status=footer.getByRole('status');
+  await expect(status,label).toHaveCount(1);
+  await expect(dialog.getByRole('status'),label).toHaveCount(1);
+  await expect(sameRowCard.getByRole('status'),label).toHaveCount(0);
+  await expect(nextRowCard.getByRole('status'),label).toHaveCount(0);
+  const box=(await status.boundingBox())!,progress=(await percent.boundingBox())!,button=(await more.boundingBox())!;
+  expect(progress.x,label+' progress x').toBeCloseTo(baseline.cover.x,0);
+  expect(progress.x+progress.width,label+' progress before status').toBeLessThanOrEqual(box.x+1);
+  expect(box.x+box.width,label+' status before menu').toBeLessThanOrEqual(button.x+1);
+  expect(button.x+button.width,label+' menu right edge').toBeCloseTo(baseline.cover.x+baseline.cover.width,0);
+  expect(Math.abs(box.y+box.height/2-(button.y+button.height/2)),label+' status shares menu row').toBeLessThan(8);
+  expect(button.width,label+' menu click width').toBeCloseTo(44,0);
+  expect(button.height,label+' menu click height').toBeCloseTo(44,0);
+  await expect(status,label).toHaveCSS('white-space','nowrap');
+  await expect(status,label).toHaveCSS('text-overflow','ellipsis');
+  await expect(status,label).toHaveCSS('overflow','hidden');
+  const text=await status.innerText();
+  await expect(status,label).toHaveAttribute('title',text);
+  return text;
+ }
  await menu.click();await dialog.getByRole('button',{name:'更新卡组',exact:true}).click();
  await expect(dialog.getByRole('status')).toHaveText('已是最新版本');
+ expect(await expectFooterOnlyStatus('latest')).toBe('已是最新版本');
+ await page.screenshot({path:info.outputPath('footer-current.png'),animations:'disabled'});
  current=latest;
  await menu.click();await dialog.getByRole('button',{name:'更新卡组',exact:true}).click();
  await expect(dialog.getByRole('status')).toContainText('校验失败');
+ expect(await expectFooterOnlyStatus('failed')).toContain('校验失败');
  await expect(dialog.locator(`[data-deck-id="${first.id}"]`)).toHaveAttribute('aria-pressed','true');
  valid=true;
  await menu.click();await dialog.getByRole('button',{name:'更新卡组',exact:true}).click();
  await expect(dialog.getByRole('status')).toHaveText('已更新至 v2');
+ expect(await expectFooterOnlyStatus('updated')).toBe('已更新至 v2');
  await expect(dialog.getByRole('button',{name:changedTitle,exact:true})).toHaveAttribute('aria-pressed','true');
  await dialog.getByRole('button',{name:'关闭',exact:true}).click();
  await expect(input).toHaveValue(draft);

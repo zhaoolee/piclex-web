@@ -113,6 +113,7 @@ export default function DeckPicker({choices,loadPurchaseChoices,selectedID,posit
     </button>
     <div className="practice-deck-footer">
      <span className="practice-deck-percent" aria-label={`${item.title}学习进度 ${percent}%`}>{percent}%</span>
+     {statuses[item.id]&&<span className="practice-deck-status" role="status" title={statuses[item.id]}>{statuses[item.id]}</span>}
      <div className="practice-deck-more">
       <button type="button" ref={expanded?trigger:null} aria-label={`${item.title}的更多操作`} aria-expanded={expanded}
        onClick={()=>setOpen(expanded?'':item.id)}>⋯</button>
@@ -123,7 +124,6 @@ export default function DeckPicker({choices,loadPurchaseChoices,selectedID,posit
       </div>}
      </div>
     </div>
-    {statuses[item.id]&&<p className="practice-deck-status" role="status">{statuses[item.id]}</p>}
    </article>;
   })}
  </div>;
