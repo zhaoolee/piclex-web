@@ -1,0 +1,47 @@
+{
+  "candidateRevision": "1c4dd3b877ec7e9fd09a4f96cb889ae3692781d8",
+  "releaseID": "1c4dd3b877ec-a21256792cc7",
+  "candidateRun": 42553754723,
+  "releaseRun": 42555474856,
+  "candidatePreparationSeconds": 1072,
+  "gates": {
+    "node": 338,
+    "deploy": 54,
+    "browserPassed": 680,
+    "browserExistingSkipped": 4,
+    "performanceRoundsPassed": 24,
+    "imageArchitectures": [
+      "linux/amd64",
+      "linux/arm64"
+    ]
+  },
+  "githubActionsWallSeconds": 52,
+  "clientObservedGitHubCompleteSeconds": 54.412,
+  "pagesDeploymentProviderSeconds": 14.766,
+  "localPreflightSeconds": 1.628,
+  "dualSiteCutoverAndDomesticServiceSeconds": 77.607,
+  "dualSiteCutoverAndDomesticServiceIncludingPreflightSeconds": 79.235,
+  "initialTimedVerification": "domestic HTTPS connect timeout",
+  "fullVerificationAfterDiagnosticsIncludingPreflightSeconds": 280.209,
+  "within60Seconds": false,
+  "finalVerification": {
+    "bothSites": true,
+    "assetsPerSite": 14,
+    "fullManifestFileCount": 1207,
+    "flows": [
+      "deck import",
+      "module switch",
+      "reload persistence"
+    ],
+    "domesticCleanup": "only current release remains",
+    "dockerDigest": "sha256:ec3562f0172936d28cd64419792b3e1b5ab60fe471bdcbbf286c8786585322f6"
+  },
+  "baseline": {
+    "priorGithubRun": 42482659965,
+    "priorGithubWallSeconds": 62,
+    "priorDualSiteSeconds": 122.138,
+    "latestGithubRun": 42491450129,
+    "latestGithubWallSeconds": 460,
+    "latestPagesWaitSeconds": 425
+  }
+}
