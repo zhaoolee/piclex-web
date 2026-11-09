@@ -73,11 +73,11 @@ export function useSpeech(notify:(s:string)=>void,preferLocalVoice=false){
   // Queue progress is weighted by text length. Original audio uses its media
   // clock; Web Speech interpolates its estimated position between real events.
   const total=queue.reduce((sum,text)=>sum+text.length,0);
-  const update=(i:number,fraction:number,indeterminate=false,estimated=false)=>{
+  const update=(i:number,fraction:number,indeterminate=false,estimated=false,paused=false)=>{
    if(!valid())return;
    const before=queue.slice(0,i).reduce((sum,text)=>sum+text.length,0);
    const value=total?(before+(queue[i]?.length||0)*Math.min(1,Math.max(0,fraction)))/total:0;
-   progress.update(Math.max(progress.getSnapshot().value,estimated?Math.min(.99,value):value),indeterminate);
+   progress.update(Math.max(progress.getSnapshot().value,estimated?Math.min(.99,value):value),indeterminate,paused);
   };
   const fail=(message?:string)=>{if(!valid())return;stop();blockedRequest.current=null;retrying.current=false;setBlocked(!confirmed.current);if(message&&!next.automatic){setError(message);notify(message);}};
   // Autoplay policy retains only the segment that was actually denied. A clip
@@ -145,19 +145,21 @@ export function useSpeech(notify:(s:string)=>void,preferLocalVoice=false){
     const utterance=new SpeechSynthesisUtterance(queue[i]);utterance.lang='en-US';utterance.rate=next.rate;
     const voice=selectedSpeechVoice(preferLocalVoice);if(voice)utterance.voice=voice;
     let clock:ReturnType<typeof createSpeechProgress>|undefined,paused=false;
+    const sample=()=>{
+     if(!current()||!clock)return;
+     const now=performance.now(),frozen=paused||!!speechSynthesis.paused;
+     clock.setPaused(frozen,now);
+     update(i,clock.sample(now),false,true,frozen);
+    };
     const begin=()=>{
      if(!current()||clock)return;
      started();clock=createSpeechProgress(queue[i],next.rate);update(i,0);
-     speechClock.current=setInterval(()=>{
-      if(!current()||!clock)return;
-      const now=performance.now();clock.setPaused(paused||!!speechSynthesis.paused,now);
-      update(i,clock.sample(now),false,true);
-     },33);
+     speechClock.current=setInterval(sample,33);
     };
     utterance.onstart=begin;
     utterance.onboundary=e=>{if(current()){begin();clock?.boundary(e.charIndex,performance.now());if(i===0)setPosition(e.charIndex+next.offset);}};
-    utterance.onpause=()=>{if(current()){paused=true;clock?.setPaused(true,performance.now());}};
-    utterance.onresume=()=>{if(current()){paused=false;clock?.setPaused(false,performance.now());}};
+    utterance.onpause=()=>{paused=true;sample();};
+    utterance.onresume=()=>{paused=false;sample();};
     // Let the short completion animation finish before hiding the button's
     // fill. The next segment still starts after the established 180 ms gap.
     utterance.onend=()=>{if(!current())return;speechPending.current=false;ended(180);};

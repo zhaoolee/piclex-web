@@ -73,8 +73,10 @@ function PlaybackFill({progress}:{progress:ReturnType<typeof useSpeech>['progres
   // One monotonic painter avoids WebKit's small backwards steps when a running
   // CSS transition is repeatedly retargeted. No layout reads or parent renders.
   const paint=(time:number)=>{
-   const target=progress.getSnapshot().value,delta=Math.min(64,Math.max(0,time-lastTime));lastTime=time;
+   const {value:target,paused}=progress.getSnapshot();
+   const delta=Math.min(64,Math.max(0,time-lastTime));lastTime=time;
    if(reduced.matches||target<lastTarget){shown=target;finishTime=undefined;}
+   else if(paused){finishTime=undefined;}
    else if(target===1){if(finishTime===undefined){finishTime=time;finishFrom=shown;}shown=finishFrom+(1-finishFrom)*Math.min(1,(time-finishTime)/120);}
    else {finishTime=undefined;shown+=Math.max(0,target-shown)*(1-Math.exp(-delta/50));if(target-shown<.0001)shown=target;}
    lastTarget=target;if(fill.current)fill.current.style.transform=`scaleX(${shown})`;

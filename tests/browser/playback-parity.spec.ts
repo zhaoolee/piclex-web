@@ -73,7 +73,8 @@ test('speech without boundary events animates continuously, freezes on pause and
  await press(button,!!info.project.use.hasTouch);await expect(bar).toHaveCount(0);await emit(page,'start');
  expectSmooth(await fillFrames(page));await expect(page.locator('.playback-activity')).toHaveCount(0);
  await page.screenshot({path:info.outputPath('smooth-speech-progress.png')});
- await emit(page,'pause');await page.waitForTimeout(220);const paused=await fillFrames(page,300);
+ await emit(page,'pause');
+ const paused=await fillFrames(page,520);
  expect(Math.max(...paused.map(s=>s.value))-Math.min(...paused.map(s=>s.value))).toBeLessThan(.001);
  await emit(page,'resume');expectSmooth(await fillFrames(page));await emit(page,'end');
  await expect.poll(()=>page.evaluate(()=>(window as any).__utterances.at(-1).text)).toBe('croissant');await emit(page,'start');expectSmooth(await fillFrames(page,400));
