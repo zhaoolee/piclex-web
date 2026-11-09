@@ -13,9 +13,10 @@ export const baseline = {
 };
 export const browserJobs = ['desktop', 'mobile', 'mobile-webkit'].flatMap(
   project => [1, 2].map(shard => `Browser ${project} ${shard}/2`));
-// This one reviewed workflow change only wires selection into the existing six
-// shards. Any subsequent workflow edit invalidates reuse until reviewed again.
-export const reviewedWorkflowHash = '4861b632edd8f68b2e68b394a6cc8c50da5a54ed770e58079875bfc77a82a49b';
+// Reviewed workflow changes wire selection and bound package mirror requests.
+// Browser install commands, projects, shards and assertions remain the same.
+// Any subsequent workflow edit invalidates reuse until reviewed again.
+export const reviewedWorkflowHash = 'be1bc4453fc1a99618b1b2143857a6a9d81665ccdb0abf2ec52c5a9ea615e494';
 const specs = names => names.trim().split(/\s+/).map(name => `${name}.spec.ts`);
 const learning = specs(`app-shell alignment-extension audio-unlock audio-unlock-speech
   capture capture-grouping deck-picker-audio desktop-fit focus-ambience guided-no-eyes
