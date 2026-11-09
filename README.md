@@ -4,7 +4,11 @@
 
 [在线体验](https://piclex.v2fy.com/piclex-web/) · [GitHub Pages 镜像](https://zhaoolee.com/piclex-web/) · [iPhone App](https://apps.apple.com/cn/app/id6808490052)
 
-![](./README.assets/9bf26ecec404b9e078c44ea3f4a243d2f5bd6c1776b80b348a48f80ce0b3ace0.jpg)
+## 本项目一经推出，好评如潮！
+
+| 知名抽象艺术家[大苦茶籽](https://www.xiaohongshu.com/user/profile/5b72c4bbd1dd410001707460) 倾情推荐！ | 知名外语求学者陈清泉表示**一定要学**！ |
+| --- | --- |
+| <img src="./README.assets/21701c8b4b8c7ba11b0f89dbc3129fa9a9af53c7a617d7679332fc8708105e8b.png" alt="" height="231"> |  <img src="./README.assets/9bf26ecec404b9e078c44ea3f4a243d2f5bd6c1776b80b348a48f80ce0b3ace0.jpg" alt="" height="231"> |
 
 ## 从喜欢的电影，记住一句英语
 
