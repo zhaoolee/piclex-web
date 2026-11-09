@@ -4,7 +4,7 @@ import {studyEventScope,studySentenceKey} from '../../../packages/practice/src/c
 import usePositionSync from './usePositionSync';
 import {PhotoCache} from '../../../packages/learning-ui/src/photo-cache';
 import {upcomingPhotos} from '../../../packages/practice/src/upcoming-photos.mjs';
-import DeckPicker from './DeckPicker';
+import DeckPicker,{type DeckPickerChoice} from './DeckPicker';
 import {recordPortableStudy,portableHistory} from './practice-progress';
 import {applyLearningURL,learningHash,parseLearningURL} from '../../../packages/practice/src/learning-url.mjs';
 import usePageViewport from './usePageViewport';
@@ -136,7 +136,7 @@ function HardDictationInput({promptKey,sentence,value,disabled,deckWord,deckMean
  return <div className="hard-dictation-peek" onPointerDown={press} onClickCapture={consumeClick} onContextMenu={e=>e.preventDefault()}><EnglishInput ref={field} key={promptKey} multiline className="dictation-input" label="听写句子" onWarning={onWarning} placeholder="听一句，写下听到的英文" value={value} maxLength={2000} onVirtualKey={onVirtualKey} readOnly={disabled} onComposing={onComposing} onValue={onValue} onKeyDown={e=>onKeyDown(e)}/><WordPeekTooltip peek={peek}/></div>;
 }
 
-export default function NativePractice({deck,openGame,gameBusy,deckChoices,selectDeck,spellingRequest=0,consumeSpellingRequest,notify,exit,download,share,installedDecks,saveDownloaded}:{deck:PracticeDeck;openGame:()=>void;gameBusy:boolean;deckChoices:{id:string;title:string;cover:string;photoCount?:number}[];selectDeck:(id:string)=>void;spellingRequest?:number;consumeSpellingRequest:(sequence:number)=>void;notify:(s:string)=>void;exit:()=>void;download:()=>void;share:()=>void;installedDecks:{id:string;fingerprint?:string}[];saveDownloaded:(bytes:Uint8Array,signal:AbortSignal,source?:{url:string;feed:SourceDeck})=>Promise<void>}){
+export default function NativePractice({deck,openGame,gameBusy,deckChoices,loadPurchaseChoices,selectDeck,spellingRequest=0,consumeSpellingRequest,notify,exit,download,share,installedDecks,saveDownloaded}:{deck:PracticeDeck;openGame:()=>void;gameBusy:boolean;deckChoices:DeckPickerChoice[];loadPurchaseChoices:(signal:AbortSignal)=>Promise<DeckPickerChoice[]>;selectDeck:(id:string)=>void;spellingRequest?:number;consumeSpellingRequest:(sequence:number)=>void;notify:(s:string)=>void;exit:()=>void;download:()=>void;share:()=>void;installedDecks:{id:string;fingerprint?:string}[];saveDownloaded:(bytes:Uint8Array,signal:AbortSignal,source?:{url:string;feed:SourceDeck})=>Promise<void>}){
  usePageViewport();
  const desktopKeyboard=useDesktopKeyboard();
  const desktopShortcut=useDesktopKeyboard(700);
@@ -429,7 +429,7 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,selec
   {!complete&&(state.module==='spelling'||state.module==='listening'&&state.mode==='free'&&!!prompt&&!state.sentenceFinished)&&<VirtualKeyboard active={active} press={virtualPress} lettersOnly />}
   {panel==='download'&&<DeckDownload close={()=>setPanel(null)} installed={installedDecks} save={saveDownloaded}/>}
   {panel==='level'&&<Dialog title="我的等级" close={()=>setPanel(null)}><LevelPage embedded openGame={openGame} gameBusy={gameBusy} learn={()=>{setPanel(null);selectModule('spelling');}}/></Dialog>}
-  {panel&&panel!=='download'&&panel!=='level'&&<Dialog title={panel==='gallery'?'选择照片':'选择卡组'} close={()=>setPanel(null)}>{panel==='settings'?<DeckPicker choices={deckChoices} selectedID={deck.id} select={id=>{audio.stop();setPanel(null);selectDeck(id);}}/>:<><div className="gallery-tools"><button className="native-button" aria-label="分享卡组" onClick={share}><Icon name="share"/></button><button className="native-button" aria-label="下载卡组" onClick={download}>↓</button></div><div className="native-photo-grid">{deck.images.map((src,imageIndex)=>{const first=deck.words.findIndex(w=>w.imageIndex===imageIndex);return <button key={src} aria-label={`照片 ${imageIndex+1}`} aria-pressed={word?.imageIndex===imageIndex} onClick={()=>{dispatch({type:'selectWord',index:word?.imageIndex===imageIndex?state.index:first});setPanel(null);}}><img src={src} alt="" loading="lazy"/><span>{imageIndex+1}</span></button>;})}</div></>}</Dialog>}
+  {panel&&panel!=='download'&&panel!=='level'&&<Dialog title={panel==='gallery'?'选择照片':'选择卡组'} close={()=>setPanel(null)}>{panel==='settings'?<DeckPicker choices={deckChoices} loadPurchaseChoices={loadPurchaseChoices} selectedID={deck.id} position={state.index} notify={notify} select={id=>{audio.stop();setPanel(null);selectDeck(id);}}/>:<><div className="gallery-tools"><button className="native-button" aria-label="分享卡组" onClick={share}><Icon name="share"/></button><button className="native-button" aria-label="下载卡组" onClick={download}>↓</button></div><div className="native-photo-grid">{deck.images.map((src,imageIndex)=>{const first=deck.words.findIndex(w=>w.imageIndex===imageIndex);return <button key={src} aria-label={`照片 ${imageIndex+1}`} aria-pressed={word?.imageIndex===imageIndex} onClick={()=>{dispatch({type:'selectWord',index:word?.imageIndex===imageIndex?state.index:first});setPanel(null);}}><img src={src} alt="" loading="lazy"/><span>{imageIndex+1}</span></button>;})}</div></>}</Dialog>}
  </main>;
 }
 function Chunk({text,disabled,remove,move}:{text:string;disabled:boolean;remove:()=>void;move:(offset:number)=>void}){

@@ -242,11 +242,23 @@ body[data-practice=true] .toast button{pointer-events:auto}
    sharing stay on the photograph's own drawer, as in PracticeDeckPickerOverlay. */
 .practice-deck-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:16px 12px;padding:2px}
 .practice-deck-option{display:flex;flex-direction:column;gap:8px;min-width:0;width:100%;padding:0;text-align:left;border:0;border-radius:8px;background:transparent;color:var(--ink)}
-.practice-deck-cover{display:block;position:relative;width:100%;aspect-ratio:3/4;overflow:hidden;border-radius:8px;background:var(--surface)}
-.practice-deck-cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:var(--surface)}
+.practice-deck-cover{display:block;position:relative;width:100%;aspect-ratio:2/3;overflow:hidden;border-radius:8px;background:var(--surface)}
+.practice-deck-cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:var(--surface)}
 .practice-deck-placeholder{position:absolute;inset:0;display:grid;place-items:center;font-size:30px;color:var(--muted)}
-.practice-deck-option strong{display:block;width:100%;min-width:0;font-size:16px;line-height:24px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.practice-deck-option .deck-selection-mark{position:absolute;top:6px;right:6px;display:grid;place-items:center;width:28px;height:28px;border-radius:8px;background:var(--ink);color:var(--bg);font-size:18px;font-weight:700}
+.practice-deck-cover-title{position:absolute;inset:auto 0 0;padding:6px 8px;background:#000a;color:white;font-size:14px;font-weight:600;text-align:center;overflow-wrap:anywhere}
+.practice-deck-item{min-width:0}
+.practice-deck-footer{display:flex;align-items:center;justify-content:space-between;color:var(--muted)}
+.practice-deck-percent{font-size:15px;font-variant-numeric:tabular-nums}
+.practice-deck-more{position:relative}
+.practice-deck-more>button{display:block;width:44px;height:44px;padding:0;text-align:right;border:0;background:none;color:inherit;font-size:24px;font-weight:700}
+.practice-deck-actions{position:absolute;right:0;bottom:100%;z-index:1;width:max-content;max-width:min(220px,80vw);padding:4px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);box-shadow:0 8px 28px #0004}
+.practice-deck-actions>*{display:flex;align-items:center;width:100%;min-height:44px;padding:6px 12px;border:0;border-radius:6px;background:none;color:inherit;text-align:left;font-size:14px;text-decoration:none}
+.practice-deck-actions :is(button,a):is(:hover,:focus-visible){background:var(--surface)}
+.practice-deck-actions>span,.practice-deck-status{color:var(--muted)}
+.practice-deck-status{margin:0;font-size:12px}
+.practice-deck-option .deck-selection-mark{position:absolute;bottom:6px;right:6px;display:grid;place-items:center;width:28px;height:28px;border-radius:8px;background:var(--ink);color:var(--bg);font-size:18px;font-weight:700}
+.practice-deck-option:has(.practice-deck-cover-title) .deck-selection-mark{top:6px;bottom:auto}
+.native-practice .practice-deck-option:disabled{opacity:1;cursor:default}
 .practice-deck-option[aria-pressed=true] .practice-deck-cover::after{content:"";position:absolute;inset:0;border:2px solid var(--ink);border-radius:inherit;pointer-events:none}
 .practice-deck-option:active{opacity:.7}.practice-deck-option:focus-visible{outline:2px solid var(--ink);outline-offset:4px}
 .gallery-tools{display:flex;justify-content:flex-end;gap:10px}.gallery-tools button{width:44px;padding:8px}

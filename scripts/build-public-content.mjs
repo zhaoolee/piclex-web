@@ -9,7 +9,7 @@ import { latestPublicSnapshot } from './latest-public-snapshot.mjs';
 
 const root = resolve('apps/public/public');
 const reviewed = validateSnapshot(JSON.parse(await readFile('content/snapshot.json', 'utf8')));
-const {snapshot,changed} = latestPublicSnapshot(reviewed);
+const {snapshot,changed,purchases} = latestPublicSnapshot(reviewed);
 for(const item of changed)console.log(`Updated public deck: ${item}`);
 const temporary = await mkdtemp(join(tmpdir(), 'piclex-library-'));
 const suppliedCache = process.env.PICLEX_CONTENT_CACHE;
@@ -72,7 +72,7 @@ try {
     const learningFingerprint = parsed.learningFingerprint;
     const payload = JSON.stringify({ format: 'com.piclex.web-deck', schemaVersion: 1, deckID: entry.deckID, fingerprint: parsed.fingerprint, learningFingerprint, title: entry.title, photos, words });
     await writeFile(join(directory, 'deck.json'), payload);
-    catalog.push({ id: entry.deckID, title: entry.title, description: entry.description, count: entry.wordCount, photoCount: entry.photoCount,
+    catalog.push({ id: entry.deckID, title: entry.title, description: entry.description, count: entry.wordCount, photoCount: entry.photoCount, version: entry.version,
       ...(Object.keys(covers).length ? { covers } : {}), learningFingerprint, progressAliases,
       cover: `library/${name}/cover.jpg`, package: `library/${name}/deck.piclexdeck`, payload: `library/${name}/deck.json`, payloadSHA256: digest(payload),
       fingerprint: entry.packageSHA256, author: entry.author, sourceURL: entry.sourceURL,
@@ -83,6 +83,7 @@ try {
     console.log(`${entry.title}: ${parsed.photos.length} photos / ${parsed.words.length} words; lazy image payload ${Buffer.byteLength(payload)} bytes`);
   }
   await writeFile(join(output, 'catalog.json'), JSON.stringify(catalog, null, 2) + '\n');
+  await writeFile(join(output, 'purchase-catalog.json'), JSON.stringify(purchases) + '\n');
   // This directory contains generated public artifacts only; originals remain at their source URLs.
   await rm(join(root, 'library'), { recursive: true, force: true });
   await cp(output, join(root, 'library'), { recursive: true });

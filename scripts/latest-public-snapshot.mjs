@@ -2,6 +2,24 @@ import {execFileSync} from 'node:child_process';
 import {validateSnapshot} from '../packages/deck-format/src/public.mjs';
 
 const hash=/^[0-9a-f]{64}$/;
+const officialSource='https://piclex.v2fy.com/decks/source.json';
+const uuid=/^[a-f0-9]{8}-(?:[a-f0-9]{4}-){3}[a-f0-9]{12}$/;
+
+export function purchaseListings(feed){
+  if(feed?.format!=='com.piclex.deck-source'||feed.schemaVersion!==1||feed.purchasesAvailable!==true||!Array.isArray(feed.decks))return [];
+  return feed.decks.flatMap(deck=>{
+    if(deck?.access!=='storekit'||typeof deck.productID!=='string'||!deck.productID||
+      !uuid.test(deck.deckID)||typeof deck.title!=='string'||!deck.title.trim()||deck.title.length>80||
+      !Number.isSafeInteger(deck.version)||deck.version<1||!hash.test(deck.packageSHA256))return [];
+    const directory=`/decks/${deck.deckID}/v${deck.version}-${deck.packageSHA256.slice(0,16)}/`;
+    const portrait=directory+'cover-portrait.jpg',fallback=directory+'cover.jpg';
+    const officialOrigin=new URL(officialSource).origin;
+    const declared=deck.covers?.portrait?.url;
+    const path=declared===portrait||declared===officialOrigin+portrait?portrait:
+      deck.coverURL===fallback||deck.coverURL===officialOrigin+fallback?fallback:null;
+    return path?[{id:deck.deckID,title:deck.title,cover:officialOrigin+path}]:[];
+  });
+}
 const catalogs=[
   'https://piclex.v2fy.com/piclex-web/library/catalog.json',
   'https://zhaoolee.com/piclex-web/library/catalog.json',
@@ -55,10 +73,11 @@ export function mergePublished(snapshot,feeds,previousCatalogs=[]){
 
 export function latestPublicSnapshot(snapshot){
   const feeds=new Map([...new Set(snapshot.decks.map(deck=>deck.sourceURL))].map(url=>[url,publicJSON(url)]));
+  const purchases=purchaseListings(feeds.get(officialSource));
   const first=mergePublished(snapshot,feeds);
-  if(!first.changed.length)return first;
+  if(!first.changed.length)return {...first,purchases};
   // A prior public catalog contains fingerprints from builds since the reviewed
   // snapshot. Keep them so updating a card does not reset Web study progress.
   const previous=catalogs.map(publicJSON);
-  return mergePublished(snapshot,feeds,previous);
+  return {...mergePublished(snapshot,feeds,previous),purchases};
 }
