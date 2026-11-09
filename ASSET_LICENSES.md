@@ -62,3 +62,18 @@ The camera's GitHub mark is `mark-github-16` from [GitHub Octicons](https://gith
 浅色学习页复用 App 的 `PracticeReliefSurface` 参数；其 Uiverse ke1221 ancient-walrus-24 来源和完整 MIT 声明保存在 `docs/licenses/uiverse-ke1221.txt`。
 
 `audio/ambience/piano.m4a` 与 `cafe.m4a` 原样复用 App `Resources/PracticeAmbience`。钢琴为项目原创16小节旋律；咖啡厅使用 stephan 的公共领域 [Restaurant Ambience](https://commons.wikimedia.org/wiki/File:Restaurant_ambience.ogg) 加工录音（2007-05-18，PDSounds 274）。混音、均衡、瓷器／蒸汽层与循环处理与 App 一致，不包含用户录音。
+
+## README 人物头像
+
+下列肖像来自 Wikimedia Commons。仓库版本已缩小并重新编码为 JPEG，沿用各文件的原许可。
+
+| 文件 | 作者或署名 | 原始文件页 | 许可 |
+| --- | --- | --- | --- |
+| `README.assets/english-learning/mao-zedong.jpg` | 陈正青 | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Mao_Zedong_1950_Portrait_%283x4_cropped%29.jpg) | 公共领域（见原始文件页） |
+| `README.assets/english-learning/jiang-zemin.jpg` | Kremlin.ru / Roman Kubanskiy | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Jiang_Zemin_2002.jpg) | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) |
+| `README.assets/english-learning/ren-zhengfei.jpg` | © European Union, 2010 / EC, Photo: Etienne Ansotte | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Ren_Zhengfei_%282010%29.jpg) | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) |
+| `README.assets/english-learning/jack-ma.jpg` | World Economic Forum / Natalie Behring | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Jack_Ma_Yun%2C_Tianjin%2C_2008_%28cropped%29.jpg) | [CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0/) |
+| `README.assets/english-learning/yu-minhong.jpg` | 太子太保啦啦 | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Yu_Minhong_in_Lanzhou_University.jpg) | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) |
+| `README.assets/english-learning/lei-jun.jpg` | DirectX3 | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Lei_Jun.jpg) | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) |
+
+张朝阳的头像由加州大学圣迭戈分校网站提供，README 使用原站图片地址。[加州大学圣迭戈分校人物档案](https://ccgt.ucsd.edu/fellows/past/zang.html)

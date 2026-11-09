@@ -141,11 +141,19 @@ docker pull zhaoolee/piclex-web:latest && (if docker container inspect piclex-we
 
 代码使用 [MIT](LICENSE)；卡组内容按原来源授权，详见[素材说明](ASSET_LICENSES.md)。
 
+## 如何看待学英语？
 
+| 头像 | 言论与出处 |
+| --- | --- |
+| <img src="./README.assets/english-learning/mao-zedong.jpg" alt="毛泽东" width="96"> | **毛泽东**<br>「现在每天读一点英语，要是能够有恒，总可稍有所得。」<br>致黎锦熙的信，[人民网党史资料引录](https://dangshi.people.com.cn/n1/2021/0802/c436975-32177420.html) |
+| <img src="./README.assets/english-learning/jiang-zemin.jpg" alt="江泽民" width="96"> | **江泽民**<br>「加强同各国人民的交流交往，需要在学好祖国语言的同时认真学习外语，领导干部尤其要以身作则。」<br>2011 年《领导干部外事用语丛书》序言，[《南方都市报》刊载的全文](https://news.sina.cn/sa/2011-12-18/detail-ikftpnny5299205.d.html?vt=4) |
+| <img src="./README.assets/english-learning/ren-zhengfei.jpg" alt="任正非" width="96"> | **任正非**<br>「不学英文，农村孩子永远就是农民。你不学英文，将来在这个世界上怎么就业啊？」<br>2023 年 7 月 7 日与刘亚东对谈，[第一财经对谈全文](https://www.yicai.com/news/101864260.html) |
+| <img src="./README.assets/english-learning/jack-ma.jpg" alt="马云" width="96"> | **马云**<br>「每天早上我就带着外国游客去逛……他们就教我说英语。这改变了我的人生。」（译文）<br>2015 年达沃斯论坛，[世界经济论坛原视频](https://www.weforum.org/videos/davos-2015-an-insight-an-idea-with-jack-ma/) · [新浪财经中文实录](https://finance.sina.cn/2015-01-23/detail-ichmifpx5338453.d.html) |
+| <img src="./README.assets/english-learning/yu-minhong.jpg" alt="俞敏洪" width="96"> | **俞敏洪**<br>「中国人学英语是一件很现实的事情。」<br>2014 年 3 月 10 日，[中国新闻网采访实录](https://www.chinanews.com/shipin/cnstv/2014/03-10/news391559.shtml) |
+| <img src="./README.assets/english-learning/lei-jun.jpg" alt="雷军" width="96"> | **雷军**<br>「如果你是大学一年级，我建议你首先把英文学好。」<br>2015 年 6 月「潘谈会」，[新浪科技现场报道](https://tech.sina.com.cn/i/2015-06-03/doc-icrvvqrf3979818.shtml) |
+| <img src="https://ccgt.ucsd.edu/_images/pacific-fellows/upcoming-fellows/cwo_zhang_profiles.jpg" alt="张朝阳" width="96"> | **张朝阳**<br>「这是一门非常精确的语言，表达层层递进，能够帮助学者提升理性的逻辑思维。」<br>2026 年 8 月 6 日《张朝阳的英语课》十周年活动，[新浪科技采访报道](https://finance.sina.com.cn/jjxw/2026-08-06/doc-inimknci3821210.shtml) |
 
-
-
-
+[头像来源与许可](ASSET_LICENSES.md#readme-人物头像)
 
 ## 感谢
 
