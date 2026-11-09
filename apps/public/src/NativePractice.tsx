@@ -225,12 +225,16 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,loadP
   if(!active||previous.key!==key||previous.result)return;
   if(state.module==='spelling'&&(completionResult==='correct'||completionResult==='reviewed'))playCompletionSound();
   if(freeDictation&&completionResult==='correct'&&sentence?.pending==='free'){
-   const board=layoutRoot.current?.querySelector('.guided-input,.hard-dictation-peek');
+   const board=layoutRoot.current?.querySelector<HTMLElement>('.guided-input,.hard-dictation-peek');
    if(!board)return;
    let stopSweep:(()=>void)|undefined;
-   const cancel=dictationCue.start(()=>{
-    stopSweep=startDictationGoldSweep(board);
-    if(board.matches('.guided-input'))emitExperience([board.getBoundingClientRect()],true,true,particleEffect);
+   const cancel=dictationCue.start(playCue=>{
+    const feedback=()=>{
+     playCue();
+     if(board.matches('.guided-input'))emitExperience([board.getBoundingClientRect()],true,true,particleEffect);
+    };
+    stopSweep=startDictationGoldSweep(board,feedback);
+    if(!stopSweep)feedback();
    });
    return ()=>{cancel();stopSweep?.();};
   }

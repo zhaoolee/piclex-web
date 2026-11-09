@@ -252,14 +252,18 @@ for(const difficulty of ['easy','medium','hard'])test(`fresh free ${difficulty} 
  // The first success must use the original cue even when the standalone WAV
  // is unavailable on a cold network.
  await page.route('**/audio/correct-word.wav',route=>route.abort());
- const wrapped=difficulty==='easy'&&!!info.project.use.hasTouch;
+ const virtual=!!info.project.use.hasTouch&&difficulty!=='hard';
+ const wrapped=difficulty==='easy'&&virtual;
  const letters=wrapped?'Heresmyprogressthesearchfeatureisreadyforreview':'Onetestisfailing';
  await page.goto(progressURL(wrapped?'1':'3',difficulty));
  const answer=page.locator(difficulty==='hard'?'.hard-dictation-peek':'.guided-input');
+ // Force the paint to start after the first frame to reproduce the audio
+ // outrunning the gold when its CSS animation is deferred.
+ if(difficulty==='medium')await page.addStyleTag({content:'.gold-sweep .dictation-gold-text{animation-delay:180ms,900ms!important}'});
  const background=await answer.evaluate(node=>getComputedStyle(node).backgroundColor);
  const url=page.url();
  if(difficulty==='hard')await page.getByRole('textbox',{name:'听写句子'}).pressSequentially(letters);
- else if(wrapped){
+ else if(virtual){
   for(const letter of letters.toLowerCase())await page.locator(`.virtual-key[data-key="${letter}"]`).tap();
  }
  else{
@@ -289,8 +293,8 @@ for(const difficulty of ['easy','medium','hard'])test(`fresh free ${difficulty} 
  await expect.poll(cue).toMatchObject({started:1,ended:1,duration:expect.closeTo(.32,2),output:'running',animation:expect.any(Number)});
  const timing=await cue();
  expect(timing.elapsed).toBeGreaterThanOrEqual(.30);
- expect(Math.abs(timing.scheduled-timing.animation)).toBeLessThan(100);
  await info.attach('completion-cue-timing',{body:JSON.stringify(timing),contentType:'application/json'});
+ expect(Math.abs(timing.scheduled-timing.animation)).toBeLessThan(100);
  if(info.project.name==='desktop'){
   await answer.evaluate(node=>{
    for(const animation of node.getAnimations({subtree:true})){
@@ -323,10 +327,32 @@ test('a delayed cue decode never rings after the sentence feedback has started',
   const url=page.url();
   await page.keyboard.type('Onetestisfailing');
   await expect(board).toHaveClass(/gold-sweep/,{timeout:500});
+  await expect.poll(()=>page.evaluate(()=>(window as any).__cues.animation)).toEqual(expect.any(Number));
   expect(await page.evaluate(()=>(window as any).__cues.started)).toBe(0);
   await releaseAudio();
   await expect.poll(()=>page.evaluate(()=>!!(window as any).__cueBuffer)).toBe(true);
   await expect.poll(()=>page.url()).not.toBe(url);
   expect(await page.evaluate(()=>(window as any).__cues.started)).toBe(0);
  }finally{await releaseAudio().catch(()=>{});}
+});
+
+test('reduced motion still plays the sentence completion cue once',async({page},info)=>{
+ await page.emulateMedia({reducedMotion:'reduce'});
+ await isolateSpeech(page);
+ await observeCompletionCue(page);
+ await page.goto(progressURL('3'));
+ const board=page.locator('.guided-input');
+ const url=page.url();
+ if(info.project.use.hasTouch){
+  for(const letter of 'onetestisfailing')await page.locator(`.virtual-key[data-key="${letter}"]`).tap();
+ }else{
+  await board.locator('input').first().focus();
+  await page.keyboard.type('Onetestisfailing');
+ }
+ await expect(page.locator('.sentence-actions-pending')).toHaveCount(1);
+ await expect(board).not.toHaveClass(/gold-sweep/);
+ const cue=()=>page.evaluate(()=>(window as any).__cues);
+ await expect.poll(cue).toMatchObject({started:1,ended:1,output:'running'});
+ expect((await cue()).animation).toBeUndefined();
+ await expect.poll(()=>page.url()).not.toBe(url);
 });

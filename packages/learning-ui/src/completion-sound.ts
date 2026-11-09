@@ -34,31 +34,29 @@ export function createSynchronizedCompletionSound(){
    resuming=audio.resume().catch(()=>{}).then(()=>{if(context===audio)resuming=undefined;});
   }catch{/* Completion can still show while audio is unavailable. */}
  }
- function start(onStart:()=>void){
-  const audio=context,deadline=performance.now()+MAX_FEEDBACK_WAIT_MS;
-  let pending=true,frame=0,timer:ReturnType<typeof setTimeout>|undefined;
-  const cancel=()=>{pending=false;clearTimeout(timer);cancelAnimationFrame(frame);};
-  const show=(withSound:boolean)=>{
+ function start(onFeedback:(playCue:()=>void)=>void){
+  const audio=context;
+  let pending=true,cancelled=false,played=false,timer:ReturnType<typeof setTimeout>|undefined;
+  const cancel=()=>{pending=false;cancelled=true;clearTimeout(timer);};
+  const show=()=>{
    if(!pending)return;
    pending=false;clearTimeout(timer);
    if(document.hidden)return;
-   onStart();
-   if(withSound&&audio)frame=requestAnimationFrame(()=>{
-    // Use the first rendering opportunity for the gold and particle effects,
-    // so a delayed frame does not play the audio before the feedback appears.
-    if(document.hidden||audio!==context||audio.state!=='running'||!buffer)return;
+   onFeedback(()=>{
+    if(cancelled||played||document.hidden||!audio||audio!==context||audio.state!=='running'||!buffer)return;
+    played=true;
     try{
      const cue=audio.createBufferSource();cue.buffer=buffer;cue.connect(audio.destination);
      cue.onended=()=>cue.disconnect();cue.start();
     }catch{/* Completion can still show while audio is unavailable. */}
    });
   };
-  if(!audio||audio.state==='running'&&buffer)show(true);
+  if(!audio||audio.state==='running'&&buffer)show();
   else{
-   // If playback is blocked or the file arrives late, show the feedback
-   // promptly and discard the stale cue rather than ringing on the next item.
-   timer=setTimeout(()=>show(false),MAX_FEEDBACK_WAIT_MS);
-   void Promise.all([prepare(),resuming]).then(()=>show(performance.now()<=deadline));
+   // Bound the wait for visual feedback. Audio still gets one opportunity
+   // when the animation actually starts, even if rendering was deferred.
+   timer=setTimeout(show,MAX_FEEDBACK_WAIT_MS);
+   void Promise.all([prepare(),resuming]).then(show);
   }
   return cancel;
  }
