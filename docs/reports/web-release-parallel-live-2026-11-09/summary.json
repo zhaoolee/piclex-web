@@ -1,0 +1,86 @@
+{
+  "releaseID": "e42ba86dd56e-bea6db9931df",
+  "sourceRevision": "e42ba86dd56e9e91a13200f49265aa0c89a3e054",
+  "candidateRun": 42561064210,
+  "releaseRun": 42562535960,
+  "officialPreparationSeconds": 898.0,
+  "candidateStartToProductionVerifiedSeconds": 995.17,
+  "mirrorPreparation": {
+    "deltaUploadSeconds": 10.407,
+    "uploadedFiles": 119,
+    "uploadedBytes": 41068131,
+    "assemblySeconds": 14.748,
+    "manifestFiles": 1209
+  },
+  "formalRelease": {
+    "totalSeconds": 50.619,
+    "within60Seconds": true,
+    "elapsedEvents": {
+      "preflightStarted": 0.0,
+      "preflightPassed": 1.172,
+      "githubDispatched": 2.86,
+      "mirrorRequested": 2.951,
+      "mirrorCutoverObserved": 30.013,
+      "pagesPublic": 36.991,
+      "pagesExtraAssetsVerified": 37.88,
+      "pagesBehavior": 43.245,
+      "mirrorServiceComplete": 47.379,
+      "mirrorVerified": 47.511,
+      "githubComplete": 50.616
+    },
+    "githubRunSeconds": 46.0,
+    "githubStageDurations": {
+      "dependencies": 1.432,
+      "docker": 4.534,
+      "pages": 16.12,
+      "live": 8.691
+    },
+    "mirrorStageDurations": {
+      "candidate": 1.318,
+      "lock": 0.0,
+      "previous": 1.942,
+      "populate": 5.606,
+      "hashes": 3.674,
+      "isolatedNginx": 3.473,
+      "authorization": 4.258,
+      "installCandidate": 5.862,
+      "cutover": 0.002,
+      "liveHttp": 5.63,
+      "cleanup": 11.2
+    }
+  },
+  "gates": {
+    "nodePassed": 339,
+    "deployPassed": 59,
+    "browserPassed": 689,
+    "browserExistingSkipped": 4,
+    "performanceRoundsPassed": 24,
+    "performanceMaxMainTaskMs": 18.227,
+    "performanceMaxFrameGapMs": 33.4
+  },
+  "production": {
+    "pages": "https://zhaoolee.com/piclex-web/",
+    "mirror": "https://piclex.v2fy.com/piclex-web/",
+    "dockerLatestDigest": "sha256:f48f0efe6854098e0f026b76a5be30921193e1df65b7d7e6892044e0b743f882",
+    "imagePlatforms": [
+      "linux/amd64",
+      "linux/arm64"
+    ],
+    "verifiedAssetsPerSite": 17,
+    "mirrorRetainedReleases": [
+      "e42ba86dd56e-bea6db9931df"
+    ],
+    "pickerTouchViewport": [
+      390,
+      844
+    ],
+    "pickerCardHeightBeforeAndAfterStatusPx": [
+      284,
+      284
+    ],
+    "previousReleaseCardHeightBeforeAndAfterStatusPx": [
+      284,
+      301
+    ]
+  }
+}

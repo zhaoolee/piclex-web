@@ -69,7 +69,7 @@ CI=1 npm run test:browser -- tests/browser/webdav-backup.spec.ts
 gh workflow run release.yml --ref main -f revision="$RELEASE_SHA"
 ```
 
-当前目标是发布触发到所需线上确认完成不超过60秒，包含GitHub排队；实测前不保证该数字。完整候选准备时间单列，未准备好时不允许发布，不将失败检查排除计时后冒充成功。国内站仍使用现有标准更新器和完整文件/安全清理校验；当前sudo要求密码且没有CI部署凭据，此部分尚未自动化，不能将Pages/Docker成功称作双站目标达成。
+双站发布按[并行发布步骤](../deploy/README.md#并行发布候选)操作，传入确切的候选运行 ID。国内站通过已有 SSH 身份触发现有 systemd 服务，可与 Pages 和 Docker 并行校验、切换。一次性安装完成后，常规发布无需 sudo。完整候选准备另计，60 秒目标从生产发布预检开始，包含 GitHub 排队、两站和 Docker 切换、资源校验、国内站清理及实际页面操作。
 
 
 ## 按模块选测（2026-11-08）
