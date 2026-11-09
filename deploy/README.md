@@ -75,7 +75,7 @@ sudo python3 -B /home/hermes/piclex-web/deploy/auto-update-public.py
 
 国内站可以提前暂存经过完整门禁的 GitHub Pages 产物差异。生产切换仍通过原有 systemd 服务和发布锁。只有指定的 GitHub 正式发布运行进入受保护环境并通过候选检查后才可切换，候选 SHA 和运行 ID 在两端一致。GitHub API 回执、原始清单压缩包摘要、完整文件哈希、回环 Nginx、源站和公网验收及清理均保留。
 
-候选准备阶段运行以下命令，保存输出的 JSON。若已下载该运行的 Pages artifact.tar，传入 `--pages-tar` 避免重复下载。此命令只写 `incoming/verified-<run>`，与发布计时分开。
+候选准备阶段运行以下命令，保存输出的 JSON。若已下载该运行的 Pages artifact.tar，传入 `--pages-tar` 避免重复下载。先将差异上传到 `incoming/verified-<run>`，再在现有发布锁内组装并核对 `releases/<releaseID>`。正式阶段仍由管理员服务完整校验后切换。暂存和组装与发布计时分开。
 
 ```sh
 python3 -B deploy/stage-verified-release.py --candidate-run "$CANDIDATE_RUN" --revision "$REVISION" > mirror-stage.json

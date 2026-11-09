@@ -30,6 +30,22 @@ function publicJSON(url){
   return JSON.parse(bytes.toString('utf8'));
 }
 
+// Official feeds can use root-relative public resource paths. Resolve them
+// against their feed and leave final origin, path and digest validation intact.
+function publishedDeck(deck, sourceURL) {
+  const absolute = value => typeof value === 'string' &&
+    /^\/(?:decks|public\/subscriptions|piclex-web\/library)\/[a-zA-Z0-9/._-]+$/.test(value)
+    && value.slice(1).split('/').every(part => part && !part.startsWith('.'))
+    ? new URL(value, sourceURL).href : value;
+  const result = {...deck, sourceURL, packageURL: absolute(deck.packageURL), coverURL: absolute(deck.coverURL)};
+  if (deck.covers && typeof deck.covers === 'object') {
+    result.covers = Object.fromEntries(Object.entries(deck.covers).map(([role, cover]) => [
+      role, cover && typeof cover === 'object' ? {...cover, url: absolute(cover.url)} : cover,
+    ]));
+  }
+  return result;
+}
+
 export function mergePublished(snapshot,feeds,previousCatalogs=[]){
   const changed=[];
   const existing=new Set(snapshot.decks.map(deck=>deck.deckID));
@@ -52,7 +68,7 @@ export function mergePublished(snapshot,feeds,previousCatalogs=[]){
     }
     const progressAliases=[...aliases].filter(value=>hash.test(value));
     if(progressAliases.length>100)throw Error(`Too many progress aliases: ${current.title}`);
-    const merged={...latest,sourceURL:current.sourceURL,progressAliases};
+    const merged={...publishedDeck(latest,current.sourceURL),progressAliases};
     // The package parser calculates the new learning fingerprint after checking its bytes.
     delete merged.learningSHA256;
     changed.push(`${current.title}: v${current.version} → v${latest.version}`);
@@ -64,7 +80,7 @@ export function mergePublished(snapshot,feeds,previousCatalogs=[]){
     for(const published of feed.decks){
       if(published?.access!=='public'||existing.has(published.deckID))continue;
       if(decks.some(deck=>deck.deckID===published.deckID))throw Error(`Duplicate new public deck: ${published.deckID}`);
-      decks.push({...published,sourceURL:url});
+      decks.push(publishedDeck(published,url));
       changed.push(`${published.title}: new public deck v${published.version}`);
     }
   }

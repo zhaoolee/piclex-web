@@ -39,3 +39,27 @@ test('new public cards join trusted sources but paid cards remain excluded',()=>
   assert.equal(result.snapshot.decks.at(-1).title,'New public card');
   assert.equal(result.snapshot.decks.at(-1).sourceURL,snapshot.decks[0].sourceURL);
 });
+
+test('updated and new official decks resolve root-relative assets before validating',()=>{
+  const original=snapshot.decks[0],sourceURL=original.sourceURL,origin=new URL(sourceURL).origin;
+  assert.equal(origin,'https://piclex.v2fy.com');
+  const sources=feeds(),source=sources.get(sourceURL);
+  const root='/decks/'+original.deckID+'/v'+(original.version+1)+'-'+original.packageSHA256.slice(0,16)+'/';
+  const relative={...original,version:original.version+1,packageURL:root+'deck.piclexdeck',coverURL:root+'cover.jpg',
+    covers:Object.fromEntries(Object.entries(original.covers).map(([role,cover])=>[
+      role,{...cover,url:root+'cover-'+role+'.jpg'}]))};
+  source.decks[0]=relative;
+  const fresh={...relative,deckID:'eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee'};
+  source.decks.push(fresh);
+  const result=mergePublished(snapshot,sources);
+  assert.equal(result.snapshot.decks[0].packageURL,origin+relative.packageURL);
+  assert.equal(result.snapshot.decks[0].coverURL,origin+relative.coverURL);
+  assert.equal(result.snapshot.decks[0].covers.portrait.url,origin+relative.covers.portrait.url);
+  assert.equal(result.snapshot.decks.at(-1).packageURL,origin+fresh.packageURL);
+  assert.equal(source.decks[0].packageURL,relative.packageURL);
+  for(const packageURL of ['//outside.invalid/decks/asset.piclexdeck','/decks/../private/asset.piclexdeck',
+    'https://outside.invalid/decks/asset.piclexdeck','/other/asset.piclexdeck']){
+    source.decks[0]={...relative,packageURL};
+    assert.throws(()=>mergePublished(snapshot,sources),/公开卡组内容校验失败/);
+  }
+});

@@ -24,6 +24,38 @@ test ! -e "$scratch"
 """
 
 
+# Assemble the exact candidate on the release filesystem ahead of dispatch.
+# PrivateTmp is a separate mount, so the root service should never need a
+# cross-mount rename for a normal parallel release.
+MATERIALIZE = """import fcntl,runpy,sys,tempfile
+from pathlib import Path
+sys.path.insert(0,'/usr/local/lib/piclex-public-updater')
+from verified_candidate import staged_candidate
+from activate import ROOT,LOCK_PATH,verify_release
+updater=runpy.run_path('/usr/local/lib/piclex-public-updater/auto-update-public.py')
+run=int(sys.argv[1]); revision=sys.argv[2]; base=sys.argv[3]
+with staged_candidate(ROOT,run,revision) as (manifest,files), LOCK_PATH.open('r') as lock:
+    updater['validate_manifest'](manifest)
+    fcntl.flock(lock,fcntl.LOCK_EX)
+    pointer=ROOT/'current'
+    if not pointer.is_symlink():raise ValueError('Current mirror pointer is not a symlink')
+    previous=pointer.resolve(strict=True)
+    if previous.parent!=ROOT/'releases' or verify_release(previous)['sourceRevision']!=base:
+        raise ValueError('Current mirror changed during staging')
+    target=ROOT/'releases'/manifest['releaseID']
+    if target.exists() or target.is_symlink():
+        if verify_release(target)!=manifest:raise ValueError('Staged release ID collision')
+    else:
+        with tempfile.TemporaryDirectory(prefix='piclex-prepare-',dir=ROOT/'incoming') as name:
+            stage=Path(name)
+            updater['populate'](stage,manifest,previous,files,reuse_links=False)
+            if verify_release(stage)!=manifest or pointer.resolve(strict=True)!=previous:
+                raise ValueError('Candidate or current changed during assembly')
+            stage.rename(target)
+    print(target.name)
+"""
+
+
 def gh_read(path):
     return json.loads(subprocess.check_output(['gh', 'api', f'repos/{REPO}{path}'], timeout=30))
 
@@ -92,6 +124,13 @@ def stage(host, run_id, revision, local_tar=None):
         command = 'bash -c ' + quote(UPLOAD) + f' _ verified-{run_id}'
         with upload.open('rb') as stream:
             subprocess.run(ssh(host, command), stdin=stream, check=True, timeout=480)
+    if previous['sourceRevision'] != revision:
+        assembled = subprocess.check_output(
+            ssh(host, f'python3 -B - {run_id} {revision} {previous["sourceRevision"]}'),
+            input=MATERIALIZE.encode(), timeout=150,
+        ).decode().strip().splitlines()[-1]
+        if assembled != manifest['releaseID']:
+            raise ValueError('Assembled mirror release does not match the verified candidate')
     return {'candidateRun': run_id, 'revision': revision, 'previousRevision': previous['sourceRevision'],
             'releaseID': manifest['releaseID'], 'uploadedFiles': len(names)}
 
