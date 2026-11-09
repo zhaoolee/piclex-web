@@ -1,3 +1,5 @@
+import cueDataURL from '../../../apps/public/public/audio/correct-word.wav?inline';
+
 // Same independent two-voice success cue as App PracticeView.
 const soundURL=`${import.meta.env.BASE_URL}audio/correct-word.wav`;
 let voices:HTMLAudioElement[]=[];let index=0;
@@ -17,9 +19,11 @@ export function createSynchronizedCompletionSound(){
  let buffer:AudioBuffer|undefined,loading:Promise<void>|undefined;
  let context:AudioContext|undefined,resuming:Promise<void>|undefined;
  function prepare(){
-  loading??=fetch(soundURL).then(async response=>{
-   if(!response.ok)throw Error('Completion audio unavailable');
-   buffer=await new OfflineAudioContext(1,1,48000).decodeAudioData(await response.arrayBuffer());
+  // Bundle the original cue so a cold connection cannot delay the first
+  // dictation success beyond its animation.
+  loading??=Promise.resolve().then(async()=>{
+   const wav=Uint8Array.from(atob(cueDataURL.slice(cueDataURL.indexOf(',')+1)),char=>char.charCodeAt(0));
+   buffer=await new OfflineAudioContext(1,1,48000).decodeAudioData(wav.buffer);
   }).catch(()=>{loading=undefined;});
   return loading;
  }

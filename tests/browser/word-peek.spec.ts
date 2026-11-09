@@ -249,6 +249,9 @@ async function observeCompletionCue(page:Page){
 for(const difficulty of ['easy','medium','hard'])test(`fresh free ${difficulty} completion lights the full answer and plays the spelling cue once`,async({page},info)=>{
  await isolateSpeech(page);
  await observeCompletionCue(page);
+ // The first success must use the original cue even when the standalone WAV
+ // is unavailable on a cold network.
+ await page.route('**/audio/correct-word.wav',route=>route.abort());
  const wrapped=difficulty==='easy'&&!!info.project.use.hasTouch;
  const letters=wrapped?'Heresmyprogressthesearchfeatureisreadyforreview':'Onetestisfailing';
  await page.goto(progressURL(wrapped?'1':'3',difficulty));
@@ -304,12 +307,15 @@ for(const difficulty of ['easy','medium','hard'])test(`fresh free ${difficulty} 
  expect((await cue()).started).toBe(1);
 });
 
-test('a delayed cue file never rings after the sentence feedback has started',async({page})=>{
+test('a delayed cue decode never rings after the sentence feedback has started',async({page})=>{
  await isolateSpeech(page);
  await observeCompletionCue(page);
- let releaseAudio!:()=>void;
- const gate=new Promise<void>(resolve=>{releaseAudio=resolve;});
- await page.route('**/audio/correct-word.wav',async route=>{await gate;await route.continue();});
+ await page.addInitScript(()=>{
+  const decode=OfflineAudioContext.prototype.decodeAudioData;
+  const gate=new Promise<void>(resolve=>{(window as any).__releaseCueDecode=resolve;});
+  OfflineAudioContext.prototype.decodeAudioData=function(data){return gate.then(()=>decode.call(this,data));};
+ });
+ const releaseAudio=()=>page.evaluate(()=>(window as any).__releaseCueDecode?.());
  try{
   await page.goto(progressURL('3'));
   const board=page.locator('.guided-input');
@@ -318,9 +324,9 @@ test('a delayed cue file never rings after the sentence feedback has started',as
   await page.keyboard.type('Onetestisfailing');
   await expect(board).toHaveClass(/gold-sweep/,{timeout:500});
   expect(await page.evaluate(()=>(window as any).__cues.started)).toBe(0);
-  releaseAudio();
+  await releaseAudio();
   await expect.poll(()=>page.evaluate(()=>!!(window as any).__cueBuffer)).toBe(true);
   await expect.poll(()=>page.url()).not.toBe(url);
   expect(await page.evaluate(()=>(window as any).__cues.started)).toBe(0);
- }finally{releaseAudio();}
+ }finally{await releaseAudio().catch(()=>{});}
 });
