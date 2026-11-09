@@ -49,3 +49,50 @@ test('advancing original audio clears preparation even when playing notification
  await expect.poll(()=>page.evaluate(()=>{const a=(window as any).__advancing.at(-1);return a?.currentTime/a?.duration||0;})).toBeGreaterThanOrEqual(.5);
  await page.getByRole('button',{name:'暂停',exact:true}).click();expect(Number(await slider.inputValue())).toBeGreaterThanOrEqual(500);
 });
+
+test('Galway Girl preloads the next recording and advances without a new network wait',async({page},info)=>{
+ const [first,next]=payload.words.filter((word:any)=>word.occurrenceID?.startsWith('SONG-GALWAY-'));
+ const requests:string[]=[];
+ await page.route(url=>url.pathname.endsWith('/'+next.audio.path),async route=>{
+  requests.push(route.request().resourceType());
+  await new Promise(resolve=>setTimeout(resolve,1200));
+  await route.continue();
+ });
+ await page.addInitScript(({firstPath,nextPath})=>{
+  const w=window as any,Original=window.Audio;
+  w.__songTransition={players:[],speech:0};
+  const transition=w.__songTransition;
+  Object.defineProperty(window,'speechSynthesis',{configurable:true,value:{getVoices:()=>[],speak(){transition.speech++;},cancel(){}}});
+  w.Audio=class extends Original{
+   constructor(src?:string){
+    super(src);this.muted=true;
+    if(!src)return;
+    if(src.endsWith(firstPath)){
+     transition.players.push(this);
+     this.addEventListener('ended',()=>{transition.firstEnd=performance.now();},{once:true});
+    }else if(src.endsWith(nextPath)||src.startsWith('blob:')){
+     transition.players.push(this);
+     this.addEventListener('playing',()=>{transition.nextStart=performance.now();transition.next=this;},{once:true});
+    }
+   }
+  };
+ },{firstPath:first.audio.path,nextPath:next.audio.path});
+ await page.goto('/piclex-web/#/deck/'+song.id+'?module=listening&mode=listening&photo=1');
+ await page.getByLabel('循环方式').selectOption('once');
+ expect(requests).toEqual([]);
+ await page.getByRole('button',{name:'播放',exact:true}).click();
+ const read=()=>page.evaluate(()=>{
+  const {firstEnd,nextStart,next,speech}=(window as any).__songTransition;
+  return {firstEnd,nextStart,elapsed:next?.currentTime||0,speech};
+ });
+ await expect.poll(async()=>(await read()).elapsed,{timeout:12000}).toBeGreaterThan(.1);
+ await expect(page.getByLabel('播放列表位置')).toHaveText(new RegExp('^2/'));
+ const timing=await read();
+ await info.attach('song-transition',{body:JSON.stringify({...timing,requests,gap:timing.nextStart-timing.firstEnd}),contentType:'application/json'});
+ expect(timing.speech).toBe(0);
+ expect(timing.nextStart-timing.firstEnd).toBeGreaterThanOrEqual(0);
+ expect(timing.nextStart-timing.firstEnd).toBeLessThan(650);
+ expect(requests).toEqual(['fetch']);
+ await page.getByRole('button',{name:'暂停',exact:true}).click();
+ expect(await page.evaluate(()=>(window as any).__songTransition.players.every((a:HTMLAudioElement)=>a.paused&&!a.getAttribute('src')))).toBe(true);
+});

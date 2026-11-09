@@ -44,6 +44,11 @@ export type AudioClip={mediaType:string;sha256:string;byteCount:number;durationS
 export type Word={audio?:AudioClip;id:string;english:string;chinese:string;imageIndex:number;focus:Focus;example:string;exampleChinese:string;phonetic:string;partOfSpeech:string;occurrenceID?:string};
 export type PracticeDeck={id:string;title:string;fingerprint:string;legacyFingerprints?:string[];studySources?:any[];words:Word[];images:string[]};
 type Action={type:string;[key:string]:unknown};
+function recordingFor(words:Word[],prompt?:{wordIndex:number;sentence:string}){
+ if(!prompt)return;
+ const word=words[prompt.wordIndex];
+ return word?.example.trim()===prompt.sentence.trim()?word.audio:undefined;
+}
 const StablePhotoFocus=memo(PhotoFocus);
 const modes=[['listening','随身听'],['chunks','词块拼句'],['free','自由听写']];
 const modules=[['spelling','拼单词'],['listening','练听力'],['speaking','练口语']];
@@ -156,18 +161,20 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,loadP
  const freeDictation=state.module==='listening'&&state.mode==='free';
  const readingContinuation=useRef(false),readingSaved=useRef(new Map<string,ReadingDraft>()),audio=useSpeech(notify,freeDictation),prompts=useMemo(()=>promptsFor(deck),[deck]);
  const prompt=prompts[state.sentenceIndex],word=deck.words[state.index],draft=wordDraft(deck,state),sentence=prompt?(state.sentences[prompt.key]||newSentence(prompt)):null;
- const promptWord=prompt?deck.words[prompt.wordIndex]:undefined,promptAudio=promptWord?.example.trim()===prompt?.sentence.trim()?promptWord?.audio:undefined;
+ const promptAudio=recordingFor(deck.words,prompt);
  const active=visible&&!panel,complete=!word,playback=state.module==='listening'&&state.mode==='listening';
  const sentenceResult=sentence?.outcomes[state.mode],check=sentence?.checks[state.mode],revealed=sentence?.revealed.includes(state.mode);
  const layoutRoot=useRef<HTMLElement>(null),dictationFocus=useRef<HTMLInputElement|HTMLTextAreaElement|null>(null);
  const ambienceControl=useSentenceAmbience({active:active&&!complete&&state.module!=='speaking',speaking:audio.playing});
  const playlist=useMemo(()=>listeningPlaylist(prompts,deck.words,onePhoto,prompt?.key),[prompts,deck.words,onePhoto,prompt?.key]);
+ const nextListeningIndex=playback?listeningNeighbor(playlist,state.sentenceIndex,1):state.sentenceIndex;
+ const nextRecording=playback&&nextListeningIndex!==state.sentenceIndex?recordingFor(deck.words,prompts[nextListeningIndex]):undefined;
  const photos=useMemo(()=>new PhotoCache(),[deck]);
  const upcoming=useMemo(()=>upcomingPhotos(deck,state,prompts,playlist),[deck,state.index,state.module,state.mode,state.sentenceIndex,state.sentenceFinished,state.quick,state.history,prompts,playlist]);
  const photoWindow=JSON.stringify(upcoming);
  useEffect(()=>{photos.setWindow(deck.images[word?.imageIndex],visible?upcoming:[]);},[photos,word?.imageIndex,photoWindow,visible]);
  useEffect(()=>()=>photos.setWindow(undefined),[photos]);
- const skipListening=(offset:number)=>{audio.stop();setPass(0);setSeek(0);setSeekRevision(n=>n+1);dispatch({type:'listeningJump',index:listeningNeighbor(playlist,state.sentenceIndex,offset)});};
+ const skipListening=(offset:number)=>{audio.stopPlayback();setPass(0);setSeek(0);setSeekRevision(n=>n+1);dispatch({type:'listeningJump',index:listeningNeighbor(playlist,state.sentenceIndex,offset)});};
  const pauseListening=()=>{if(listenRun)setSeek(promptAudio?audio.readProgress():Math.max(0,audio.position));setListenRun(false);audio.stop();};
  const pauseListeningRef=useRef(pauseListening);pauseListeningRef.current=pauseListening;
  const navigationAudio=useRef<{module:string;from:string}|null>(null),revealAudio=useRef<string|null>(null);
@@ -277,7 +284,7 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,loadP
   document.addEventListener('click',click);window.addEventListener('focus',focus);
   return()=>{document.removeEventListener('click',click);window.removeEventListener('focus',focus);};
  },[freeDictation,active,key,state.sentenceFinished,sentenceResult]);
- useEffect(()=>{audio.stop();audio.clearError();setImeWarning(false);setComposing(false);if(active&&!complete)focusAnswer();},[key,panel]);
+ useEffect(()=>{if(playback&&active&&listenRun)audio.stopPlayback();else audio.stop();audio.clearError();setImeWarning(false);setComposing(false);if(active&&!complete)focusAnswer();},[key,panel]);
  useEffect(()=>{setSeek(0);setPass(0);},[prompt?.key,state.module,state.mode]);
  useEffect(()=>{if(audio.error)setListenRun(false);},[audio.error]);
  useLayoutEffect(()=>{if(active&&!complete&&(state.module==='spelling'||!state.sentenceFinished))focusAnswer();},[key,panel,state.difficulty,active]);
@@ -339,12 +346,16 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,loadP
    const count=repeat==='single'?Infinity:repeat==='once'?1:5;
    if(pass+1<count){setSeek(0);setPass(p=>p+1);}else{
     setPass(0);setSeek(0);
-    dispatch({type:'listeningJump',index:listeningNeighbor(playlist,state.sentenceIndex,1)});
+    dispatch({type:'listeningJump',index:nextListeningIndex});
     setSeekRevision(n=>n+1);
    }
   },promptAudio?0:seek,promptAudio,promptAudio?seek:0);
-  return audio.stop;
- },[listenRun,active,playback,prompt?.key,pass,repeat,state.rate,seek,seekRevision,onePhoto]);
+  return audio.stopPlayback;
+ },[listenRun,active,playback,prompt?.key,pass,repeat,state.rate,seek,seekRevision,onePhoto,nextListeningIndex]);
+ // Start the current segment first so it can claim the previous preload.
+ useEffect(()=>{
+  audio.preloadClip(active&&listenRun&&repeat!=='single'&&!state.sentenceFinished?nextRecording:undefined);
+ },[audio.preloadClip,active,listenRun,repeat,nextRecording,state.sentenceFinished]);
  useEffect(()=>{
   if(!desktopShortcut)return;
   // Capture Space before EnglishInput can treat it as printable text. Native
@@ -472,7 +483,7 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,loadP
     <Playback play={replay} audio={audio} rate={state.rate} setRate={setRate} shortcut={desktopShortcut} label={word.example?'播放句子和单词':'播放单词'}/>
     {draft.result==='revealed'||draft.result&&!state.pending?<button className="native-primary" onClick={()=>dispatch({type:'next'})}>{state.index+1===deck.words.length?'完成本轮':'下一个'}</button>:<button className="native-primary" disabled={!!draft.result} aria-keyshortcuts={desktopShortcut?'Escape':undefined} onClick={revealWord}>不认识 <kbd className="esc-keycap" aria-hidden="true">Esc</kbd></button>}
    </div>:state.module==='listening'&&prompt&&!state.sentenceFinished?<div className="native-answer-footer sentence-footer">
-    {playback?<><ListeningSeek onBegin={()=>{if(listenRun)setSeek(promptAudio?audio.readProgress():Math.max(0,audio.position));audio.stop();}} audio={audio} prompt={prompt.sentence} original={!!promptAudio} seek={seek} onSeek={value=>{audio.stop();setSeek(value);setSeekRevision(n=>n+1);}}/><div className="listening-metadata"><span aria-label="播放列表位置">{Math.max(0,playlist.indexOf(state.sentenceIndex))+1}/{playlist.length}</span><label className="listening-repeat"><span aria-hidden="true">↻</span><select aria-label="循环方式" value={repeat} onChange={e=>{if(listenRun)setSeek(promptAudio?audio.readProgress():Math.max(0,audio.position));setRepeat(e.target.value);setPass(0);writePreference('piclex-web.listening.repeat',e.target.value);}}>{repeatModes.map(([id,title])=><option key={id} value={id}>{title}</option>)}</select></label><select aria-label="播放速度" disabled={repeat==='fastThreeSlowTwo'} value={repeat==='fastThreeSlowTwo'?(pass<3?1:.75):state.rate} onChange={e=>setRate(Number(e.target.value))}>{rates.map(r=><option key={r} value={r}>{r}×</option>)}</select></div><div className="listening-transport"><button className="native-button" aria-label="上一句" onClick={()=>skipListening(-1)}><span className="transport-skip previous" aria-hidden="true"/></button><button className="native-button" onClick={()=>{if(listenRun)pauseListening();else setListenRun(true);}}>{listenRun?<Icon name="pause"/>:<span className="transport-play" aria-hidden="true"/>}{audio.preparing&&listenRun?'准备中…':listenRun?'暂停':audio.error?'重新准备':'播放'}</button><button className="native-button" aria-label="下一句" onClick={()=>skipListening(1)}><span className="transport-skip" aria-hidden="true"/></button></div></>:<><Playback play={replay} audio={audio} rate={state.rate} setRate={setRate} shortcut={desktopShortcut}/>{sentenceResult&&sentence.pending!==state.mode?<div className="sentence-actions">{state.mode==='chunks'&&sentenceResult==='correct'&&<button className="native-button" onClick={()=>setMode('free')}>挑战自由听写</button>}<button className="native-primary" onClick={()=>dispatch({type:'sentenceNext'})}>下一个</button></div>:<div className={`sentence-actions${sentenceResult?' sentence-actions-pending':''}`} aria-hidden={sentenceResult?true:undefined} inert={!!sentenceResult}><button className="native-primary" aria-keyshortcuts={desktopShortcut&&!sentenceResult?'Escape':undefined} onClick={()=>act({type:'giveUp'})}>听不懂 <kbd className="esc-keycap" aria-hidden="true">Esc</kbd></button></div>}</>}
+    {playback?<><ListeningSeek onBegin={()=>{if(listenRun)setSeek(promptAudio?audio.readProgress():Math.max(0,audio.position));audio.stopPlayback();}} audio={audio} prompt={prompt.sentence} original={!!promptAudio} seek={seek} onSeek={value=>{audio.stopPlayback();setSeek(value);setSeekRevision(n=>n+1);}}/><div className="listening-metadata"><span aria-label="播放列表位置">{Math.max(0,playlist.indexOf(state.sentenceIndex))+1}/{playlist.length}</span><label className="listening-repeat"><span aria-hidden="true">↻</span><select aria-label="循环方式" value={repeat} onChange={e=>{if(listenRun)setSeek(promptAudio?audio.readProgress():Math.max(0,audio.position));setRepeat(e.target.value);setPass(0);writePreference('piclex-web.listening.repeat',e.target.value);}}>{repeatModes.map(([id,title])=><option key={id} value={id}>{title}</option>)}</select></label><select aria-label="播放速度" disabled={repeat==='fastThreeSlowTwo'} value={repeat==='fastThreeSlowTwo'?(pass<3?1:.75):state.rate} onChange={e=>setRate(Number(e.target.value))}>{rates.map(r=><option key={r} value={r}>{r}×</option>)}</select></div><div className="listening-transport"><button className="native-button" aria-label="上一句" onClick={()=>skipListening(-1)}><span className="transport-skip previous" aria-hidden="true"/></button><button className="native-button" onClick={()=>{if(listenRun)pauseListening();else setListenRun(true);}}>{listenRun?<Icon name="pause"/>:<span className="transport-play" aria-hidden="true"/>}{audio.preparing&&listenRun?'准备中…':listenRun?'暂停':audio.error?'重新准备':'播放'}</button><button className="native-button" aria-label="下一句" onClick={()=>skipListening(1)}><span className="transport-skip" aria-hidden="true"/></button></div></>:<><Playback play={replay} audio={audio} rate={state.rate} setRate={setRate} shortcut={desktopShortcut}/>{sentenceResult&&sentence.pending!==state.mode?<div className="sentence-actions">{state.mode==='chunks'&&sentenceResult==='correct'&&<button className="native-button" onClick={()=>setMode('free')}>挑战自由听写</button>}<button className="native-primary" onClick={()=>dispatch({type:'sentenceNext'})}>下一个</button></div>:<div className={`sentence-actions${sentenceResult?' sentence-actions-pending':''}`} aria-hidden={sentenceResult?true:undefined} inert={!!sentenceResult}><button className="native-primary" aria-keyshortcuts={desktopShortcut&&!sentenceResult?'Escape':undefined} onClick={()=>act({type:'giveUp'})}>听不懂 <kbd className="esc-keycap" aria-hidden="true">Esc</kbd></button></div>}</>}
    </div>:null}
   </>}
   {!complete&&(state.module==='spelling'||state.module==='listening'&&state.mode==='free'&&!!prompt&&!state.sentenceFinished)&&<VirtualKeyboard active={active} press={virtualPress} lettersOnly />}

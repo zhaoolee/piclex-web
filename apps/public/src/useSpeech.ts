@@ -5,10 +5,12 @@ import {createPlaybackProgress} from './playback-progress';
 import {createSpeechProgress} from './speech-progress.mjs';
 type PlayRequest={texts:string[];rate:number;onEnd?:()=>void;offset:number;clip?:AudioClip;startFraction:number;automatic?:boolean};
 type PreparedClip={clip:AudioClip;player:HTMLAudioElement;blobURL:string};
+type PreloadedClip={clip:AudioClip;controller:AbortController;blob?:Blob};
+const clipSource=(path:string)=>new URL(import.meta.env.BASE_URL+path,location.href).href;
 const policyError=(error:unknown)=>error instanceof DOMException?error.name==='NotAllowedError':(error as {name?:string})?.name==='NotAllowedError';
 export function useSpeech(notify:(s:string)=>void,preferLocalVoice=false){
  const generation=useRef(0),timer=useRef<ReturnType<typeof setTimeout>|undefined>(undefined),media=useRef<HTMLAudioElement|null>(null);
- const prepared=useRef<PreparedClip|null>(null),speechPending=useRef(false);
+ const prepared=useRef<PreparedClip|null>(null),preloaded=useRef<PreloadedClip|null>(null),speechPending=useRef(false);
  const blockedRequest=useRef<PlayRequest|null>(null),retrying=useRef(false),gestureRetry=useRef(false),confirmed=useRef(false);
  const startupTimer=useRef<ReturnType<typeof setTimeout>|undefined>(undefined);
  const [playing,setPlaying]=useState(false),[preparing,setPreparing]=useState(false),[position,setPosition]=useState(-1),[blocked,setBlocked]=useState(false);
@@ -29,6 +31,24 @@ export function useSpeech(notify:(s:string)=>void,preferLocalVoice=false){
   saved.player.removeAttribute('src');saved.player.load();
   if(saved.blobURL)URL.revokeObjectURL(saved.blobURL);
  },[clearMedia]);
+ const clearPreload=useCallback(()=>{
+  preloaded.current?.controller.abort();
+  preloaded.current=null;
+ },[]);
+ const preloadClip=useCallback((clip?:AudioClip)=>{
+  if(preloaded.current?.clip===clip)return;
+  clearPreload();
+  if(!clip?.path||document.hidden)return;
+  const entry:PreloadedClip={clip,controller:new AbortController()};
+  preloaded.current=entry;
+  // Fetch the small recording explicitly. Media preload is a hint, and
+  // a later media range request need not reuse the fetched HTTP response.
+  void fetch(clipSource(clip.path),{signal:entry.controller.signal,priority:'low'}).then(async response=>{
+   if(!response.ok)return;
+   const blob=await response.blob();
+   if(preloaded.current===entry&&blob.size===clip.byteCount)entry.blob=blob;
+  }).catch(()=>{/* A missed preload still uses the normal media source. */});
+ },[clearPreload]);
  const cancelPlayback=useCallback(()=>{
   // Invalidate callbacks before cancel(): a late onstart/onend must not revive
   // a request that was blocked or replaced.
@@ -41,7 +61,8 @@ export function useSpeech(notify:(s:string)=>void,preferLocalVoice=false){
   // Blocked is a permission status, so an explicit stop keeps the icon while
   // discarding the now-stale request. The next gesture retries current content.
  },[cancelPlayback,progress]);
- const stop=useCallback(()=>{finish();discardClip();},[finish,discardClip]);
+ const stopPlayback=useCallback(()=>{finish();discardClip();},[finish,discardClip]);
+ const stop=useCallback(()=>{stopPlayback();clearPreload();},[stopPlayback,clearPreload]);
  const start=useCallback((next:PlayRequest)=>{
   cancelPlayback();
   setError('');const id=generation.current,queue=next.texts.filter(text=>text.trim());
@@ -88,9 +109,12 @@ export function useSpeech(notify:(s:string)=>void,preferLocalVoice=false){
      // loaded media instead of rebuilding the source and fetching it again.
      if(prepared.current?.clip!==next.clip||prepared.current.player.error){
       discardClip();
+      const cached=preloaded.current?.clip===next.clip?preloaded.current:null;
+      if(cached)clearPreload();
       let blobURL='';
-      if(next.clip.dataBase64){const bytes=Uint8Array.from(atob(next.clip.dataBase64),c=>c.charCodeAt(0));blobURL=URL.createObjectURL(new Blob([bytes],{type:'audio/mpeg'}));}
-      const source=blobURL||(next.clip.path?new URL(import.meta.env.BASE_URL+next.clip.path,location.href).href:'');
+      if(cached?.blob)blobURL=URL.createObjectURL(cached.blob);
+      else if(next.clip.dataBase64){const bytes=Uint8Array.from(atob(next.clip.dataBase64),c=>c.charCodeAt(0));blobURL=URL.createObjectURL(new Blob([bytes],{type:'audio/mpeg'}));}
+      const source=blobURL||(next.clip.path?clipSource(next.clip.path):'');
       if(!source){fail('这张卡片的原音频暂时无法播放。');return;}
       try{prepared.current={clip:next.clip,player:new Audio(source),blobURL};}
       catch(error){if(blobURL)URL.revokeObjectURL(blobURL);throw error;}
@@ -143,7 +167,7 @@ export function useSpeech(notify:(s:string)=>void,preferLocalVoice=false){
    }catch{fail('朗读暂时不可用，请检查浏览器的语音与播放权限。');}
   };
   nextSegment(0);
- },[cancelPlayback,stop,finish,clearMedia,discardClip,notify,preferLocalVoice,progress]);
+ },[cancelPlayback,stop,finish,clearMedia,discardClip,clearPreload,notify,preferLocalVoice,progress]);
  const play=useCallback((texts:string[],rate=1,onEnd?:()=>void,offset=0,clip?:AudioClip,startFraction=0,automatic=false)=>{
   start({texts:[...texts],rate,onEnd,offset,clip,startFraction,automatic});
  },[start]);
@@ -156,5 +180,5 @@ export function useSpeech(notify:(s:string)=>void,preferLocalVoice=false){
  const clearError=useCallback(()=>setError(''),[]);
  const acknowledgeGesture=useCallback(()=>{/* A gesture alone is not evidence of playback permission. */},[]);
  useEffect(()=>{const hide=()=>{if(document.hidden)stop();};document.addEventListener('visibilitychange',hide);window.addEventListener('pagehide',stop);return ()=>{stop();document.removeEventListener('visibilitychange',hide);window.removeEventListener('pagehide',stop);};},[stop]);
- return {blocked,error,clearError,playing,preparing,position,progress,readProgress,play,retryBlocked,acknowledgeGesture,stop};
+ return {blocked,error,clearError,playing,preparing,position,progress,readProgress,play,retryBlocked,acknowledgeGesture,stopPlayback,stop,preloadClip};
 }
