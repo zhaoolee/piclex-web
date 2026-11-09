@@ -23,10 +23,31 @@ test('new correct letters render particles, restored answers do not, and reduced
 test('two tabs award a completed word only once and keep low-level rewards locked',async({page,context})=>{
  await importCafe(page);const second=await context.newPage();await second.goto(page.url());await expect(second.getByRole('textbox',{name:'输入英文'})).toBeVisible();await Promise.all([fillSpelling(page,'croissant'),fillSpelling(second,'croissant')]);for(const p of [page,second])await expect(p.getByRole('button',{name:'等级 LV0，1 经验',exact:true})).toBeVisible();await page.getByRole('button',{name:'设置',exact:true}).click();await page.getByRole('button',{name:'个性化设置',exact:true}).click();await expect(page.getByRole('switch',{name:'快拼',exact:true})).toBeDisabled();await page.getByRole('button',{name:/^键盘声音/}).click();await expect(page.getByRole('switch',{name:'键盘敲击音',exact:true})).toBeEnabled();await expect(page.getByRole('switch',{name:'键盘敲击音',exact:true})).toBeChecked();await second.close();
 });
-test('the native game loads local assets, pauses, saves before changing tabs, and resumes',async({page},info)=>{
+test('the native game loads local assets, pauses without the App tabs, saves by returning to the lab, and resumes',async({page},info)=>{
  await page.setViewportSize({width:844,height:390});const bad:string[]=[];page.on('pageerror',e=>bad.push(e.message));const failed:string[]=[];page.on('response',r=>{if(r.url().includes('/lab/assets/')&&r.status()>=400)failed.push(r.url());});
- await page.goto('/piclex-web/#/settings');await page.getByRole('button',{name:'个性化设置',exact:true}).click();await page.getByRole('button',{name:'实验室',exact:true}).click();await page.getByRole('button',{name:/薯薯求生/}).click();const game=page.frameLocator('iframe');await game.getByRole('button',{name:'开始冒险',exact:true}).click();await game.getByRole('button',{name:'暂停',exact:true}).click();await expect(game.getByRole('heading',{name:'已暂停',exact:true})).toBeVisible();await page.screenshot({path:`test-results/game-paused-${info.project.name}.png`});
- await page.getByRole('navigation',{name:'底部导航'}).getByRole('button',{name:'学习',exact:true}).click();await expect(page.locator('iframe')).toHaveCount(0);await page.getByRole('navigation',{name:'底部导航'}).getByRole('button',{name:'设置',exact:true}).click();await page.getByRole('button',{name:'个性化设置',exact:true}).click();await page.getByRole('button',{name:'实验室',exact:true}).click();await page.getByRole('button',{name:/薯薯求生/}).click();await expect(game.getByRole('button',{name:/继续冒险 · 第 1 波/})).toBeVisible();expect(failed).toEqual([]);expect(bad).toEqual([]);
+ await page.goto('/piclex-web/#/settings');
+ await page.getByRole('button',{name:'个性化设置',exact:true}).click();
+ await page.getByRole('button',{name:'实验室',exact:true}).click();
+ await page.getByRole('button',{name:/薯薯求生/}).click();
+ const game=page.frameLocator('iframe');
+ await game.getByRole('button',{name:'开始冒险',exact:true}).click();
+ await game.getByRole('button',{name:'暂停',exact:true}).click();
+ await expect(game.getByRole('heading',{name:'已暂停',exact:true})).toBeVisible();
+ await page.screenshot({path:`test-results/game-paused-${info.project.name}.png`});
+ const tabs=page.getByRole('navigation',{name:'底部导航'});
+ await expect(tabs).toHaveCount(0);
+ await game.locator('.topbar').getByRole('button',{name:'返回实验室',exact:true}).click();
+ await expect(page.locator('iframe')).toHaveCount(0);
+ await expect(tabs).toBeVisible();
+ await tabs.getByRole('button',{name:'学习',exact:true}).click();
+ await expect(page.locator('iframe')).toHaveCount(0);
+ await tabs.getByRole('button',{name:'设置',exact:true}).click();
+ await page.getByRole('button',{name:'个性化设置',exact:true}).click();
+ await page.getByRole('button',{name:'实验室',exact:true}).click();
+ await page.getByRole('button',{name:/薯薯求生/}).click();
+ await expect(game.getByRole('button',{name:/继续冒险 · 第 1 波/})).toBeVisible();
+ expect(failed).toEqual([]);
+ expect(bad).toEqual([]);
 });
 
 test('one App shell adapts at 320, 390, 768 and 1440px without hiding navigation or controls',async({page},info)=>{

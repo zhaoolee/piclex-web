@@ -329,7 +329,7 @@ function App() {
       <section className="home-app"><div className="app-icon"><img src={asset("brand/app-icon.png")} alt=""/></div><div><h2>你的照片，就是你的词书。</h2><p>用摄影学英语 iPhone App 拍照制卡，在自己的生活里持续练习。</p></div><a className="secondary" href={appStore} target="_blank" rel="noreferrer">探索 iPhone App <Icon name="arrow"/></a></section>
     </main>}
     </div>
-    <GlassTabs selected={page==='capture'?'capture':page==='learn'?'learn':'settings'} onSelect={id=>{if(id==='learn'){startLearning();}else navigate(`/${id}`);}}/>
+    {page==='lab'?null:<GlassTabs selected={page==='capture'?'capture':page==='learn'?'learn':'settings'} onSelect={id=>{if(id==='learn'){startLearning();}else navigate(`/${id}`);}}/>}
     <input ref={file} className="file-input" type="file" accept=".piclexdeck" aria-label="选择照片卡组文件" onChange={e => void importFile(e.target.files?.[0])}/>
     {notice && <div className="toast" role="status"><span>{notice}</span><button aria-label="关闭提示" onClick={() => setNotice('')}><Icon name="close"/></button></div>}
   </>;
