@@ -4,9 +4,11 @@ import type {AudioClip} from './NativePractice';
 import {createPlaybackProgress} from './playback-progress';
 import {createSpeechProgress} from './speech-progress.mjs';
 type PlayRequest={texts:string[];rate:number;onEnd?:()=>void;offset:number;clip?:AudioClip;startFraction:number;automatic?:boolean};
+type PreparedClip={clip:AudioClip;player:HTMLAudioElement;blobURL:string};
 const policyError=(error:unknown)=>error instanceof DOMException?error.name==='NotAllowedError':(error as {name?:string})?.name==='NotAllowedError';
-export function useSpeech(notify:(s:string)=>void){
- const generation=useRef(0),timer=useRef<ReturnType<typeof setTimeout>|undefined>(undefined),media=useRef<HTMLAudioElement|null>(null),blob=useRef('');
+export function useSpeech(notify:(s:string)=>void,preferLocalVoice=false){
+ const generation=useRef(0),timer=useRef<ReturnType<typeof setTimeout>|undefined>(undefined),media=useRef<HTMLAudioElement|null>(null);
+ const prepared=useRef<PreparedClip|null>(null),speechPending=useRef(false);
  const blockedRequest=useRef<PlayRequest|null>(null),retrying=useRef(false),gestureRetry=useRef(false),confirmed=useRef(false);
  const startupTimer=useRef<ReturnType<typeof setTimeout>|undefined>(undefined);
  const [playing,setPlaying]=useState(false),[preparing,setPreparing]=useState(false),[position,setPosition]=useState(-1),[blocked,setBlocked]=useState(false);
@@ -19,13 +21,19 @@ export function useSpeech(notify:(s:string)=>void){
  const clearMedia=useCallback(()=>{
   clearInterval(mediaClock.current);mediaClock.current=undefined;
   const current=media.current;media.current=null;
-  if(current){current.onended=null;current.onerror=null;current.ontimeupdate=null;current.onplaying=null;current.onwaiting=null;current.onstalled=null;current.onloadedmetadata=null;current.pause();current.removeAttribute('src');current.load();}
-  if(blob.current){URL.revokeObjectURL(blob.current);blob.current='';}
+  if(current){current.onended=null;current.onerror=null;current.ontimeupdate=null;current.onplaying=null;current.onwaiting=null;current.onstalled=null;current.onloadedmetadata=null;current.pause();}
  },[]);
+ const discardClip=useCallback(()=>{
+  const saved=prepared.current;if(!saved)return;
+  clearMedia();prepared.current=null;
+  saved.player.removeAttribute('src');saved.player.load();
+  if(saved.blobURL)URL.revokeObjectURL(saved.blobURL);
+ },[clearMedia]);
  const cancelPlayback=useCallback(()=>{
   // Invalidate callbacks before cancel(): a late onstart/onend must not revive
   // a request that was blocked or replaced.
-  generation.current++;clearTimeout(startupTimer.current);clearTimeout(timer.current);clearInterval(speechClock.current);speechClock.current=undefined;clearMedia();window.speechSynthesis?.cancel();
+  generation.current++;clearTimeout(startupTimer.current);clearTimeout(timer.current);clearInterval(speechClock.current);speechClock.current=undefined;clearMedia();
+  if(speechPending.current){speechPending.current=false;window.speechSynthesis?.cancel();}
  },[clearMedia]);
  const stop=useCallback(()=>{
   cancelPlayback();blockedRequest.current=null;retrying.current=false;
@@ -75,12 +83,19 @@ export function useSpeech(notify:(s:string)=>void){
    // Original audio belongs to this sentence occurrence only; the following word uses TTS.
    if(i===0&&next.clip){
     try{
-     let source='';
-     if(next.clip.dataBase64){const bytes=Uint8Array.from(atob(next.clip.dataBase64),c=>c.charCodeAt(0));source=URL.createObjectURL(new Blob([bytes],{type:'audio/mpeg'}));blob.current=source;}
-     else if(next.clip.path)source=new URL(import.meta.env.BASE_URL+next.clip.path,location.href).href;
-     if(!source){fail('这张卡片的原音频暂时无法播放。');return;}
-     const player=new Audio(source);media.current=player;player.playbackRate=next.rate;player.preservesPitch=true;
-     const failed=()=>{if(media.current===player)fail('原音频播放失败，请检查网络并再次点击播放。');};
+     // Keep just the latest recording attached so replay can seek in its
+     // loaded media instead of rebuilding the source and fetching it again.
+     if(prepared.current?.clip!==next.clip||prepared.current.player.error){
+      discardClip();
+      let blobURL='';
+      if(next.clip.dataBase64){const bytes=Uint8Array.from(atob(next.clip.dataBase64),c=>c.charCodeAt(0));blobURL=URL.createObjectURL(new Blob([bytes],{type:'audio/mpeg'}));}
+      const source=blobURL||(next.clip.path?new URL(import.meta.env.BASE_URL+next.clip.path,location.href).href:'');
+      if(!source){fail('这张卡片的原音频暂时无法播放。');return;}
+      try{prepared.current={clip:next.clip,player:new Audio(source),blobURL};}
+      catch(error){if(blobURL)URL.revokeObjectURL(blobURL);throw error;}
+     }
+     const player=prepared.current.player;media.current=player;player.playbackRate=next.rate;player.preservesPitch=true;
+     const failed=()=>{if(current()&&media.current===player){discardClip();fail('原音频播放失败，请检查网络并再次点击播放。');}};
      let observedTime=0;
      const time=()=>{if(media.current!==player||!current())return;
       // Some media backends omit/reorder playing after a seek. A moving decoded
@@ -90,19 +105,20 @@ export function useSpeech(notify:(s:string)=>void){
      };
      player.onplaying=()=>{if(media.current===player){started();time();}};
      player.onwaiting=player.onstalled=()=>{if(valid()&&media.current===player&&player.readyState<3)setPreparing(true);};
-     player.onloadedmetadata=()=>{if(!valid()||media.current!==player)return;if(Number.isFinite(player.duration)&&player.duration>0)player.currentTime=player.duration*Math.min(.999,Math.max(0,next.startFraction));time();};
+     const seek=()=>{if(!current()||media.current!==player)return;if(Number.isFinite(player.duration)&&player.duration>0)player.currentTime=player.duration*Math.min(.999,Math.max(0,next.startFraction));time();};
+     if(player.readyState>=1)seek();else player.onloadedmetadata=seek;
      player.ontimeupdate=time;player.onerror=failed;
      // Like App, sample the actual audio clock; a stall cannot advance the fill.
      mediaClock.current=setInterval(time,33);
      player.onended=()=>{if(!valid()||media.current!==player)return;clearMedia();ended();};
-     void player.play().then(()=>{if(media.current===player&&current()&&!player.paused)started();}).catch(error=>{if(media.current!==player)return;if(policyError(error))block(0);else failed();});
-    }catch(error){if(policyError(error))block(0);else fail('这张卡片的原音频暂时无法播放。');}
+     void player.play().then(()=>{if(media.current===player&&current()&&!player.paused)started();}).catch(error=>{if(!current()||media.current!==player)return;if(policyError(error))block(0);else failed();});
+    }catch(error){if(policyError(error))block(0);else{discardClip();fail('这张卡片的原音频暂时无法播放。');}}
     return;
    }
    if(!window.speechSynthesis){fail('此浏览器没有提供英文朗读功能。');return;}
    try{
     const utterance=new SpeechSynthesisUtterance(queue[i]);utterance.lang='en-US';utterance.rate=next.rate;
-    const voice=selectedSpeechVoice();if(voice)utterance.voice=voice;
+    const voice=selectedSpeechVoice(preferLocalVoice);if(voice)utterance.voice=voice;
     let clock:ReturnType<typeof createSpeechProgress>|undefined,paused=false;
     const begin=()=>{
      if(!current()||clock)return;
@@ -119,13 +135,14 @@ export function useSpeech(notify:(s:string)=>void){
     utterance.onresume=()=>{if(current()){paused=false;clock?.setPaused(false,performance.now());}};
     // Let the short completion animation finish before hiding the button's
     // fill. The next segment still starts after the established 180 ms gap.
-    utterance.onend=()=>ended(180);
-    utterance.onerror=e=>{if(!current())return;if(e.error==='not-allowed')block(i);else fail(['interrupted','canceled'].includes(e.error)?undefined:'朗读暂时不可用，请检查浏览器的语音与播放权限。');};
+    utterance.onend=()=>{if(!current())return;speechPending.current=false;ended(180);};
+    utterance.onerror=e=>{if(!current())return;speechPending.current=false;if(e.error==='not-allowed')block(i);else fail(['interrupted','canceled'].includes(e.error)?undefined:'朗读暂时不可用，请检查浏览器的语音与播放权限。');};
+    speechPending.current=true;
     speechSynthesis.speak(utterance);
    }catch{fail('朗读暂时不可用，请检查浏览器的语音与播放权限。');}
   };
   nextSegment(0);
- },[cancelPlayback,stop,clearMedia,notify,progress]);
+ },[cancelPlayback,stop,clearMedia,discardClip,notify,preferLocalVoice,progress]);
  const play=useCallback((texts:string[],rate=1,onEnd?:()=>void,offset=0,clip?:AudioClip,startFraction=0,automatic=false)=>{
   start({texts:[...texts],rate,onEnd,offset,clip,startFraction,automatic});
  },[start]);
@@ -137,6 +154,6 @@ export function useSpeech(notify:(s:string)=>void){
  },[start]);
  const clearError=useCallback(()=>setError(''),[]);
  const acknowledgeGesture=useCallback(()=>{/* A gesture alone is not evidence of playback permission. */},[]);
- useEffect(()=>{const hide=()=>{if(document.hidden)stop();};document.addEventListener('visibilitychange',hide);window.addEventListener('pagehide',stop);return ()=>{stop();document.removeEventListener('visibilitychange',hide);window.removeEventListener('pagehide',stop);};},[stop]);
+ useEffect(()=>{const hide=()=>{if(document.hidden)stop();};document.addEventListener('visibilitychange',hide);window.addEventListener('pagehide',stop);return ()=>{stop();discardClip();document.removeEventListener('visibilitychange',hide);window.removeEventListener('pagehide',stop);};},[discardClip,stop]);
  return {blocked,error,clearError,playing,preparing,position,progress,readProgress,play,retryBlocked,acknowledgeGesture,stop};
 }

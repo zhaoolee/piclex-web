@@ -41,35 +41,64 @@ test('gradient stays on the ring surface through resize, pause and reduced motio
  await page.screenshot({path:info.outputPath('ring.png')});
 });
 
-test('background gain stays below keys when media volume is read-only, ducks for typing and recovers',async({page},info)=>{
- await observeAmbienceMix(page,true);await open(page);
- const press=async(key:string)=>{const button=page.getByRole('button',{name:`按键 ${key}`,exact:true});if(info.project.use.hasTouch)await button.tap();else await button.click();};
+test('background gain and media clock stay steady through typing, and duck only for playback',async({page},info)=>{
+ await observeAmbienceMix(page,true);
+ await page.addInitScript(()=>{
+  const w=window as any,play=HTMLMediaElement.prototype.play;
+  w.__keyPlays=0;
+  HTMLMediaElement.prototype.play=function(){if(this.src.endsWith('/cherry-mx-blue.mp3'))w.__keyPlays++;return play.call(this);};
+  Object.defineProperty(window,'speechSynthesis',{configurable:true,value:{
+   getVoices:()=>[],cancel(){},speak(utterance:SpeechSynthesisUtterance){queueMicrotask(()=>{
+    utterance.onstart?.(new Event('start') as SpeechSynthesisEvent);
+    if(w.__holdSpeech)w.__utterance=utterance;else utterance.onend?.(new Event('end') as SpeechSynthesisEvent);
+   });}
+  }});
+ });
+ await open(page);
+ const field=page.getByRole('textbox',{name:'输入英文',exact:true});
  await page.locator('.sentence-ambience summary').click();
  await expect.poll(()=>page.evaluate(()=>{const m=(window as any).__ambienceMixes.at(-1);return m&&!m.sound.paused&&m.sound.currentTime>0&&m.context.state==='running';})).toBe(true);
  await expect.poll(()=>ambienceGain(page)).toBeCloseTo(.28*.22,3);
  expect(await page.evaluate(()=>(window as any).__ambienceMixes.at(-1).sound.volume)).toBe(1);
  await page.getByLabel('背景声音量').selectOption('0.45');await expect.poll(()=>ambienceGain(page)).toBeCloseTo(.45*.22,3);
  await page.locator('.sentence-ambience summary').click();
- // Sample the actual AudioParam during each duck. The 280 ms window can end
- // before a slow Linux browser returns from Playwright's click action.
- await page.evaluate(()=>{const w=window as any;w.__duckSamples=[];window.addEventListener('piclex-typing-sound',()=>{
-  setTimeout(()=>w.__duckSamples.push(w.__ambienceMixes.at(-1)?.node.gain.value),60);
- });});
- await press('C');await expect(page.getByRole('textbox',{name:'输入英文',exact:true})).toHaveValue('c');
- await expect.poll(()=>page.evaluate(()=>(window as any).__duckSamples[0])).toBeLessThan(.025);
- await press('R');await expect.poll(()=>page.evaluate(()=>(window as any).__duckSamples[1])).toBeLessThan(.025);
+ await field.focus();
+ await page.evaluate(()=>{
+  const w=window as any,mix=w.__ambienceMixes.at(-1),events:string[]=[],samples:{gain:number;time:number;paused:boolean}[]=[];
+  for(const name of ['pause','waiting','seeking','play'])mix.sound.addEventListener(name,()=>events.push(name));
+  const sample=()=>samples.push({gain:mix.node.gain.value,time:mix.sound.currentTime,paused:mix.sound.paused});
+  sample();const timer=setInterval(sample,12);
+  w.__stopSamples=()=>{clearInterval(timer);return {events,samples,players:w.__ambienceMixes.length,keys:w.__keyPlays};};
+ });
+ for(const key of 'CROI'){
+  if(info.project.use.hasTouch)await page.getByRole('button',{name:`按键 ${key}`,exact:true}).tap();
+  else await page.keyboard.press(key.toLowerCase());
+ }
+ await expect(field).toHaveValue('croi');
+ await page.waitForTimeout(300);
+ const trace=await page.evaluate(()=>(window as any).__stopSamples()) as {events:string[];samples:{gain:number;time:number;paused:boolean}[];players:number;keys:number};
+ expect(trace.players).toBe(1);expect(trace.keys).toBeGreaterThanOrEqual(4);expect(trace.events).toEqual([]);
+ expect(trace.samples.every((sample,i)=>!sample.paused&&(!i||sample.time>=trace.samples[i-1].time))).toBe(true);
+ expect(trace.samples.at(-1)!.time-trace.samples[0].time).toBeGreaterThan(.15);
+ expect(Math.min(...trace.samples.map(sample=>sample.gain))).toBeGreaterThan(.09);
+ await info.attach('typing-background-clock',{body:JSON.stringify(trace),contentType:'application/json'});
+ await page.evaluate(()=>{(window as any).__holdSpeech=true;});
+ await page.getByRole('button',{name:'播放句子和单词',exact:true}).click();
+ await expect.poll(()=>ambienceGain(page)).toBeCloseTo(.45*.22*.22,3);
+ await page.evaluate(()=>{const w=window as any;w.__holdSpeech=false;w.__utterance.onend?.();});
  await expect.poll(()=>ambienceGain(page)).toBeCloseTo(.45*.22,3);
  // Real decoded source samples: even the loudest background at the highest UI
- // level must stay below the default keyboard recording, with extra room while typing.
+ // level must stay below the default keyboard recording.
  const levels=await page.evaluate(async()=>{
   const context=new OfflineAudioContext(2,48000,48000);
   const decode=async(path:string)=>context.decodeAudioData(await(await fetch('/piclex-web/audio/'+path)).arrayBuffer());
   const rms=(buffer:AudioBuffer)=>{let sum=0,count=0;for(let c=0;c<buffer.numberOfChannels;c++){for(const sample of buffer.getChannelData(c)){sum+=sample*sample;count++;}}return Math.sqrt(sum/count);};
   const key=rms(await decode('cherry-mx-blue.mp3')),backgrounds=[];
-  for(const file of ['ambience/cafe.m4a','ambience/piano.m4a']){const buffer=await decode(file),render=new OfflineAudioContext(buffer.numberOfChannels,buffer.length,buffer.sampleRate),source=render.createBufferSource(),gain=render.createGain();source.buffer=buffer;gain.gain.value=.45*.22;source.connect(gain);gain.connect(render.destination);source.start();const mixed=rms(await render.startRendering());backgrounds.push({file,relativeDb:20*Math.log10(mixed/key),typingDb:20*Math.log10(mixed*.2/key)});}
+  for(const file of ['ambience/cafe.m4a','ambience/piano.m4a']){const buffer=await decode(file),render=new OfflineAudioContext(buffer.numberOfChannels,buffer.length,buffer.sampleRate),source=render.createBufferSource(),gain=render.createGain();source.buffer=buffer;gain.gain.value=.45*.22;source.connect(gain);gain.connect(render.destination);source.start();const mixed=rms(await render.startRendering());backgrounds.push({file,relativeDb:20*Math.log10(mixed/key)});}
   return backgrounds;
  });
- for(const result of levels){expect(result.relativeDb).toBeLessThan(-6);expect(result.typingDb).toBeLessThan(-18);}await info.attach('decoded-background-key-levels',{body:JSON.stringify(levels),contentType:'application/json'});
+ for(const result of levels)expect(result.relativeDb).toBeLessThan(-6);
+ await info.attach('decoded-background-key-levels',{body:JSON.stringify(levels),contentType:'application/json'});
  await page.locator('.sentence-ambience summary').click();await page.getByRole('button',{name:'关闭',exact:true}).click();await page.reload();await expect(page.locator('.sentence-ambience summary')).toHaveAttribute('aria-label','背景声：关闭');
  await page.locator('.sentence-ambience summary').click();await page.getByRole('button',{name:'咖啡厅',exact:true}).click();await expect.poll(()=>ambienceGain(page)).toBeCloseTo(.45*.22,3);
  await page.evaluate(()=>window.dispatchEvent(new Event('pagehide')));await expect.poll(()=>page.evaluate(()=>(window as any).__ambienceMixes.every((m:any)=>m.sound.paused))).toBe(true);

@@ -9,19 +9,18 @@ export default function useSentenceAmbience({active,speaking}:{active:boolean;sp
  const [authorized,setAuthorized]=useState(false),[failed,setFailed]=useState(false),[revision,retry]=useState(0);
  const player=useRef<HTMLAudioElement|null>(null),menu=useRef<HTMLDetailsElement>(null),mixer=useRef<ReturnType<typeof createAmbienceMixer>|null>(null);
  const level=useRef({volume,speaking});level.current={volume,speaking};
- const authorize=()=>{try{const audio=mixer.current??=createAmbienceMixer();audio.setLevel(level.current.volume,level.current.speaking);void audio.resume().catch(()=>{player.current?.pause();setFailed(true);});setAuthorized(true);}catch{setFailed(true);}};
+ const authorize=()=>{try{const audio=mixer.current??=createAmbienceMixer();void audio.resume().catch(()=>{player.current?.pause();setFailed(true);});setAuthorized(true);}catch{setFailed(true);}};
  // Browser audio starts from a gesture, and must not resume itself after a tab is hidden.
  useEffect(()=>{
   const gesture=(e:Event)=>{
-   if(!active||document.hidden||selection==='off'||!(e.target as HTMLElement)?.closest('.native-practice'))return;
+   if(!active||authorized&&!failed||document.hidden||selection==='off'||!(e.target as HTMLElement)?.closest('.native-practice'))return;
    authorize();
   };
   const stop=()=>{player.current?.pause();mixer.current?.stop();setAuthorized(false);if(menu.current)menu.current.open=false;};
   const hide=()=>{if(document.hidden)stop();};
   document.addEventListener('pointerdown',gesture);document.addEventListener('keydown',gesture);document.addEventListener('visibilitychange',hide);window.addEventListener('pagehide',stop);
   return()=>{document.removeEventListener('pointerdown',gesture);document.removeEventListener('keydown',gesture);document.removeEventListener('visibilitychange',hide);window.removeEventListener('pagehide',stop);};
- },[active,selection]);
- useEffect(()=>{const duck=()=>{if(player.current&&!player.current.paused)mixer.current?.duck();};window.addEventListener('piclex-typing-sound',duck);return()=>window.removeEventListener('piclex-typing-sound',duck);},[]);
+ },[active,authorized,failed,selection]);
  useEffect(()=>()=>{mixer.current?.dispose();mixer.current=null;},[]);
  useEffect(()=>{
   if(!active||!authorized||selection==='off')return;

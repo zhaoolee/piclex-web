@@ -109,3 +109,39 @@ test('no speech callback leaves preparation and remains retryable',async({page})
  await expect(icon).toHaveCount(0);
  await expect.poll(()=>page.evaluate(()=>(window as any).__started)).toBeGreaterThan(0);
 });
+
+test('free dictation Auto uses an installed English voice and replays without canceling an idle service',async({page},info)=>{
+ test.skip(!!info.project.use.hasTouch,'Space is the desktop shortcut');
+ await page.addInitScript(()=>{
+  const w=window as any;
+  const remote={name:'Google US English',lang:'en-US',voiceURI:'remote',localService:false},local={name:'Samantha',lang:'en-US',voiceURI:'local',localService:true};
+  let active=false;
+  w.__utterances=[];w.__idleCancels=0;w.__speechStarts=[];
+  Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:class {constructor(public text:string){}}});
+  Object.defineProperty(window,'speechSynthesis',{configurable:true,value:{
+   getVoices:()=>[remote,local],cancel(){if(!active)w.__idleCancels++;active=false;},get paused(){return false;},
+   speak(utterance:SpeechSynthesisUtterance){
+    active=true;
+    w.__utterances.push({text:utterance.text,voice:utterance.voice?.voiceURI});
+    setTimeout(()=>{w.__speechStarts.push(performance.now());utterance.onstart?.(new Event('start') as SpeechSynthesisEvent);},utterance.voice?.localService?20:1600);
+    setTimeout(()=>{active=false;utterance.onend?.(new Event('end') as SpeechSynthesisEvent);},utterance.voice?.localService?100:1700);
+   }
+  }});
+ });
+ await page.goto('/piclex-web/#/deck/'+plain.id+'?module=listening&mode=free&difficulty=easy');
+ await expect.poll(()=>page.evaluate(()=>(window as any).__utterances.length)).toBe(1);
+ await expect(page.getByRole('button',{name:'播放句子',exact:true})).toBeVisible();
+ const first=await page.evaluate(()=>({utterance:(window as any).__utterances[0],idle:(window as any).__idleCancels}));
+ await page.evaluate(()=>window.addEventListener('keydown',event=>{if(event.code==='Space')(window as any).__spaceAt=performance.now();},{capture:true,once:true}));
+ await page.keyboard.press('Space');
+ await expect(page.getByRole('progressbar',{name:'播放进度'})).toBeVisible();
+ const second=await page.evaluate(()=>{const w=window as any;return {utterance:w.__utterances[1],idle:w.__idleCancels,delay:w.__speechStarts[1]-w.__spaceAt};});
+ expect(second.utterance).toEqual(first.utterance);
+ expect(second.utterance.voice).toBe('local');
+ expect(second.idle).toBe(first.idle);
+ expect(second.delay).toBeLessThan(350);
+ await expect(page.getByRole('button',{name:'播放句子',exact:true})).toBeVisible();
+ await page.evaluate(()=>localStorage.setItem('practice.speechVoiceIdentifier','remote'));
+ await page.keyboard.press('Space');
+ await expect.poll(()=>page.evaluate(()=>(window as any).__utterances[2]?.voice)).toBe('remote');
+});

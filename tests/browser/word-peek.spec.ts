@@ -1,4 +1,4 @@
-import {test,expect,type Locator} from '@playwright/test';
+import {test,expect,type Locator,type Page} from '@playwright/test';
 import fs from 'node:fs';
 import {fillEnglish} from './helpers/spelling';
 
@@ -107,7 +107,7 @@ test('paused automatic advance and assisted answers keep a manual Next fallback'
  await expect(page.getByRole('button',{name:'下一个',exact:true})).toBeVisible();
 });
 
-test('hard hold targets the pointed word instead of the old caret and ignores blank space',async({page})=>{
+test('hard word help targets the pointed word instead of the old caret and ignores blank space',async({page},info)=>{
  await openGuided(page);
  const second=page.locator('.guided-word').nth(1);
  await settleWord(second);await second.hover();await page.mouse.down();
@@ -120,7 +120,12 @@ test('hard hold targets the pointed word instead of the old caret and ignores bl
   node.setSelectionRange(0,0);const box=node.getBoundingClientRect(),css=getComputedStyle(node),ctx=document.createElement('canvas').getContext('2d')!;ctx.font=css.font;
   return {x:box.left+node.clientLeft+parseFloat(css.paddingLeft)+ctx.measureText(value.slice(0,split+1)).width+ctx.measureText(value[split+1]||value[split]).width/2,y:box.top+node.clientTop+parseFloat(css.paddingTop)+parseFloat(css.lineHeight)/2};
  },{value:fieldValue,split});
- await page.mouse.move(point.x,point.y);await page.mouse.down();await expect(tooltip).toBeVisible();
+ await page.mouse.move(point.x,point.y);
+ if(!info.project.use.hasTouch){
+  await expect(tooltip.locator('.word-peek-english')).toHaveText(expected);
+  expect(await field.evaluate((node:HTMLTextAreaElement)=>node.selectionStart)).toBe(0);
+ }
+ await page.mouse.down();await expect(tooltip).toBeVisible();
  await expect(tooltip.locator('.word-peek-english')).toHaveText(expected);
  expect(await field.evaluate((node:HTMLTextAreaElement)=>node.selectionStart)).toBe(0);
  await page.mouse.up();await expect(tooltip).toHaveCount(0);await expect(field).toHaveValue(fieldValue);
@@ -171,4 +176,118 @@ for(const scenario of [{difficulty:'easy'},{difficulty:'medium'},{difficulty:'ha
  await expect.poll(()=>page.url(),{timeout:2500}).not.toBe(url);
  expect(await measure()).toEqual(before);
  expect(await page.evaluate(()=>(window as any).__nextFlashes)).toBe(0);
+});
+
+const programmer=JSON.parse(fs.readFileSync('apps/public/public/'+sentenceDeck.payload,'utf8'));
+const progressWord=programmer.words.find((word:{example:string})=>word.example.includes("Here's my progress:"));
+const progressURL=(sentence:string,difficulty='easy')=>'/piclex-web/#/deck/'+sentenceDeck.id+'?'+new URLSearchParams({module:'listening',mode:'free',difficulty,word:progressWord.id,sentence});
+async function isolateSpeech(page:Page){
+ await page.addInitScript(()=>Object.defineProperty(window,'speechSynthesis',{configurable:true,value:{
+  getVoices:()=>[],cancel(){},speak(utterance:SpeechSynthesisUtterance){queueMicrotask(()=>{utterance.onstart?.(new Event('start') as SpeechSynthesisEvent);utterance.onend?.(new Event('end') as SpeechSynthesisEvent);});}
+ }}));
+}
+
+test('desktop free dictation resumes on a background click and shows a bilingual hover without moving the caret',async({page},info)=>{
+ test.skip(!!info.project.use.hasTouch,'Desktop mouse interaction');
+ await isolateSpeech(page);
+ await page.goto(progressURL('1'));
+ const fields=page.locator('.guided-word input'),second=fields.nth(1);
+ await fields.first().pressSequentially('heres');
+ await expect(second).toBeFocused();
+ await page.keyboard.press('m');
+ const progress=page.locator('.guided-word').nth(2);
+ await settleWord(progress);
+ const punctuation=page.locator('.guided-punctuation').first();
+ await page.screenshot({path:info.outputPath('desktop-dictation.png'),fullPage:true});
+ expect.soft(await punctuation.evaluate(node=>parseFloat(getComputedStyle(node).fontSize))).toBeGreaterThanOrEqual(16);
+ await progress.hover();
+ const tooltip=page.getByRole('tooltip');
+ await expect.soft(tooltip.locator('.word-peek-english')).toHaveText('progress',{timeout:1500});
+ await expect.soft(tooltip.locator('.word-peek-meaning')).toHaveText('进展',{timeout:1500});
+ await expect(second).toBeFocused();
+ await page.screenshot({path:info.outputPath('desktop-hover.png'),fullPage:true});
+ await page.locator('.sentence-toolbar').click({position:{x:240,y:14}});
+ await expect(tooltip).toHaveCount(0);
+ await expect(second).toBeFocused();
+ await page.keyboard.press('y');
+ await expect(second).toHaveValue('my');
+ await expect(fields.nth(2)).toBeFocused();
+ await page.getByLabel('听写难度').focus();
+ await expect(page.getByLabel('听写难度')).toBeFocused();
+ await page.locator('.sentence-toolbar').click({position:{x:240,y:14}});
+ await expect(fields.nth(2)).toBeFocused();
+ await page.keyboard.press('p');
+ await expect(fields.nth(2)).toHaveValue('p');
+ // Headless tabs emulate focus independently; exercise window re-entry from a
+ // blurred field in addition to the real pointer click above.
+ await page.evaluate(()=>{(document.activeElement as HTMLElement)?.blur();window.dispatchEvent(new FocusEvent('focus'));});
+ await expect(fields.nth(2)).toBeFocused();
+ await page.keyboard.press('r');
+ await expect(fields.nth(2)).toHaveValue('pr');
+});
+
+for(const difficulty of ['easy','medium','hard'])test(`fresh free ${difficulty} completion lights the full answer and plays the spelling cue once`,async({page},info)=>{
+ await isolateSpeech(page);
+ await page.addInitScript(()=>{
+  const w=window as any,play=HTMLMediaElement.prototype.play;
+  w.__cues={attempted:0,started:0,ended:0};
+  HTMLMediaElement.prototype.play=function(){
+   if(this.currentSrc.endsWith('/correct-word.wav')||this.src.endsWith('/correct-word.wav')){
+    w.__cues.attempted++;
+    w.__cuePlayer=this;
+    this.addEventListener('playing',()=>w.__cues.started++,{once:true});
+    this.addEventListener('ended',()=>w.__cues.ended++,{once:true});
+   }
+   return play.call(this);
+  };
+ });
+ const wrapped=difficulty==='easy'&&!!info.project.use.hasTouch;
+ const letters=wrapped?'Heresmyprogressthesearchfeatureisreadyforreview':'Onetestisfailing';
+ await page.goto(progressURL(wrapped?'1':'3',difficulty));
+ const answer=page.locator(difficulty==='hard'?'.hard-dictation-peek':'.guided-input');
+ const background=await answer.evaluate(node=>getComputedStyle(node).backgroundColor);
+ const url=page.url();
+ if(difficulty==='hard')await page.getByRole('textbox',{name:'听写句子'}).pressSequentially(letters);
+ else{
+  await answer.locator('input').first().focus();
+  await page.keyboard.type(letters);
+ }
+ await expect(page.locator('.sentence-actions-pending')).toHaveCount(1);
+ await expect(answer).toHaveClass(/gold-sweep/);
+ const paint=await answer.evaluate(node=>{
+  const layers=[...node.querySelectorAll('.dictation-gold-text')],styles=layers.map(layer=>getComputedStyle(layer));
+  const rows=new Set([...node.querySelectorAll('.guided-letters .letter-glyph')].map(glyph=>glyph.getBoundingClientRect().top)).size;
+  return {count:layers.length,rows,glyphs:node.querySelectorAll('.dictation-gold-letter').length,allClipped:styles.every(style=>style.backgroundClip==='text'),
+   animation:styles[0]?.animationName,palette:styles[0]?.backgroundImage,halo:styles[0]?.filter,
+   background:getComputedStyle(node).backgroundColor,boardOverlay:getComputedStyle(node,'::after').content};
+ });
+ expect(paint.count).toBe(difficulty==='easy'?paint.rows:difficulty==='medium'?4:1);
+ if(difficulty==='easy')expect(paint.glyphs).toBe(letters.length);
+ if(wrapped)expect(paint.rows).toBeGreaterThan(1);
+ expect(paint.allClipped).toBe(true);expect(paint.palette).toContain('rgb(255, 247, 196)');
+ expect(paint.animation).toBe('letter-gold-sweep, letter-gold-fade');
+ expect(paint.halo).toContain('4px');expect(paint.halo).toContain('10px');
+ expect(paint.background).toBe(background);expect(paint.boardOverlay).toBe('none');
+ if(info.project.name==='desktop'){
+  await answer.evaluate(node=>{
+   for(const animation of node.getAnimations({subtree:true})){
+    if(!(animation instanceof CSSAnimation)||!animation.animationName.startsWith('letter-gold-'))continue;
+    animation.pause();animation.currentTime=140;
+   }
+  });
+ }
+ const cue=()=>page.evaluate(()=>{
+  const w=window as any,player=w.__cuePlayer as HTMLAudioElement|undefined;
+  return {...w.__cues,time:player?.currentTime,duration:player?.duration,paused:player?.paused};
+ });
+ // A short, detached WAV can reach its full duration in WebKit without
+ // delivering ended. Check that playback actually reaches the end of the file.
+ await expect.poll(cue).toMatchObject({attempted:1,started:1,time:expect.closeTo(.32,2),duration:expect.closeTo(.32,2)});
+ expect((await cue()).ended).toBeLessThanOrEqual(1);
+ if(info.project.name==='desktop')await page.screenshot({path:info.outputPath('sentence-gold.png'),fullPage:true});
+ await expect.poll(()=>page.url()).not.toBe(url);
+ await expect(answer).not.toHaveClass(/gold-sweep/);
+ await page.getByRole('button',{name:'听不懂',exact:true}).click();
+ await expect(page.getByText('参考答案',{exact:true})).toBeVisible();
+ expect(await page.evaluate(()=>(window as any).__cues.attempted)).toBe(1);
 });

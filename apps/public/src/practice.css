@@ -285,7 +285,13 @@ body[data-practice=true] .learning-dialog{position:fixed;inset:auto;top:calc(var
 .sentence-footer .playback-button{min-width:0;height:44px;min-height:44px;white-space:nowrap}
 .sentence-footer .playback-label{white-space:nowrap}
 
-.hard-dictation-peek{display:block}
+.hard-dictation-peek{display:block;position:relative}
+.guided-punctuation.guided-apostrophe{left:16px;top:-3px;transform:translateX(-50%);font:700 19px/22px system-ui,sans-serif}
+.guided-input{position:relative}
+.dictation-gold-mirror{position:absolute;display:block;overflow:hidden;box-sizing:border-box;color:transparent;pointer-events:none;overflow-wrap:break-word}
+.dictation-gold-text{display:block}
+.dictation-gold-row{overflow:visible;white-space:pre}
+.dictation-gold-letter{display:inline-block}
 
 .audio-unlock{position:absolute;top:10px;right:10px;z-index:4;width:34px;height:34px;display:grid;place-items:center;padding:0;border:1px solid #ffffff4d;border-radius:50%;background:#00000073;color:#fff;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 2px 8px #0003;touch-action:manipulation}.audio-unlock svg{width:18px;height:18px}.audio-unlock:focus-visible{outline:2px solid #fff;outline-offset:2px}
 

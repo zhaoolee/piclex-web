@@ -96,7 +96,13 @@ test('reduced motion retains estimated speech progress and only the real end com
 
 test('original audio fills the button from its clock even without timeupdate and stops advancing while paused',async({page},info)=>{
  const fs=await import('node:fs');const catalog=JSON.parse(fs.readFileSync('apps/public/public/library/catalog.json','utf8'));const song=catalog.find((c:any)=>c.id==='0a1ff2e2-3db0-4bb1-889a-b27b62798cbe');
- await page.addInitScript(()=>{const w=window as any,Original=window.Audio;w.__clockAudio=[];w.Audio=class extends Original{constructor(src?:string){super(src);this.muted=true;if(src?.includes('/library/')&&src.endsWith('.mp3')){w.__clockAudio.push(this);Object.defineProperty(this,'ontimeupdate',{get:()=>null,set:()=>{}});}}};});
+ await page.addInitScript(()=>{
+  const w=window as any,Original=window.Audio;w.__clockAudio=[];w.__clockPlays=[];
+  w.Audio=class extends Original{
+   constructor(src?:string){super(src);this.muted=true;if(src?.includes('/library/')&&src.endsWith('.mp3')){w.__clockAudio.push(this);Object.defineProperty(this,'ontimeupdate',{get:()=>null,set:()=>{}});}}
+   play(){if(w.__clockAudio.includes(this))w.__clockPlays.push({time:this.currentTime,rate:this.playbackRate});return super.play();}
+  };
+ });
  await page.goto('/piclex-web/#/deck/'+song.id);const button=page.locator('.playback-button'),bar=page.getByRole('progressbar',{name:'播放进度'});await expect(button).toBeVisible();await page.getByLabel('播放速度',{exact:true}).selectOption('0.75');
  await expect.poll(async()=>Number(await bar.getAttribute('aria-valuenow'))).toBeGreaterThan(3);
  const geometry=await button.boundingBox();await expect(page.locator('.playback-fill')).toHaveCSS('opacity','0.28');await expect(page.locator('.playback-activity')).toHaveCount(0);
@@ -104,7 +110,11 @@ test('original audio fills the button from its clock even without timeupdate and
  // Give the sampler one turn to observe the final media time, then require no drift.
  await page.waitForTimeout(70);const paused=await bar.getAttribute('aria-valuenow');await page.waitForTimeout(160);expect(await bar.getAttribute('aria-valuenow')).toBe(paused);
  await page.screenshot({path:info.outputPath('original-audio-progress.png')});
- const playsBeforeReplay=await page.evaluate(()=>(window as any).__clockAudio.length);
- await press(button,!!info.project.use.hasTouch);await expect.poll(()=>page.evaluate(()=>(window as any).__clockAudio.length)).toBe(playsBeforeReplay+1);await expect.poll(()=>page.evaluate(()=>(window as any).__clockAudio.at(-1).currentTime)).toBeGreaterThan(0);expect(await button.boundingBox()).toEqual(geometry);
+ const playsBeforeReplay=await page.evaluate(()=>(window as any).__clockPlays.length);
+ await press(button,!!info.project.use.hasTouch);
+ await expect.poll(()=>page.evaluate(()=>(window as any).__clockPlays.length)).toBe(playsBeforeReplay+1);
+ expect(await page.evaluate(()=>(window as any).__clockPlays.at(-1))).toEqual({time:0,rate:.75});
+ await expect.poll(()=>page.evaluate(()=>(window as any).__clockAudio.at(-1).currentTime)).toBeGreaterThan(.1);
+ expect(await button.boundingBox()).toEqual(geometry);
  await page.getByRole('tab',{name:'练听力',exact:true}).click();await expect(bar).toHaveCount(0);expect(await page.evaluate(()=>(window as any).__clockAudio.every((a:HTMLAudioElement)=>a.paused))).toBe(true);
 });

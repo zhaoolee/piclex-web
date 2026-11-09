@@ -44,6 +44,16 @@ export function useWordPeek(resetKey?:unknown,active=true){
    held.current=true;show(result.word,result.anchor,result.meaning);
   },400);
  },[cancel,show]);
+ const hover=useCallback((target:()=>PeekTarget|null,event:{pointerType:string;buttons:number})=>{
+  if(event.pointerType!=='mouse'||event.buttons||!enabled.current||!matchMedia('(any-hover: hover)').matches)return;
+  clearTimeout(timer.current);
+  timer.current=setTimeout(()=>{
+   timer.current=undefined;
+   const result=target();
+   if(result)show(result.word,result.anchor,result.meaning);
+   else cancel();
+  },150);
+ },[cancel,show]);
  useLayoutEffect(()=>{mounted.current=true;cancel();return()=>{mounted.current=false;cancel();};},[resetKey,active,cancel]);
  useEffect(()=>{
   const close=()=>cancel(),visibility=()=>{if(document.hidden)close();};
@@ -71,7 +81,7 @@ export function useWordPeek(resetKey?:unknown,active=true){
   };
  },[cancel]);
  const consumeClick=(event:{preventDefault:()=>void;stopPropagation:()=>void})=>{if(held.current){held.current=false;event.preventDefault();event.stopPropagation();}};
- return {peek:peek as WordPeekState|null,begin,cancel,consumeClick};
+ return {peek:peek as WordPeekState|null,begin,hover,cancel,consumeClick};
 }
 
 /** A body portal keeps the tooltip outside the scrolling sentence panel. */

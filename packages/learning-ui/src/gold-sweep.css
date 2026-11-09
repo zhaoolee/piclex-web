@@ -1,11 +1,13 @@
 /* PracticeGoldSweepStyle palette: clear -> bronze -> amber -> gold -> cream -> amber -> bronze -> clear.
-   The sweep is a moving background band clipped to the real glyphs and their underlines; no
-   duplicate text nodes are added, so the answer board keeps its exact layout and text. */
-.answer-slots.gold-sweep{--gold-sweep-gradient:linear-gradient(103deg,rgba(0,0,0,0) 0%,#91501a 14.29%,#e8992b 28.57%,#ffd96b 42.86%,#fff7c4 57.14%,#ffc74a 71.43%,#b0611c 85.71%,rgba(0,0,0,0) 100%)}
-.answer-slots.gold-sweep .letter-glyph{position:relative}
-.answer-slots.gold-sweep .letter-glyph::before{
+   The sweep is a moving background band clipped to the glyphs. Word spelling
+   also applies it to the capsule underlines. */
+.gold-sweep{--gold-sweep-gradient:linear-gradient(103deg,rgba(0,0,0,0) 0%,#91501a 14.29%,#e8992b 28.57%,#ffd96b 42.86%,#fff7c4 57.14%,#ffc74a 71.43%,#b0611c 85.71%,rgba(0,0,0,0) 100%)}
+.gold-sweep .letter-glyph{position:relative}
+.gold-sweep .letter-glyph[data-gold]::before{
  content:attr(data-gold);position:absolute;left:0;top:0;width:100%;
  font:inherit;line-height:inherit;letter-spacing:inherit;white-space:pre;
+}
+.gold-sweep .letter-glyph[data-gold]::before,.gold-sweep .dictation-gold-text{
  color:transparent;-webkit-text-fill-color:transparent;
  background-image:var(--gold-sweep-gradient);background-repeat:no-repeat;
  background-size:calc(var(--gold-word,0px) * 1.24) 100%;
@@ -32,5 +34,5 @@
 }
 @keyframes letter-gold-fade{from{opacity:1}to{opacity:0}}
 @media(prefers-reduced-motion:reduce){
- .answer-slots.gold-sweep .letter-glyph::before,.answer-slots.gold-sweep .letter-slot:not(.fixed)::after{content:none;animation:none}
+ .gold-sweep .letter-glyph[data-gold]::before,.gold-sweep .dictation-gold-text,.answer-slots.gold-sweep .letter-slot:not(.fixed)::after{content:none;background-image:none;animation:none}
 }

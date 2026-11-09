@@ -20,7 +20,6 @@ export async function playTypingSound(id=currentTypingSound()):Promise<boolean>{
  const index=candidates.find(i=>!pending.has(voices[i])&&(voices[i].paused||voices[i].ended))??nextVoice;
  const voice=voices[index];nextVoice=(index+1)%voices.length;
  voice.currentTime=0;pending.add(voice);
- window.dispatchEvent(new Event('piclex-typing-sound'));
  try{await voice.play();if(ticket!==generation){voice.pause();voice.currentTime=0;return false;}return true;}catch{return false;}finally{pending.delete(voice);}
 }
 export function stopTypingSound(){generation++;for(const voice of voices){voice.pause();voice.currentTime=0;}pending.clear();}

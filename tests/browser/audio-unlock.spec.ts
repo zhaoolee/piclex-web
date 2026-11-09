@@ -103,3 +103,29 @@ test('module navigation keeps unconfirmed permission visible and never replays s
   expect(retried.attempts).toBe(settled.attempts+1);
  }finally{await close();}
 });
+
+test('free dictation replays a completed original clip on the same ready player',async({page},info)=>{
+ test.skip(!!info.project.use.hasTouch,'Space is the desktop shortcut');
+ await instrumentMedia(page);
+ await page.goto('/piclex-web/#/deck/'+song.id+'?module=listening&mode=free&difficulty=easy');
+ await expect(page.locator('.guided-input input').first()).toBeFocused();
+ await expect.poll(()=>page.evaluate(()=>(window as any).__mediaPlayed)).toBe(1);
+ await expect(page.getByRole('button',{name:'播放句子',exact:true})).toBeVisible();
+ await page.evaluate(()=>{
+  (window as any).__replayDelay=null;
+  window.addEventListener('keydown',event=>{
+   if(event.code!=='Space')return;
+   const player=(window as any).__media[0] as HTMLAudioElement,start=performance.now();
+   player.addEventListener('playing',()=>{(window as any).__replayDelay=performance.now()-start;},{once:true});
+  },{capture:true});
+ });
+ await page.keyboard.press('Space');
+ await expect.poll(()=>page.evaluate(()=>(window as any).__mediaPlayed)).toBe(2);
+ const state=await page.evaluate(()=>{const w=window as any;return {players:w.__media.length,delay:w.__replayDelay,errors:w.__mediaErrors};});
+ expect(state.players).toBe(1);
+ expect(state.delay).not.toBeNull();
+ expect(state.delay).toBeLessThan(350);
+ expect(state.errors).toEqual([]);
+ await expect.poll(()=>page.evaluate(()=>(window as any).__media[0].currentTime)).toBeGreaterThan(.1);
+ await info.attach('recording-replay',{body:JSON.stringify(state),contentType:'application/json'});
+});
