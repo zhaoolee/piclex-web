@@ -35,12 +35,13 @@ export function useSpeech(notify:(s:string)=>void,preferLocalVoice=false){
   generation.current++;clearTimeout(startupTimer.current);clearTimeout(timer.current);clearInterval(speechClock.current);speechClock.current=undefined;clearMedia();
   if(speechPending.current){speechPending.current=false;window.speechSynthesis?.cancel();}
  },[clearMedia]);
- const stop=useCallback(()=>{
+ const finish=useCallback(()=>{
   cancelPlayback();blockedRequest.current=null;retrying.current=false;
   setPlaying(false);setPreparing(false);setPosition(-1);progress.update(0);
   // Blocked is a permission status, so an explicit stop keeps the icon while
   // discarding the now-stale request. The next gesture retries current content.
  },[cancelPlayback,progress]);
+ const stop=useCallback(()=>{finish();discardClip();},[finish,discardClip]);
  const start=useCallback((next:PlayRequest)=>{
   cancelPlayback();
   setError('');const id=generation.current,queue=next.texts.filter(text=>text.trim());
@@ -68,7 +69,7 @@ export function useSpeech(notify:(s:string)=>void,preferLocalVoice=false){
   };
   const nextSegment=(i:number)=>{
    if(!valid())return;
-   if(i===queue.length){stop();next.onEnd?.();return;}
+   if(i===queue.length){finish();next.onEnd?.();return;}
    let finished=false;
    const current=()=>valid()&&!finished;
    const started=()=>{if(current()){clearTimeout(startupTimer.current);confirmed.current=true;gestureRetry.current=false;retrying.current=false;blockedRequest.current=null;setBlocked(false);setPreparing(false);setPlaying(true);}};
@@ -142,7 +143,7 @@ export function useSpeech(notify:(s:string)=>void,preferLocalVoice=false){
    }catch{fail('朗读暂时不可用，请检查浏览器的语音与播放权限。');}
   };
   nextSegment(0);
- },[cancelPlayback,stop,clearMedia,discardClip,notify,preferLocalVoice,progress]);
+ },[cancelPlayback,stop,finish,clearMedia,discardClip,notify,preferLocalVoice,progress]);
  const play=useCallback((texts:string[],rate=1,onEnd?:()=>void,offset=0,clip?:AudioClip,startFraction=0,automatic=false)=>{
   start({texts:[...texts],rate,onEnd,offset,clip,startFraction,automatic});
  },[start]);
@@ -154,6 +155,6 @@ export function useSpeech(notify:(s:string)=>void,preferLocalVoice=false){
  },[start]);
  const clearError=useCallback(()=>setError(''),[]);
  const acknowledgeGesture=useCallback(()=>{/* A gesture alone is not evidence of playback permission. */},[]);
- useEffect(()=>{const hide=()=>{if(document.hidden)stop();};document.addEventListener('visibilitychange',hide);window.addEventListener('pagehide',stop);return ()=>{stop();discardClip();document.removeEventListener('visibilitychange',hide);window.removeEventListener('pagehide',stop);};},[discardClip,stop]);
+ useEffect(()=>{const hide=()=>{if(document.hidden)stop();};document.addEventListener('visibilitychange',hide);window.addEventListener('pagehide',stop);return ()=>{stop();document.removeEventListener('visibilitychange',hide);window.removeEventListener('pagehide',stop);};},[stop]);
  return {blocked,error,clearError,playing,preparing,position,progress,readProgress,play,retryBlocked,acknowledgeGesture,stop};
 }
