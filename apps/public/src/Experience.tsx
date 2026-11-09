@@ -8,7 +8,7 @@ export function ExperienceMeter({open}:{open?:()=>void}){const xp=useExperience(
 export function PracticeProgress({deckTitle,position,count,openLevel,openDeck}:{deckTitle:string;position:number;count:number;openLevel:()=>void;openDeck:()=>void}){
  const xp=useExperience(),deckProgress=count>0?Math.min(1,Math.max(0,position/count)):0;return <div className="practice-progress-battery">
   <button className="practice-level-target" onClick={openLevel} aria-label={`等级 LV${xp.level}，${xp.total} 经验`}>
-   <span className="practice-player-avatar"><img src={`${import.meta.env.BASE_URL}lab/assets/hero.png`} alt=""/><strong>LV{xp.level}</strong></span>
+   <span className="practice-player-avatar"><img src={`${import.meta.env.BASE_URL}lab/assets/hero.webp`} alt=""/><strong>LV{xp.level}</strong></span>
   </button>
   <button className="practice-deck-target" onClick={openDeck} aria-label="当前卡组，学习设置">
    <span className="practice-experience-target">
@@ -43,7 +43,7 @@ export function LevelPage({embedded=false,openGame,gameBusy=false,gameReady=true
  return <section className="level-page" data-embedded={embedded}>{!embedded&&<h1>我的等级</h1>}
   <div className="level-summary"><ExperienceMeter/><p>共 {xp.total} 经验 · 距离 LV{xp.level+1} 还需 {xp.remaining} 经验</p></div>
   <div className="level-scroll">{xp.error&&<p role="alert">{xp.error}</p>}
-  <button className="level-game-entry" aria-label="薯薯求生" disabled={!gameReady||gameBusy} onClick={openGame}><span className="level-game-avatar"><img src={`${import.meta.env.BASE_URL}lab/assets/hero.png`} alt=""/></span><span><strong>薯薯求生</strong><small>{gameBusy||!gameReady?'正在准备游戏':'冒险、拼词，赢取经验'}</small></span><Icon name="forward"/></button>
+  <button className="level-game-entry" aria-label="薯薯求生" disabled={!gameReady||gameBusy} onClick={openGame}><span className="level-game-avatar"><img src={`${import.meta.env.BASE_URL}lab/assets/hero.webp`} alt=""/></span><span><strong>薯薯求生</strong><small>{gameBusy||!gameReady?'正在准备游戏':'冒险、拼词，赢取经验'}</small></span><Icon name="forward"/></button>
   <h2>等级奖励</h2><div className="level-rewards">{rewards.map(r=><button className="level-reward" key={r.level} onClick={()=>setRewardLevel(r.level)} aria-label={`${r.title}，LV${r.level} ${xp.total>=r.level*(r.level+1)?'已解锁':'解锁'}`}><b>LV{r.level}</b><span>{r.title}<small>{r.web?'':'App 中使用'}</small></span><span>{xp.total>=r.level*(r.level+1)?'已解锁 · 去看看':`还需 ${r.level*(r.level+1)-xp.total} 经验`}</span><Icon name="forward"/></button>)}</div>
   <h2>等级与解锁</h2><div className="level-history">{levels.map(level=>{const reached=xp.milestones.some((m:{level:number})=>m.level===level)||xp.total>=level*(level+1);return <div key={level} className="level-milestone" data-reached={reached}><strong>LV{level}{level===xp.level&&<small>当前等级</small>}</strong><span>累计经验 {level*(level+1)} 点</span><small>{reached?'已达到':`再获得 ${Math.max(0,level*(level+1)-xp.total)} 点经验，点亮新玩法`}</small>{rewards.filter(r=>r.level===level).map(r=><button key={r.level} onClick={()=>setRewardLevel(r.level)}>{r.title} <Icon name="forward"/></button>)}</div>;})}</div>
   {!xp.milestones.length&&xp.level===0&&<p className="muted">获得 2 点经验，开启 LV1。</p>}

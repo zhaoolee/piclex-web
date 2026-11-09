@@ -2,17 +2,17 @@
 export const artwork = {};
 export function loadArtwork(redraw,progress=()=>{}) {
   const assets=[
-    ['achievementIcons','./assets/generated-v208/achievements.png'],
-    ['classIcons','./assets/generated-v208/classes.png'],
-    ['hero','./assets/hero.png'],
-    ['items','./assets/items.png'],
-    ['coin','./assets/coin.png'],
-    ['enemies','./assets/enemies.png'],
-    ['enemyVariants','./assets/generated-v210/enemies.png'],
-    ['weaponIcons','./assets/generated-v204/weapons.png'],
-    ['shopIcons','./assets/generated-v204/shop.png'],
-    ['worldProps','./assets/generated-v204/world.png'],
-    ['combatFx','./assets/generated-v205/combat-fx.png'],
+    ['achievementIcons','./assets/generated-v208/achievements.webp'],
+    ['classIcons','./assets/generated-v208/classes.webp'],
+    ['hero','./assets/hero.webp'],
+    ['items','./assets/items.webp'],
+    ['coin','./assets/coin.webp'],
+    ['enemies','./assets/enemies.webp'],
+    ['enemyVariants','./assets/generated-v210/enemies.webp'],
+    ['weaponIcons','./assets/generated-v204/weapons.webp'],
+    ['shopIcons','./assets/generated-v204/shop.webp'],
+    ['worldProps','./assets/generated-v204/world.webp'],
+    ['combatFx','./assets/generated-v205/combat-fx.webp'],
     ['heroSheet','./assets/sprites/hero/spritesheet.png'],
     ['blobSheet','./assets/sprites/blob/spritesheet.png'],
     ['runnerSheet','./assets/sprites/runner/spritesheet.png'],
@@ -36,11 +36,11 @@ const achievementIds=['potato','night_goggles','power_fist','trophy'];
 const classIds=['chopper','wand','medical_gun','thunder_sword','snake','scared_sausage','medikit','multitasker'];
 export function itemTile(id){
   id=({doctor:'medikit',mage:'wand',engineer:'wrench',well_rounded:'potato',brawler:'power_fist',ranger:'night_goggles',wrench:'stick'}[id]||id);
-  if(achievementIds.includes(id))return {name:'achievementIcons',file:'generated-v208/achievements.png',index:achievementIds.indexOf(id),columns:4,rows:1};
-  if(classIds.includes(id))return {name:'classIcons',file:'generated-v208/classes.png',index:classIds.indexOf(id),columns:4,rows:2};
-  if(weaponIds.includes(id))return {name:'weaponIcons',file:'generated-v204/weapons.png',index:weaponIds.indexOf(id),columns:4,rows:3};
-  if(shopIds.includes(id))return {name:'shopIcons',file:'generated-v204/shop.png',index:shopIds.indexOf(id),columns:4,rows:6};
-  if(id in indices)return {name:'items',file:'items.png',index:indices[id],columns:4,rows:3};
+  if(achievementIds.includes(id))return {name:'achievementIcons',file:'generated-v208/achievements.webp',index:achievementIds.indexOf(id),columns:4,rows:1};
+  if(classIds.includes(id))return {name:'classIcons',file:'generated-v208/classes.webp',index:classIds.indexOf(id),columns:4,rows:2};
+  if(weaponIds.includes(id))return {name:'weaponIcons',file:'generated-v204/weapons.webp',index:weaponIds.indexOf(id),columns:4,rows:3};
+  if(shopIds.includes(id))return {name:'shopIcons',file:'generated-v204/shop.webp',index:shopIds.indexOf(id),columns:4,rows:6};
+  if(id in indices)return {name:'items',file:'items.webp',index:indices[id],columns:4,rows:3};
   return null;
 }
 export function itemArt(id) {
@@ -49,7 +49,7 @@ export function itemArt(id) {
 }
 export function upgradeArt(statKey) {
   const index=upgradeIndices[statKey],columns=4,rows=4;if(!Number.isInteger(index))return '';
-  return `<span class="upgrade-art" aria-hidden="true" style="background-image:url(./assets/generated-v205/upgrades.png);background-size:${columns*100}% ${rows*100}%;--upgrade-x:${index%columns/(columns-1)*100}%;--upgrade-y:${Math.floor(index/columns)/(rows-1)*100}%"></span>`;
+  return `<span class="upgrade-art" aria-hidden="true" style="background-image:url(./assets/generated-v205/upgrades.webp);background-size:${columns*100}% ${rows*100}%;--upgrade-x:${index%columns/(columns-1)*100}%;--upgrade-y:${Math.floor(index/columns)/(rows-1)*100}%"></span>`;
 }
 export const coinArt = '<span class="coin-art" aria-hidden="true"></span>';
 export function drawItem(ctx, id, x, y, size) {

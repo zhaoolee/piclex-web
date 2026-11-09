@@ -68,9 +68,9 @@ body{color:var(--parchment);background:linear-gradient(#11100ecc,#0b0a08f0),radi
 .quiet:hover{background:#ffffff12}
 .topbar-actions{display:inline-flex;align-items:center;gap:6px;flex:none}
 .topbar-actions .quiet{min-height:44px;min-width:44px;display:inline-flex;align-items:center;justify-content:center}
-.tiny-potato{display:inline-block;width:30px;height:30px;background:url(/piclex-web/lab/assets/hero.png) center/contain no-repeat;color:transparent;font-size:0;transform:none}
+.tiny-potato{display:inline-block;width:30px;height:30px;background:url(/piclex-web/lab/assets/hero.webp) center/contain no-repeat;color:transparent;font-size:0;transform:none}
 /* hero sprite replaces the old potato shapes */
-.potato-art,.hero-art{width:100px;height:100px;margin:0 auto 28px;border:0;border-radius:0;background:url(/piclex-web/lab/assets/hero.png) center/contain no-repeat;box-shadow:none;transform:none;position:relative}
+.potato-art,.hero-art{width:100px;height:100px;margin:0 auto 28px;border:0;border-radius:0;background:url(/piclex-web/lab/assets/hero.webp) center/contain no-repeat;box-shadow:none;transform:none;position:relative}
 .potato-art:before,.potato-art:after,.hero-art:before,.hero-art:after{content:none;display:none}
 /* arena / hud / footer */
 .arena-wrap{border:1px solid var(--bronze);border-radius:12px;background:var(--stone);box-shadow:0 18px 60px #000a,inset 0 0 0 1px #00000080}
@@ -110,7 +110,7 @@ body{color:var(--parchment);background:linear-gradient(#11100ecc,#0b0a08f0),radi
 .stat-grid{border-block-color:#6f5a3040}
 .stat-grid small{color:var(--muted)}
 .stat-grid b{color:var(--brass-bright)}
-.gear{width:48px;height:48px;min-width:48px;border:1px solid var(--bronze);border-radius:6px;background-color:var(--iron);background-image:url(/piclex-web/lab/assets/items.png);background-repeat:no-repeat;background-size:400% 300%;background-position:var(--item-x,0) var(--item-y,0);font-size:0;color:transparent;box-shadow:inset 0 1px 0 #ffffff12,inset 0 -2px 4px #00000080}
+.gear{width:48px;height:48px;min-width:48px;border:1px solid var(--bronze);border-radius:6px;background-color:var(--iron);background-image:url(/piclex-web/lab/assets/items.webp);background-repeat:no-repeat;background-size:400% 300%;background-position:var(--item-x,0) var(--item-y,0);font-size:0;color:transparent;box-shadow:inset 0 1px 0 #ffffff12,inset 0 -2px 4px #00000080}
 .items .gear{width:48px;height:48px;min-width:48px}
 .empty{color:var(--muted)}
 /* shop cards */
@@ -124,7 +124,7 @@ body{color:var(--parchment);background:linear-gradient(#11100ecc,#0b0a08f0),radi
 .offer strong{color:var(--parchment)}
 .offer small{color:var(--muted-parch)}
 .offer-price{color:var(--brass-bright)}
-.offer-icon{width:44px;height:44px;border:1px solid var(--bronze-soft);border-radius:6px;background-color:#141210;background-image:url(/piclex-web/lab/assets/items.png);background-repeat:no-repeat;background-size:400% 300%;background-position:var(--item-x,0) var(--item-y,0);font-size:0;color:transparent}
+.offer-icon{width:44px;height:44px;border:1px solid var(--bronze-soft);border-radius:6px;background-color:#141210;background-image:url(/piclex-web/lab/assets/items.webp);background-repeat:no-repeat;background-size:400% 300%;background-position:var(--item-x,0) var(--item-y,0);font-size:0;color:transparent}
 .shop-header h2{color:var(--brass-bright)}
 .shop-header span{color:var(--muted-parch)}
 .shop-refresh{background:linear-gradient(#2f2a23,#211d18);border:1px solid var(--bronze);color:var(--parchment)}
@@ -139,7 +139,7 @@ body{color:var(--parchment);background:linear-gradient(#11100ecc,#0b0a08f0),radi
 .modal-top .side-label{color:var(--brass)}
 .purchase-heading h2{color:var(--parchment)}
 .purchase-heading div>span{color:var(--muted-parch)}
-.purchase-icon{width:64px;height:64px;border-radius:8px;background-color:#141210;background-image:url(/piclex-web/lab/assets/items.png);background-repeat:no-repeat;background-size:400% 300%;background-position:var(--item-x,0) var(--item-y,0);border:1px solid var(--bronze);font-size:0;color:transparent}
+.purchase-icon{width:64px;height:64px;border-radius:8px;background-color:#141210;background-image:url(/piclex-web/lab/assets/items.webp);background-repeat:no-repeat;background-size:400% 300%;background-position:var(--item-x,0) var(--item-y,0);border:1px solid var(--bronze);font-size:0;color:transparent}
 /* learning area (keep green active underline + red error) */
 .learning-spelling{background:linear-gradient(#221e18,#191612);color:var(--parchment);box-shadow:0 8px 18px #0006}
 .learning-hint{background:linear-gradient(#4a3b2e,#33281f);border:1px solid #6f5a3080}
@@ -164,8 +164,8 @@ body{color:var(--parchment);background:linear-gradient(#11100ecc,#0b0a08f0),radi
 .bad-letter::after{background:#ff453a}
 .notification{background:linear-gradient(#26211a,#191612);color:var(--parchment);border:1px solid var(--brass);box-shadow:0 8px 30px #000a}
 /* atlas art helpers */
-.item-art{display:inline-block;background-image:url(/piclex-web/lab/assets/items.png);background-repeat:no-repeat;background-size:400% 300%;background-position:var(--item-x,0) var(--item-y,0);width:100%;height:100%}
-.coin-art{display:inline-block;width:18px;height:18px;background:url(/piclex-web/lab/assets/coin.png) center/contain no-repeat;vertical-align:middle}
+.item-art{display:inline-block;background-image:url(/piclex-web/lab/assets/items.webp);background-repeat:no-repeat;background-size:400% 300%;background-position:var(--item-x,0) var(--item-y,0);width:100%;height:100%}
+.coin-art{display:inline-block;width:18px;height:18px;background:url(/piclex-web/lab/assets/coin.webp) center/contain no-repeat;vertical-align:middle}
 /* upgrade stat icons (generated-v205 atlas, upgrade cards only) */
 .offer-upgrade{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
 .upgrade-icon{width:56px;height:56px;flex:none;display:grid;place-items:center;margin:0 auto 10px;border:1px solid var(--bronze);border-radius:8px;background-color:#141210;box-shadow:inset 0 1px 0 #ffffff12,inset 0 -2px 4px #00000080}
@@ -189,7 +189,7 @@ body{color:var(--parchment);background:linear-gradient(#11100ecc,#0b0a08f0),radi
 .shop-screen,.settlement-screen{display:block}
 @media(max-width:400px){.topbar-actions{flex:1 0 100%;justify-content:flex-end}.game-title{justify-content:flex-end}.loadout-row>div{gap:3px}.loadout-row button{font-size:10px}.loadout-icon{display:none}}
 @media(max-width:360px){.game-title strong{font-size:15px;letter-spacing:0}.beta{padding:3px 4px}}
-.spelling-gem{width:16px;height:16px;clip-path:none;background:url(/piclex-web/lab/assets/items.png) 66.666667% 100%/400% 300% no-repeat}
+.spelling-gem{width:16px;height:16px;clip-path:none;background:url(/piclex-web/lab/assets/items.webp) 66.666667% 100%/400% 300% no-repeat}
 .offer-price{display:flex;align-items:center;gap:3px}.shop-grid .offer .offer-price.insufficient-funds{color:#ff8076}.shop-refresh .coin-art{width:16px;height:16px}.materials .coin-art{width:26px;height:26px}
 /* mobile touch and text-selection overrides */
 html,body{touch-action:pan-y}

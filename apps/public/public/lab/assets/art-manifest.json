@@ -2,27 +2,27 @@
   "artDirection": "暗黑2式哥特氛围，原创角色/物件",
   "assets": {
     "hero": {
-      "file": "hero.png",
+      "file": "hero.webp",
       "tool": "built-in image_gen",
       "prompt": "Use case: stylized-concept. Asset type: transparent playable character sprite for a mobile dark fantasy survivor game. Primary request: redraw an original small potato adventurer with the dark gothic, late-1990s pre-rendered painterly atmosphere of Diablo II. One single full-body character only, centered, facing camera in a 3/4 overhead game camera view. An oval potato body and small potato face visible beneath a battered charcoal hood, worn brown leather armour, a few bronze buckles, stout boots, faint amber eyes. Serious resourceful adventurer, recognisably a potato rather than a human. Warm muted ochre skin against soot-black cloth, restrained realistic material detail, readable bold silhouette at 64 pixels. Full head and boots inside frame, character occupies central 70% of a square canvas with generous transparent margins. Neutral pose, empty hands because weapons orbit separately. Genuine transparent alpha background, no ground plane, no scene, no UI, no lettering, no logo, no watermark. Original design."
     },
     "items": {
-      "file": "items.png",
+      "file": "items.webp",
       "tool": "built-in image_gen",
       "prompt": "Use case: stylized-concept. Asset type: one production-ready transparent inventory ICON ATLAS. A perfectly aligned square 4-column by 3-row grid, exactly twelve separate icons, every icon centred in its equal-sized grid cell, all cells have genuinely transparent background, no cell borders, no text. Dark gothic Diablo II inventory-art atmosphere, late-1990s hand-painted pre-rendered relics, tarnished iron, antique brass, aged leather and muted ember highlights. Each icon fits inside central 65% of its cell with transparent gutters; consistent overhead 3/4 view and readable 48px silhouette. EXACT row-major order: row1: (1) archaic brass pea-firing hand cannon with green chamber, (2) rusty three-pronged garden war fork, (3) iron seed-scatter blunderbuss, (4) red potion bottle with cork; row2: (5) heavy brown leather coat, (6) pair of worn leather boots, (7) round tarnished iron shield, (8) horseshoe magnet iron-and-brass, row3: (9) pair of dark leather gauntlets, (10) weathered bowl of warm soup, (11) small emerald faceted gemstone, (12) red faceted ruby gemstone. Do not combine or add icons, keep correct precise grid order, no pedestals, no ornamental cards, no shadows outside cell, no lettering, no logo. Original objects."
     },
     "coin": {
-      "file": "coin.png",
+      "file": "coin.webp",
       "tool": "built-in image_gen",
       "prompt": "Use case: stylized-concept. Asset type: transparent single gold currency sprite. One antique hammered gold coin in slight 3/4 tilted view, thick ridged edge, worn archaic sun sigil embossed in its centre, no letters or numbers. Diablo II dark gothic inventory art atmosphere: burnished old gold, uneven hand-forged surface, dusty recesses, small sharp warm highlight. Readable circular silhouette at 16 pixels, coin occupies central 65% of square canvas, generous truly transparent margins, no extra coins, no stack, no card, no environment, no text, no logo, no watermark. Original coin design."
     },
     "enemies": {
-      "file": "enemies.png",
+      "file": "enemies.webp",
       "tool": "built-in image_gen",
       "prompt": "Use case: stylized-concept. Asset type: one transparent monster sprite atlas, perfectly aligned horizontal three equal columns in a wide landscape image. Exactly three separate small full-body enemy creatures, one per cell, centred at identical feet baseline with transparent gutters, each fits central 70% of its own cell. Diablo II dark gothic late-1990s pre-rendered hand-painted game art atmosphere, consistent 3/4 overhead camera and original designs. Left: squat rotting root-and-bone ghoul, mossy grey-green skin, amber eyes, hunched shape. Centre: lean fast red-brown horned imp with digitigrade legs, ragged cloth and clawed hands. Right: stocky hulking skeletal sentinel in corroded black iron armour with dull purple cloth, heavy broad silhouette. Three distinct readable enemy types at 48px, no weapons extending beyond cells, no scenery, no UI, no text, no logo, no watermark. Genuine transparent alpha background."
     },
     "enemyVariants": {
-      "file": "generated-v210/enemies.png",
+      "file": "generated-v210/enemies.webp",
       "tool": "built-in image_gen",
       "promptFile": "generated-v210/enemies-prompt.txt",
       "layout": "5 transparent horizontal cutouts: 2 normal, 2 elite, 1 boss"

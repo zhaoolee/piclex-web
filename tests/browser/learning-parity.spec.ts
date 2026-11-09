@@ -99,7 +99,7 @@ test('avatar level sheet enters the real game with the current deck and returns 
  await expect(page.locator('iframe')).toHaveCount(0);
 });
 test('settings level entry offers game loading recovery back to the level page',async({page})=>{
- await page.route('**/lab/assets/hero.png',route=>route.abort());
+ await page.route('**/lab/assets/hero.webp',route=>route.abort());
  await page.goto('/piclex-web/#/settings');await page.locator('.settings-level-card').click();
  await expect(page.getByRole('button',{name:'薯薯求生',exact:true})).toBeEnabled();
  await page.getByRole('button',{name:'薯薯求生',exact:true}).click();

@@ -1,0 +1,96 @@
+{
+  "baselineRevision": "f5b728817eb7e766d8e877f392feeb164b9dbfb7",
+  "interval": "Click the game entry in the learning level sheet until the iframe becomes visible and Start Adventure is available",
+  "environment": "Isolated Linux Chromium, production Vite builds, same local deck data, no audio output",
+  "profile": {
+    "latency": 80,
+    "downloadMbps": 10,
+    "uploadMbps": 10
+  },
+  "metrics": [
+    {
+      "variant": "before",
+      "round": 1,
+      "cold": {
+        "ms": 16509,
+        "bytes": 17674011,
+        "transferred": 16526741
+      },
+      "warm": {
+        "ms": 334,
+        "bytes": 17674011,
+        "transferred": 0
+      }
+    },
+    {
+      "variant": "after",
+      "round": 1,
+      "cold": {
+        "ms": 4397,
+        "bytes": 1457536,
+        "transferred": 1439570
+      },
+      "warm": {
+        "ms": 332,
+        "bytes": 1457536,
+        "transferred": 0
+      }
+    },
+    {
+      "variant": "before",
+      "round": 2,
+      "cold": {
+        "ms": 16510,
+        "bytes": 17674011,
+        "transferred": 16526741
+      },
+      "warm": {
+        "ms": 387,
+        "bytes": 17674011,
+        "transferred": 0
+      }
+    },
+    {
+      "variant": "after",
+      "round": 2,
+      "cold": {
+        "ms": 4385,
+        "bytes": 1457536,
+        "transferred": 1439570
+      },
+      "warm": {
+        "ms": 288,
+        "bytes": 1457536,
+        "transferred": 0
+      }
+    },
+    {
+      "variant": "before",
+      "round": 3,
+      "cold": {
+        "ms": 16496,
+        "bytes": 17674011,
+        "transferred": 16526741
+      },
+      "warm": {
+        "ms": 393,
+        "bytes": 17674011,
+        "transferred": 0
+      }
+    },
+    {
+      "variant": "after",
+      "round": 3,
+      "cold": {
+        "ms": 4394,
+        "bytes": 1457536,
+        "transferred": 1439570
+      },
+      "warm": {
+        "ms": 328,
+        "bytes": 1457536,
+        "transferred": 0
+      }
+    }
+  ]
+}

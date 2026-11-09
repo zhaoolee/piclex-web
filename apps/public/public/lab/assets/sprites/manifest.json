@@ -4,7 +4,7 @@
   "packing": "Complete connected figures, one uniform scale per character, fixed foot origin; no procedural or duplicated poses",
   "assets": {
     "hero": {
-      "reference": "../../hero.png",
+      "reference": "../../hero.webp",
       "sourceSha256": "fac6d2afc098a7f37cc12091379cd01e19897e487b36bb643e5d4e98c1dbe81d",
       "sheetSha256": "87a2fee7c85eb4e8f8d231447c399866061ade114dd0340d9851337b1a6d516f",
       "uniformScale": 0.14606741573033707,
@@ -150,7 +150,7 @@
       "distinctFrames": 12
     },
     "blob": {
-      "reference": "../../enemies.png",
+      "reference": "../../enemies.webp",
       "sourceSha256": "7c7a665f0978caad27539a449fa07444dbc54809492d586d3cf4af168a386c25",
       "sheetSha256": "c1ddbf7c05873d9977f54826f8330e7216ccb26265880e7fce58f52c49238f79",
       "uniformScale": 0.1087866108786611,
@@ -296,7 +296,7 @@
       "distinctFrames": 12
     },
     "runner": {
-      "reference": "../../enemies.png",
+      "reference": "../../enemies.webp",
       "sourceSha256": "159bd6dd3d24ffc30adcb3d9c81d9b7214ccdcc3f59ef0516932b848aaf72479",
       "sheetSha256": "501e5f371fb4b6907e23d40d904490269cc969ecfee712933144057b418583da",
       "uniformScale": 0.13903743315508021,
@@ -442,7 +442,7 @@
       "distinctFrames": 12
     },
     "tank": {
-      "reference": "../../enemies.png",
+      "reference": "../../enemies.webp",
       "sourceSha256": "d9c4850de7acccdb324ea33b7a0cb48de6e0b02f0d6a3b8acc875d673aa50ff6",
       "sheetSha256": "f38c53e084faa9bc72e1ec41275608a431ae7895c52ca1fc74d11bcf4ee622c7",
       "uniformScale": 0.10993657505285412,
