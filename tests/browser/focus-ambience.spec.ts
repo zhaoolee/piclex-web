@@ -30,14 +30,15 @@ test('default cafe is controllable in spelling; choice survives modules and relo
 });
 test('gradient stays on the ring surface through resize, pause and reduced motion',async({page},info)=>{
  await open(page);
- const ring=page.locator('.focus-box');await expect(ring.locator('span')).toHaveCount(0);
+ const ring=page.locator('.focus-box'),mask=ring.locator('.focus-ring');
  for(const [width,height] of [[180,130],[30,30],[160,40],[40,160]]){
   await ring.evaluate((el,[width,height])=>{Object.assign((el as HTMLElement).style,{width:width+'px',height:height+'px',left:'180px',top:'110px'});},[width,height]);
-  expect(await ring.evaluate(el=>getComputedStyle(el,'::after').backgroundImage)).toContain('conic-gradient');
-  expect(await ring.evaluate(el=>getComputedStyle(el,'::after').transform)).toBe('none');
+  await expect(mask).toHaveCSS('transform','none');
+  const paint=await mask.evaluate(el=>{const css=getComputedStyle(el,'::after'),box=el.getBoundingClientRect();return {gradient:css.backgroundImage,texture:parseFloat(css.width),diagonal:Math.hypot(box.width,box.height)};});
+  expect(paint.gradient).toContain('conic-gradient');expect(paint.texture).toBeGreaterThan(paint.diagonal);
  }
  await page.emulateMedia({reducedMotion:'reduce'});
- expect(await ring.evaluate(el=>getComputedStyle(el,'::after').animationName)).toBe('none');
+ expect(await mask.evaluate(el=>getComputedStyle(el,'::after').animationName)).toBe('none');
  await page.screenshot({path:info.outputPath('ring.png')});
 });
 

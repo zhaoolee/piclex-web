@@ -30,9 +30,9 @@ for(const scheme of ['light','dark'] as const) test(`all four target edges remai
    while(performance.now()<until){await new Promise(requestAnimationFrame);const el=document.querySelector('.focus-box')!,b=el.getBoundingClientRect(),p=el.parentElement!.getBoundingClientRect();results.push(b.left>=p.left+3.9&&b.top>=p.top+3.9&&b.right<=p.right-3.9&&b.bottom<=p.bottom-3.9);}
    return results;
   });expect(samples.every(Boolean)).toBe(true);
-  expect(await page.locator('.focus-box').evaluate(el=>getComputedStyle(el,'::after').backgroundImage)).toContain('conic-gradient');
+  expect(await page.locator('.focus-ring').evaluate(el=>getComputedStyle(el,'::after').backgroundImage)).toContain('conic-gradient');
   if(size.height===640)await page.screenshot({path:info.outputPath(`four-edges-${scheme}.png`)});
  }
  await page.emulateMedia({reducedMotion:'reduce'});
- expect(await page.locator('.focus-box').evaluate(el=>getComputedStyle(el,'::after').animationName)).toBe('none');
+ expect(await page.locator('.focus-ring').evaluate(el=>getComputedStyle(el,'::after').animationName)).toBe('none');
 });

@@ -1,7 +1,10 @@
-// A row uses a single clipped gradient and halo across its measured glyphs.
-// Animating a filtered layer per letter is noticeably more expensive on long sentences.
+// Rasterize the fixed glyph mask once. Moving the gradient behind it lets the
+// compositor reuse the lettering and halo geometry throughout the sweep.
 function mirrorGuidedRows(board:Element,glyphs:HTMLElement[]){
- const origin=board.getBoundingClientRect(),font=getComputedStyle(glyphs[0]).font;
+ const origin=board.getBoundingClientRect(),style=getComputedStyle(glyphs[0]);
+ const canvas=document.createElement('canvas'),context=canvas.getContext('2d');
+ if(!context)return [];
+ const font=`${style.fontStyle} ${style.fontWeight} ${style.fontSize} ${style.fontFamily}`,scale=window.devicePixelRatio||1;
  const rows=new Map<number,{rect:DOMRect;character:string}[]>();
  for(const glyph of glyphs){
   const rect=glyph.getBoundingClientRect();
@@ -12,18 +15,20 @@ function mirrorGuidedRows(board:Element,glyphs:HTMLElement[]){
  return [...rows.values()].map(row=>{
   row.sort((a,b)=>a.rect.left-b.rect.left);
   const first=row[0].rect,last=row[row.length-1].rect;
-  const mirror=document.createElement('span');
-  mirror.className='dictation-gold-mirror dictation-gold-row dictation-gold-text';
+  const width=last.right-first.left,height=first.height;
+  canvas.width=Math.ceil(width*scale);canvas.height=Math.ceil(height*scale);
+  context.scale(canvas.width/width,canvas.height/height);
+  context.font=font;
+  const {fontBoundingBoxAscent:ascent,fontBoundingBoxDescent:descent}=context.measureText('Mg');
+  const baseline=(height+ascent-descent)/2;
+  for(const {rect,character} of row)context.fillText(character,rect.left-first.left,baseline);
+  const mirror=document.createElement('span'),mask=document.createElement('span');
+  mirror.className='dictation-gold-mirror dictation-gold-row';
   mirror.setAttribute('aria-hidden','true');
-  Object.assign(mirror.style,{left:`${first.left-origin.left}px`,top:`${first.top-origin.top}px`,width:`${last.right-first.left}px`,font});
-  let edge=first.left;
-  for(const {rect,character} of row){
-   const letter=document.createElement('span');
-   letter.className='dictation-gold-letter';letter.textContent=character;
-   letter.style.width=`${rect.width}px`;letter.style.marginLeft=`${rect.left-edge}px`;
-   mirror.append(letter);edge=rect.right;
-  }
-  return {mirror,text:mirror};
+  Object.assign(mirror.style,{left:`${first.left-origin.left}px`,top:`${first.top-origin.top}px`,width:`${width}px`,height:`${height}px`});
+  mask.className='dictation-gold-mask';mask.style.maskImage=`url("${canvas.toDataURL()}")`;
+  mirror.append(mask);
+  return {mirror,left:first.left,right:last.right};
  });
 }
 
@@ -53,11 +58,11 @@ export function startDictationGoldSweep(board:Element){
  const mirrors=[...rows,...fields];
  if(!mirrors.length)return;
  const range=document.createRange();
- const bounds=mirrors.map(({text:node})=>{
+ const bounds=[...rows.map(({mirror:node,left,right})=>({node,left,right})),...fields.map(({text:node})=>{
   range.selectNodeContents(node);
   const {left,right}=range.getBoundingClientRect();
   return {node,left,right};
- });
+ })];
  const origin=Math.min(...bounds.map(({left})=>left)),width=Math.max(...bounds.map(({right})=>right))-origin;
  for(const {node,left} of bounds){
   node.style.setProperty('--gold-word',`${width}px`);

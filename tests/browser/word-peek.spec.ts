@@ -255,17 +255,20 @@ for(const difficulty of ['easy','medium','hard'])test(`fresh free ${difficulty} 
  await expect(page.locator('.sentence-actions-pending')).toHaveCount(1);
  await expect(answer).toHaveClass(/gold-sweep/);
  const paint=await answer.evaluate(node=>{
-  const layers=[...node.querySelectorAll('.dictation-gold-text')],styles=layers.map(layer=>getComputedStyle(layer));
-  const rows=new Set([...node.querySelectorAll('.guided-letters .letter-glyph')].map(glyph=>glyph.getBoundingClientRect().top)).size;
-  return {count:layers.length,rows,glyphs:node.querySelectorAll('.dictation-gold-letter').length,allClipped:styles.every(style=>style.backgroundClip==='text'),
-   animation:styles[0]?.animationName,palette:styles[0]?.backgroundImage,halo:styles[0]?.filter,
+  const layers=[...node.querySelectorAll('.dictation-gold-text,.dictation-gold-row')],styles=layers.map(layer=>getComputedStyle(layer));
+  const masks=[...node.querySelectorAll('.dictation-gold-mask')];
+  const glyphs=[...node.querySelectorAll('.guided-letters .letter-glyph')];
+  const rows=new Set(glyphs.map(glyph=>glyph.getBoundingClientRect().top)).size;
+  const band=masks[0]?getComputedStyle(masks[0],'::after'):styles[0];
+  return {count:layers.length,rows,glyphs:glyphs.length,allClipped:masks.length?masks.length===layers.length&&masks.every(mask=>getComputedStyle(mask).maskImage.startsWith('url("data:image/png;base64,')):styles.every(style=>style.backgroundClip==='text'),
+   animation:band?.animationName,palette:band?.backgroundImage,halo:styles[0]?.filter,
    background:getComputedStyle(node).backgroundColor,boardOverlay:getComputedStyle(node,'::after').content};
  });
  expect(paint.count).toBe(difficulty==='easy'?paint.rows:difficulty==='medium'?4:1);
  if(difficulty==='easy')expect(paint.glyphs).toBe(letters.length);
  if(wrapped)expect(paint.rows).toBeGreaterThan(1);
  expect(paint.allClipped).toBe(true);expect(paint.palette).toContain('rgb(255, 247, 196)');
- expect(paint.animation).toBe('letter-gold-sweep, letter-gold-fade');
+ expect(paint.animation).toBe(difficulty==='easy'?'letter-gold-slide':'letter-gold-sweep, letter-gold-fade');
  expect(paint.halo).toContain('4px');expect(paint.halo).toContain('10px');
  expect(paint.background).toBe(background);expect(paint.boardOverlay).toBe('none');
  if(info.project.name==='desktop'){

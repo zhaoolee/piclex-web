@@ -23,6 +23,6 @@ export function PhotoFocus({ src, focus, alt, active = true,fit='focus',retry=0,
  return <div className={`photo-focus ${active?'':'effects-paused'}`} ref={host} data-fit={fit} aria-busy={!current&&broken!==src}>
   {current&&<img key={current.src} src={current.src} alt={alt} className="focus-image" style={layout?{left:layout.image.x,top:layout.image.y,width:layout.image.width,height:layout.image.height}:undefined}/>}
   {broken===src?<p className="image-error">图片加载失败，点击重试</p>:!current&&<div className="photo-loading"><LoadProgress label="正在加载图片" progress={transfer?.source===src?transfer.progress:null} finishing={transfer?.source===src&&transfer.decoding}/></div>}
-  {current&&target&&<span className="focus-box" aria-hidden="true" style={{...visibleFocusStyle(target,size),boxSizing:'border-box'}}/>}
+  {current&&target&&<span className="focus-box" aria-hidden="true" style={{...visibleFocusStyle(target,size),boxSizing:'border-box'}}><span className="focus-ring"/></span>}
  </div>;
 }

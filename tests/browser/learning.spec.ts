@@ -98,7 +98,7 @@ test('native modules preserve independent sentence drafts, shuffle order and pho
  await expect(page.getByRole('status').filter({hasText:'参考答案'})).toBeVisible();
  await expect(page.getByRole('textbox',{name:'听写句子'})).toHaveValue(publicDeck.words[0].example);
  await page.getByRole('tab',{name:'拼单词'}).click();await expect(page.getByRole('textbox',{name:'输入英文'})).toHaveValue('b');
- await expect.poll(()=>page.locator('.focus-box').evaluate(n=>getComputedStyle(n,'::after').animationDuration)).toBe('5s');
+ await expect.poll(()=>page.locator('.focus-ring').evaluate(n=>getComputedStyle(n,'::after').animationDuration)).toBe('5s');
  await page.screenshot({path:`test-results/native-spelling-${testInfo.project.name}.png`,fullPage:true});
  await page.getByRole('tab',{name:'练听力'}).click();await mode.selectOption('chunks');
  await page.screenshot({path:`test-results/native-chunks-${testInfo.project.name}.png`,fullPage:true});
@@ -146,7 +146,7 @@ test('guided dictation, listening controls, compact height and reduced-motion re
  await page.getByRole('tab',{name:'拼单词'}).click();await page.setViewportSize({width:390,height:430});
  await page.getByRole('button',{name:'不认识',exact:true}).scrollIntoViewIfNeeded();
  const rect=await page.getByRole('button',{name:'不认识',exact:true}).boundingBox();expect(rect!.y+rect!.height).toBeLessThanOrEqual(378);
- await page.emulateMedia({reducedMotion:'reduce'});await expect.poll(()=>page.locator('.focus-box').evaluate(n=>getComputedStyle(n,'::after').animationName)).toBe('none');
+ await page.emulateMedia({reducedMotion:'reduce'});await expect.poll(()=>page.locator('.focus-ring').evaluate(n=>getComputedStyle(n,'::after').animationName)).toBe('none');
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
 });
 
