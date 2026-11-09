@@ -12,7 +12,7 @@ import useSentenceAmbience from './SentenceAmbience';
 import {listeningPlaylist,listeningNeighbor,repeatModes} from '../../../packages/practice/src/listening.mjs';
 import Dialog from './Dialog';
 import DeckDownload from './DeckDownload';
-import {prepareCompletionSound,playCompletionSound,stopCompletionSound} from '../../../packages/learning-ui/src/completion-sound';
+import {createSynchronizedCompletionSound,prepareCompletionSound,playCompletionSound,stopCompletionSound} from '../../../packages/learning-ui/src/completion-sound';
 import {usePhotoPalette} from './usePhotoPalette';
 import {NativeIcon as Icon} from '../../../packages/learning-ui/src/NativeIcon';
 import {playTypingSound,stopTypingSound,prepareTypingSound} from '../../../packages/learning-ui/src/typing-sound';
@@ -201,20 +201,36 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,loadP
  // Only a fresh answer transition earns the cue; restored/revealed answers are silent.
  const completionResult=freeDictation?sentenceResult:draft.result;
  const completionState=useRef({key,result:completionResult});
- useEffect(()=>{if(active&&(state.module==='spelling'||freeDictation))prepareCompletionSound();else stopCompletionSound();},[active,state.module,freeDictation]);
+ const dictationCue=useMemo(createSynchronizedCompletionSound,[]);
+ useEffect(()=>{if(active&&state.module==='spelling')prepareCompletionSound();else stopCompletionSound();},[active,state.module]);
+ useLayoutEffect(()=>{
+  if(!active||!freeDictation)return;
+  void dictationCue.prepare();
+  const unlock=(event:Event)=>{
+   if(event.isTrusted&&navigator.userActivation?.isActive!==false&&event.target instanceof Node&&layoutRoot.current?.contains(event.target))dictationCue.unlock();
+  };
+  const gestures=['pointerup','click','keydown'];
+  for(const gesture of gestures)document.addEventListener(gesture,unlock,true);
+  return ()=>{for(const gesture of gestures)document.removeEventListener(gesture,unlock,true);dictationCue.stop();};
+ },[active,freeDictation,dictationCue]);
  useEffect(()=>{
   const previous=completionState.current;completionState.current={key,result:completionResult};
   if(!active||previous.key!==key||previous.result)return;
   if(state.module==='spelling'&&(completionResult==='correct'||completionResult==='reviewed'))playCompletionSound();
   if(freeDictation&&completionResult==='correct'&&sentence?.pending==='free'){
-   playCompletionSound();
    const board=layoutRoot.current?.querySelector('.guided-input,.hard-dictation-peek');
-   if(board)return startDictationGoldSweep(board);
+   if(!board)return;
+   let stopSweep:(()=>void)|undefined;
+   const cancel=dictationCue.start(()=>{
+    stopSweep=startDictationGoldSweep(board);
+    if(board.matches('.guided-input'))emitExperience([board.getBoundingClientRect()],true,true,particleEffect);
+   });
+   return ()=>{cancel();stopSweep?.();};
   }
- },[key,completionResult,active,state.module,freeDictation]);
- useEffect(()=>{window.addEventListener('pagehide',stopCompletionSound);return()=>{window.removeEventListener('pagehide',stopCompletionSound);stopCompletionSound();};},[]);
+ },[key,completionResult,active,state.module,freeDictation,dictationCue]);
+ useEffect(()=>{const stop=()=>{stopCompletionSound();dictationCue.stop();};window.addEventListener('pagehide',stop);return()=>{window.removeEventListener('pagehide',stop);stop();};},[dictationCue]);
  const sentenceEffects=useRef(new Set<string>());
- useEffect(()=>{if(!active||state.module!=='listening'||!sentence||sentence.outcomes[state.mode]!=='correct')return;const stamp=`${key}:${state.mode}`;if(sentenceEffects.current.has(stamp))return;sentenceEffects.current.add(stamp);if(sentence.pending!==state.mode)return;const sources=[...document.querySelectorAll('.selected-chunk,.free-dictation,.guided-input')].map(n=>n.getBoundingClientRect());emitExperience(sources,true,true,particleEffect);},[key,state.mode,sentence?.outcomes,state.module,active]);
+ useEffect(()=>{if(!active||state.module!=='listening'||state.mode!=='chunks'||sentence?.outcomes.chunks!=='correct')return;const stamp=`${key}:chunks`;if(sentenceEffects.current.has(stamp))return;sentenceEffects.current.add(stamp);if(sentence.pending!=='chunks')return;const sources=[...document.querySelectorAll('.selected-chunk')].map(n=>n.getBoundingClientRect());emitExperience(sources,true,true,particleEffect);},[key,state.mode,sentence?.outcomes,state.module,active]);
  useEffect(()=>{if(!active)clearExperienceEffects();},[active]);
  useEffect(()=>{
   for(const w of deck.words){const d=state.words[w.id];if(d?.result==='correct'||d?.result==='reviewed')award({id:`spell:${studyEventScope(deck,state,w)}:${w.id}`,kind:'spelling',result:d.result,wordKey:w.occurrenceID?.trim()?'occurrence:'+w.occurrenceID.trim():w.english.toLowerCase().trim()});}

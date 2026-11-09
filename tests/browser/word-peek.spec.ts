@@ -226,21 +226,29 @@ test('desktop free dictation resumes on a background click and shows a bilingual
  await expect(fields.nth(2)).toHaveValue('pr');
 });
 
+async function observeCompletionCue(page:Page){
+ await page.addInitScript(()=>{
+  const w=window as any,start=AudioBufferSourceNode.prototype.start,decode=OfflineAudioContext.prototype.decodeAudioData;
+  w.__cues={started:0,ended:0};
+  OfflineAudioContext.prototype.decodeAudioData=function(data){return decode.call(this,data).then(buffer=>{w.__cueBuffer=buffer;return buffer;});};
+  AudioBufferSourceNode.prototype.start=function(...args){
+   if(this.buffer&&this.buffer===w.__cueBuffer){
+    w.__cues.started++;w.__cues.scheduled=performance.now();
+    w.__cues.duration=this.buffer.duration;w.__cues.output=this.context.state;
+    const startTime=this.context.currentTime;
+    this.addEventListener('ended',()=>{w.__cues.ended++;w.__cues.elapsed=this.context.currentTime-startTime;},{once:true});
+   }
+   start.apply(this,args);
+  };
+  document.addEventListener('animationstart',event=>{
+   if(/^letter-gold-(slide|sweep)$/.test(event.animationName))w.__cues.animation??=performance.now();
+  },true);
+ });
+}
+
 for(const difficulty of ['easy','medium','hard'])test(`fresh free ${difficulty} completion lights the full answer and plays the spelling cue once`,async({page},info)=>{
  await isolateSpeech(page);
- await page.addInitScript(()=>{
-  const w=window as any,play=HTMLMediaElement.prototype.play;
-  w.__cues={attempted:0,started:0,ended:0};
-  HTMLMediaElement.prototype.play=function(){
-   if(this.currentSrc.endsWith('/correct-word.wav')||this.src.endsWith('/correct-word.wav')){
-    w.__cues.attempted++;
-    w.__cuePlayer=this;
-    this.addEventListener('playing',()=>w.__cues.started++,{once:true});
-    this.addEventListener('ended',()=>w.__cues.ended++,{once:true});
-   }
-   return play.call(this);
-  };
- });
+ await observeCompletionCue(page);
  const wrapped=difficulty==='easy'&&!!info.project.use.hasTouch;
  const letters=wrapped?'Heresmyprogressthesearchfeatureisreadyforreview':'Onetestisfailing';
  await page.goto(progressURL(wrapped?'1':'3',difficulty));
@@ -248,6 +256,9 @@ for(const difficulty of ['easy','medium','hard'])test(`fresh free ${difficulty} 
  const background=await answer.evaluate(node=>getComputedStyle(node).backgroundColor);
  const url=page.url();
  if(difficulty==='hard')await page.getByRole('textbox',{name:'听写句子'}).pressSequentially(letters);
+ else if(wrapped){
+  for(const letter of letters.toLowerCase())await page.locator(`.virtual-key[data-key="${letter}"]`).tap();
+ }
  else{
   await answer.locator('input').first().focus();
   await page.keyboard.type(letters);
@@ -271,6 +282,12 @@ for(const difficulty of ['easy','medium','hard'])test(`fresh free ${difficulty} 
  expect(paint.animation).toBe(difficulty==='easy'?'letter-gold-slide':'letter-gold-sweep, letter-gold-fade');
  expect(paint.halo).toContain('4px');expect(paint.halo).toContain('10px');
  expect(paint.background).toBe(background);expect(paint.boardOverlay).toBe('none');
+ const cue=()=>page.evaluate(()=>(window as any).__cues);
+ await expect.poll(cue).toMatchObject({started:1,ended:1,duration:expect.closeTo(.32,2),output:'running',animation:expect.any(Number)});
+ const timing=await cue();
+ expect(timing.elapsed).toBeGreaterThanOrEqual(.30);
+ expect(Math.abs(timing.scheduled-timing.animation)).toBeLessThan(100);
+ await info.attach('completion-cue-timing',{body:JSON.stringify(timing),contentType:'application/json'});
  if(info.project.name==='desktop'){
   await answer.evaluate(node=>{
    for(const animation of node.getAnimations({subtree:true})){
@@ -278,19 +295,32 @@ for(const difficulty of ['easy','medium','hard'])test(`fresh free ${difficulty} 
     animation.pause();animation.currentTime=140;
    }
   });
+  await page.screenshot({path:info.outputPath('sentence-gold.png'),fullPage:true});
  }
- const cue=()=>page.evaluate(()=>{
-  const w=window as any,player=w.__cuePlayer as HTMLAudioElement|undefined;
-  return {...w.__cues,time:player?.currentTime,duration:player?.duration,paused:player?.paused};
- });
- // A short, detached WAV can reach its full duration in WebKit without
- // delivering ended. Check that playback actually reaches the end of the file.
- await expect.poll(cue).toMatchObject({attempted:1,started:1,time:expect.closeTo(.32,2),duration:expect.closeTo(.32,2)});
- expect((await cue()).ended).toBeLessThanOrEqual(1);
- if(info.project.name==='desktop')await page.screenshot({path:info.outputPath('sentence-gold.png'),fullPage:true});
  await expect.poll(()=>page.url()).not.toBe(url);
  await expect(answer).not.toHaveClass(/gold-sweep/);
  await page.getByRole('button',{name:'听不懂',exact:true}).click();
  await expect(page.getByText('参考答案',{exact:true})).toBeVisible();
- expect(await page.evaluate(()=>(window as any).__cues.attempted)).toBe(1);
+ expect((await cue()).started).toBe(1);
+});
+
+test('a delayed cue file never rings after the sentence feedback has started',async({page})=>{
+ await isolateSpeech(page);
+ await observeCompletionCue(page);
+ let releaseAudio!:()=>void;
+ const gate=new Promise<void>(resolve=>{releaseAudio=resolve;});
+ await page.route('**/audio/correct-word.wav',async route=>{await gate;await route.continue();});
+ try{
+  await page.goto(progressURL('3'));
+  const board=page.locator('.guided-input');
+  await board.locator('input').first().focus();
+  const url=page.url();
+  await page.keyboard.type('Onetestisfailing');
+  await expect(board).toHaveClass(/gold-sweep/,{timeout:500});
+  expect(await page.evaluate(()=>(window as any).__cues.started)).toBe(0);
+  releaseAudio();
+  await expect.poll(()=>page.evaluate(()=>!!(window as any).__cueBuffer)).toBe(true);
+  await expect.poll(()=>page.url()).not.toBe(url);
+  expect(await page.evaluate(()=>(window as any).__cues.started)).toBe(0);
+ }finally{releaseAudio();}
 });
