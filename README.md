@@ -4,6 +4,8 @@
 
 [在线体验](https://piclex.v2fy.com/piclex-web/) · [GitHub Pages 镜像](https://zhaoolee.com/piclex-web/) · [iPhone App](https://apps.apple.com/cn/app/id6808490052)
 
+![](./README.assets/9bf26ecec404b9e078c44ea3f4a243d2f5bd6c1776b80b348a48f80ce0b3ace0.jpg)
+
 ## 从喜欢的电影，记住一句英语
 
 《阿甘正传》《教父》《星球大战》……在熟悉的画面里记单词，用经典台词练听说。
