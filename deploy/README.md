@@ -70,3 +70,19 @@ sudo python3 -B /home/hermes/piclex-web/deploy/auto-update-public.py
 ```
 
 正式自动更新须使用管理员身份，以读取全部进程和容器占用；权限不足会在下载／切换前拒绝，不能跳过安全扫描。`--check` 可由普通用户执行且不写交接记录。若清理失败，使用上面的标准 finalizer 重试；重复运行自动更新器遇到相同版本仍只退出，不冒充清理完成。
+
+## 并行发布候选
+
+国内站可以提前暂存经过完整门禁的 GitHub Pages 产物差异。生产切换仍通过原有 systemd 服务和发布锁。只有指定的 GitHub 正式发布运行进入受保护环境并通过候选检查后才可切换，候选 SHA 和运行 ID 在两端一致。GitHub API 回执、原始清单压缩包摘要、完整文件哈希、回环 Nginx、源站和公网验收及清理均保留。
+
+候选准备阶段运行以下命令，保存输出的 JSON。若已下载该运行的 Pages artifact.tar，传入 `--pages-tar` 避免重复下载。此命令只写 `incoming/verified-<run>`，与发布计时分开。
+
+```sh
+python3 -B deploy/stage-verified-release.py --candidate-run "$CANDIDATE_RUN" --revision "$REVISION" > mirror-stage.json
+```
+
+在新版 `release.yml` 和服务器更新器都已生效后，开始正式发布计时。向现有 GitHub 工作流传入 `revision` 与 `candidate_run`。取得新的 `workflow_run_id` 后，通过原有 SSH 身份将 JSON 写入 `/run/piclex-public-updater/request`。JSON 只包含 `candidateRun`、`releaseRun`、`revision` 和 `previousRevision`。前任版本取自暂存回执。更新器会拒绝另一次运行、旧版本、过期或失败回执和基线变化。旧入口使用纯 SHA 或空文件触发原 Pages 镜像更新。
+
+必须等待 GitHub 正式运行成功和国内更新服务成功。国内站实际浏览器操作使用隔离 Linux 中的 `node scripts/verify-live-release.mjs https://piclex.v2fy.com/piclex-web/ --mirror-smoke`。在浏览器操作前后运行 `deploy/verify-remote-release.py` 回读完整清单摘要。任一端失败都记录已切换的端及其版本，并保留失败证据。以发起正式发布前的预检开始到实际双站、镜像和行为验收完成计算 60 秒，候选准备另计。
+
+现有服务把 `/usr/local/lib/piclex-public-updater` 以只读方式绑定进来。启用须由管理员将本版 `verified_candidate.py` 和 `auto-update-public.py` 安装到该目录。先安装校验模块，再在原发布锁内原子替换入口。保留旧入口的管理员备份用于回退。按部署时提供的 SHA-256 核对两份文件。无需编辑 systemd 单元、重载 Nginx 或增加凭据。

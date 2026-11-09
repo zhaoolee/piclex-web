@@ -8,7 +8,7 @@ import {findArtifact} from './find-performance-artifact.mjs';
 export async function deployVerifiedPages({repository, revision, token, ref, oidcURL, oidcToken, expectedRun,
   request = fetch, sleep = ms => new Promise(r => setTimeout(r, ms)), now = Date.now, onStatus = () => {}}) {
   if (ref !== 'refs/heads/main') throw Error('Pages deployment requires protected main workflow');
-  const receipt = await findArtifact({repository, revision, token, ready: true, details: true});
+  const receipt = await findArtifact({repository, revision, token, ready: true, details: true, expectedRun});
   if (String(receipt.runID) !== String(expectedRun)) throw Error('Verified candidate run changed');
   if (!oidcURL || !oidcToken) throw Error('Missing Actions OIDC credentials');
   const api = async (path, method = 'GET', body) => {

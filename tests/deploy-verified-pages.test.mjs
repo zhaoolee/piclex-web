@@ -17,7 +17,7 @@ test('Pages directly deploys only the exact immutable fully verified candidate w
       let data;
       if (url.includes('/jobs?')) data = {jobs};
       else if (url.includes('/artifacts?')) data = {artifacts};
-      else if (url.includes('/runs?')) data = {workflow_runs: [run]};
+      else if (/\/actions\/runs\/[0-9]+$/.test(url)) data = run;
       else if (url === 'https://oidc.invalid/token') data = {value: 'identity-placeholder'};
       else if (url.endsWith('/pages/deployments')) data = {id: 'deployment-1', page_url: 'https://fixture.invalid/'};
       else data = {status: mode === 'server-failure' ? 'deployment_failed' : 'succeed'};

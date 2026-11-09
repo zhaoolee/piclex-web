@@ -8,6 +8,7 @@ import json
 import os
 from pathlib import Path
 import re
+import shutil
 import subprocess
 import tempfile
 import time
@@ -15,6 +16,8 @@ import time
 from activate import ROOT, SITE, LOCK_PATH, patch_site, verify_release
 from release_lifecycle import verify_live_release, prune_old_releases
 from release_state import record_activation
+from contextlib import ExitStack
+from verified_candidate import authorize_cutover, copy_delta, read_request, staged_candidate
 
 PAGES='https://zhaoolee.com/piclex-web/'
 HASH=re.compile(r'[0-9a-f]{64}')
@@ -37,7 +40,10 @@ def digest(path):
 
 
 def manifest_from_pages():
-    manifest=json.loads(fetch(PAGES+'release.json'))
+    return validate_manifest(json.loads(fetch(PAGES+'release.json')))
+
+
+def validate_manifest(manifest):
     if (not RELEASE.fullmatch(manifest.get('releaseID','')) or
         not re.fullmatch(r'[0-9a-f]{40}',manifest.get('sourceRevision','')) or
         manifest.get('origin')!='https://piclex.v2fy.com' or
@@ -61,7 +67,7 @@ def safe_file(name, info):
             0<=info['bytes']<=134217728 and HASH.fullmatch(info.get('sha256','')))
 
 
-def populate(stage,manifest,previous):
+def populate(stage,manifest,previous,staged_files=None,reuse_links=True):
     # The final release must be traversable by the existing Nginx worker.
     stage.chmod(0o755)
     old_files={}
@@ -75,7 +81,10 @@ def populate(stage,manifest,previous):
         destination.parent.mkdir(parents=True,exist_ok=True)
         old=previous/name if previous else None
         if old is not None and old_files.get(name)==info and old.is_file() and not old.is_symlink() and digest(old)==info['sha256']:
-            os.link(old,destination)
+            if reuse_links:os.link(old,destination)
+            else:shutil.copyfile(old,destination)
+        elif staged_files is not None:
+            copy_delta(staged_files,name,destination,info)
         else:
             fetch(PAGES+name.removeprefix('piclex-web/'),destination,info['bytes']+1)
         if destination.stat().st_size!=info['bytes'] or digest(destination)!=info['sha256']:
@@ -98,30 +107,49 @@ def switch(target):
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--check',action='store_true',help='Verify the candidate without activating it')
+    parser.add_argument('--candidate-run',type=int,help='Staged GitHub run to rehearse with --check')
+    parser.add_argument('--revision',help='Exact staged SHA to rehearse with --check')
     args=parser.parse_args()
+    if (args.candidate_run is not None or args.revision is not None) and (
+            not args.check or not args.candidate_run or not args.revision):
+        parser.error('--candidate-run and --revision require --check and each other')
     if not ROOT.is_dir() or ROOT.resolve()!=ROOT or SITE.is_symlink():raise RuntimeError('Unexpected deployment paths')
     if not args.check and os.geteuid()!=0:
         raise SystemExit('Run activation as root so all process/container cleanup checks can complete; use --check for validation only')
     config=SITE.read_bytes()
     if patch_site(config.decode())!=config.decode():raise RuntimeError('Nginx configuration needs privileged review')
-    with LOCK_PATH.open('r') as lock:
+    request = None if args.check else read_request()
+    staged = request or ({'candidateRun': args.candidate_run, 'revision': args.revision}
+                         if args.candidate_run else None)
+    with ExitStack() as stack:
+        staged_files = None
+        if staged:
+            manifest, staged_files = stack.enter_context(staged_candidate(ROOT, staged['candidateRun'], staged['revision']))
+            validate_manifest(manifest)
+        lock = stack.enter_context(LOCK_PATH.open('r'))
         fcntl.flock(lock,fcntl.LOCK_EX)
         started=time.time()
-        manifest=manifest_from_pages()
+        if not staged:
+            manifest=manifest_from_pages()
         current=ROOT/'current'
         if current.exists() and not current.is_symlink():raise RuntimeError('current must be a symlink')
         previous=current.resolve() if current.is_symlink() else None
-        if previous and previous.name==manifest['releaseID']:
+        if previous and previous.name==manifest['releaseID'] and not (staged and args.check):
             return print('Public Web release unchanged; no deployment')
+        previous_manifest = {}
         if previous:
             if previous.parent!=ROOT/'releases':raise RuntimeError('Current release is outside the managed directory')
-            verify_release(previous)
+            previous_manifest = verify_release(previous)
+        if request and previous_manifest.get('sourceRevision') != request['previousRevision']:
+            raise ValueError('Mirror base changed after candidate staging')
         with tempfile.TemporaryDirectory(prefix='piclex-auto-',dir=ROOT/'incoming') as directory:
             stage=Path(directory)
-            populate(stage,manifest,previous)
+            populate(stage,manifest,previous,staged_files,reuse_links=not args.check)
             verify_release(stage)
             subprocess.run(['/usr/bin/python3','-B',str(ROOT/'deploy/check-mirror.py'),'--release',str(stage)],check=True)
             if args.check:return print(f'Candidate verified: {manifest["releaseID"]}')
+            if request:
+                authorize_cutover(request)
             if SITE.read_bytes()!=config:raise RuntimeError('Nginx configuration changed during preparation')
             if (current.resolve() if current.is_symlink() else None)!=previous or (current.exists() and not current.is_symlink()):
                 raise RuntimeError('Current changed during preparation')

@@ -1,4 +1,5 @@
 name: Release verified build
+run-name: Release ${{ inputs.revision }} candidate ${{ inputs.candidate_run }}
 on:
   workflow_dispatch:
     inputs:
@@ -6,6 +7,10 @@ on:
         description: Full commit SHA of the verified release candidate
         required: true
         type: string
+      candidate_run:
+        description: Exact verified Actions run (required for parallel mirror promotion)
+        type: string
+        required: false
 permissions:
   contents: read
   actions: read
@@ -41,6 +46,7 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           RELEASE_REVISION: ${{ inputs.revision }}
           REQUIRE_READY_RELEASE: 'true'
+          EXPECTED_CANDIDATE_RUN: ${{ inputs.candidate_run }}
       - uses: actions/download-artifact@v4
         with:
           pattern: '{release-manifest,verified-image}'
