@@ -2,20 +2,19 @@
 
 body[data-page=lab] .site-header,body[data-page=lab] .app-footer,body[data-page=lab] .file-input{display:none}body[data-page=lab]{overflow:hidden}body[data-page=lab] #root{padding-bottom:0}
 
-/* Give the game its own landscape viewport even in a portrait-locked browser. */
-@media (pointer:coarse) and (orientation:portrait){
-  .laboratory-page{overflow:hidden}
+/* The game's width follows the longer edge of its available area. */
+.laboratory-page{container:game-viewport / size;overflow:hidden}
+@container game-viewport (aspect-ratio < 1){
   .laboratory-page>iframe{
     position:absolute;
     top:0;
     left:0;
-    width:100dvh;
-    height:100vw;
+    width:100cqh;
+    height:100cqw;
     transform-origin:top left;
-    transform:translateX(100vw) rotate(90deg);
+    transform:translateX(100cqw) rotate(90deg);
   }
 }
-
 
 .brand-mark{padding:0;overflow:hidden;background:transparent}.brand-mark>img,.app-icon>img{display:block;width:100%;height:100%;object-fit:contain}.app-icon{padding:0;overflow:hidden;background:none}.site-header .header-app{display:flex;align-items:center;justify-content:center;width:44px;height:44px;flex:none;border:0;padding:0;max-width:none;border-radius:10px}.header-app>img{display:block;width:36px;height:36px;object-fit:contain}
 
