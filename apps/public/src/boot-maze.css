@@ -1,0 +1,19 @@
+.boot-maze{display:block;width:204px;height:132px;max-width:100%;overflow:visible;flex:none}
+.boot-maze .boot-wall{fill:none;stroke:var(--boot-ink,#242424);stroke-width:2;stroke-linecap:square}
+.boot-maze .boot-arena{animation:boot-clock 8.32s linear infinite}
+.boot-maze .boot-dot{fill:var(--boot-ink,#242424);opacity:calc((var(--d) - var(--boot-t))*500)}
+.boot-maze .boot-pac{transform-box:view-box;transform-origin:0 0;translate:42px 18px;rotate:90deg;animation:boot-path 8.32s linear infinite,boot-face 8.32s steps(1,end) infinite}
+.boot-maze .boot-body{fill:var(--boot-ink,#242424)}
+.boot-maze .boot-jaw{fill:var(--boot-bg,#fafafa)}
+.boot-maze .boot-frame{opacity:0;animation-duration:.42s;animation-timing-function:steps(1,end);animation-iteration-count:infinite}
+.boot-maze .boot-frame-a{animation-name:boot-chomp-a}.boot-maze .boot-frame-b{animation-name:boot-chomp-b}.boot-maze .boot-frame-c{animation-name:boot-chomp-c}
+.boot-maze .boot-eye{fill:var(--boot-bg,#fafafa)}
+@property --boot-t{syntax:"<number>";inherits:true;initial-value:0}
+@keyframes boot-chomp-a{0%{opacity:1;animation-timing-function:steps(1,end)}25%{opacity:0}}
+@keyframes boot-chomp-b{0%{opacity:0;animation-timing-function:steps(1,end)}25%{opacity:1;animation-timing-function:steps(1,end)}50%{opacity:0;animation-timing-function:steps(1,end)}75%{opacity:1}}
+@keyframes boot-chomp-c{0%{opacity:0;animation-timing-function:steps(1,end)}50%{opacity:1;animation-timing-function:steps(1,end)}75%{opacity:0}}
+@keyframes boot-clock{from{--boot-t:0}to{--boot-t:1}}
+@keyframes boot-path{0%{translate:42px 18px}7.6923%{translate:42px 66px}11.5385%{translate:66px 66px}15.3846%{translate:66px 42px}19.2308%{translate:90px 42px}23.0769%{translate:90px 66px}26.9231%{translate:114px 66px}30.7692%{translate:114px 90px}38.4615%{translate:66px 90px}42.3077%{translate:66px 114px}57.6923%{translate:162px 114px}61.5385%{translate:162px 90px}65.3846%{translate:138px 90px}69.2308%{translate:138px 66px}73.0769%{translate:162px 66px}80.7692%{translate:162px 18px}100%{translate:42px 18px}}
+@keyframes boot-face{0%{rotate:90deg}7.6923%{rotate:0deg}11.5385%{rotate:270deg}15.3846%{rotate:0deg}19.2308%{rotate:90deg}23.0769%{rotate:0deg}26.9231%{rotate:90deg}30.7692%{rotate:180deg}38.4615%{rotate:90deg}42.3077%{rotate:0deg}57.6923%{rotate:270deg}61.5385%{rotate:180deg}65.3846%{rotate:270deg}69.2308%{rotate:0deg}73.0769%{rotate:270deg}80.7692%{rotate:180deg}100%{rotate:90deg}}
+@media(max-height:520px){.lab-loading .boot-maze,#lab-boot .boot-maze{width:auto;height:min(132px,32vh);max-height:132px}}
+@media(prefers-reduced-motion:reduce){.boot-maze .boot-frame{animation:none}.boot-maze .boot-frame-b{opacity:1}.boot-maze .boot-frame-a,.boot-maze .boot-frame-c{opacity:0}.boot-maze .boot-pac,.boot-maze .boot-arena{animation:none}.boot-maze .boot-arena{--boot-t:0}}
