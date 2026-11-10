@@ -30,7 +30,7 @@ import {AnswerSlots} from '../../../packages/learning-ui/src/AnswerSlots';
 import SpellingGlow from '../../../packages/learning-ui/src/SpellingGlow';
 import {maskExample,mismatch,completionProgress,exampleTokens,exampleWords,tokenForWord} from '../../../packages/learning-ui/src/spelling.mjs';
 import {newStudy,restoreStudy,restoreStudyFromStorage,reduceStudy,studyKey,wordDraft,expectedInput} from '../../../packages/practice/src/study.mjs';
-import {promptsFor,newSentence,rates,writtenWords,checkSentence,tokens} from '../../../packages/practice/src/sentence.mjs';
+import {promptsFor,newSentence,rates,writtenWords,isGuidedWordEditable,checkSentence,tokens} from '../../../packages/practice/src/sentence.mjs';
 import {accumulateReading} from '../../../packages/practice/src/reading.mjs';
 import {readPreference,writePreference} from './storage';
 import {useSpeech} from './useSpeech';
@@ -111,20 +111,37 @@ function GuidedInput({sentence,value,difficulty,disabled,feedbackActive,deckWord
  const words:string[]=writtenWords(sentence),inputs=useRef<(HTMLInputElement|null)[]>([]);
  const {peek:wordPeek,begin,hover,cancel,consumeClick}=useWordPeek(`${sentence}|${difficulty}|${disabled}`,!disabled);
  const target=(word:string,node:Element)=>()=>({word,anchor:node.getBoundingClientRect(),meaning:normalizeDefinitionWord(word)===normalizeDefinitionWord(deckWord)?deckMeaning:undefined});
- const editableWord=(word:string)=>/[a-z]/i.test(word);
- const savedValues=()=>words.map((word,j)=>editableWord(word)?value[j]||'':word);
- const update=(i:number,v:string)=>{const next=savedValues();next[i]=v;onChange(next);};
- const wordPress=(word:string,e:ReactPointerEvent<HTMLLabelElement>)=>{
-  if(disabled||e.button!==0||!e.isPrimary)return;
-  begin(target(word,e.currentTarget),e);
+ const pasteWords=(start:number,text:string)=>{
+  const pasted=text.trim().split(/\s+/),next=[...value];
+  let first=start;
+  while(first>0&&!isGuidedWordEditable(words[first-1]))first--;
+  let at=0;
+  for(let i=first;i<words.length&&at<pasted.length;i++){
+   if(isGuidedWordEditable(words[i]))next[i]=pasted[at++];
+   else if(writtenWords(pasted[at])[0]?.toLowerCase()===words[i].toLowerCase())at++;
+  }
+  onChange(next);
  };
  return <div className="guided-input" onClickCapture={consumeClick} onContextMenu={e=>e.preventDefault()} aria-label={difficulty==='easy'?'显示单词和字母数量':'只显示单词数量'}>{words.map((word,i)=>{
-  const expected=letterGroups(word),entered=editableWord(word)?value[i]||'':word,typed=letterGroups(entered),capacity=expected.length,slots=Math.max(capacity,typed.length);
-  return <label key={i} className="guided-word" style={{width:difficulty==='easy'?`min(${slots*16}px,100%)`:80}} onPointerDown={e=>wordPress(word,e)} onPointerEnter={e=>hover(target(word,e.currentTarget),e)} onPointerLeave={e=>{if(e.pointerType==='mouse'&&!e.buttons)cancel();}}>
+  const pointer={
+   onPointerDown:(e:ReactPointerEvent<HTMLElement>)=>{if(!disabled&&e.button===0&&e.isPrimary)begin(target(word,e.currentTarget),e);},
+   onPointerEnter:(e:ReactPointerEvent<HTMLElement>)=>hover(target(word,e.currentTarget),e),
+   onPointerLeave:(e:ReactPointerEvent<HTMLElement>)=>{if(e.pointerType==='mouse'&&!e.buttons)cancel();},
+  };
+  if(!isGuidedWordEditable(word))return <span key={i} className="guided-word guided-word-fixed" lang="en" {...pointer}>{word}</span>;
+  const expected=letterGroups(word),entered=value[i]||'',typed=letterGroups(entered),capacity=expected.length,slots=Math.max(capacity,typed.length);
+  const nextField=()=>inputs.current.find((node,j)=>node&&j>i);
+  return <label key={i} className="guided-word" style={{width:difficulty==='easy'?`min(${slots*16}px,100%)`:80}} {...pointer}>
    <EnglishInput key={`${sentence}:${i}`} ref={n=>{inputs.current[i]=n as HTMLInputElement|null;}} label={`第 ${i+1} 个单词${difficulty==='easy'?`，${capacity} 个字母`:''}`} readOnly={disabled} onVirtualKey={onVirtualKey} value={entered} onWarning={onWarning} onComposing={onComposing}
-    onValue={(raw,advance)=>{const next=raw.replace(/\s/g,''),before=letterGroups(entered).length,after=letterGroups(next).length,later=value.some((v,j)=>j>i&&editableWord(words[j])&&!!String(v||'').trim());update(i,next);if(advance&&!later&&before<capacity&&after>=capacity)inputs.current.find((node,j)=>j>i&&editableWord(words[j]))?.focus({preventScroll:true});}}
-    onPaste={e=>{const text=e.clipboardData.getData('text');if(!/\s/.test(text))return;e.preventDefault();const next=savedValues();text.trim().split(/\s+/).forEach((v,j)=>{if(i+j<next.length)next[i+j]=v;});onChange(next);}}
-    onKeyDown={e=>{if(e.nativeEvent.isComposing)return;if(e.key==='Enter'){e.preventDefault();if(!disabled&&inputs.current[i+1])inputs.current[i+1]?.focus({preventScroll:true});else onSubmit();return;}if(disabled)return;if(e.key==='Backspace'&&!entered){e.preventDefault();inputs.current[i-1]?.focus({preventScroll:true});}}}/>
+    onValue={(raw,advance)=>{
+     const next=raw.replace(/\s/g,''),updated=[...value];
+     updated[i]=next;
+     onChange(updated);
+     const later=value.some((v,j)=>j>i&&isGuidedWordEditable(words[j])&&!!v?.trim());
+     if(advance&&!later&&typed.length<capacity&&letterGroups(next).length>=capacity)nextField()?.focus({preventScroll:true});
+    }}
+    onPaste={e=>{const text=e.clipboardData.getData('text');if(!/\s/.test(text))return;e.preventDefault();pasteWords(i,text);}}
+    onKeyDown={e=>{if(e.nativeEvent.isComposing||e.key!=='Enter')return;e.preventDefault();const next=disabled?null:nextField();if(next)next.focus({preventScroll:true});else onSubmit();}}/>
    {difficulty==='easy'&&<GuidedLetters expected={expected} typed={typed} active={feedbackActive} sentenceComplete={disabled}/>}
   </label>;
  })}<WordPeekTooltip peek={wordPeek}/></div>;
@@ -265,9 +282,9 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,loadP
  },[deck]);
  const focusAnswer=()=>{
   const fields=[...(layoutRoot.current?.querySelectorAll<HTMLInputElement|HTMLTextAreaElement>('.spelling-input,.guided-input input,.dictation-input')||[])];
-  const words=freeDictation&&prompt&&state.difficulty!=='hard'?writtenWords(prompt.sentence):[];
+  const words=freeDictation&&state.difficulty!=='hard'?editableSentenceWords:[];
   const incomplete=words.length
-   ? fields.find((node,i)=>/[a-z]/i.test(words[i]||'')&&node.value.replace(/[^\p{L}\p{N}]/gu,'').length<words[i].replace(/[^\p{L}\p{N}]/gu,'').length)
+   ? fields.find((node,i)=>node.value.replace(/[^\p{L}\p{N}]/gu,'').length<words[i].replace(/[^\p{L}\p{N}]/gu,'').length)
    : fields.find(node=>!node.value);
   const remembered=freeDictation?fields.find(node=>node===dictationFocus.current):undefined;
   const target=fields.find(node=>node===document.activeElement)||remembered||incomplete||fields[0];
@@ -392,7 +409,7 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,loadP
   const shortcutTarget=target?.closest('.native-practice')||target===document.body||target===document.documentElement||target?.id==='main-content';
   const shortcutBlocked=target?.closest('select,dialog,[role=dialog],[contenteditable=true],.sentence-ambience')||document.querySelector('.sentence-ambience[open],.chunk-menu');
   const shortcutField=target?.closest('input,textarea');
-  if(desktopShortcut&&e.key==='Escape'&&!complete&&state.module==='listening'&&prompt&&!state.sentenceFinished&&(state.mode==='chunks'||state.mode==='free')&&!sentenceResult&&!shortcutBlocked&&shortcutTarget&&(!shortcutField||shortcutField.matches('.guided-input input,.dictation-input'))){
+  if(desktopShortcut&&e.key==='Escape'&&!complete&&!allWordsShown&&state.module==='listening'&&prompt&&!state.sentenceFinished&&(state.mode==='chunks'||state.mode==='free')&&!sentenceResult&&!shortcutBlocked&&shortcutTarget&&(!shortcutField||shortcutField.matches('.guided-input input,.dictation-input'))){
    e.preventDefault();act({type:'giveUp'});return;
   }
   if(state.module==='spelling'&&e.key==='Escape'&&!draft.result&&!shortcutBlocked&&(!shortcutField||shortcutField.matches('.spelling-input'))&&(shortcutTarget||target===document.body||target===document.documentElement||target?.id==='main-content')){
@@ -414,19 +431,18 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,loadP
   }else if(state.module==='listening'&&state.mode==='free'&&!state.sentenceFinished){
    if(pressed===' ')return;
    if(sentenceResult){if(pressed==='Enter'&&sentence.pending!==state.mode)dispatch({type:'sentenceNext'});return;}
-   const inputs=[...document.querySelectorAll<HTMLInputElement|HTMLTextAreaElement>('.guided-input input,.dictation-input')];
-   let target=inputs.find(node=>node===document.activeElement)||inputs.find(node=>!node.value)||inputs[0];if(!target)return;
-   if(target.matches('.guided-input input')&&!/[a-z]/i.test(sentenceWords[inputs.indexOf(target)]||'')){target=inputs.find((node,j)=>j>inputs.indexOf(target)&&/[a-z]/i.test(sentenceWords[j]||''))!;if(!target)return;}
+   const inputs=[...(layoutRoot.current?.querySelectorAll<HTMLInputElement|HTMLTextAreaElement>('.guided-input input,.dictation-input')||[])];
+   const target=inputs.find(node=>node===document.activeElement)||inputs.find(node=>!node.value)||inputs[0];if(!target)return;
    target.focus({preventScroll:true});
    const index=inputs.indexOf(target);
-   const edit=(field:HTMLInputElement|HTMLTextAreaElement,key:string)=>prompt?editDictationText(field.matches('.dictation-input')?prompt.sentence:(sentenceWords[inputs.indexOf(field)]||'').replace(/['’‘]/g,''),field.value,field.selectionStart,field.selectionEnd,key):editKeyboardText(field.value,field.selectionStart,field.selectionEnd,key);
+   const edit=(field:HTMLInputElement|HTMLTextAreaElement,key:string)=>prompt?editDictationText(field.matches('.dictation-input')?prompt.sentence:(editableSentenceWords[inputs.indexOf(field)]||'').replace(/['’‘]/g,''),field.value,field.selectionStart,field.selectionEnd,key):editKeyboardText(field.value,field.selectionStart,field.selectionEnd,key);
    const commit=(field:HTMLInputElement|HTMLTextAreaElement,edited:{value:string;cursor:number})=>{
     const prototype=field instanceof HTMLTextAreaElement?HTMLTextAreaElement.prototype:HTMLInputElement.prototype;
     Object.getOwnPropertyDescriptor(prototype,'value')!.set!.call(field,edited.value);field.setSelectionRange(edited.cursor,edited.cursor);flushSync(()=>field.dispatchEvent(new Event('input',{bubbles:true})));if(field===document.activeElement)field.setSelectionRange(Math.min(edited.cursor,field.value.length),Math.min(edited.cursor,field.value.length));
    };
    if(pressed==='Escape'){act({type:'giveUp'});return;}
    if(pressed==='Backspace'&&target.selectionStart===target.selectionEnd&&target.selectionStart===0){
-    const previous=inputs.slice(0,index).filter((node,j)=>/[a-z]/i.test(sentenceWords[j]||'')).at(-1);if(previous){previous.focus({preventScroll:true});previous.setSelectionRange(previous.value.length,previous.value.length);const edited=edit(previous,'Backspace');if(edited)commit(previous,edited);}return;
+    const previous=inputs[index-1];if(previous){previous.focus({preventScroll:true});previous.setSelectionRange(previous.value.length,previous.value.length);const edited=edit(previous,'Backspace');if(edited)commit(previous,edited);}return;
    }
    if(pressed==='Enter'){const next=inputs[index+1];if(next)next.focus({preventScroll:true});else act({type:'submit'});return;}
    const edited=edit(target,pressed);if(!edited)return;commit(target,edited);
@@ -436,6 +452,8 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,loadP
  const progress=completionProgress(required,draft.input);
  const results=Object.values(state.words) as any[],correct=results.filter(d=>d.result==='correct').length,reviewed=results.filter(d=>d.result&&d.result!=='correct').length;
  const sentenceWords=prompt?writtenWords(prompt.sentence):[];
+ const editableSentenceWords=sentenceWords.filter(isGuidedWordEditable);
+ const allWordsShown=freeDictation&&state.difficulty!=='hard'&&!editableSentenceWords.length;
  const photoPalette=usePhotoPalette();
  const spellingPhotoBudget=useRef<{height:number;photo:number}|null>(null);
  useLayoutEffect(()=>{
@@ -488,10 +506,10 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,loadP
     <Playback play={replay} audio={audio} rate={state.rate} setRate={setRate} shortcut={desktopShortcut} label={word.example?'播放句子和单词':'播放单词'}/>
     {draft.result==='revealed'||draft.result&&!state.pending?<button className="native-primary" onClick={()=>dispatch({type:'next'})}>{state.index+1===deck.words.length?'完成本轮':'下一个'}</button>:<button className="native-primary" disabled={!!draft.result} aria-keyshortcuts={desktopShortcut?'Escape':undefined} onClick={revealWord}>不认识 <kbd className="esc-keycap" aria-hidden="true">Esc</kbd></button>}
    </div>:state.module==='listening'&&prompt&&!state.sentenceFinished?<div className="native-answer-footer sentence-footer">
-    {playback?<><ListeningSeek onBegin={()=>{if(listenRun)setSeek(promptAudio?audio.readProgress():Math.max(0,audio.position));audio.stopPlayback();}} audio={audio} prompt={prompt.sentence} original={!!promptAudio} seek={seek} onSeek={value=>{audio.stopPlayback();setSeek(value);setSeekRevision(n=>n+1);}}/><div className="listening-metadata"><span aria-label="播放列表位置">{Math.max(0,playlist.indexOf(state.sentenceIndex))+1}/{playlist.length}</span><label className="listening-repeat"><span aria-hidden="true">↻</span><select aria-label="循环方式" value={repeat} onChange={e=>{if(listenRun)setSeek(promptAudio?audio.readProgress():Math.max(0,audio.position));setRepeat(e.target.value);setPass(0);writePreference('piclex-web.listening.repeat',e.target.value);}}>{repeatModes.map(([id,title])=><option key={id} value={id}>{title}</option>)}</select></label><select aria-label="播放速度" disabled={repeat==='fastThreeSlowTwo'} value={repeat==='fastThreeSlowTwo'?(pass<3?1:.75):state.rate} onChange={e=>setRate(Number(e.target.value))}>{rates.map(r=><option key={r} value={r}>{r}×</option>)}</select></div><div className="listening-transport"><button className="native-button" aria-label="上一句" onClick={()=>skipListening(-1)}><span className="transport-skip previous" aria-hidden="true"/></button><button className="native-button" onClick={()=>{if(listenRun)pauseListening();else setListenRun(true);}}>{listenRun?<Icon name="pause"/>:<span className="transport-play" aria-hidden="true"/>}{audio.preparing&&listenRun?'准备中…':listenRun?'暂停':audio.error?'重新准备':'播放'}</button><button className="native-button" aria-label="下一句" onClick={()=>skipListening(1)}><span className="transport-skip" aria-hidden="true"/></button></div></>:<><Playback play={replay} audio={audio} rate={state.rate} setRate={setRate} shortcut={desktopShortcut}/>{sentenceResult&&sentence.pending!==state.mode?<div className="sentence-actions">{state.mode==='chunks'&&sentenceResult==='correct'&&<button className="native-button" onClick={()=>setMode('free')}>挑战自由听写</button>}<button className="native-primary" onClick={()=>dispatch({type:'sentenceNext'})}>下一个</button></div>:<div className={`sentence-actions${sentenceResult?' sentence-actions-pending':''}`} aria-hidden={sentenceResult?true:undefined} inert={!!sentenceResult}><button className="native-primary" aria-keyshortcuts={desktopShortcut&&!sentenceResult?'Escape':undefined} onClick={()=>act({type:'giveUp'})}>听不懂 <kbd className="esc-keycap" aria-hidden="true">Esc</kbd></button></div>}</>}
+    {playback?<><ListeningSeek onBegin={()=>{if(listenRun)setSeek(promptAudio?audio.readProgress():Math.max(0,audio.position));audio.stopPlayback();}} audio={audio} prompt={prompt.sentence} original={!!promptAudio} seek={seek} onSeek={value=>{audio.stopPlayback();setSeek(value);setSeekRevision(n=>n+1);}}/><div className="listening-metadata"><span aria-label="播放列表位置">{Math.max(0,playlist.indexOf(state.sentenceIndex))+1}/{playlist.length}</span><label className="listening-repeat"><span aria-hidden="true">↻</span><select aria-label="循环方式" value={repeat} onChange={e=>{if(listenRun)setSeek(promptAudio?audio.readProgress():Math.max(0,audio.position));setRepeat(e.target.value);setPass(0);writePreference('piclex-web.listening.repeat',e.target.value);}}>{repeatModes.map(([id,title])=><option key={id} value={id}>{title}</option>)}</select></label><select aria-label="播放速度" disabled={repeat==='fastThreeSlowTwo'} value={repeat==='fastThreeSlowTwo'?(pass<3?1:.75):state.rate} onChange={e=>setRate(Number(e.target.value))}>{rates.map(r=><option key={r} value={r}>{r}×</option>)}</select></div><div className="listening-transport"><button className="native-button" aria-label="上一句" onClick={()=>skipListening(-1)}><span className="transport-skip previous" aria-hidden="true"/></button><button className="native-button" onClick={()=>{if(listenRun)pauseListening();else setListenRun(true);}}>{listenRun?<Icon name="pause"/>:<span className="transport-play" aria-hidden="true"/>}{audio.preparing&&listenRun?'准备中…':listenRun?'暂停':audio.error?'重新准备':'播放'}</button><button className="native-button" aria-label="下一句" onClick={()=>skipListening(1)}><span className="transport-skip" aria-hidden="true"/></button></div></>:<><Playback play={replay} audio={audio} rate={state.rate} setRate={setRate} shortcut={desktopShortcut}/>{(allWordsShown||sentenceResult&&sentence.pending!==state.mode)?<div className="sentence-actions">{state.mode==='chunks'&&sentenceResult==='correct'&&<button className="native-button" onClick={()=>setMode('free')}>挑战自由听写</button>}<button className="native-primary" onClick={()=>dispatch({type:'sentenceNext'})}>下一个</button></div>:<div className={`sentence-actions${sentenceResult?' sentence-actions-pending':''}`} aria-hidden={sentenceResult?true:undefined} inert={!!sentenceResult}><button className="native-primary" aria-keyshortcuts={desktopShortcut&&!sentenceResult?'Escape':undefined} onClick={()=>act({type:'giveUp'})}>听不懂 <kbd className="esc-keycap" aria-hidden="true">Esc</kbd></button></div>}</>}
    </div>:null}
   </>}
-  {!complete&&(state.module==='spelling'||state.module==='listening'&&state.mode==='free'&&!!prompt&&!state.sentenceFinished)&&<VirtualKeyboard active={active} press={virtualPress} lettersOnly />}
+  {!complete&&(state.module==='spelling'||state.module==='listening'&&state.mode==='free'&&!!prompt&&!state.sentenceFinished&&!allWordsShown)&&<VirtualKeyboard active={active} press={virtualPress} lettersOnly />}
   {panel==='download'&&<DeckDownload close={()=>setPanel(null)} installed={installedDecks} save={saveDownloaded}/>}
   {panel==='level'&&<Dialog title="我的等级" close={()=>setPanel(null)}><LevelPage embedded openGame={openGame} gameBusy={gameBusy} learn={()=>{setPanel(null);selectModule('spelling');}}/></Dialog>}
   {panel&&panel!=='download'&&panel!=='level'&&<Dialog title={panel==='gallery'?'选择照片':'选择卡组'} close={()=>setPanel(null)}>{panel==='settings'?<DeckPicker choices={deckChoices} loadPurchaseChoices={loadPurchaseChoices} selectedID={deck.id} position={state.index} notify={notify} select={id=>{audio.stop();setPanel(null);selectDeck(id);}}/>:<><div className="gallery-tools"><button className="native-button" aria-label="分享卡组" onClick={share}><Icon name="share"/></button><button className="native-button" aria-label="下载卡组" onClick={download}>↓</button></div><div className="native-photo-grid">{deck.images.map((src,imageIndex)=>{const first=deck.words.findIndex(w=>w.imageIndex===imageIndex);return <button key={src} aria-label={`照片 ${imageIndex+1}`} aria-pressed={word?.imageIndex===imageIndex} onClick={()=>{dispatch({type:'selectWord',index:word?.imageIndex===imageIndex?state.index:first});setPanel(null);}}><img src={src} alt="" loading="lazy"/><span>{imageIndex+1}</span></button>;})}</div></>}</Dialog>}

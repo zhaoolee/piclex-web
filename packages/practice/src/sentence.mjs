@@ -106,6 +106,7 @@ export function newSentence(prompt,random=Math.random){
   return {key:prompt.key,chunks:list,bank,selected:[],freeText:'',guided:null,checks:{},outcomes:{},revealed:[],statistics:{chunks:{submissions:0,correct:0,assisted:0,plays:0},free:{submissions:0,correct:0,assisted:0,plays:0}},pending:null};
 }
 export const writtenWords=sentence=>sentence.match(/[\p{L}\p{N}]+(?:['’‘][\p{L}\p{N}]+)*/gu)||[];
+export const isGuidedWordEditable=word=>/[a-z]/i.test(word??'')&&!/\p{N}/u.test(word);
 const alphanumericLength=value=>(String(value??'').match(/[\p{L}\p{N}]/gu)||[]).length;
 // Hard input scaffolds fixed separators, so only its typed letters/numbers count.
 const hardFilled=(sentence,value)=>alphanumericLength(value)>=alphanumericLength(sentence);
@@ -123,7 +124,12 @@ export function reduceSentence(prompt,session,mode,action){
   else if(action.type==='remove'){next.selected=next.selected.filter(id=>id!==action.id);delete next.checks.chunks;}
   else if(action.type==='move') {const i=next.selected.indexOf(action.id),j=i+action.offset;if(i<0||j<0||j>=next.selected.length)return session;[next.selected[i],next.selected[j]]=[next.selected[j],next.selected[i]];delete next.checks.chunks;evaluate=next.selected.length===next.chunks.length;}
   else if(action.type==='input') {next.freeText=String(action.value).slice(0,2000).replace(/[\r\n]+/g,' ');next.guided=null;delete next.checks.free;evaluate=checkSentence(prompt.sentence,next.freeText).isCorrect||hardFilled(prompt.sentence,next.freeText);}
-  else if(action.type==='guided'){next.guided=action.values.map(v=>String(v).slice(0,100));next.freeText=next.guided.join(' ').trimEnd().slice(0,2000);delete next.checks.free;evaluate=guidedCorrect(prompt.sentence,next.guided)||guidedFilled(prompt.sentence,next.guided);}
+  else if(action.type==='guided'){
+    const words=writtenWords(prompt.sentence);
+    next.guided=words.map((word,i)=>isGuidedWordEditable(word)?String(action.values[i]??'').slice(0,100):word);
+    next.freeText=next.guided.join(' ').trimEnd().slice(0,2000);delete next.checks.free;
+    evaluate=guidedCorrect(prompt.sentence,next.guided)||guidedFilled(prompt.sentence,next.guided);
+  }
   else if(action.type==='submit')evaluate=mode==='free'?!!tokens(next.freeText).length:next.selected.length===next.chunks.length&&!next.checks.chunks;
   else if(action.type==='reveal') {if(!next.revealed.includes(mode))next.revealed.push(mode);next.pending=null;}
   else if(action.type==='retry'){next.freeText='';next.guided=null;delete next.checks.free;next.revealed=next.revealed.filter(v=>v!=='free');next.pending=null;}

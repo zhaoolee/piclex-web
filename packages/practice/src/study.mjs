@@ -1,6 +1,6 @@
 import {restoreCaptureStudy} from './capture-group.mjs';
 import {resolve,mismatch,convertPrompt,fixed} from '../../learning-ui/src/spelling.mjs';
-import {promptsFor,promptIndex,newSentence,reduceSentence,checkSentence} from './sentence.mjs';
+import {promptsFor,promptIndex,newSentence,reduceSentence,checkSentence,writtenWords,isGuidedWordEditable} from './sentence.mjs';
 export function newStudy(deck){return {version:2,fingerprint:deck.fingerprint,index:0,round:0,presentation:0,module:'spelling',mode:'chunks',rate:1,difficulty:'hard',quick:false,hiddenChinese:false,words:{},history:{},sentences:{},sentenceIndex:0,sentenceFinished:false,pending:null};}
 export const studyKey=s=>`${s.fingerprint}:${s.round}:${s.presentation}:${s.index}:${s.module}:${s.mode}:${s.sentenceIndex}`;
 export function wordDraft(deck,s){return s.words[deck.words[s.index]?.id]||{input:'',hadMistake:false,result:null,quickIndices:null};}
@@ -132,7 +132,10 @@ export function reduceStudy(deck,s,action,preparedPrompts){
  if(action.type==='retryWord'&&word&&s.module==='spelling'&&s.words[word.id]?.result){reopen(next,word);pause(next);return next;}
  if(action.type==='listeningJump'&&s.module==='listening'&&s.mode==='listening'&&Number.isInteger(action.index)&&prompts[action.index]){next.sentenceIndex=action.index;next.sentenceFinished=false;navigate(prompts[action.index].wordIndex);return next;}
  if(action.type==='sentenceNext'){
-  const p=prompts[s.sentenceIndex],draft=p&&s.sentences[p.key];if(!p||(s.mode!=='listening'&&!draft?.outcomes[s.mode]))return s;
+  const p=prompts[s.sentenceIndex];if(!p)return s;
+  const draft=s.sentences[p.key];
+  const allWordsShown=s.mode==='free'&&s.difficulty!=='hard'&&!writtenWords(p.sentence).some(isGuidedWordEditable);
+  if(s.mode!=='listening'&&!draft?.outcomes[s.mode]&&!allWordsShown)return s;
   if(s.sentenceIndex+1<prompts.length){next.sentenceIndex++;navigate(prompts[next.sentenceIndex].wordIndex);}else {next.sentenceFinished=true;pause(next);}return next;
  }
  if(action.type==='speakingNext'&&s.module==='speaking'&&word){navigate(Math.min(deck.words.length,s.index+1));return next;}

@@ -1,6 +1,7 @@
 import {test,expect,type Locator,type Page} from '@playwright/test';
 import {observeCompletionCue} from './helpers/completion-cue';
 import fs from 'node:fs';
+import {createHash} from 'node:crypto';
 import {fillEnglish} from './helpers/spelling';
 
 const catalog=JSON.parse(fs.readFileSync('apps/public/public/library/catalog.json','utf8'));
@@ -382,4 +383,86 @@ test('reduced motion still plays the sentence completion cue once',async({page},
  await expect.poll(cue).toMatchObject({started:1,ended:1,output:'running'});
  expect((await cue()).animation).toBeUndefined();
  await expect.poll(()=>page.url()).not.toBe(url);
+});
+
+async function openNumberedDictation(page:Page,difficulty:string,examples:string[]){
+ const deck=JSON.parse(fs.readFileSync('apps/public/public/'+sentenceDeck.payload,'utf8'));
+ deck.words=examples.map((example,i)=>({...deck.words[i],example,exampleChinese:'',audio:undefined,occurrenceID:'numbered-dictation-'+i}));
+ const payload=JSON.stringify(deck);
+ const card={...sentenceDeck,count:deck.words.length,payloadSHA256:createHash('sha256').update(payload).digest('hex')};
+ await page.route('**/library/catalog.json',route=>route.fulfill({json:[card]}));
+ await page.route('**/'+card.payload,route=>route.fulfill({body:payload,contentType:'application/json'}));
+ await isolateSpeech(page);
+ await page.goto('/piclex-web/#/deck/'+card.id+'?module=listening&mode=free&difficulty='+difficulty);
+}
+
+for(const difficulty of ['easy','medium'])test(`numbered dictation shows fixed words and skips them in ${difficulty}`,async({page},info)=>{
+ await openNumberedDictation(page,difficulty,['1st comes R2D2 today 2026.','24 7.','Try again.']);
+ const board=page.locator('.guided-input'),fields=board.locator('input');
+ await expect(board).toBeVisible();
+ const evidence=process.env.NUMBER_DICTATION_EVIDENCE;
+ if(evidence)await page.screenshot({path:`${evidence}/${info.project.name}-${difficulty}-${process.env.NUMBER_DICTATION_STAGE}.png`,fullPage:true});
+ await expect(board.locator('.guided-word-fixed')).toHaveText(['1st','R2D2','2026']);
+ await expect(fields).toHaveCount(2);
+ const first=fields.first(),last=fields.last();
+ await expect(first).toBeFocused();
+ await first.press('Enter');
+ await expect(last).toBeFocused();
+ await first.focus();
+ if(info.project.use.hasTouch){
+  for(const letter of 'comes')await page.locator(`.virtual-key[data-key="${letter}"]`).tap();
+ }else await first.pressSequentially('comes');
+ await expect(last).toBeFocused();
+ await last.press('Backspace');
+ await expect(first).toBeFocused();
+ await expect(first).toHaveValue('come');
+ await first.press('s');
+ await expect(last).toBeFocused();
+ await last.pressSequentially('todax');
+ await expect(page.getByRole('status').filter({hasText:'再听一次'})).toBeVisible();
+ await last.press('Backspace');
+ await page.reload();
+ await expect(first).toHaveValue('comes');
+ await expect(last).toHaveValue('toda');
+ await expect(board.locator('.guided-word-fixed')).toHaveText(['1st','R2D2','2026']);
+ await last.press('End');
+ await last.press('y');
+ await expect(board.locator('.guided-word-fixed')).toHaveText(['24','7']);
+ await expect(fields).toHaveCount(0);
+ await page.getByRole('button',{name:'下一个',exact:true}).click();
+ await expect(board.locator('.guided-word-fixed')).toHaveCount(0);
+ await expect(fields).toHaveCount(2);
+ await expect(fields.first()).toBeFocused();
+});
+
+test('numbered dictation shows the reported ordinal inline',async({page},info)=>{
+ await openNumberedDictation(page,'easy',['And that ends our special bulletin for today, Thursday, April 1st.']);
+ const board=page.locator('.guided-input');
+ await expect(board).toBeVisible();
+ const evidence=process.env.NUMBER_DICTATION_EVIDENCE;
+ if(evidence)await page.screenshot({path:`${evidence}/${info.project.name}-april-${process.env.NUMBER_DICTATION_STAGE}.png`,fullPage:true});
+ const ordinal=board.locator('.guided-word').last();
+ await expect(ordinal).toHaveText('1st');
+ await expect(ordinal.locator('input')).toHaveCount(0);
+ await expect(board.locator('input')).toHaveCount(10);
+});
+
+test('numbered dictation pastes with or without the fixed tokens',async({page})=>{
+ const sentences=['1st comes R2D2 today 2026.','2nd comes R2D2 tomorrow.','Try again.'];
+ await openNumberedDictation(page,'easy',sentences);
+ const fields=page.locator('.guided-input input');
+ for(const [index,text] of ['1st comes R2D2 today 2026.','comes tomorrow'].entries()){
+  await expect(fields.first()).toBeFocused();
+  await fields.first().evaluate((node,text)=>{
+   const clipboardData=new DataTransfer();
+   clipboardData.setData('text/plain',text);
+   node.dispatchEvent(new ClipboardEvent('paste',{bubbles:true,cancelable:true,clipboardData}));
+  },text);
+  const next=index===0?'2nd':'';
+  if(next)await expect(page.locator('.guided-word-fixed').first()).toHaveText(next);
+  else{
+   await expect(page.locator('.guided-word-fixed')).toHaveCount(0);
+   await expect(fields.first()).toHaveValue('');
+  }
+ }
 });
