@@ -3,7 +3,7 @@ import {useCallback,useEffect,useRef,useState} from 'react';
 import type {AudioClip} from './NativePractice';
 import {createPlaybackProgress} from './playback-progress';
 import {createSpeechProgress} from './speech-progress.mjs';
-type PlayRequest={texts:string[];rate:number;onEnd?:()=>void;offset:number;clip?:AudioClip;startFraction:number;automatic?:boolean};
+type PlayRequest={texts:string[];rate:number;onEnd?:()=>void;offset:number;clip?:AudioClip;startFraction:number;intent?:'automatic'|'replay'};
 type PreparedClip={clip:AudioClip;player:HTMLAudioElement;blobURL:string};
 type PreloadedClip={clip:AudioClip;controller:AbortController;blob?:Blob};
 const networkStartupTimeout=12000;
@@ -14,7 +14,7 @@ export function useSpeech(notify:(s:string)=>void){
  const prepared=useRef<PreparedClip|null>(null),preloaded=useRef<PreloadedClip|null>(null),speechPending=useRef(false);
  const blockedRequest=useRef<PlayRequest|null>(null),retrying=useRef(false),gestureRetry=useRef(false),confirmed=useRef(false);
  const startupTimer=useRef<ReturnType<typeof setTimeout>|undefined>(undefined);
- const [playing,setPlaying]=useState(false),[preparing,setPreparing]=useState(false),[position,setPosition]=useState(-1),[blocked,setBlocked]=useState(false);
+ const [playing,setPlaying]=useState(false),[preparation,setPreparation]=useState<'play'|'replay'|null>(null),[position,setPosition]=useState(-1),[blocked,setBlocked]=useState(false);
  const mediaClock=useRef<ReturnType<typeof setInterval>|undefined>(undefined);
  const speechClock=useRef<ReturnType<typeof setInterval>|undefined>(undefined);
  const [error,setError]=useState('');
@@ -58,7 +58,7 @@ export function useSpeech(notify:(s:string)=>void){
  },[clearMedia]);
  const finish=useCallback(()=>{
   cancelPlayback();blockedRequest.current=null;retrying.current=false;
-  setPlaying(false);setPreparing(false);setPosition(-1);progress.update(0);
+  setPlaying(false);setPreparation(null);setPosition(-1);progress.update(0);
   // Blocked is a permission status, so an explicit stop keeps the icon while
   // discarding the now-stale request. The next gesture retries current content.
  },[cancelPlayback,progress]);
@@ -67,9 +67,10 @@ export function useSpeech(notify:(s:string)=>void){
  const start=useCallback((next:PlayRequest)=>{
   cancelPlayback();
   setError('');const id=generation.current,queue=next.texts.filter(text=>text.trim());
-  blockedRequest.current=next;retrying.current=true;gestureRetry.current=!!next.automatic;
+  const automatic=next.intent==='automatic',pendingState=next.intent==='replay'?'replay':'play';
+  blockedRequest.current=next;retrying.current=true;gestureRetry.current=automatic;
   if(!confirmed.current)setBlocked(true);
-  setPlaying(false);setPreparing(queue.length>0);setPosition(-1);progress.update(0);
+  setPlaying(false);setPreparation(queue.length?pendingState:null);setPosition(-1);progress.update(0);
   const valid=()=>id===generation.current&&!document.hidden;
   // Queue progress is weighted by text length. Original audio uses its media
   // clock; Web Speech interpolates its estimated position between real events.
@@ -80,21 +81,21 @@ export function useSpeech(notify:(s:string)=>void){
    const value=total?(before+(queue[i]?.length||0)*Math.min(1,Math.max(0,fraction)))/total:0;
    progress.update(Math.max(progress.getSnapshot().value,estimated?Math.min(.99,value):value),indeterminate,paused);
   };
-  const fail=(message?:string)=>{if(!valid())return;stop();blockedRequest.current=null;retrying.current=false;setBlocked(!confirmed.current);if(message&&!next.automatic){setError(message);notify(message);}};
+  const fail=(message?:string)=>{if(!valid())return;stop();blockedRequest.current=null;retrying.current=false;setBlocked(!confirmed.current);if(message&&!automatic){setError(message);notify(message);}};
   // Autoplay policy retains only the segment that was actually denied. A clip
   // that already finished must not replay when the following TTS word blocks.
   const block=(i:number)=>{
    if(!valid())return;
    const pending={...next,texts:queue.slice(i),clip:i===0?next.clip:undefined,offset:i===0?next.offset:0,startFraction:i===0?next.startFraction:0};
    cancelPlayback();blockedRequest.current=pending;retrying.current=false;confirmed.current=false;
-   setBlocked(true);setPlaying(false);setPreparing(false);setPosition(-1);progress.update(0);
+   setBlocked(true);setPlaying(false);setPreparation(null);setPosition(-1);progress.update(0);
   };
   const nextSegment=(i:number)=>{
    if(!valid())return;
    if(i===queue.length){finish();next.onEnd?.();return;}
    let finished=false;
    const current=()=>valid()&&!finished;
-   const started=()=>{if(current()){clearTimeout(startupTimer.current);confirmed.current=true;gestureRetry.current=false;retrying.current=false;blockedRequest.current=null;setBlocked(false);setPreparing(false);setPlaying(true);}};
+   const started=()=>{if(current()){clearTimeout(startupTimer.current);confirmed.current=true;gestureRetry.current=false;retrying.current=false;blockedRequest.current=null;setBlocked(false);setPreparation(null);setPlaying(true);}};
    const ended=(settle=0)=>{if(!current())return;finished=true;clearTimeout(startupTimer.current);clearInterval(speechClock.current);speechClock.current=undefined;update(i,1);setPosition(-1);timer.current=setTimeout(()=>nextSegment(i+1),i<queue.length-1?180:settle);};
    // Some engines accept speak()/play() without start or error. Preserve a
    // retryable current segment and leave preparation instead of hanging forever.
@@ -102,7 +103,7 @@ export function useSpeech(notify:(s:string)=>void){
     startupTimer.current=setTimeout(()=>{
      if(!current())return;
      block(i);
-     if(!next.automatic){const message='音频未能开始，请点击喇叭重试。';setError(message);notify(message);}
+     if(!automatic){const message='音频未能开始，请点击喇叭重试。';setError(message);notify(message);}
     },timeout);
    };
    // Original audio belongs to this sentence occurrence only; the following word uses TTS.
@@ -132,7 +133,7 @@ export function useSpeech(notify:(s:string)=>void){
       observedTime=player.currentTime;update(i,Number.isFinite(player.duration)&&player.duration>0?player.currentTime/player.duration:0,!Number.isFinite(player.duration)||player.duration<=0);
      };
      player.onplaying=()=>{if(media.current===player){started();time();}};
-     player.onwaiting=player.onstalled=()=>{if(valid()&&media.current===player&&player.readyState<3)setPreparing(true);};
+     player.onwaiting=player.onstalled=()=>{if(valid()&&media.current===player&&player.readyState<3)setPreparation(pendingState);};
      const seek=()=>{if(!current()||media.current!==player)return;if(Number.isFinite(player.duration)&&player.duration>0)player.currentTime=player.duration*Math.min(.999,Math.max(0,next.startFraction));time();};
      if(player.readyState>=1)seek();else player.onloadedmetadata=seek;
      player.ontimeupdate=time;player.onerror=failed;
@@ -176,17 +177,17 @@ export function useSpeech(notify:(s:string)=>void){
   };
   nextSegment(0);
  },[cancelPlayback,stop,finish,clearMedia,discardClip,clearPreload,notify,progress]);
- const play=useCallback((texts:string[],rate=1,onEnd?:()=>void,offset=0,clip?:AudioClip,startFraction=0,automatic=false)=>{
-  start({texts:[...texts],rate,onEnd,offset,clip,startFraction,automatic});
+ const play=useCallback((texts:string[],rate=1,onEnd?:()=>void,offset=0,clip?:AudioClip,startFraction=0,intent?:PlayRequest['intent'])=>{
+  start({texts:[...texts],rate,onEnd,offset,clip,startFraction,intent});
  },[start]);
  const retryBlocked=useCallback(()=>{
   const pending=blockedRequest.current;if(!pending)return false;
   if(retrying.current&&!gestureRetry.current)return true;
   gestureRetry.current=false;
-  start({...pending,automatic:false});return true;
+  start(pending.intent==='automatic'?{...pending,intent:undefined}:pending);return true;
  },[start]);
  const clearError=useCallback(()=>setError(''),[]);
  const acknowledgeGesture=useCallback(()=>{/* A gesture alone is not evidence of playback permission. */},[]);
  useEffect(()=>{const hide=()=>{if(document.hidden)stop();};document.addEventListener('visibilitychange',hide);window.addEventListener('pagehide',stop);return ()=>{stop();document.removeEventListener('visibilitychange',hide);window.removeEventListener('pagehide',stop);};},[stop]);
- return {blocked,error,clearError,playing,preparing,position,progress,readProgress,play,retryBlocked,acknowledgeGesture,stopPlayback,stop,preloadClip};
+ return {blocked,error,clearError,playing,preparing:preparation!==null,replayPending:preparation==='replay',position,progress,readProgress,play,retryBlocked,acknowledgeGesture,stopPlayback,stop,preloadClip};
 }

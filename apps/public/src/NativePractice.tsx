@@ -88,7 +88,9 @@ function PlaybackFill({progress}:{progress:ReturnType<typeof useSpeech>['progres
  return <span className={`playback-progress${indeterminate?' indeterminate':''}`} role="progressbar" aria-label="播放进度" aria-valuemin={0} aria-valuemax={100} aria-valuenow={indeterminate?undefined:Math.round(value*100)} aria-valuetext={indeterminate?'正在播放':undefined}><span ref={fill} className="playback-fill"/></span>;
 }
 function Playback({play,audio,rate,setRate,label='播放句子',shortcut=false}:{play:()=>void;audio:ReturnType<typeof useSpeech>;rate:number;setRate:(n:number)=>void;label?:string;shortcut?:boolean}){
- return <div className="native-playback"><button className="native-button playback-button" aria-keyshortcuts={shortcut?'Space':undefined} onClick={play}>{audio.playing&&<PlaybackFill progress={audio.progress}/>}<span className="playback-label"><SpeakerIcon/>{audio.preparing?'准备音频…':audio.playing?'重新播放':label}</span><kbd className="space-keycap" aria-hidden="true"/></button><span className="playback-rate"><select aria-label="播放速度" value={rate} onChange={e=>setRate(Number(e.target.value))}>{rates.map(r=><option key={r} value={r}>{r===1?'1.0':r}×</option>)}</select><span aria-hidden="true">⌄</span></span></div>;
+ const showProgress=audio.replayPending||audio.playing;
+ const title=audio.preparing&&!audio.replayPending?'准备音频…':showProgress?'重新播放':label;
+ return <div className="native-playback"><button className="native-button playback-button" aria-keyshortcuts={shortcut?'Space':undefined} onClick={play}>{showProgress&&<PlaybackFill progress={audio.progress}/>}<span className="playback-label"><SpeakerIcon/>{title}</span><kbd className="space-keycap" aria-hidden="true"/></button><span className="playback-rate"><select aria-label="播放速度" value={rate} onChange={e=>setRate(Number(e.target.value))}>{rates.map(r=><option key={r} value={r}>{r===1?'1.0':r}×</option>)}</select><span aria-hidden="true">⌄</span></span></div>;
 }
 function ListeningSeek({audio,prompt,original,seek,onSeek,onBegin}:{audio:ReturnType<typeof useSpeech>;prompt:string;original:boolean;seek:number;onSeek:(value:number)=>void;onBegin:()=>void}){
  const progress=useSyncExternalStore(audio.progress.subscribe,audio.progress.getSnapshot),words=exampleWords(prompt);
@@ -328,15 +330,16 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,loadP
  const selectModule=(value:string)=>{if(value===state.module)return;readingContinuation.current=false;setListenRun(false);audio.stop();flushSync(()=>dispatch({type:'module',value}));focusAnswer();};
  const setMode=(value:string)=>{if(value===state.mode)return;setListenRun(false);setPass(0);audio.stop();flushSync(()=>dispatch({type:'mode',value}));focusAnswer();};
  const setDifficulty=(value:string)=>{setComposing(false);setImeWarning(false);flushSync(()=>dispatch({type:'preference',name:'difficulty',value}));focusAnswer();};
- const replay=()=>{if(!active)return;navigationAudio.current=null;if(state.module==='spelling'&&word)audio.play(word.example?[word.example,word.english]:[word.english],state.rate,undefined,0,word.example?word.audio:undefined);else if(prompt){act({type:'play',rate:state.rate});audio.play([prompt.sentence],state.rate,undefined,0,promptAudio);}};
+ const replay=()=>{if(!active)return;navigationAudio.current=null;if(state.module==='spelling'&&word)audio.play(word.example?[word.example,word.english]:[word.english],state.rate,undefined,0,word.example?word.audio:undefined);else if(prompt){act({type:'play',rate:state.rate});audio.play([prompt.sentence],state.rate,undefined,0,promptAudio,0,freeDictation?'replay':undefined);}};
  // First-load sound stays inside spelling and sentence exercises. Passive
  // listening already has transport state, and speaking has its own microphone
  // controls; neither should start audio behind the user's back.
  const autoAudioScope=state.module==='spelling'||state.module==='listening'&&state.mode!=='listening';
  const playCurrent=(automatic=false)=>{
   if(!active||complete||panel||!autoAudioScope)return;
-  if(state.module==='spelling'&&word)audio.play(word.example?[word.example,word.english]:[word.english],state.rate,undefined,0,word.example?word.audio:undefined,0,automatic);
-  else if(state.module==='listening'&&prompt&&!state.sentenceFinished)audio.play([prompt.sentence],state.rate,undefined,0,promptAudio,0,automatic);
+  const intent=automatic?'automatic':undefined;
+  if(state.module==='spelling'&&word)audio.play(word.example?[word.example,word.english]:[word.english],state.rate,undefined,0,word.example?word.audio:undefined,0,intent);
+  else if(state.module==='listening'&&prompt&&!state.sentenceFinished)audio.play([prompt.sentence],state.rate,undefined,0,promptAudio,0,intent);
  };playCurrentRef.current=playCurrent;
  const retryCurrent=()=>{if(!audio.retryBlocked())playCurrentRef.current();};
  useEffect(()=>{

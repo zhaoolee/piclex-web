@@ -5,14 +5,14 @@ const plain=catalog.find((deck:any)=>deck.id==='add03b54-d0a7-46fd-88c8-2aa0fa7f
 const song=catalog.find((deck:any)=>deck.id==='0a1ff2e2-3db0-4bb1-889a-b27b62798cbe'),songDeck=JSON.parse(fs.readFileSync('apps/public/public/'+song.payload,'utf8'));
 async function mockSpeech(page:Page,initial='denied',remote=false){
  await page.addInitScript(({initial,remote})=>{
-  const w=window as any;w.__spoken=[];w.__all=[];w.__held=[];w.__speechAttempts=0;w.__started=0;w.__speechMode=initial;
+  const w=window as any;w.__spoken=[];w.__all=[];w.__held=[];w.__speechAttempts=0;w.__speechCancels=0;w.__started=0;w.__speechMode=initial;
   class Utterance{lang='';rate=1;voice=null;text:string;onstart:any;onend:any;onerror:any;onpause:any;onresume:any;onboundary:any;constructor(text:string){this.text=text;}}
   Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,writable:true,value:Utterance});
   Object.defineProperty(window,'speechSynthesis',{configurable:true,value:{
    speak(utterance:any){w.__spoken.push(utterance.text);w.__all.push(utterance);w.__speechAttempts++;const mode=w.__speechMode;
     if(mode==='hold'){w.__held.push(utterance);return;}
     queueMicrotask(()=>{if(mode==='denied'||mode==='failed')utterance.onerror?.({error:mode==='denied'?'not-allowed':'synthesis-failed'});else{w.__started++;utterance.onstart?.();setTimeout(()=>utterance.onend?.(),60);}});},
-   cancel(){},getVoices(){return remote?[{name:'Google US English',lang:'en-US',voiceURI:'remote',localService:false}]:[];},get paused(){return false;}
+   cancel(){w.__speechCancels++;},getVoices(){return remote?[{name:'Google US English',lang:'en-US',voiceURI:'remote',localService:false}]:[];},get paused(){return false;}
   }});
  },{initial,remote});
 }
@@ -110,7 +110,7 @@ test('no speech callback leaves preparation and remains retryable',async({page})
  await expect.poll(()=>page.evaluate(()=>(window as any).__started)).toBeGreaterThan(0);
 });
 
-test('slow online dictation speech keeps replay progress after Space or a tap',async({page},info)=>{
+test('four dictation replays reset the same button to zero and ignore replaced speech',async({page},info)=>{
  await mockSpeech(page,'denied',true);
  await page.goto('/piclex-web/#/deck/'+plain.id+'?module=listening&mode=free&difficulty=easy');
  const playback=page.locator('.playback-button'),label=playback.locator('.playback-label');
@@ -118,37 +118,43 @@ test('slow online dictation speech keeps replay progress after Space or a tap',a
  const retry=page.getByRole('button',{name:'开启声音，播放当前内容',exact:true});
  const warning=page.getByText('音频未能开始，请点击喇叭重试。',{exact:true});
  const pressPlay=()=>info.project.use.hasTouch?playback.tap():page.keyboard.press('Space');
- const emit=(event:'start'|'end',index=-1)=>page.evaluate(({event,index})=>{
-  (window as any).__held.at(index)['on'+event]?.();
+ const emit=(event:'start'|'end'|'error',index=-1)=>page.evaluate(({event,index})=>{
+  (window as any).__held.at(index)['on'+event]?.({error:'canceled'});
  },{event,index});
  await expect(retry).toBeVisible();
  await expect.poll(()=>page.evaluate(()=>(window as any).__speechAttempts)).toBe(1);
  await page.clock.install();
+ await page.clock.pauseAt(await page.evaluate(()=>Date.now()+100));
  await page.evaluate(()=>{(window as any).__speechMode='hold';});
 
- await pressPlay();
- await expect(label).toHaveText('准备音频…');
  const buttonBounds=await playback.boundingBox();
- await emit('start');
- await expect(progress).toBeVisible();
- await page.clock.runFor(750);
- expect(Number(await progress.getAttribute('aria-valuenow'))).toBeGreaterThan(0);
-
- // Replay while speech is active. The previous utterance must not clear
- // the new request, even if the new voice service takes over four seconds.
- await pressPlay();
- await expect(label).toHaveText('准备音频…');
- await emit('end',0);
- await page.clock.runFor(5100);
- await expect(label).toHaveText('准备音频…');
- await expect(warning).toHaveCount(0);
- await emit('start');
- await expect(retry).toHaveCount(0);
- await page.clock.runFor(4500);
- await expect(label).toHaveText('重新播放');
- const value=Number(await progress.getAttribute('aria-valuenow'));
- expect(value).toBeGreaterThan(0);
- expect(value).toBeLessThan(100);
+ const cancels=await page.evaluate(()=>(window as any).__speechCancels);
+ for(let i=0;i<4;i++){
+  await pressPlay();
+  await expect.poll(()=>page.evaluate(()=>(window as any).__speechAttempts)).toBe(i+2);
+  expect(await page.evaluate(()=>(window as any).__speechCancels)).toBe(cancels+i);
+  if(i>0){
+   await emit('start',i-1);
+   await emit('error',i-1);
+   await emit('end',i-1);
+  }
+  // Replays 1–3 remain active two seconds after the key press. The final
+  // request also exercises a slow start beyond the old four-second timeout.
+  await page.clock.runFor(i===3?5100:250);
+  if(i>0){
+   await expect(label).toHaveText('重新播放');
+   await expect(progress).toHaveAttribute('aria-valuenow','0');
+   expect(await progress.locator('.playback-fill').evaluate(fill=>new DOMMatrixReadOnly(getComputedStyle(fill).transform).a)).toBe(0);
+  }
+  await expect(warning).toHaveCount(0);
+  await emit('start');
+  await expect(retry).toHaveCount(0);
+  await page.clock.runFor(i===3?4500:1750);
+  const value=Number(await progress.getAttribute('aria-valuenow'));
+  expect(value).toBeGreaterThan(0);
+  expect(value).toBeLessThan(100);
+ }
+ expect(await page.evaluate(()=>(window as any).__held.map((u:SpeechSynthesisUtterance)=>u.text))).toEqual(Array(4).fill(plainDeck.words[0].example));
  expect(await playback.boundingBox()).toEqual(buttonBounds);
  await expect(warning).toHaveCount(0);
  await emit('end');
@@ -158,10 +164,11 @@ test('slow online dictation speech keeps replay progress after Space or a tap',a
 
  // Keep the online timeout bounded and allow the same sentence to be retried.
  await pressPlay();
- await expect(label).toHaveText('准备音频…');
+ await expect(progress).toHaveAttribute('aria-valuenow','0');
  await page.clock.runFor(12500);
  await expect(retry).toBeVisible();
  await expect(warning).toBeVisible();
+ await expect(progress).toHaveCount(0);
  await retry.click();
  await emit('start');
  await expect(progress).toBeVisible();
