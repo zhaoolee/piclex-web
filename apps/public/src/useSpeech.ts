@@ -6,6 +6,7 @@ import {createSpeechProgress} from './speech-progress.mjs';
 type PlayRequest={texts:string[];rate:number;onEnd?:()=>void;offset:number;clip?:AudioClip;startFraction:number;automatic?:boolean};
 type PreparedClip={clip:AudioClip;player:HTMLAudioElement;blobURL:string};
 type PreloadedClip={clip:AudioClip;controller:AbortController;blob?:Blob};
+const networkStartupTimeout=12000;
 const clipSource=(path:string)=>new URL(import.meta.env.BASE_URL+path,location.href).href;
 const policyError=(error:unknown)=>error instanceof DOMException?error.name==='NotAllowedError':(error as {name?:string})?.name==='NotAllowedError';
 export function useSpeech(notify:(s:string)=>void){
@@ -97,11 +98,13 @@ export function useSpeech(notify:(s:string)=>void){
    const ended=(settle=0)=>{if(!current())return;finished=true;clearTimeout(startupTimer.current);clearInterval(speechClock.current);speechClock.current=undefined;update(i,1);setPosition(-1);timer.current=setTimeout(()=>nextSegment(i+1),i<queue.length-1?180:settle);};
    // Some engines accept speak()/play() without start or error. Preserve a
    // retryable current segment and leave preparation instead of hanging forever.
-   startupTimer.current=setTimeout(()=>{
-    if(!current())return;
-    block(i);
-    if(!next.automatic){const message='音频未能开始，请点击喇叭重试。';setError(message);notify(message);}
-   },i===0&&next.clip?12000:4000);
+   const watchStartup=(timeout:number)=>{
+    startupTimer.current=setTimeout(()=>{
+     if(!current())return;
+     block(i);
+     if(!next.automatic){const message='音频未能开始，请点击喇叭重试。';setError(message);notify(message);}
+    },timeout);
+   };
    // Original audio belongs to this sentence occurrence only; the following word uses TTS.
    if(i===0&&next.clip){
     try{
@@ -136,6 +139,7 @@ export function useSpeech(notify:(s:string)=>void){
      // Like App, sample the actual audio clock; a stall cannot advance the fill.
      mediaClock.current=setInterval(time,33);
      player.onended=()=>{if(!valid()||media.current!==player)return;clearMedia();ended();};
+     watchStartup(networkStartupTimeout);
      void player.play().then(()=>{if(media.current===player&&current()&&!player.paused)started();}).catch(error=>{if(!current()||media.current!==player)return;if(policyError(error))block(0);else failed();});
     }catch(error){if(policyError(error))block(0);else{discardClip();fail('这张卡片的原音频暂时无法播放。');}}
     return;
@@ -164,6 +168,8 @@ export function useSpeech(notify:(s:string)=>void){
     // fill. The next segment still starts after the established 180 ms gap.
     utterance.onend=()=>{if(!current())return;speechPending.current=false;ended(180);};
     utterance.onerror=e=>{if(!current())return;speechPending.current=false;if(e.error==='not-allowed')block(i);else fail(['interrupted','canceled'].includes(e.error)?undefined:'朗读暂时不可用，请检查浏览器的语音与播放权限。');};
+    // Online voices may need a network round trip before sending onstart.
+    watchStartup(voice?.localService===false?networkStartupTimeout:4000);
     speechPending.current=true;
     speechSynthesis.speak(utterance);
    }catch{fail('朗读暂时不可用，请检查浏览器的语音与播放权限。');}

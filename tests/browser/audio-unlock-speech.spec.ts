@@ -3,8 +3,8 @@ import fs from 'node:fs';
 const catalog=JSON.parse(fs.readFileSync('apps/public/public/library/catalog.json','utf8'));
 const plain=catalog.find((deck:any)=>deck.id==='add03b54-d0a7-46fd-88c8-2aa0fa7f0c7f'),plainDeck=JSON.parse(fs.readFileSync('apps/public/public/'+plain.payload,'utf8'));
 const song=catalog.find((deck:any)=>deck.id==='0a1ff2e2-3db0-4bb1-889a-b27b62798cbe'),songDeck=JSON.parse(fs.readFileSync('apps/public/public/'+song.payload,'utf8'));
-async function mockSpeech(page:Page,initial='denied'){
- await page.addInitScript(initial=>{
+async function mockSpeech(page:Page,initial='denied',remote=false){
+ await page.addInitScript(({initial,remote})=>{
   const w=window as any;w.__spoken=[];w.__all=[];w.__held=[];w.__speechAttempts=0;w.__started=0;w.__speechMode=initial;
   class Utterance{lang='';rate=1;voice=null;text:string;onstart:any;onend:any;onerror:any;onpause:any;onresume:any;onboundary:any;constructor(text:string){this.text=text;}}
   Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,writable:true,value:Utterance});
@@ -12,9 +12,9 @@ async function mockSpeech(page:Page,initial='denied'){
    speak(utterance:any){w.__spoken.push(utterance.text);w.__all.push(utterance);w.__speechAttempts++;const mode=w.__speechMode;
     if(mode==='hold'){w.__held.push(utterance);return;}
     queueMicrotask(()=>{if(mode==='denied'||mode==='failed')utterance.onerror?.({error:mode==='denied'?'not-allowed':'synthesis-failed'});else{w.__started++;utterance.onstart?.();setTimeout(()=>utterance.onend?.(),60);}});},
-   cancel(){},getVoices(){return [];},get paused(){return false;}
+   cancel(){},getVoices(){return remote?[{name:'Google US English',lang:'en-US',voiceURI:'remote',localService:false}]:[];},get paused(){return false;}
   }});
- },initial);
+ },{initial,remote});
 }
 test('speech policy denial keeps one retryable request, ignores stale callbacks and only hides on real start',async({page})=>{
  await mockSpeech(page);await page.goto('/piclex-web/#/deck/'+plain.id);
@@ -108,6 +108,64 @@ test('no speech callback leaves preparation and remains retryable',async({page})
  await page.evaluate(()=>{(window as any).__speechMode='allowed';});await icon.click();
  await expect(icon).toHaveCount(0);
  await expect.poll(()=>page.evaluate(()=>(window as any).__started)).toBeGreaterThan(0);
+});
+
+test('slow online dictation speech keeps replay progress after Space or a tap',async({page},info)=>{
+ await mockSpeech(page,'denied',true);
+ await page.goto('/piclex-web/#/deck/'+plain.id+'?module=listening&mode=free&difficulty=easy');
+ const playback=page.locator('.playback-button'),label=playback.locator('.playback-label');
+ const progress=playback.getByRole('progressbar',{name:'播放进度'});
+ const retry=page.getByRole('button',{name:'开启声音，播放当前内容',exact:true});
+ const warning=page.getByText('音频未能开始，请点击喇叭重试。',{exact:true});
+ const pressPlay=()=>info.project.use.hasTouch?playback.tap():page.keyboard.press('Space');
+ const emit=(event:'start'|'end',index=-1)=>page.evaluate(({event,index})=>{
+  (window as any).__held.at(index)['on'+event]?.();
+ },{event,index});
+ await expect(retry).toBeVisible();
+ await expect.poll(()=>page.evaluate(()=>(window as any).__speechAttempts)).toBe(1);
+ await page.clock.install();
+ await page.evaluate(()=>{(window as any).__speechMode='hold';});
+
+ await pressPlay();
+ await expect(label).toHaveText('准备音频…');
+ const buttonBounds=await playback.boundingBox();
+ await emit('start');
+ await expect(progress).toBeVisible();
+ await page.clock.runFor(750);
+ expect(Number(await progress.getAttribute('aria-valuenow'))).toBeGreaterThan(0);
+
+ // Replay while speech is active. The previous utterance must not clear
+ // the new request, even if the new voice service takes over four seconds.
+ await pressPlay();
+ await expect(label).toHaveText('准备音频…');
+ await emit('end',0);
+ await page.clock.runFor(5100);
+ await expect(label).toHaveText('准备音频…');
+ await expect(warning).toHaveCount(0);
+ await emit('start');
+ await expect(retry).toHaveCount(0);
+ await page.clock.runFor(4500);
+ await expect(label).toHaveText('重新播放');
+ const value=Number(await progress.getAttribute('aria-valuenow'));
+ expect(value).toBeGreaterThan(0);
+ expect(value).toBeLessThan(100);
+ expect(await playback.boundingBox()).toEqual(buttonBounds);
+ await expect(warning).toHaveCount(0);
+ await emit('end');
+ await page.clock.runFor(250);
+ await expect(label).toHaveText('播放句子');
+ await expect(progress).toHaveCount(0);
+
+ // Keep the online timeout bounded and allow the same sentence to be retried.
+ await pressPlay();
+ await expect(label).toHaveText('准备音频…');
+ await page.clock.runFor(12500);
+ await expect(retry).toBeVisible();
+ await expect(warning).toBeVisible();
+ await retry.click();
+ await emit('start');
+ await expect(progress).toBeVisible();
+ await expect(retry).toHaveCount(0);
 });
 
 test('free dictation shares spelling’s Auto voice and replays without canceling an idle service',async({page},info)=>{
