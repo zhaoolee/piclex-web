@@ -125,7 +125,10 @@ test('free dictation shares spelling’s Auto voice and replays without cancelin
     // The browser's service can take longer to start than the app takes to request it.
     const startup=utterance.voice?.localService?20:1600;
     setTimeout(()=>utterance.onstart?.(new Event('start') as SpeechSynthesisEvent),startup);
-    setTimeout(()=>{active=false;utterance.onend?.(new Event('end') as SpeechSynthesisEvent);},startup+150);
+    const end=()=>{active=false;utterance.onend?.(new Event('end') as SpeechSynthesisEvent);};
+    // Keep the replay active until the test observes the rendered progress bar.
+    if(w.__utterances.length===2)w.__finishReplay=end;
+    else setTimeout(end,startup+150);
    }
   }});
  });
@@ -148,6 +151,7 @@ test('free dictation shares spelling’s Auto voice and replays without cancelin
  expect(replay.requestedAt-await page.evaluate(()=>(window as any).__gestureAt)).toBeLessThan(350);
  expect(await page.evaluate(()=>(window as any).__idleCancels)).toBe(idle);
  await expect(page.getByRole('progressbar',{name:'播放进度'})).toBeVisible();
+ await page.evaluate(()=>(window as any).__finishReplay());
  await expect(play).toBeVisible();
 
  await spelling.click();

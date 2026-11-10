@@ -218,8 +218,13 @@ test('Escape acts once and respects modified, repeated and IME keys, selects, di
 for(const difficulty of ['easy','medium','hard'])test(`letters alone complete contractions and fixed numbers in ${difficulty}`,async({page})=>{
  await openCafe(page,"I'm in room 3 at 8 pm.");await page.getByRole('tab',{name:'练听力',exact:true}).click();await page.getByLabel('句子练习模式').selectOption('free');await page.getByLabel('听写难度').selectOption(difficulty);
  await page.clock.install();await page.clock.pauseAt(await page.evaluate(()=>Date.now()+1000));
- await page.locator('.guided-input input,.dictation-input').first().focus();await page.keyboard.type('Iminroomatpm');
+ const fields=page.locator('.guided-input input,.dictation-input');
+ if(difficulty!=='hard'){
+  await expect(page.locator('.guided-word-fixed')).toHaveText(['3','8']);
+  await expect(fields).toHaveCount(5);
+ }
+ await fields.first().focus();await page.keyboard.type('Iminroomatpm');
  if(difficulty==='hard')await expect(page.getByRole('textbox',{name:'听写句子',exact:true})).toHaveValue("I'm in room 3 at 8 pm.");
- else expect(await page.locator('.guided-input input').evaluateAll(nodes=>nodes.map(n=>(n as HTMLInputElement).value))).toEqual(['Im','in','room','3','at','8','pm']);
+ else expect(await fields.evaluateAll(nodes=>nodes.map(n=>(n as HTMLInputElement).value))).toEqual(['Im','in','room','at','pm']);
  await expect(page.locator('.sentence-actions-pending')).toHaveCount(1);await expectLetterKeyboard(page);
 });
