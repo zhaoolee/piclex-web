@@ -65,6 +65,24 @@ test('cancel download and upload removes only operation files and keeps photos a
 test('conservative storage estimates do not reject valid backups',async({page})=>{await server(page);await connect(page);await page.evaluate(()=>Object.defineProperty(Object.getPrototypeOf(navigator.storage),'estimate',{configurable:true,value:async()=>({usage:1,quota:2})}));await restore(page);await xp(page);await page.goto('/piclex-web/#/settings/data');await expect(page.getByRole('button',{name:'已拍照片 1',exact:true})).toBeVisible();});
 
 
+test('an unconfigured WebDAV connection does not schedule progress sync reads',async({page})=>{
+ await page.addInitScript(()=>{
+  const getItem=Storage.prototype.getItem,w=window as any;
+  w.__syncReads=0;
+  Storage.prototype.getItem=function(key){
+   if(key==='piclex-web.webdav.auto-progress'||key==='piclex-web.webdav.connection')w.__syncReads++;
+   return getItem.call(this,key);
+  };
+  Object.defineProperty(window,'speechSynthesis',{configurable:true,value:{getVoices:()=>[],speak(){},cancel(){}}});
+ });
+ await page.clock.install();
+ await page.goto('/piclex-web/#/decks');
+ await page.getByLabel('选择照片卡组文件').setInputFiles(path.resolve('tests/fixtures/demo/decks/cafe.piclexdeck'));
+ await expect(page.getByRole('textbox',{name:'输入英文',exact:true})).toBeVisible();
+ const before=await page.evaluate(()=>(window as any).__syncReads);
+ await page.clock.runFor(11_000);
+ expect(await page.evaluate(()=>(window as any).__syncReads)).toBe(before);
+});
 test('automatic progress imports native XP without photos and unchanged sync never uploads a deck',async({page})=>{
  const remote=await server(page);const name=remote.putProgress(progress);
  await connect(page);await page.goto('/piclex-web/#/settings/data/webdav');

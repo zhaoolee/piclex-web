@@ -16,6 +16,7 @@ let status:SyncStatus={message:'配置 WebDAV 后自动同步等级与学习进�
 export const progressSyncStatus=()=>status;
 function report(next:SyncStatus){status=next;window.dispatchEvent(new Event('piclex-progress-sync-status'));}
 let running=false,applying=false,timer:ReturnType<typeof setTimeout>|undefined,retryAt=0,failures=0;
+let hasConnection=false;
 let controller:AbortController|undefined;
 let generation=0;
 // Keep automatic sync work outside an active typing/answer-animation burst.
@@ -39,7 +40,8 @@ const enabled=()=>readPreference(autoProgressKey)!=='false';
 
 export async function syncProgress(){
  if(running||!enabled()||!navigator.onLine||Date.now()<retryAt)return;
- const settings=savedWebDAV();if(!settings.address)return;
+ const settings=savedWebDAV();hasConnection=!!settings.address;
+ if(!hasConnection)return;
  running=true;controller=new AbortController();const runGeneration=generation;
  let work:ProgressWork|undefined;
  const captured=JSON.stringify(settings),valid=()=>{
@@ -87,8 +89,9 @@ export async function syncProgress(){
  }catch(e){if(runGeneration!==generation)return;failures++;retryAt=Date.now()+Math.min(15*60_000,30_000*2**Math.min(failures-1,5));report({...status,message:(e as Error).message,error:true});}
  finally{work?.close();running=false;controller=undefined;}
 }
-function queue(){if(!enabled()||timer||applying)return;timer=setTimeout(()=>{timer=undefined;void syncProgress();},10_000);}
+function queue(){if(!hasConnection||timer||applying||!enabled())return;timer=setTimeout(()=>{timer=undefined;void syncProgress();},10_000);}
 export function startProgressSync(){
+ hasConnection=!!savedWebDAV().address;
  const input=(event:Event)=>{
   const target=event.target as HTMLElement;
   if(target?.closest?.('.native-practice')||(event.type==='keydown'&&document.querySelector('.native-practice')&&!target?.closest?.('[role=dialog]')))lastPracticeInput=performance.now();
@@ -100,9 +103,9 @@ export function startProgressSync(){
  window.addEventListener('focus',()=>void syncProgress());
  window.addEventListener('online',()=>{retryAt=0;void syncProgress();});
  document.addEventListener('visibilitychange',()=>{if(!document.hidden)void syncProgress();});
- const configChanged=()=>{generation++;controller?.abort();retryAt=0;failures=0;if(enabled()){queue();void syncProgress();}else report({...status,message:'学习进度自动同步已关闭'});};
+ const configChanged=()=>{hasConnection=!!savedWebDAV().address;generation++;controller?.abort();retryAt=0;failures=0;if(enabled()){queue();if(hasConnection)void syncProgress();}else report({...status,message:'学习进度自动同步已关闭'});};
  window.addEventListener('piclex-webdav-configured',configChanged);
- window.addEventListener('storage',e=>{if(e.key===webDAVConfigKey||e.key===autoProgressKey)configChanged();});
+ window.addEventListener('storage',e=>{if(e.key===null||e.key===webDAVConfigKey||e.key===autoProgressKey)configChanged();});
  setInterval(()=>{if(!document.hidden)void syncProgress();},60_000);
  queue();
 }
