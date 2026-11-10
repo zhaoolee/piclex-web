@@ -7,11 +7,14 @@ type PlayRequest={texts:string[];rate:number;onEnd?:()=>void;offset:number;clip?
 type PreparedClip={clip:AudioClip;player:HTMLAudioElement;blobURL:string};
 type PreloadedClip={clip:AudioClip;controller:AbortController;blob?:Blob};
 const networkStartupTimeout=12000;
+const speechStopTimeout=120;
 const clipSource=(path:string)=>new URL(import.meta.env.BASE_URL+path,location.href).href;
 const policyError=(error:unknown)=>error instanceof DOMException?error.name==='NotAllowedError':(error as {name?:string})?.name==='NotAllowedError';
 export function useSpeech(notify:(s:string)=>void){
  const generation=useRef(0),timer=useRef<ReturnType<typeof setTimeout>|undefined>(undefined),media=useRef<HTMLAudioElement|null>(null);
- const prepared=useRef<PreparedClip|null>(null),preloaded=useRef<PreloadedClip|null>(null),speechPending=useRef(false);
+ const prepared=useRef<PreparedClip|null>(null),preloaded=useRef<PreloadedClip|null>(null);
+ const speechPending=useRef<SpeechSynthesisUtterance|null>(null),speechHasStarted=useRef(false);
+ const speechStopping=useRef<Promise<void>|null>(null);
  const blockedRequest=useRef<PlayRequest|null>(null),retrying=useRef(false),gestureRetry=useRef(false),confirmed=useRef(false);
  const startupTimer=useRef<ReturnType<typeof setTimeout>|undefined>(undefined);
  const [playing,setPlaying]=useState(false),[preparation,setPreparation]=useState<'play'|'replay'|null>(null),[position,setPosition]=useState(-1),[blocked,setBlocked]=useState(false);
@@ -50,11 +53,25 @@ export function useSpeech(notify:(s:string)=>void){
    if(preloaded.current===entry&&blob.size===clip.byteCount)entry.blob=blob;
   }).catch(()=>{/* A missed preload still uses the normal media source. */});
  },[clearPreload]);
- const cancelPlayback=useCallback(()=>{
+ const cancelPlayback=useCallback((waitForSpeech=false)=>{
   // Invalidate callbacks before cancel(): a late onstart/onend must not revive
   // a request that was blocked or replaced.
   generation.current++;clearTimeout(startupTimer.current);clearTimeout(timer.current);clearInterval(speechClock.current);speechClock.current=undefined;clearMedia();
-  if(speechPending.current){speechPending.current=false;window.speechSynthesis?.cancel();}
+  const utterance=speechPending.current;
+  if(!utterance)return;
+  speechPending.current=null;
+  if(waitForSpeech&&speechHasStarted.current){
+   // Keep the next replay out of the engine until it acknowledges the stop.
+   // Some engines omit the callback. First-time speech stays in the gesture.
+   const stopped=new Promise<void>(resolve=>{
+    const timeout=setTimeout(resolve,speechStopTimeout);
+    const settle=()=>{clearTimeout(timeout);resolve();};
+    utterance.onend=utterance.onerror=settle;
+   });
+   speechStopping.current=stopped;
+   void stopped.then(()=>{if(speechStopping.current===stopped)speechStopping.current=null;});
+  }
+  window.speechSynthesis?.cancel();
  },[clearMedia]);
  const finish=useCallback(()=>{
   cancelPlayback();blockedRequest.current=null;retrying.current=false;
@@ -65,7 +82,8 @@ export function useSpeech(notify:(s:string)=>void){
  const stopPlayback=useCallback(()=>{finish();discardClip();},[finish,discardClip]);
  const stop=useCallback(()=>{stopPlayback();clearPreload();},[stopPlayback,clearPreload]);
  const start=useCallback((next:PlayRequest)=>{
-  cancelPlayback();
+  const waitForSpeech=next.intent==='replay'&&!next.clip;
+  cancelPlayback(waitForSpeech);
   setError('');const id=generation.current,queue=next.texts.filter(text=>text.trim());
   const automatic=next.intent==='automatic',pendingState=next.intent==='replay'?'replay':'play';
   blockedRequest.current=next;retrying.current=true;gestureRetry.current=automatic;
@@ -158,7 +176,7 @@ export function useSpeech(notify:(s:string)=>void){
     };
     const begin=()=>{
      if(!current()||clock)return;
-     started();clock=createSpeechProgress(queue[i],next.rate);update(i,0);
+     started();speechHasStarted.current=true;clock=createSpeechProgress(queue[i],next.rate);update(i,0);
      speechClock.current=setInterval(sample,33);
     };
     utterance.onstart=begin;
@@ -167,15 +185,16 @@ export function useSpeech(notify:(s:string)=>void){
     utterance.onresume=()=>{paused=false;sample();};
     // Let the short completion animation finish before hiding the button's
     // fill. The next segment still starts after the established 180 ms gap.
-    utterance.onend=()=>{if(!current())return;speechPending.current=false;ended(180);};
-    utterance.onerror=e=>{if(!current())return;speechPending.current=false;if(e.error==='not-allowed')block(i);else fail(['interrupted','canceled'].includes(e.error)?undefined:'朗读暂时不可用，请检查浏览器的语音与播放权限。');};
+    utterance.onend=()=>{if(!current())return;speechPending.current=null;ended(180);};
+    utterance.onerror=e=>{if(!current())return;speechPending.current=null;if(e.error==='not-allowed')block(i);else fail(['interrupted','canceled'].includes(e.error)?undefined:'朗读暂时不可用，请检查浏览器的语音与播放权限。');};
     // Online voices may need a network round trip before sending onstart.
     watchStartup(voice?.localService===false?networkStartupTimeout:4000);
-    speechPending.current=true;
+    speechPending.current=utterance;
     speechSynthesis.speak(utterance);
    }catch{fail('朗读暂时不可用，请检查浏览器的语音与播放权限。');}
   };
-  nextSegment(0);
+  const stopping=waitForSpeech?speechStopping.current:null;
+  if(stopping)void stopping.then(()=>nextSegment(0));else nextSegment(0);
  },[cancelPlayback,stop,finish,clearMedia,discardClip,clearPreload,notify,progress]);
  const play=useCallback((texts:string[],rate=1,onEnd?:()=>void,offset=0,clip?:AudioClip,startFraction=0,intent?:PlayRequest['intent'])=>{
   start({texts:[...texts],rate,onEnd,offset,clip,startFraction,intent});

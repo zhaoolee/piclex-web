@@ -131,11 +131,11 @@ test('four dictation replays reset the same button to zero and ignore replaced s
  const cancels=await page.evaluate(()=>(window as any).__speechCancels);
  for(let i=0;i<4;i++){
   await pressPlay();
+  if(i>0)await emit('error',i-1);
   await expect.poll(()=>page.evaluate(()=>(window as any).__speechAttempts)).toBe(i+2);
   expect(await page.evaluate(()=>(window as any).__speechCancels)).toBe(cancels+i);
   if(i>0){
    await emit('start',i-1);
-   await emit('error',i-1);
    await emit('end',i-1);
   }
   // Replays 1–3 remain active two seconds after the key press. The final
@@ -173,6 +173,58 @@ test('four dictation replays reset the same button to zero and ignore replaced s
  await emit('start');
  await expect(progress).toBeVisible();
  await expect(retry).toHaveCount(0);
+});
+
+test('click then Space restores the fill after the voice finishes canceling',async({page},info)=>{
+ await page.addInitScript(()=>{
+  const w=window as any;
+  const remote={name:'Google US English',lang:'en-US',voiceURI:'remote',localService:false};
+  let active:SpeechSynthesisUtterance|null=null,stopping=false,activated=false;
+  window.addEventListener('click',event=>{activated ||= event.isTrusted;},true);
+  w.__starts=0;w.__dropped=0;w.__acknowledgeCancel=true;
+  Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:class{constructor(public text:string){}}});
+  Object.defineProperty(window,'speechSynthesis',{configurable:true,value:{
+   getVoices:()=>[remote],
+   speak(utterance:SpeechSynthesisUtterance){
+    if(!activated){queueMicrotask(()=>utterance.onerror?.({error:'not-allowed'} as SpeechSynthesisErrorEvent));return;}
+    // A service can reject replacement speech while its asynchronous stop is in flight.
+    if(stopping){w.__dropped++;return;}
+    active=utterance;
+    queueMicrotask(()=>{if(active===utterance){w.__starts++;utterance.onstart?.(new Event('start') as SpeechSynthesisEvent);}});
+   },
+   cancel(){
+    const previous=active;
+    if(!previous)return;
+    active=null;stopping=true;
+    setTimeout(()=>{
+     stopping=false;
+     if(w.__acknowledgeCancel)previous.onerror?.({error:'interrupted'} as SpeechSynthesisErrorEvent);
+    },60);
+   }
+  }});
+ });
+ await page.goto('/piclex-web/#/deck/'+plain.id+'?module=listening&mode=free&difficulty=easy');
+ const button=page.locator('.playback-button'),bar=button.getByRole('progressbar',{name:'播放进度'});
+ const width=()=>bar.locator('.playback-fill').evaluate(fill=>new DOMMatrixReadOnly(getComputedStyle(fill).transform).a);
+ const starts=()=>page.evaluate(()=>(window as any).__starts);
+ const touch=!!info.project.use.hasTouch;
+ await expect(page.getByRole('button',{name:'开启声音，播放当前内容',exact:true})).toBeVisible();
+ if(touch)await button.tap();else await button.click();
+ if(info.project.name==='desktop')await expect(button).toBeFocused();
+ await expect.poll(starts).toBe(1);
+ await expect.poll(width).toBeGreaterThan(.05);
+
+ if(touch)await button.tap();else await page.keyboard.press('Space');
+ await expect.poll(starts).toBe(2);
+ await expect.poll(width).toBeGreaterThan(.05);
+ expect(await page.evaluate(()=>(window as any).__dropped)).toBe(0);
+
+ // Engines that omit the stop callback still get a bounded handoff.
+ await page.evaluate(()=>{(window as any).__acknowledgeCancel=false;});
+ if(touch)await button.tap();else await page.keyboard.press('Space');
+ await expect.poll(starts).toBe(3);
+ await expect.poll(width).toBeGreaterThan(.05);
+ expect(await page.evaluate(()=>(window as any).__dropped)).toBe(0);
 });
 
 test('free dictation shares spelling’s Auto voice and replays without canceling an idle service',async({page},info)=>{
