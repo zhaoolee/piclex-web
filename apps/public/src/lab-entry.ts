@@ -1,4 +1,5 @@
 import '../../../packages/laboratory/src/game.css';
+import {labLoadFraction} from './lab-progress';
 import {experienceReport} from '../../../packages/practice/src/experience-store.mjs';
 const scope=window as any;scope.PICLEX_PUBLIC_WEB=true;
 let failed=false,done=false;
@@ -6,9 +7,23 @@ const report=(state:string,message:string,loaded?:number,total?:number)=>{
  if(done||failed)return;
  if(state==='error')failed=true;if(state==='ready')done=true;if(done||failed)clearTimeout(timeout);
  const cover=document.getElementById('lab-boot'),label=document.getElementById('lab-boot-message'),bar=document.getElementById('lab-boot-progress') as HTMLProgressElement|null;
+ const phaseChanged=label?.textContent!==message;
  if(label)label.textContent=message;
  if(bar){if(total){bar.max=total;bar.value=loaded||0;}else bar.removeAttribute('value');bar.hidden=state==='error';}
  if(cover){cover.hidden=state==='ready';const retry=cover.querySelector<HTMLButtonElement>('button');if(retry)retry.hidden=state!=='error';}
+ if(parent===window&&state==='loading'){
+  const oldMaze=cover?.querySelector<HTMLElement>('.boot-game');
+  if(oldMaze){
+   const progress=labLoadFraction(loaded,total);
+   const measured=progress!==undefined;
+   const restart=oldMaze.hasAttribute('data-measured')!==measured||(measured&&phaseChanged);
+   const maze=restart?oldMaze.cloneNode(true) as HTMLElement:oldMaze;
+   maze.toggleAttribute('data-measured',measured);
+   if(measured)maze.style.setProperty('--boot-progress',String(progress));
+   else maze.style.removeProperty('--boot-progress');
+   if(maze!==oldMaze)oldMaze.replaceWith(maze);
+  }
+ }
  if(parent!==window)parent.postMessage({type:'piclex-lab-status',state,message,loaded,total},location.origin);
 };
 scope.PICLEX_LAB_LOAD=report;

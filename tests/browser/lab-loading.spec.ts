@@ -33,7 +33,7 @@ test('game program delay shows loading immediately and the game return restores 
   await expect(maze).toHaveAttribute('data-cycle','8.32');
   await expect(page.locator('.lab-loading .boot-pac .boot-frame')).toHaveCount(3);
   expect(await page.locator('.lab-loading .boot-dot').count()).toBe(80);
-  await expect.poll(()=>page.locator('.lab-loading .boot-arena').evaluate(el=>getComputedStyle(el).animationName)).toBe('boot-clock');
+  await expect(page.locator('.lab-loading .boot-pac')).toHaveCSS('animation-play-state','paused');
   expect(await page.getByRole('progressbar',{name:'游戏加载进度'}).evaluate(el=>[getComputedStyle(el).width,getComputedStyle(el).height])).toEqual(['1px','1px']);
   await expect(tabs).toHaveCount(0);
   const viewport=await page.evaluate(()=>innerHeight),box=(await page.locator('.laboratory-page').boundingBox())!;
@@ -60,7 +60,8 @@ test('the standalone game boot cover shows the shared pixel maze instead of a na
   await expect(maze).toHaveAttribute('data-cycle','8.32');
   await expect(cover.locator('.boot-pac .boot-frame')).toHaveCount(3);
   expect(await cover.locator('.boot-dot').count()).toBe(80);
-  await expect.poll(()=>cover.locator('.boot-arena').evaluate(el=>getComputedStyle(el).animationName)).toBe('boot-clock');
+  await expect(cover.getByText('正在下载游戏程序…',{exact:true})).toBeVisible();
+  await expect(cover.locator('.boot-pac')).toHaveCSS('animation-play-state','paused');
   const paint=await page.evaluate(()=>{const cover=getComputedStyle(document.getElementById('lab-boot')!);return {ink:cover.color,bg:cover.backgroundColor,body:getComputedStyle(document.querySelector('#lab-boot .boot-body')!).fill,jaw:getComputedStyle(document.querySelector('#lab-boot .boot-jaw')!).fill};});expect(paint.body).toBe(paint.ink);expect(paint.jaw).toBe(paint.bg);
   const bar=cover.getByRole('progressbar',{name:'游戏加载进度'});
   await expect(bar).toBeVisible();
@@ -131,14 +132,19 @@ test('failed game program has a recovery action instead of a blank canvas',async
 test('a half-downloaded game program shows measured byte progress, not a black screen',async({page,baseURL},info)=>{
  await page.setViewportSize({width:844,height:390});
  const html=fs.readFileSync('dist/lab/index.html','utf8'),assets=JSON.parse(html.match(/window\.PICLEX_LAB_BOOT_ASSETS=(\[.*?\])<\/script>/)![1]);const asset=assets.sort((a:any,b:any)=>b.bytes-a.bytes)[0];const bytes=fs.readFileSync('dist/'+asset.url.replace('/piclex-web/',''));
- let release!:()=>void;const gate=new Promise<void>(r=>release=r);
+ let sendHalf!:()=>void,sendMore!:()=>void,sendRest!:()=>void,finish!:()=>void;
+ const halfGate=new Promise<void>(r=>sendHalf=r),moreGate=new Promise<void>(r=>sendMore=r);
+ const restGate=new Promise<void>(r=>sendRest=r),finishGate=new Promise<void>(r=>finish=r);
  // Serve the delayed module on the same origin as the app in every browser.
  const server=http.createServer(async(req,res)=>{
   const url=new URL(req.url!,baseURL);
   if(url.pathname===asset.url){
-   const half=Math.floor(bytes.length/2);
-   res.writeHead(200,{'Content-Type':'application/javascript','Content-Length':bytes.length});
-   res.write(bytes.subarray(0,half));await gate;res.end(bytes.subarray(half));
+   const half=Math.ceil(bytes.length/2),threeQuarters=Math.ceil(bytes.length*3/4);
+   res.writeHead(200,{'Content-Type':'application/javascript'});
+   await halfGate;res.write(bytes.subarray(0,half));
+   await moreGate;res.write(bytes.subarray(half,threeQuarters));
+   await restGate;res.write(bytes.subarray(threeQuarters));
+   await finishGate;res.end();
    return;
   }
   const upstream=http.get(url,response=>{res.writeHead(response.statusCode!,response.headers);response.pipe(res);});
@@ -151,14 +157,43 @@ test('a half-downloaded game program shows measured byte progress, not a black s
   await page.goto(`http://127.0.0.1:${port}/piclex-web/#/settings/lab`,{waitUntil:'domcontentloaded'});
   await expect(page.getByText('正在下载游戏程序…',{exact:true})).toBeVisible();
   const bar=page.getByRole('progressbar',{name:'游戏加载进度'});
+  const loader=page.locator('.lab-loading'),pac=loader.locator('.boot-pac');
+  const beans=()=>loader.locator('.boot-dot').evaluateAll(dots=>dots.filter(dot=>{
+   const style=getComputedStyle(dot);return style.display!=='none'&&Number(style.opacity)>.5;
+  }).length);
+  await expect(loader.getByText('0%',{exact:true})).toBeVisible();
+  await expect.poll(beans).toBe(51);
+  await page.screenshot({path:info.outputPath('game-byte-progress-start.png')});
+  sendHalf();
+  await expect(loader.getByText('50%',{exact:true})).toBeVisible();
   await expect.poll(async()=>Number(await bar.getAttribute('value'))).toBeGreaterThan(0);
   expect(Number(await bar.getAttribute('value'))).toBeLessThan(Number(await bar.getAttribute('max')));
+  await expect.poll(beans).toBe(25);
+  await expect.poll(()=>loader.locator('.boot-game').evaluate(el=>el.getAnimations().length)).toBe(0);
+  await expect.poll(()=>pac.evaluate(el=>parseFloat(getComputedStyle(el).translate))).toBeGreaterThan(110);
+  await expect.poll(()=>pac.evaluate(el=>parseFloat(getComputedStyle(el).translate))).toBeLessThan(120);
   await expect(tabs).toHaveCount(0);
   await page.screenshot({path:info.outputPath('game-byte-progress.png')});
+  const halfway=await pac.evaluate(el=>getComputedStyle(el).translate);
+  // Hold beyond the original 8.32 s loop and ensure the eaten dots stay gone.
+  await page.waitForTimeout(8500);
+  await expect(loader.getByText('50%',{exact:true})).toBeVisible();
+  expect(await beans()).toBe(25);
+  expect(await pac.evaluate(el=>getComputedStyle(el).translate)).toBe(halfway);
+  sendMore();
+  await expect(loader.getByText('75%',{exact:true})).toBeVisible();
+  await expect.poll(beans).toBe(12);
+  await page.screenshot({path:info.outputPath('game-byte-progress-later.png')});
+  await page.emulateMedia({reducedMotion:'reduce'});
+  await expect(pac).toHaveCSS('animation-name','none');
+  expect(await beans()).toBe(12);
+  sendRest();
+  await expect(loader.getByText('100%',{exact:true})).toBeVisible();
+  await expect.poll(beans).toBe(0);
   await page.locator('.lab-loading').getByRole('button',{name:'返回实验室',exact:true}).click();
   await expect(page.locator('iframe')).toHaveCount(0);
   await expect(tabs).toBeVisible();
- }finally{release();server.closeAllConnections();
+ }finally{sendHalf();sendMore();sendRest();finish();server.closeAllConnections();
   await new Promise<void>(resolve=>server.close(()=>resolve()));}
 });
 
