@@ -8,7 +8,7 @@ type PreparedClip={clip:AudioClip;player:HTMLAudioElement;blobURL:string};
 type PreloadedClip={clip:AudioClip;controller:AbortController;blob?:Blob};
 const clipSource=(path:string)=>new URL(import.meta.env.BASE_URL+path,location.href).href;
 const policyError=(error:unknown)=>error instanceof DOMException?error.name==='NotAllowedError':(error as {name?:string})?.name==='NotAllowedError';
-export function useSpeech(notify:(s:string)=>void,preferLocalVoice=false){
+export function useSpeech(notify:(s:string)=>void){
  const generation=useRef(0),timer=useRef<ReturnType<typeof setTimeout>|undefined>(undefined),media=useRef<HTMLAudioElement|null>(null);
  const prepared=useRef<PreparedClip|null>(null),preloaded=useRef<PreloadedClip|null>(null),speechPending=useRef(false);
  const blockedRequest=useRef<PlayRequest|null>(null),retrying=useRef(false),gestureRetry=useRef(false),confirmed=useRef(false);
@@ -143,7 +143,7 @@ export function useSpeech(notify:(s:string)=>void,preferLocalVoice=false){
    if(!window.speechSynthesis){fail('此浏览器没有提供英文朗读功能。');return;}
    try{
     const utterance=new SpeechSynthesisUtterance(queue[i]);utterance.lang='en-US';utterance.rate=next.rate;
-    const voice=selectedSpeechVoice(preferLocalVoice);if(voice)utterance.voice=voice;
+    const voice=selectedSpeechVoice();if(voice)utterance.voice=voice;
     let clock:ReturnType<typeof createSpeechProgress>|undefined,paused=false;
     const sample=()=>{
      if(!current()||!clock)return;
@@ -169,7 +169,7 @@ export function useSpeech(notify:(s:string)=>void,preferLocalVoice=false){
    }catch{fail('朗读暂时不可用，请检查浏览器的语音与播放权限。');}
   };
   nextSegment(0);
- },[cancelPlayback,stop,finish,clearMedia,discardClip,clearPreload,notify,preferLocalVoice,progress]);
+ },[cancelPlayback,stop,finish,clearMedia,discardClip,clearPreload,notify,progress]);
  const play=useCallback((texts:string[],rate=1,onEnd?:()=>void,offset=0,clip?:AudioClip,startFraction=0,automatic=false)=>{
   start({texts:[...texts],rate,onEnd,offset,clip,startFraction,automatic});
  },[start]);

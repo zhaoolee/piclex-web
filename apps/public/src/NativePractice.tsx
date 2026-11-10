@@ -161,7 +161,7 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,loadP
  const [repeat,setRepeat]=useState(()=>readPreference('piclex-web.listening.repeat')||'once'),[onePhoto]=useState(()=>readPreference('piclex-web.listening.single-photo')==='true');
  const [listenRun,setListenRun]=useState(false),[pass,setPass]=useState(0),[seek,setSeek]=useState(0),[seekRevision,setSeekRevision]=useState(0);
  const freeDictation=state.module==='listening'&&state.mode==='free';
- const readingContinuation=useRef(false),readingSaved=useRef(new Map<string,ReadingDraft>()),audio=useSpeech(notify,freeDictation),prompts=useMemo(()=>promptsFor(deck),[deck]);
+ const readingContinuation=useRef(false),readingSaved=useRef(new Map<string,ReadingDraft>()),audio=useSpeech(notify),prompts=useMemo(()=>promptsFor(deck),[deck]);
  const prompt=prompts[state.sentenceIndex],word=deck.words[state.index],draft=wordDraft(deck,state),sentence=prompt?(state.sentences[prompt.key]||newSentence(prompt)):null;
  const promptAudio=recordingFor(deck.words,prompt);
  const active=visible&&!panel,complete=!word,playback=state.module==='listening'&&state.mode==='listening';

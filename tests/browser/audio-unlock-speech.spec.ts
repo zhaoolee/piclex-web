@@ -110,38 +110,54 @@ test('no speech callback leaves preparation and remains retryable',async({page})
  await expect.poll(()=>page.evaluate(()=>(window as any).__started)).toBeGreaterThan(0);
 });
 
-test('free dictation Auto uses an installed English voice and replays without canceling an idle service',async({page},info)=>{
- test.skip(!!info.project.use.hasTouch,'Space is the desktop shortcut');
+test('free dictation shares spelling’s Auto voice and replays without canceling an idle service',async({page},info)=>{
  await page.addInitScript(()=>{
   const w=window as any;
   const remote={name:'Google US English',lang:'en-US',voiceURI:'remote',localService:false},local={name:'Samantha',lang:'en-US',voiceURI:'local',localService:true};
   let active=false;
-  w.__utterances=[];w.__idleCancels=0;w.__speechStarts=[];
+  w.__utterances=[];w.__idleCancels=0;
   Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:class {constructor(public text:string){}}});
   Object.defineProperty(window,'speechSynthesis',{configurable:true,value:{
    getVoices:()=>[remote,local],cancel(){if(!active)w.__idleCancels++;active=false;},get paused(){return false;},
    speak(utterance:SpeechSynthesisUtterance){
     active=true;
-    w.__utterances.push({text:utterance.text,voice:utterance.voice?.voiceURI});
-    setTimeout(()=>{w.__speechStarts.push(performance.now());utterance.onstart?.(new Event('start') as SpeechSynthesisEvent);},utterance.voice?.localService?20:1600);
-    setTimeout(()=>{active=false;utterance.onend?.(new Event('end') as SpeechSynthesisEvent);},utterance.voice?.localService?100:1700);
+    w.__utterances.push({text:utterance.text,voice:utterance.voice?.voiceURI,requestedAt:performance.now()});
+    // The browser's service can take longer to start than the app takes to request it.
+    const startup=utterance.voice?.localService?20:1600;
+    setTimeout(()=>utterance.onstart?.(new Event('start') as SpeechSynthesisEvent),startup);
+    setTimeout(()=>{active=false;utterance.onend?.(new Event('end') as SpeechSynthesisEvent);},startup+150);
    }
   }});
  });
+ const utterance=(index:number)=>page.evaluate(index=>(window as any).__utterances[index],index);
+ const spelling=page.getByRole('tab',{name:'拼单词',exact:true}),listening=page.getByRole('tab',{name:'练听力',exact:true});
+ const play=page.getByRole('button',{name:'播放句子',exact:true});
+ const touch=!!info.project.use.hasTouch;
  await page.goto('/piclex-web/#/deck/'+plain.id+'?module=listening&mode=free&difficulty=easy');
- await expect.poll(()=>page.evaluate(()=>(window as any).__utterances.length)).toBe(1);
- await expect(page.getByRole('button',{name:'播放句子',exact:true})).toBeVisible();
- const first=await page.evaluate(()=>({utterance:(window as any).__utterances[0],idle:(window as any).__idleCancels}));
- await page.evaluate(()=>window.addEventListener('keydown',event=>{if(event.code==='Space')(window as any).__spaceAt=performance.now();},{capture:true,once:true}));
- await page.keyboard.press('Space');
+ await expect.poll(async()=>(await utterance(0))?.text).toBe(plainDeck.words[0].example);
+ const first=await utterance(0);
+ expect(first.voice).toBe('remote');
+ await expect(play).toBeVisible();
+
+ const idle=await page.evaluate(()=>(window as any).__idleCancels);
+ await page.evaluate(eventName=>window.addEventListener(eventName,()=>{(window as any).__gestureAt=performance.now();},{capture:true,once:true}),touch?'click':'keydown');
+ if(touch)await play.tap();else await page.keyboard.press('Space');
+ await expect.poll(async()=>(await utterance(1))?.voice).toBe(first.voice);
+ const replay=await utterance(1);
+ expect(replay.text).toBe(first.text);
+ expect(replay.requestedAt-await page.evaluate(()=>(window as any).__gestureAt)).toBeLessThan(350);
+ expect(await page.evaluate(()=>(window as any).__idleCancels)).toBe(idle);
  await expect(page.getByRole('progressbar',{name:'播放进度'})).toBeVisible();
- const second=await page.evaluate(()=>{const w=window as any;return {utterance:w.__utterances[1],idle:w.__idleCancels,delay:w.__speechStarts[1]-w.__spaceAt};});
- expect(second.utterance).toEqual(first.utterance);
- expect(second.utterance.voice).toBe('local');
- expect(second.idle).toBe(first.idle);
- expect(second.delay).toBeLessThan(350);
- await expect(page.getByRole('button',{name:'播放句子',exact:true})).toBeVisible();
- await page.evaluate(()=>localStorage.setItem('practice.speechVoiceIdentifier','remote'));
- await page.keyboard.press('Space');
- await expect.poll(()=>page.evaluate(()=>(window as any).__utterances[2]?.voice)).toBe('remote');
+ await expect(play).toBeVisible();
+
+ await spelling.click();
+ await page.getByRole('button',{name:'播放句子和单词',exact:true}).click();
+ await expect.poll(async()=>(await utterance(2))?.text).toBe(first.text);
+ expect((await utterance(2)).voice).toBe(first.voice);
+
+ await listening.click();
+ await page.getByLabel('句子练习模式',{exact:true}).selectOption('free');
+ await page.evaluate(()=>localStorage.setItem('practice.speechVoiceIdentifier','local'));
+ if(touch)await play.tap();else await page.keyboard.press('Space');
+ await expect.poll(async()=>(await utterance(3))?.voice).toBe('local');
 });
