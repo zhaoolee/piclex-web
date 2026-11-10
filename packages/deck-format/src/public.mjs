@@ -60,7 +60,9 @@ export async function parsePublicDeck(bytes, card) {
   let value; try { value = JSON.parse(new TextDecoder().decode(bytes)); } catch { fail(); }
   if (value.format !== 'com.piclex.web-deck' || value.schemaVersion !== 1 || value.deckID !== card.id || value.fingerprint !== card.fingerprint || !string(value.title, 1, 80) || !Array.isArray(value.photos) || value.photos.length !== card.photoCount || !Array.isArray(value.words) || value.words.length !== card.count) fail();
   if (value.learningFingerprint !== card.learningFingerprint) fail();
-  for (const photo of value.photos) if (!photo || !uuid.test(photo.id) || !assetPath(photo.path)) fail();
+  for (const photo of value.photos) {
+    if (!photo || !uuid.test(photo.id) || !assetPath(photo.path) || (photo.title !== undefined && !string(photo.title, 1, 2000))) fail();
+  }
   for (const word of value.words) {
     if (!word || !string(word.id, 1, 200) || !string(word.english, 1, 100) || !string(word.chinese, 1, 200) || !Number.isInteger(word.imageIndex) || word.imageIndex < 0 || word.imageIndex >= value.photos.length || !string(word.example, 0, 2000) || !string(word.exampleChinese, 0, 2000) || !string(word.phonetic, 0, 200) || !string(word.partOfSpeech, 0, 50)) fail();
     if (word.audio !== undefined) { validateAudioInfo(word.audio); if (!assetPath(word.audio.path) || Object.hasOwn(word.audio, 'dataBase64')) fail(); }

@@ -60,7 +60,8 @@ export async function parseArchive(bytes) {
     if (meta.formatVersion !== 1 || meta.id !== item.id || meta.deletedAt != null || !safePath(meta.imagePath) || !image || image.length !== meta.imageByteCount || !hash.test(meta.imageSHA256) || await sha256(image) !== meta.imageSHA256) fail('照片内容校验失败，原有卡组未改变。');
     if (!Array.isArray(meta.labels) || meta.labels.length > 1000) fail('卡组词汇格式无效。');
     const imageIndex = photos.length;
-    photos.push({ id: item.id, bytes: image, mime: mime(image) });
+    const title = text(meta.title).trim();
+    photos.push({ id: item.id, bytes: image, mime: mime(image), ...(title ? { title } : {}) });
     for (const [index, label] of meta.labels.entries()) {
       if (!label || typeof label !== 'object') fail('卡组词汇格式无效。');
       const english = text(label.english, 100).trim(), chinese = text(label.chinese, 200).trim();

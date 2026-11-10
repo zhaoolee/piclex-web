@@ -43,7 +43,7 @@ import {normalizeDefinitionWord} from './word-definitions';
 import {flushSync} from 'react-dom';
 export type AudioClip={mediaType:string;sha256:string;byteCount:number;durationSeconds:number;dataBase64?:string;path?:string};
 export type Word={audio?:AudioClip;id:string;english:string;chinese:string;imageIndex:number;focus:Focus;example:string;exampleChinese:string;phonetic:string;partOfSpeech:string;occurrenceID?:string};
-export type PracticeDeck={id:string;title:string;fingerprint:string;legacyFingerprints?:string[];studySources?:any[];words:Word[];images:string[]};
+export type PracticeDeck={id:string;title:string;fingerprint:string;legacyFingerprints?:string[];studySources?:any[];words:Word[];images:string[];photoTitles?:(string|undefined)[]};
 type Action={type:string;[key:string]:unknown};
 function recordingFor(words:Word[],prompt?:{wordIndex:number;sentence:string}){
  if(!prompt)return;
@@ -512,7 +512,15 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,loadP
   {!complete&&(state.module==='spelling'||state.module==='listening'&&state.mode==='free'&&!!prompt&&!state.sentenceFinished&&!allWordsShown)&&<VirtualKeyboard active={active} press={virtualPress} lettersOnly />}
   {panel==='download'&&<DeckDownload close={()=>setPanel(null)} installed={installedDecks} save={saveDownloaded}/>}
   {panel==='level'&&<Dialog title="我的等级" close={()=>setPanel(null)}><LevelPage embedded openGame={openGame} gameBusy={gameBusy} learn={()=>{setPanel(null);selectModule('spelling');}}/></Dialog>}
-  {panel&&panel!=='download'&&panel!=='level'&&<Dialog title={panel==='gallery'?'选择照片':'选择卡组'} close={()=>setPanel(null)}>{panel==='settings'?<DeckPicker choices={deckChoices} loadPurchaseChoices={loadPurchaseChoices} selectedID={deck.id} position={state.index} notify={notify} select={id=>{audio.stop();setPanel(null);selectDeck(id);}}/>:<><div className="gallery-tools"><button className="native-button" aria-label="分享卡组" onClick={share}><Icon name="share"/></button><button className="native-button" aria-label="下载卡组" onClick={download}>↓</button></div><div className="native-photo-grid">{deck.images.map((src,imageIndex)=>{const first=deck.words.findIndex(w=>w.imageIndex===imageIndex);return <button key={src} aria-label={`照片 ${imageIndex+1}`} aria-pressed={word?.imageIndex===imageIndex} onClick={()=>{dispatch({type:'selectWord',index:word?.imageIndex===imageIndex?state.index:first});setPanel(null);}}><img src={src} alt="" loading="lazy"/><span>{imageIndex+1}</span></button>;})}</div></>}</Dialog>}
+  {panel&&panel!=='download'&&panel!=='level'&&<Dialog title={panel==='gallery'?'选择照片':'选择卡组'} close={()=>setPanel(null)}>{panel==='settings'?<DeckPicker choices={deckChoices} loadPurchaseChoices={loadPurchaseChoices} selectedID={deck.id} position={state.index} notify={notify} select={id=>{audio.stop();setPanel(null);selectDeck(id);}}/>:<><div className="gallery-tools"><button className="native-button" aria-label="分享卡组" onClick={share}><Icon name="share"/></button><button className="native-button" aria-label="下载卡组" onClick={download}>↓</button></div><div className="native-photo-grid">{deck.images.map((src,imageIndex)=>{
+    const first=deck.words.findIndex(w=>w.imageIndex===imageIndex),title=deck.photoTitles?.[imageIndex];
+    const label=`照片 ${imageIndex+1}`;
+    return <button key={src} title={title} aria-label={title?`${label}，${title}`:label} aria-pressed={word?.imageIndex===imageIndex} onClick={()=>{dispatch({type:'selectWord',index:word?.imageIndex===imageIndex?state.index:first});setPanel(null);}}>
+      <img src={src} alt="" loading="lazy"/>
+      {title&&<span className="photo-title">{title}</span>}
+      <span className="photo-index">{imageIndex+1}</span>
+    </button>;
+  })}</div></>}</Dialog>}
  </main>;
 }
 function Chunk({text,disabled,remove,move}:{text:string;disabled:boolean;remove:()=>void;move:(offset:number)=>void}){

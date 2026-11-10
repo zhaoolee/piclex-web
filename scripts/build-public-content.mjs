@@ -49,7 +49,7 @@ try {
     for (const photo of parsed.photos) {
       const path = `photos/${photo.id}.${photo.mime === 'image/jpeg' ? 'jpg' : 'png'}`;
       await writeFile(join(directory, path), photo.bytes);
-      photos.push({ id: photo.id, path: `library/${name}/${path}` });
+      photos.push({ id: photo.id, path: `library/${name}/${path}`, ...(photo.title ? { title: photo.title } : {}) });
     }
     const cover = await obtain(`${entry.packageSHA256}.jpg`, entry.coverURL, 4 * 1024 * 1024);
     if (cover.length > 4 * 1024 * 1024 || cover[0] !== 255 || cover[1] !== 216) throw new Error('Invalid public cover');

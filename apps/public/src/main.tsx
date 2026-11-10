@@ -34,7 +34,7 @@ import './glass-tabs.css';
 import './settings.css';
 
 type Parsed = Awaited<ReturnType<typeof parseArchive>>;
-type Deck = { id: string; title: string; fingerprint: string; legacyFingerprints?: string[]; covers?: Partial<Record<"landscape" | "portrait", string>>; words: Parsed["words"]; images: string[]; backupPhoto?:BackupPhoto; captureIDs?:string[]; studySources?:any[]; revision?:number; bytes?: Uint8Array; downloadURL?: string };
+type Deck = { id: string; title: string; fingerprint: string; legacyFingerprints?: string[]; covers?: Partial<Record<"landscape" | "portrait", string>>; words: Parsed["words"]; images: string[]; photoTitles?: (string | undefined)[]; backupPhoto?:BackupPhoto; captureIDs?:string[]; studySources?:any[]; revision?:number; bytes?: Uint8Array; downloadURL?: string };
 type Card = { id: string; title: string; description: string; count: number; cover: string; covers?: Partial<Record<"landscape" | "portrait", string>>; progressAliases?: string[]; package?: string; local?: boolean; subscribed?: boolean; sourceURL?:string; credit?: string; source?: string; payload?: string; payloadSHA256?: string; fingerprint?: string; learningFingerprint?: string; version?: number; photoCount?: number; preview?: { english: string; chinese: string } };
 const asset = (path: string) => new URL(import.meta.env.BASE_URL + path, location.href).href;
 const appStore = 'https://apps.apple.com/cn/app/id6808490052';
@@ -63,7 +63,8 @@ async function loadPublicDeck(card:Card,signal?:AbortSignal,onProgress?:(progres
   const parsed=await parsePublicDeck(bytes,card);
   return {id:card.id,title:parsed.title,fingerprint:parsed.learningFingerprint||parsed.fingerprint,
     legacyFingerprints:card.progressAliases,words:parsed.words,
-    images:parsed.photos.map((photo:{path:string})=>asset(photo.path)),downloadURL:asset(card.package!)};
+    images:parsed.photos.map((photo:{path:string})=>asset(photo.path)),
+    photoTitles:parsed.photos.map((photo:{title?:string})=>photo.title),downloadURL:asset(card.package!)};
 }
 const backupPhotos=new Map<string,BackupPhoto>();
 const captureCards=new Map<string,Card & {addedAt:number;firstWord:string}>();
@@ -77,7 +78,8 @@ function materialize(id: string, parsed: Parsed, bytes: Uint8Array, aliases: str
   const visible=parsed.photos.map((p,i)=>({p,i})).filter(({p})=>!deletedPhotoIDs.has(p.id.toLowerCase())),indices=new Map(visible.map(({i},index)=>[i,index]));
   parsed={...parsed,photos:visible.map(({p})=>p),words:parsed.words.filter(w=>indices.has(w.imageIndex)).map(w=>({...w,imageIndex:indices.get(w.imageIndex)!}))};
   const covers = Object.fromEntries(Object.entries(parsed.covers).map(([role, image]) => [role, URL.createObjectURL(new Blob([image.bytes as BlobPart], { type: image.mime }))]));
-  const deck = { ...parsed, id, bytes, covers, fingerprint: parsed.learningFingerprint, legacyFingerprints: [...new Set([...aliases, parsed.fingerprint])], images: parsed.photos.map(p => URL.createObjectURL(new Blob([p.bytes as BlobPart], { type: p.mime }))) };
+  const deck = { ...parsed, id, bytes, covers, fingerprint: parsed.learningFingerprint, legacyFingerprints: [...new Set([...aliases, parsed.fingerprint])],
+    photoTitles: parsed.photos.map(p => p.title), images: parsed.photos.map(p => URL.createObjectURL(new Blob([p.bytes as BlobPart], { type: p.mime }))) };
   const previous = cache.get(id);
   if (previous?.bytes) for (const url of [...previous.images, ...Object.values(previous.covers || {})]) URL.revokeObjectURL(url);
   cache.set(id, deck); return deck;
