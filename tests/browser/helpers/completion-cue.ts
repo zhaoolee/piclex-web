@@ -15,7 +15,7 @@ export async function observeCompletionCue(page:Page){
    start.apply(this,args);
   };
   document.addEventListener('animationstart',event=>{
-   if(/^letter-gold-(slide|sweep)$/.test(event.animationName))w.__cues.animation??=performance.now();
+   if(/^letter-gold-(slide|sweep)$/.test(event.animationName)&&event.target instanceof Element&&!event.target.closest('.guided-word.gold-sweep'))w.__cues.animation??=performance.now();
   },true);
  });
 }

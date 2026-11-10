@@ -227,6 +227,52 @@ test('desktop free dictation resumes on a background click and shows a bilingual
  await expect(fields.nth(2)).toHaveValue('pr');
 });
 
+test('easy dictation shows a circle for each input and gold for a correctly finished word',async({page},info)=>{
+ await isolateSpeech(page);
+ await page.addInitScript(()=>{
+  const feedback={letters:[] as string[],words:[] as string[]};
+  Object.assign(window,{dictationFeedback:feedback});
+  const animate=Element.prototype.animate;
+  Element.prototype.animate=function(...args){
+   if(this.matches('.guided-letter-ripple'))feedback.letters.push(this.parentElement?.textContent||'');
+   return animate.apply(this,args);
+  };
+  document.addEventListener('animationstart',event=>{
+   if(event.animationName!=='letter-gold-slide'||!(event.target instanceof Element))return;
+   const word=event.target.closest('.guided-word')?.querySelector('input');
+   if(word)feedback.words.push(word.value);
+  });
+ });
+ await page.goto(progressURL('1'));
+ const fields=page.locator('.guided-word input');
+ const feedback=()=>page.evaluate(()=>(window as Window&{dictationFeedback?:{letters:string[];words:string[]}}).dictationFeedback);
+ const press=async(key:string)=>{
+  if(info.project.use.hasTouch)await page.locator(`.virtual-key[data-key="${key}"]`).tap();
+  else await page.keyboard.press(key);
+ };
+ await fields.first().focus();
+ for(const key of 'herex')await press(key);
+ await expect(fields.first()).toHaveValue('herex');
+ expect(await feedback()).toEqual({letters:[...'herex'],words:[]});
+ // Focus advances when the field fills, even for a typo. Edit that field in place.
+ await fields.first().evaluate(input=>{(input as HTMLInputElement).focus();(input as HTMLInputElement).setSelectionRange(5,5);});
+ await press('Backspace');
+ await expect(fields.first()).toHaveValue('here');
+ expect(await feedback()).toEqual({letters:[...'herex'],words:[]});
+ await press('s');
+ await expect.poll(feedback).toEqual({letters:[...'herexs'],words:['heres']});
+ await expect(fields.nth(1)).toBeFocused();
+ await expect(page.locator('.guided-input')).not.toHaveClass(/gold-sweep/);
+ await page.reload();
+ await expect(fields.first()).toHaveValue('heres');
+ expect(await feedback()).toEqual({letters:[],words:[]});
+ await page.emulateMedia({reducedMotion:'reduce'});
+ await fields.nth(1).focus();
+ for(const key of 'my')await press(key);
+ await expect(fields.nth(1)).toHaveValue('my');
+ expect(await feedback()).toEqual({letters:[],words:[]});
+});
+
 for(const difficulty of ['easy','medium','hard'])test(`fresh free ${difficulty} completion lights the full answer and plays the spelling cue once`,async({page},info)=>{
  await isolateSpeech(page);
  await observeCompletionCue(page);

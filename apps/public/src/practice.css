@@ -304,3 +304,7 @@ body[data-practice=true] .learning-dialog{position:fixed;inset:auto;top:calc(var
  .native-practice .playback-button .space-keycap{min-width:30px;letter-spacing:.02em}
  .native-practice .playback-button .space-keycap::after{content:"空格"}
 }
+
+.guided-letters .letter-glyph{position:relative}
+.guided-letter-ripple{position:absolute;left:50%;top:50%;width:53px;height:53px;box-sizing:border-box;border:1px solid var(--ripple,#777);border-radius:50%;opacity:0;pointer-events:none}
+@media(prefers-reduced-motion:reduce){.guided-letter-ripple{display:none}}

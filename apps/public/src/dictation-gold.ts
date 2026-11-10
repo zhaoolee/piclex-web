@@ -47,7 +47,7 @@ function mirrorText(field:HTMLInputElement|HTMLTextAreaElement){
  return {field,mirror,text,left:field.scrollLeft,top:field.scrollTop};
 }
 
-export function startDictationGoldSweep(board:HTMLElement,onStart:()=>void){
+export function startDictationGoldSweep(board:HTMLElement,onStart?:()=>void){
  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
  if(reduced.matches||document.hidden)return;
  const glyphs=[...board.querySelectorAll<HTMLElement>('.guided-letters .letter-glyph')].filter(glyph=>glyph.textContent?.trim());
@@ -72,11 +72,12 @@ export function startDictationGoldSweep(board:HTMLElement,onStart:()=>void){
  // Listen to the actual sweep, since rows can also start a separate fade.
  function started(event:AnimationEvent){
   if(event.animationName!=='letter-gold-slide'&&event.animationName!=='letter-gold-sweep')return;
-  if(!(event.target instanceof Element)||!event.target.closest('.dictation-gold-mirror'))return;
+  const target=event.target;
+  if(!(target instanceof Element)||!mirrors.some(({mirror})=>mirror.contains(target)))return;
   board.removeEventListener('animationstart',started);
-  onStart();
+  onStart?.();
  }
- board.addEventListener('animationstart',started);
+ if(onStart)board.addEventListener('animationstart',started);
  board.classList.add('gold-sweep');
  const timeout=setTimeout(cancel,1040);
  reduced.addEventListener('change',cancel);
