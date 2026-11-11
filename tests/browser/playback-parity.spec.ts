@@ -8,6 +8,7 @@ async function mockSpeech(page:Page){
  });
 }
 async function emit(page:Page,event:string,index=-1,detail:any={}){
+ await expect.poll(()=>page.evaluate(index=>!!(window as any).__utterances.at(index),index)).toBe(true);
  await page.evaluate(({event,index,detail})=>{const u=(window as any).__utterances.at(index);if(!u)throw new Error('Expected a queued utterance');u['on'+event]?.(detail);},{event,index,detail});
 }
 async function open(page:Page){
@@ -21,7 +22,7 @@ test('App replay button keeps its geometry and fills in place across sentence, w
  await open(page);await page.getByRole('tab',{name:'练听力',exact:true}).click();await page.getByRole('tab',{name:'拼单词',exact:true}).click();await mockSpeech(page);const touch=!!info.project.use.hasTouch;
  const button=page.locator('.playback-button'),bar=page.getByRole('progressbar',{name:'播放进度'}),row=page.locator('.native-playback');
  await expect(button.locator('.playback-label')).toHaveText('播放句子和单词');const before=await row.boundingBox(),buttonBefore=await button.boundingBox();
- await press(button,touch);await expect(button.locator('.playback-label')).toHaveText('准备音频…');await expect(bar).toHaveCount(0);
+ await press(button,touch);await expect(button.locator('.playback-label')).toHaveText('重新播放');await expect(bar).toHaveAttribute('aria-valuenow','0');
  await emit(page,'start');await expect(button.locator('.playback-label')).toHaveText('重新播放');await expect(bar).toBeVisible();
  await expect(page.getByRole('button',{name:'停止播放'})).toHaveCount(0);await expect(row.getByRole('button')).toHaveCount(1);
  await emit(page,'boundary',-1,{charIndex:10});await expect.poll(async()=>Number(await bar.getAttribute('aria-valuenow'))).toBeGreaterThan(0);
@@ -29,8 +30,8 @@ test('App replay button keeps its geometry and fills in place across sentence, w
  await press(page.getByRole('region',{name:'虚拟键盘'}).getByRole('button',{name:'按键 C',exact:true}),touch);
  await expect(page.getByRole('textbox',{name:'输入英文',exact:true})).toHaveValue('c');
  await page.screenshot({path:info.outputPath('playback-progress.png')});
- await press(button,touch);await expect(button.locator('.playback-label')).toHaveText('准备音频…');await emit(page,'boundary',0,{charIndex:40});await emit(page,'end',0);
- await expect.poll(()=>page.evaluate(()=>(window as any).__utterances.length)).toBe(2);await expect(bar).toHaveCount(0);
+ await press(button,touch);await expect(button.locator('.playback-label')).toHaveText('重新播放');await emit(page,'boundary',0,{charIndex:40});await emit(page,'end',0);
+ await expect.poll(()=>page.evaluate(()=>(window as any).__utterances.length)).toBe(2);await expect(bar).toHaveAttribute('aria-valuenow','0');
  await emit(page,'start');await emit(page,'boundary',-1,{charIndex:12});
  await page.getByLabel('播放速度',{exact:true}).selectOption('0.75');
  await expect.poll(()=>page.evaluate(()=>(window as any).__utterances.at(-1).rate)).toBe(.75);await expect(button.locator('.playback-label')).toHaveText('准备音频…');
@@ -70,7 +71,7 @@ function expectSmooth(samples:{time:number;value:number}[]){
 }
 test('speech without boundary events animates continuously, freezes on pause and resumes without jumping',async({page},info)=>{
  await open(page);await mockSpeech(page);const button=page.locator('.playback-button'),bar=page.getByRole('progressbar',{name:'播放进度'});
- await press(button,!!info.project.use.hasTouch);await expect(bar).toHaveCount(0);await emit(page,'start');
+ await press(button,!!info.project.use.hasTouch);await expect(bar).toHaveAttribute('aria-valuenow','0');await emit(page,'start');
  expectSmooth(await fillFrames(page));await expect(page.locator('.playback-activity')).toHaveCount(0);
  await page.screenshot({path:info.outputPath('smooth-speech-progress.png')});
  await emit(page,'pause');

@@ -330,7 +330,7 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,loadP
  const selectModule=(value:string)=>{if(value===state.module)return;readingContinuation.current=false;setListenRun(false);audio.stop();flushSync(()=>dispatch({type:'module',value}));focusAnswer();};
  const setMode=(value:string)=>{if(value===state.mode)return;setListenRun(false);setPass(0);audio.stop();flushSync(()=>dispatch({type:'mode',value}));focusAnswer();};
  const setDifficulty=(value:string)=>{setComposing(false);setImeWarning(false);flushSync(()=>dispatch({type:'preference',name:'difficulty',value}));focusAnswer();};
- const replay=()=>{if(!active)return;navigationAudio.current=null;if(state.module==='spelling'&&word)audio.play(word.example?[word.example,word.english]:[word.english],state.rate,undefined,0,word.example?word.audio:undefined);else if(prompt){act({type:'play',rate:state.rate});audio.play([prompt.sentence],state.rate,undefined,0,promptAudio,0,freeDictation?'replay':undefined);}};
+ const replay=()=>{if(!active)return;navigationAudio.current=null;if(state.module==='spelling'&&word)audio.play(word.example?[word.example,word.english]:[word.english],state.rate,undefined,0,word.example?word.audio:undefined,0,'replay');else if(prompt){act({type:'play',rate:state.rate});audio.play([prompt.sentence],state.rate,undefined,0,promptAudio,0,'replay');}};
  // First-load sound stays inside spelling and sentence exercises. Passive
  // listening already has transport state, and speaking has its own microphone
  // controls; neither should start audio behind the user's back.

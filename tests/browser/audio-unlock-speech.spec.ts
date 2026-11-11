@@ -110,9 +110,11 @@ test('no speech callback leaves preparation and remains retryable',async({page})
  await expect.poll(()=>page.evaluate(()=>(window as any).__started)).toBeGreaterThan(0);
 });
 
-test('four dictation replays reset the same button to zero and ignore replaced speech',async({page},info)=>{
+for(const module of ['spelling','free dictation','phrase dictation']){
+const query=module==='spelling'?'module=spelling':`module=listening&mode=${module==='free dictation'?'free':'chunks'}&difficulty=easy`;
+test(`four ${module} replays reset the same button to zero and ignore replaced speech`,async({page},info)=>{
  await mockSpeech(page,'denied',true);
- await page.goto('/piclex-web/#/deck/'+plain.id+'?module=listening&mode=free&difficulty=easy');
+ await page.goto('/piclex-web/#/deck/'+plain.id+'?'+query);
  const playback=page.locator('.playback-button'),label=playback.locator('.playback-label');
  const progress=playback.getByRole('progressbar',{name:'播放进度'});
  const retry=page.getByRole('button',{name:'开启声音，播放当前内容',exact:true});
@@ -158,8 +160,13 @@ test('four dictation replays reset the same button to zero and ignore replaced s
  expect(await playback.boundingBox()).toEqual(buttonBounds);
  await expect(warning).toHaveCount(0);
  await emit('end');
+ if(module==='spelling'){
+  await page.clock.runFor(200);
+  expect(await page.evaluate(()=>(window as any).__held.at(-1).text)).toBe(plainDeck.words[0].english);
+  await emit('end');
+ }
  await page.clock.runFor(250);
- await expect(label).toHaveText('播放句子');
+ await expect(label).toHaveText(module==='spelling'?'播放句子和单词':'播放句子');
  await expect(progress).toHaveCount(0);
 
  // Keep the online timeout bounded and allow the same sentence to be retried.
@@ -175,7 +182,7 @@ test('four dictation replays reset the same button to zero and ignore replaced s
  await expect(retry).toHaveCount(0);
 });
 
-test('click then Space restores the fill after the voice finishes canceling',async({page},info)=>{
+test(`${module} click then Space restores the fill after the voice finishes canceling`,async({page},info)=>{
  await page.addInitScript(()=>{
   const w=window as any;
   const remote={name:'Google US English',lang:'en-US',voiceURI:'remote',localService:false};
@@ -203,7 +210,7 @@ test('click then Space restores the fill after the voice finishes canceling',asy
    }
   }});
  });
- await page.goto('/piclex-web/#/deck/'+plain.id+'?module=listening&mode=free&difficulty=easy');
+ await page.goto('/piclex-web/#/deck/'+plain.id+'?'+query);
  const button=page.locator('.playback-button'),bar=button.getByRole('progressbar',{name:'播放进度'});
  const width=()=>bar.locator('.playback-fill').evaluate(fill=>new DOMMatrixReadOnly(getComputedStyle(fill).transform).a);
  const starts=()=>page.evaluate(()=>(window as any).__starts);
@@ -226,6 +233,7 @@ test('click then Space restores the fill after the voice finishes canceling',asy
  await expect.poll(width).toBeGreaterThan(.05);
  expect(await page.evaluate(()=>(window as any).__dropped)).toBe(0);
 });
+}
 
 test('free dictation shares spelling’s Auto voice and replays without canceling an idle service',async({page},info)=>{
  await page.addInitScript(()=>{
