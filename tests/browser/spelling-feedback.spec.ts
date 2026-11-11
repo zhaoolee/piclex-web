@@ -12,7 +12,7 @@ async function open(page:any,withPronunciation=false){
   await page.getByLabel('选择照片卡组文件').setInputFiles({name:'hint-pronunciation.piclexdeck',mimeType:'application/octet-stream',buffer:Buffer.from(zipSync(files,{level:0}))});
  }else await page.getByLabel('选择照片卡组文件').setInputFiles(file);
  await expect(page.getByRole('textbox',{name:'输入英文',exact:true})).toBeVisible();
- await page.evaluate(()=>Object.defineProperty(window,'speechSynthesis',{configurable:true,value:{speak:(u:any)=>{(window as any).__feedbackSpeech=u;},cancel:()=>{},getVoices:()=>[]}}));
+ await page.evaluate(()=>Object.defineProperty(window,'speechSynthesis',{configurable:true,value:{speak:(u:any)=>{const w=window as any;w.__feedbackSpeech=u;w.__feedbackSpeechRequests=(w.__feedbackSpeechRequests??0)+1;},cancel:()=>{const previous=(window as any).__feedbackSpeech;queueMicrotask(()=>previous?.onerror?.({error:'interrupted'}));},getVoices:()=>[]}}));
 }
 test('hardware input survives replay focus, protected IME keys, and keeps dialogs isolated',async({page})=>{
  await open(page);const field=page.getByRole('textbox',{name:'输入英文',exact:true});
@@ -40,7 +40,8 @@ for(const colorScheme of ['light','dark'] as const)test(`spelling progress stays
   expect(geometry).toHaveLength(2);
   for(const g of geometry){expect(g.top).toBeGreaterThanOrEqual(g.glyphBottom);expect(g.filter).toBe('none');}
  }).toPass({timeout:5000});
- await page.locator('.playback-button').click();await page.evaluate(()=>(window as any).__feedbackSpeech.onstart());
+ const initialRequests=await page.evaluate(()=>(window as any).__feedbackSpeechRequests??0);
+ await page.locator('.playback-button').click();await expect.poll(()=>page.evaluate(()=>(window as any).__feedbackSpeechRequests)).toBe(initialRequests+1);await page.evaluate(()=>(window as any).__feedbackSpeech.onstart());
  const bar=page.getByRole('progressbar',{name:'播放进度'});await expect.poll(async()=>Number(await bar.getAttribute('aria-valuenow'))).toBeGreaterThan(0);
  const segment=page.locator('.playback-activity'),fill=page.locator('.playback-fill');await expect(segment).toHaveCount(0);
  await expect.poll(async()=>(await fill.boundingBox())!.width).toBeGreaterThan(0);await expect(fill).toHaveCSS('animation-name','none');
@@ -52,7 +53,8 @@ for(const colorScheme of ['light','dark'] as const)test(`spelling progress stays
  expect((await fill.boundingBox())!.x).toBeCloseTo(left,0);
  await page.screenshot({path:info.outputPath(`feedback-${colorScheme}.png`)});
  await page.evaluate(()=>(window as any).__feedbackSpeech.onboundary({charIndex:10}));await expect(bar).toHaveAttribute('aria-valuenow',/^[1-9]\d?$/);await expect(segment).toHaveCount(0);
- await page.emulateMedia({reducedMotion:'reduce'});await page.locator('.playback-button').click();await expect(bar).toHaveCount(0);await page.evaluate(()=>(window as any).__feedbackSpeech.onstart());await expect(segment).toHaveCount(0);await expect(fill).toHaveCSS('transition-duration','0s');await expect.poll(async()=>Number(await bar.getAttribute('aria-valuenow'))).toBeGreaterThan(0);
+ const replayRequests=await page.evaluate(()=>(window as any).__feedbackSpeechRequests);
+ await page.emulateMedia({reducedMotion:'reduce'});await page.locator('.playback-button').click();await expect.poll(()=>page.evaluate(()=>(window as any).__feedbackSpeechRequests)).toBe(replayRequests+1);await expect(bar).toHaveAttribute('aria-valuenow','0');await expect.poll(()=>fill.evaluate(element=>new DOMMatrixReadOnly(getComputedStyle(element).transform).a)).toBe(0);await page.evaluate(()=>(window as any).__feedbackSpeech.onstart());await expect(segment).toHaveCount(0);await expect(fill).toHaveCSS('transition-duration','0s');await expect.poll(async()=>Number(await bar.getAttribute('aria-valuenow'))).toBeGreaterThan(0);
 });
 
 // The App marks a mismatch with a red board only. The removed result line used
