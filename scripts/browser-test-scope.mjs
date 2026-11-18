@@ -13,10 +13,10 @@ export const baseline = {
 };
 export const browserJobs = ['desktop', 'mobile', 'mobile-webkit'].flatMap(
   project => [1, 2].map(shard => `Browser ${project} ${shard}/2`));
-// Reviewed workflow changes wire selection and bound package mirror requests.
-// Browser install commands, projects, shards and assertions remain the same.
+// The reviewed workflow uses matching packaged dependencies for WebKit.
+// Browser projects, shards and assertions are the same as the baseline.
 // Any subsequent workflow edit invalidates reuse until reviewed again.
-export const reviewedWorkflowHash = 'be1bc4453fc1a99618b1b2143857a6a9d81665ccdb0abf2ec52c5a9ea615e494';
+export const reviewedWorkflowHash = '93462f3b40275389a2714fd1d0ff01684efa39ce3c40ddbbab62216e1a16ef4f';
 const specs = names => names.trim().split(/\s+/).map(name => `${name}.spec.ts`);
 const learning = specs(`app-shell alignment-extension audio-unlock audio-unlock-speech
   capture capture-grouping deck-picker-audio desktop-fit focus-ambience guided-no-eyes
