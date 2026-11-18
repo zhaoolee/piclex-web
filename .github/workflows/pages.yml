@@ -97,7 +97,7 @@ jobs:
           tar -xf "$RUNNER_TEMP/pages-artifact/artifact.tar" -C dist
           ln -s "$PWD/dist/library" apps/public/public/library
       - name: Bound Ubuntu package mirror requests
-        if: fromJSON(needs.build.outputs.browser-scope).mode != 'reuse'
+        if: matrix.project != 'mobile-webkit' && fromJSON(needs.build.outputs.browser-scope).mode != 'reuse'
         run: |
           if [ -f /etc/apt/apt-mirrors.txt ]; then
             # Keep signed Ubuntu packages while using the mirror that responded
@@ -106,10 +106,17 @@ jobs:
           fi
           printf '%s\n' 'Acquire::http::Timeout "15";' 'Acquire::https::Timeout "15";' 'Acquire::Retries "1";' \
             | sudo tee /etc/apt/apt.conf.d/99-piclex-ci-network >/dev/null
-      - run: npx playwright install --with-deps ${{ matrix.project == 'mobile-webkit' && 'webkit' || 'chrome' }}
-        if: fromJSON(needs.build.outputs.browser-scope).mode != 'reuse'
+      - run: npx playwright install --with-deps chrome
+        if: matrix.project != 'mobile-webkit' && fromJSON(needs.build.outputs.browser-scope).mode != 'reuse'
         timeout-minutes: 5
       - run: node scripts/browser-test-scope.mjs --run --project=${{ matrix.project }} --shard=${{ matrix.shard }}/2 --reporter=line,blob
+        if: matrix.project != 'mobile-webkit' || fromJSON(needs.build.outputs.browser-scope).mode == 'reuse'
+      - name: Run WebKit with its packaged system dependencies
+        if: matrix.project == 'mobile-webkit' && fromJSON(needs.build.outputs.browser-scope).mode != 'reuse'
+        run: |
+          docker run --rm --init --env BROWSER_SCOPE --env CI \
+            --volume "$PWD:$PWD" --workdir "$PWD" mcr.microsoft.com/playwright:v1.63.0-noble \
+            node scripts/browser-test-scope.mjs --run --project=mobile-webkit --shard=${{ matrix.shard }}/2 --reporter=line,blob
       - uses: actions/upload-artifact@v4
         if: always() && fromJSON(needs.build.outputs.browser-scope).mode != 'reuse'
         with:
