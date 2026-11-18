@@ -85,12 +85,22 @@ export function sentenceParts(sentence,translation='',occurrenceID=''){
 const promptCache=new WeakMap();
 export function promptsFor(deck){
   if(promptCache.has(deck))return promptCache.get(deck);
-  const seen=new Set(),prompts=[];
+  const seen=new Set(),photoSentences=new Set(),prompts=[];
   deck.words.forEach((word,wordIndex)=>{
-    if(!tokens(word.example||'').length)return;
-    const identity=word.occurrenceID?`occurrence:${word.occurrenceID}`:`${deck.studySources?word.id.split(':')[0]:word.imageIndex}:${tokens(word.example).join(' ')}`;
+    const example=tokens(word.example||'').join(' ');
+    if(!example)return;
+    const identity=word.occurrenceID?`occurrence:${word.occurrenceID}`:`${deck.studySources?word.id.split(':')[0]:word.imageIndex}:${example}`;
     if(seen.has(identity))return;seen.add(identity);
-    for(const [part,value] of sentenceParts(word.example,word.exampleChinese,word.occurrenceID).entries())prompts.push({...value,key:`${identity}:${part}`,wordIndex,imageIndex:word.imageIndex});
+    for(const [part,value] of sentenceParts(word.example,word.exampleChinese,word.occurrenceID).entries()){
+      const prompt={...value,key:`${identity}:${part}`,wordIndex,imageIndex:word.imageIndex};
+      // Keep prompt indices and keys stable for saved attempts and direct links.
+      if(!word.occurrenceID){
+        const sentenceKey=`${word.imageIndex}:${tokens(value.sentence).join(' ')}`;
+        if(photoSentences.has(sentenceKey))prompt.repeatedOnPhoto=true;
+        else photoSentences.add(sentenceKey);
+      }
+      prompts.push(prompt);
+    }
   });promptCache.set(deck,prompts);return prompts;
 }
 export function promptIndex(prompts,deck,wordIndex){

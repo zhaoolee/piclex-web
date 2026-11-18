@@ -136,7 +136,9 @@ export function reduceStudy(deck,s,action,preparedPrompts){
   const draft=s.sentences[p.key];
   const allWordsShown=s.mode==='free'&&s.difficulty!=='hard'&&!writtenWords(p.sentence).some(isGuidedWordEditable);
   if(s.mode!=='listening'&&!draft?.outcomes[s.mode]&&!allWordsShown)return s;
-  if(s.sentenceIndex+1<prompts.length){next.sentenceIndex++;navigate(prompts[next.sentenceIndex].wordIndex);}else {next.sentenceFinished=true;pause(next);}return next;
+  let index=s.sentenceIndex+1;
+  if(s.mode==='free')while(prompts[index]?.repeatedOnPhoto)index++;
+  if(index<prompts.length){next.sentenceIndex=index;navigate(prompts[index].wordIndex);}else {next.sentenceFinished=true;pause(next);}return next;
  }
  if(action.type==='speakingNext'&&s.module==='speaking'&&word){navigate(Math.min(deck.words.length,s.index+1));return next;}
  if(action.type==='sentencePrevious'){
