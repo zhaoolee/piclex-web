@@ -4,7 +4,7 @@ import {readFile} from 'node:fs/promises';
 import {validateSnapshot,parsePublicCatalog,parsePublicDeck} from '../packages/deck-format/src/public.mjs';
 const snapshot=JSON.parse(await readFile(new URL('../content/snapshot.json',import.meta.url)));
 test('reviewed public snapshot excludes paid entitlements and rejects duplicates or foreign origins',()=>{
- const reviewedIDs=['add03b54-d0a7-46fd-88c8-2aa0fa7f0c7f','121d190a-5d4c-4a09-8d50-4741acdbbb1b','56a51624-d8aa-4167-99c5-e1c727a938db','ba777e29-70c7-4706-8ea3-dd65f592ac16','099b791c-b48b-4439-b3e1-000ac98ebb0c','0a1ff2e2-3db0-4bb1-889a-b27b62798cbe','b33417a7-0f7e-4081-be35-2fe44d9d30c4'];
+ const reviewedIDs=['add03b54-d0a7-46fd-88c8-2aa0fa7f0c7f','121d190a-5d4c-4a09-8d50-4741acdbbb1b','56a51624-d8aa-4167-99c5-e1c727a938db','ba777e29-70c7-4706-8ea3-dd65f592ac16','c13f43cf-3e7d-461a-a7b8-5acb134210d8','099b791c-b48b-4439-b3e1-000ac98ebb0c','0a1ff2e2-3db0-4bb1-889a-b27b62798cbe','b33417a7-0f7e-4081-be35-2fe44d9d30c4'];
  assert.deepEqual(validateSnapshot(structuredClone(snapshot)).decks.map(d=>d.deckID).sort(),reviewedIDs.sort());
  for(const mutate of [s=>s.decks[0].access='storekit',s=>s.decks[0].productID='paid',s=>s.decks.push(s.decks[0]),s=>s.decks[0].packageURL='https://other.example/deck.piclexdeck',s=>s.decks[0].packageBytes=129*1024*1024]){
   const value=structuredClone(snapshot);mutate(value);assert.throws(()=>validateSnapshot(value));

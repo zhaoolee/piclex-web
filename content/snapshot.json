@@ -1,6 +1,7 @@
 {
   "sources": [
     "https://piclex.v2fy.com/decks/source.json",
+    "https://piclex.v2fy.com/public/subscriptions/nce1/feed.json",
     "https://piclex.v2fy.com/public/subscriptions/nce2/feed.json",
     "https://piclex.v2fy.com/public/subscriptions/classic-english-songs/feed.json",
     "https://piclex.v2fy.com/public/subscriptions/classic-movie-quotes/feed.json"
@@ -157,6 +158,42 @@
           "url": "https://piclex.v2fy.com/decks/ba777e29-70c7-4706-8ea3-dd65f592ac16/v5-1ccd9831b62615d8/cover-portrait.jpg"
         }
       }
+    },
+    {
+      "deckID": "c13f43cf-3e7d-461a-a7b8-5acb134210d8",
+      "title": "新概念英语第一册",
+      "author": "zhaoolee",
+      "description": "前半册36篇对话课文（奇数课第1–71课；配套偶数练习未制作）。117张原创场景图，529句词条、329个不同词；237个局部区域、292个语境词。每个完整对话轮次选一词，原句、重复词句和顺序保留。中文为原创译文，使用摄影学英语朗读；原MP3不在包内。",
+      "version": 1,
+      "photoCount": 117,
+      "wordCount": 529,
+      "packageURL": "https://piclex.v2fy.com/public/subscriptions/nce1/versions/1/deck-d375ca908c56a162.piclexdeck",
+      "packageBytes": 49315400,
+      "packageSHA256": "d375ca908c56a16228579414d719d978d999a424a8e556b4dea2e8548688af04",
+      "coverURL": "https://piclex.v2fy.com/public/subscriptions/nce1/versions/1/cover-70e0860282afa535.jpg",
+      "access": "public",
+      "covers": {
+        "landscape": {
+          "mimeType": "image/jpeg",
+          "width": 1536,
+          "height": 1024,
+          "bytes": 509186,
+          "sha256": "5a50a21a4c6d109f27940f93eac4ef3646b72c2019444247a606d03085b108e4",
+          "url": "https://piclex.v2fy.com/public/subscriptions/nce1/versions/1/cover-landscape-5a50a21a4c6d109f.jpg"
+        },
+        "portrait": {
+          "mimeType": "image/jpeg",
+          "width": 1024,
+          "height": 1536,
+          "bytes": 518273,
+          "sha256": "70e0860282afa535de4fae6a3d2f30963abcf3212b4ce96e0d9baea4bd7c7077",
+          "url": "https://piclex.v2fy.com/public/subscriptions/nce1/versions/1/cover-portrait-70e0860282afa535.jpg"
+        }
+      },
+      "minimumIOS": "17.0",
+      "sourceURL": "https://piclex.v2fy.com/public/subscriptions/nce1/feed.json",
+      "learningSHA256": "8690960f7bc9a6f5b70755cc9b7ee5023d3f543f09fc0ad523db501ed00306e6",
+      "progressAliases": []
     },
     {
       "deckID": "099b791c-b48b-4439-b3e1-000ac98ebb0c",

@@ -4,26 +4,27 @@ import {readFile} from 'node:fs/promises';
 import {mergePublished} from '../scripts/latest-public-snapshot.mjs';
 
 const snapshot=JSON.parse(await readFile(new URL('../content/snapshot.json',import.meta.url)));
+const bookTwoIndex=snapshot.decks.findIndex(deck=>deck.deckID==='099b791c-b48b-4439-b3e1-000ac98ebb0c');
 const feeds=()=>new Map([...new Set(snapshot.decks.map(deck=>deck.sourceURL))].map(url=>[
   url,{format:'com.piclex.deck-source',schemaVersion:1,decks:snapshot.decks.filter(deck=>deck.sourceURL===url).map(deck=>({...deck}))},
 ]));
 
 test('every reviewed public card advances from its own source and carries prior progress',()=>{
-  const sources=feeds(),old=snapshot.decks[4],updated={...old,version:old.version+1,packageSHA256:'a'.repeat(64)};
+  const sources=feeds(),old=snapshot.decks[bookTwoIndex],updated={...old,version:old.version+1,packageSHA256:'a'.repeat(64)};
   sources.get(old.sourceURL).decks[0]=updated;
   sources.get(snapshot.decks[0].sourceURL).decks.push({...snapshot.decks[0],deckID:'f'.repeat(8)+'-ffff-ffff-ffff-ffffffffffff',access:'storekit'});
   const catalog=[[{id:old.deckID,learningFingerprint:'b'.repeat(64),progressAliases:['c'.repeat(64)]}]];
   const result=mergePublished(snapshot,sources,catalog);
   assert.equal(result.changed.length,1);
   assert.equal(result.snapshot.decks.length,snapshot.decks.length);
-  assert.equal(result.snapshot.decks[4].version,updated.version);
-  assert.deepEqual(result.snapshot.decks[4].progressAliases,[old.learningSHA256,...old.progressAliases,'b'.repeat(64),'c'.repeat(64)]);
-  assert.equal(result.snapshot.decks[4].learningSHA256,undefined);
-  assert.equal(snapshot.decks[4].version,old.version);
+  assert.equal(result.snapshot.decks[bookTwoIndex].version,updated.version);
+  assert.deepEqual(result.snapshot.decks[bookTwoIndex].progressAliases,[old.learningSHA256,...old.progressAliases,'b'.repeat(64),'c'.repeat(64)]);
+  assert.equal(result.snapshot.decks[bookTwoIndex].learningSHA256,undefined);
+  assert.equal(snapshot.decks[bookTwoIndex].version,old.version);
 });
 
 test('source rollback and mutable versions stop publication',()=>{
-  const old=snapshot.decks[4];
+  const old=snapshot.decks[bookTwoIndex];
   for(const change of [deck=>{deck.version--;},deck=>{deck.packageSHA256='a'.repeat(64);},deck=>{deck.access='storekit';}]){
     const sources=feeds();change(sources.get(old.sourceURL).decks[0]);
     assert.throws(()=>mergePublished(snapshot,sources));

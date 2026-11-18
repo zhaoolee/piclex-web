@@ -21,7 +21,7 @@ function validateSnapshotAsset(entry, value, filename) {
 
 /** A reviewed build snapshot; only publicly downloadable sources may be mirrored. */
 export function validateSnapshot(snapshot) {
-  const sources = new Set(['https://piclex.v2fy.com/decks/source.json', 'https://piclex.v2fy.com/public/subscriptions/nce2/feed.json', 'https://piclex.v2fy.com/public/subscriptions/classic-english-songs/feed.json', 'https://piclex.v2fy.com/public/subscriptions/classic-movie-quotes/feed.json']);
+  const sources = new Set(['https://piclex.v2fy.com/decks/source.json', 'https://piclex.v2fy.com/public/subscriptions/nce1/feed.json', 'https://piclex.v2fy.com/public/subscriptions/nce2/feed.json', 'https://piclex.v2fy.com/public/subscriptions/classic-english-songs/feed.json', 'https://piclex.v2fy.com/public/subscriptions/classic-movie-quotes/feed.json']);
   if (!snapshot || !Array.isArray(snapshot.decks) || !snapshot.decks.length || snapshot.decks.length > 1000) fail();
   const ids = new Set();
   for (const entry of snapshot.decks) {
