@@ -164,30 +164,30 @@
       "title": "新概念英语第一册",
       "author": "zhaoolee",
       "description": "第 1–143 课的 72 个奇数对话课，240 张原创场景卡、1,204 条原句词条和 72 个课前提问，配有原创中译、英美音标和搭配。配套偶数练习未收录。使用 PicLex 朗读。",
-      "version": 3,
+      "version": 4,
       "photoCount": 240,
       "wordCount": 1204,
-      "packageURL": "https://piclex.v2fy.com/public/subscriptions/nce1/versions/3/deck-e80151c8b7a321b2.piclexdeck",
-      "packageBytes": 99378406,
-      "packageSHA256": "e80151c8b7a321b2e3add0e022abe57021f5761fe4550f906aaf18910edd609d",
-      "coverURL": "https://piclex.v2fy.com/public/subscriptions/nce1/versions/3/cover-70e0860282afa535.jpg",
+      "packageURL": "https://piclex.v2fy.com/public/subscriptions/nce1/versions/4/deck-cc6e016dbd6cf5c4.piclexdeck",
+      "packageBytes": 99291794,
+      "packageSHA256": "cc6e016dbd6cf5c4734b604c4ba00c86dcf46946753c1b0e8a64ddd6780635e3",
+      "coverURL": "https://piclex.v2fy.com/public/subscriptions/nce1/versions/4/cover-e0026545b1c685dd.jpg",
       "access": "public",
       "covers": {
         "landscape": {
           "mimeType": "image/jpeg",
           "width": 1536,
           "height": 1024,
-          "bytes": 509186,
-          "sha256": "5a50a21a4c6d109f27940f93eac4ef3646b72c2019444247a606d03085b108e4",
-          "url": "https://piclex.v2fy.com/public/subscriptions/nce1/versions/3/cover-landscape-5a50a21a4c6d109f.jpg"
+          "bytes": 475705,
+          "sha256": "e44b428596ac5b1f7e4d3d9f2c09a4cc0f3983a5fb66d75aceeeb9722b1e4322",
+          "url": "https://piclex.v2fy.com/public/subscriptions/nce1/versions/4/cover-landscape-e44b428596ac5b1f.jpg"
         },
         "portrait": {
           "mimeType": "image/jpeg",
           "width": 1024,
           "height": 1536,
-          "bytes": 518273,
-          "sha256": "70e0860282afa535de4fae6a3d2f30963abcf3212b4ce96e0d9baea4bd7c7077",
-          "url": "https://piclex.v2fy.com/public/subscriptions/nce1/versions/3/cover-portrait-70e0860282afa535.jpg"
+          "bytes": 486795,
+          "sha256": "e0026545b1c685dd30974099f9ed1688a35f687e0b1cc4e718a1eb968379c030",
+          "url": "https://piclex.v2fy.com/public/subscriptions/nce1/versions/4/cover-portrait-e0026545b1c685dd.jpg"
         }
       },
       "minimumIOS": "17.0",
