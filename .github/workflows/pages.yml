@@ -102,7 +102,7 @@ jobs:
           if [ -f /etc/apt/apt-mirrors.txt ]; then
             # Keep signed Ubuntu packages while using the mirror that responded
             # during the stalled archive.ubuntu.com install.
-            sudo sed -Ei 's#https?://(azure\.)?archive\.ubuntu\.com/ubuntu#https://security.ubuntu.com/ubuntu#g' /etc/apt/apt-mirrors.txt
+            sudo sed -Ei 's#https?://([[:alnum:]-]+\.)*archive\.ubuntu\.com/ubuntu#https://security.ubuntu.com/ubuntu#g' /etc/apt/apt-mirrors.txt
           fi
           printf '%s\n' 'Acquire::http::Timeout "15";' 'Acquire::https::Timeout "15";' 'Acquire::Retries "1";' \
             | sudo tee /etc/apt/apt.conf.d/99-piclex-ci-network >/dev/null
