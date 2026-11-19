@@ -4,8 +4,9 @@ import { focusLayout, visibleFocusBox, visibleFocusStyle } from './focus.mjs';
 import {PhotoCache,type CachedPhoto} from './photo-cache';
 import LoadProgress,{type DownloadProgress} from './LoadProgress';
 export type Focus = { visible: boolean; box: number[] } | null;
+export type PhotoLoadState='loading'|'ready'|'error';
 /** Keep the card's dimensions while downloading and decoding its current photo. */
-export function PhotoFocus({ src, focus, alt, active = true,fit='focus',retry=0,cache,onLoadState,onImageReady }: { src: string; cache?:PhotoCache; focus: Focus; alt: string; active?: boolean;fit?:'focus'|'contain';retry?:number;onImageReady?:(image:HTMLImageElement)=>void;onLoadState?:(state:'loading'|'ready'|'error')=>void }) {
+export function PhotoFocus({ src, focus, alt, active = true,fit='focus',retry=0,cache,onLoadState,onImageReady }: { src: string; cache?:PhotoCache; focus: Focus; alt: string; active?: boolean;fit?:'focus'|'contain';retry?:number;onImageReady?:(image:HTMLImageElement)=>void;onLoadState?:(state:PhotoLoadState)=>void }) {
  const host=useRef<HTMLDivElement>(null),[size,setSize]=useState({width:0,height:0});
  const localCache=useMemo(()=>new PhotoCache(),[]),photos=cache||localCache;
  const [photo,setPhoto]=useState<CachedPhoto>();
