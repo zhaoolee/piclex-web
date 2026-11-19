@@ -16,7 +16,7 @@ export const browserJobs = ['desktop', 'mobile', 'mobile-webkit'].flatMap(
 // The reviewed workflow uses matching packaged dependencies for WebKit.
 // Browser projects, shards and assertions are the same as the baseline.
 // Any subsequent workflow edit invalidates reuse until reviewed again.
-export const reviewedWorkflowHash = '93462f3b40275389a2714fd1d0ff01684efa39ce3c40ddbbab62216e1a16ef4f';
+export const reviewedWorkflowHash = '089dae0c2f4c32f0bcd1c1c4e33334a48324051e328e649ab73a70486ba123ae';
 const specs = names => names.trim().split(/\s+/).map(name => `${name}.spec.ts`);
 const learning = specs(`app-shell alignment-extension audio-unlock audio-unlock-speech
   capture capture-grouping deck-picker-audio desktop-fit focus-ambience guided-no-eyes
