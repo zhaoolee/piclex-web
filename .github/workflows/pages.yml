@@ -149,7 +149,13 @@ jobs:
         run: |
           mkdir dist
           tar -xf /tmp/pages-artifact/artifact.tar -C dist
+      - name: Use the responsive Ubuntu mirror for Chrome dependencies
+        run: |
+          sed -Ei 's#https?://azure\.archive\.ubuntu\.com/ubuntu#https://security.ubuntu.com/ubuntu#g' /etc/apt/sources.list.d/ubuntu.sources
+          printf '%s\n' 'Acquire::http::Timeout "15";' 'Acquire::https::Timeout "15";' 'Acquire::Retries "1";' \
+            > /etc/apt/apt.conf.d/99-piclex-ci-network
       - run: npx playwright install chrome
+        timeout-minutes: 5
       - name: Measure continuous learning and automatic backup
         run: npm run test:performance -- --dist dist --source "$GITHUB_SHA" --output performance-results --channel chrome --shard ${{ matrix.viewport }}/${{ matrix.scenario }}
       - uses: actions/upload-artifact@v4
