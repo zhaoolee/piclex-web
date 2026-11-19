@@ -37,9 +37,12 @@ test('shared, unknown, deleted tests and execution configuration fail closed', (
 });
 test('only reviewed workflow bytes can reuse baseline coverage', () => {
   const workflow = readFileSync(new URL('../.github/workflows/pages.yml', import.meta.url));
-  assert.equal(createHash('sha256').update(workflow).digest('hex'), reviewedWorkflowHash);
-  assert.equal(selectBrowserTests(['.github/workflows/pages.yml'], available, {workflowHash: reviewedWorkflowHash}).mode, 'reuse');
-  assert.equal(selectBrowserTests(['.github/workflows/pages.yml'], available, {workflowHash: 'changed'}).mode, 'full');
+  const workflowHash = createHash('sha256').update(workflow).digest('hex');
+  const changedWorkflowHash = createHash('sha256').update(workflow).update('\n# unreviewed change\n').digest('hex');
+  const selectWorkflow = hash => selectBrowserTests(['.github/workflows/pages.yml'], available, {workflowHash: hash}).mode;
+  assert.equal(selectWorkflow(reviewedWorkflowHash), 'reuse');
+  assert.equal(selectWorkflow(changedWorkflowHash), 'full');
+  assert.equal(selectWorkflow(workflowHash), workflowHash === reviewedWorkflowHash ? 'reuse' : 'full');
 });
 test('test-only changes select that spec; logs and selector tooling do not republish', () => {
   assert.deepEqual(plan(['tests/browser/camera-surface.spec.ts']).files, ['camera-surface.spec.ts']);
