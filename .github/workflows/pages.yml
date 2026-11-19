@@ -96,18 +96,9 @@ jobs:
           mkdir dist
           tar -xf "$RUNNER_TEMP/pages-artifact/artifact.tar" -C dist
           ln -s "$PWD/dist/library" apps/public/public/library
-      - name: Bound Ubuntu package mirror requests
+      - name: Prepare Google Chrome
         if: matrix.project != 'mobile-webkit' && fromJSON(needs.build.outputs.browser-scope).mode != 'reuse'
-        run: |
-          if [ -f /etc/apt/apt-mirrors.txt ]; then
-            # Keep signed Ubuntu packages while using the mirror that responded
-            # during the stalled archive.ubuntu.com install.
-            sudo sed -Ei 's#https?://([[:alnum:]-]+\.)*archive\.ubuntu\.com/ubuntu#https://security.ubuntu.com/ubuntu#g' /etc/apt/apt-mirrors.txt
-          fi
-          printf '%s\n' 'Acquire::http::Timeout "15";' 'Acquire::https::Timeout "15";' 'Acquire::Retries "1";' \
-            | sudo tee /etc/apt/apt.conf.d/99-piclex-ci-network >/dev/null
-      - run: npx playwright install --with-deps chrome
-        if: matrix.project != 'mobile-webkit' && fromJSON(needs.build.outputs.browser-scope).mode != 'reuse'
+        run: bash scripts/provision-ci-chrome.sh
         timeout-minutes: 5
       - run: node scripts/browser-test-scope.mjs --run --project=${{ matrix.project }} --shard=${{ matrix.shard }}/2 --reporter=line,blob
         if: matrix.project != 'mobile-webkit' || fromJSON(needs.build.outputs.browser-scope).mode == 'reuse'
@@ -149,12 +140,8 @@ jobs:
         run: |
           mkdir dist
           tar -xf /tmp/pages-artifact/artifact.tar -C dist
-      - name: Use the responsive Ubuntu mirror for Chrome dependencies
-        run: |
-          sed -Ei 's#https?://azure\.archive\.ubuntu\.com/ubuntu#https://security.ubuntu.com/ubuntu#g' /etc/apt/sources.list.d/ubuntu.sources
-          printf '%s\n' 'Acquire::http::Timeout "15";' 'Acquire::https::Timeout "15";' 'Acquire::Retries "1";' \
-            > /etc/apt/apt.conf.d/99-piclex-ci-network
-      - run: npx playwright install chrome
+      - name: Prepare Google Chrome
+        run: bash scripts/provision-ci-chrome.sh
         timeout-minutes: 5
       - name: Measure continuous learning and automatic backup
         run: npm run test:performance -- --dist dist --source "$GITHUB_SHA" --output performance-results --channel chrome --shard ${{ matrix.viewport }}/${{ matrix.scenario }}
