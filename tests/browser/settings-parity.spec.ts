@@ -23,7 +23,12 @@ test('settings navigation before the first hash subscription leaves the old rest
 test('settings matches native hierarchy, pins the level card and retains theme and native subpages',async({page},info)=>{
  await mockQuota(page);await page.setViewportSize({width:390,height:844});await page.goto('/piclex-web/#/settings');
  await expect(page.locator('.settings-home-rows > .settings-row')).toHaveText(['AI配置官方模型','照片卡组','照片数据','外观与主题','个性化设置','关于']);
- await expect(page.locator('.settings-official-carousel > button')).toHaveCount(4);
+ const officialDecks = catalog.filter((card: { sourceURL: string }) => card.sourceURL === 'https://piclex.v2fy.com/decks/source.json');
+ const carousel = page.locator('.settings-official-carousel');
+ await expect(carousel.getByRole('button')).toHaveCount(officialDecks.length);
+ for (const { title } of officialDecks) {
+  await expect(carousel.getByRole('img', { name: title, exact: true })).toHaveCount(1);
+ }
  await expect(page.getByRole('button',{name:'薯薯求生',exact:true})).toHaveCount(0);
  const card=page.locator('.settings-level-card'),before=(await card.boundingBox())!;
  await page.getByRole('button',{name:'关于',exact:true}).scrollIntoViewIfNeeded();expect((await card.boundingBox())!.y).toBe(before.y);
