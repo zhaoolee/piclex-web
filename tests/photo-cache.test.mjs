@@ -31,3 +31,44 @@ test('shared in-flight downloads, bounded speculation, retry and cancellation re
   assert.equal(cache.peek('1'),undefined);assert.equal(new Set(revoked).size,revoked.length);
  }finally{globalThis.fetch=original.fetch;globalThis.Image=original.Image;URL.createObjectURL=original.create;URL.revokeObjectURL=original.revoke;}
 });
+
+test('only an idle transfer times out, and the photo can be retried',async t=>{
+ const {fetch,Image}=globalThis;
+ const cache=new PhotoCache();
+ let stream,signal,attempts=0;
+ t.mock.timers.enable({apis:['setTimeout']});
+ globalThis.Image=class{naturalWidth=20;naturalHeight=10;async decode(){}};
+ globalThis.fetch=async(_url,options)=>{
+  if(++attempts>1)return new Response(new Uint8Array([1,2,3,4]));
+  signal=options.signal;
+  return new Response(new ReadableStream({start(controller){
+   stream=controller;
+   signal.addEventListener('abort',()=>controller.error(signal.reason),{once:true});
+  }}),{headers:{'content-length':'4'}});
+ };
+ const updates=[];
+ cache.setWindow('photo');
+ const original=cache.acquire('photo',value=>updates.push(value.progress.received));
+ try{
+  stream.enqueue(new Uint8Array([1]));await tick();
+  t.mock.timers.tick(14000);
+  assert.equal(signal.aborted,false);
+  stream.enqueue(new Uint8Array([2]));await tick();
+  assert.equal(updates.at(-1),2);
+  t.mock.timers.tick(14000);
+  assert.equal(signal.aborted,false);
+  t.mock.timers.tick(1000);
+  assert.equal(signal.aborted,true);
+  await assert.rejects(original.promise,{name:'TimeoutError'});
+  original.release();
+  const retry=cache.acquire('photo',()=>{});
+  assert.equal((await retry.promise).width,20);
+  assert.equal(attempts,2);
+  retry.release();
+ }finally{
+  original.release();
+  cache.setWindow(undefined);
+  globalThis.fetch=fetch;
+  globalThis.Image=Image;
+ }
+});

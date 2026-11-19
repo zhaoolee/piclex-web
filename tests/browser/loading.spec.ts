@@ -1,6 +1,7 @@
 import {test,expect} from '@playwright/test';
 import fs from 'node:fs';
 import http from 'node:http';
+import {fillSpelling} from './helpers/spelling';
 const catalog=JSON.parse(fs.readFileSync('apps/public/public/library/catalog.json','utf8')),card=catalog[0];
 const payload=fs.readFileSync('apps/public/public/'+card.payload),deck=JSON.parse(payload.toString());
 const photo=fs.readFileSync('apps/public/public/'+deck.photos[0].path);
@@ -142,4 +143,46 @@ test('a failed photo has an explicit retry action and no endless progress bar',a
  let attempts=0;await page.route('**/'+deck.photos[0].path,async route=>{if(++attempts===1)await route.abort();else await route.continue();});
  await page.goto('/piclex-web/#/deck/'+card.id);await expect(page.getByText('图片加载失败，点击重试',{exact:true})).toBeVisible();await expect(page.getByRole('progressbar',{name:'正在加载图片',exact:true})).toHaveCount(0);
  await page.getByRole('button',{name:'重新加载图片',exact:true}).click();await expect(page.locator('.focus-image')).toBeVisible();await expect(page.getByText('图片加载失败，点击重试',{exact:true})).toHaveCount(0);expect(attempts).toBe(2);
+});
+
+test('finishing a word keeps its photo visible when the download completes late',async({page})=>{
+ const index=deck.words.findIndex((word:{english:string;imageIndex:number},i:number)=>/^[a-z]+$/i.test(word.english)&&deck.words[i+1]&&word.imageIndex!==deck.words[i+1].imageIndex);
+ const word=deck.words[index],next=deck.words[index+1],path=deck.photos[word.imageIndex].path;
+ const bytes=fs.readFileSync('apps/public/public/'+path);
+ let finish!:()=>void;
+ const gate=new Promise<void>(resolve=>finish=resolve);
+ const server=http.createServer(async(_req,res)=>{
+  res.writeHead(200,{'Content-Type':'image/jpeg','Content-Length':bytes.length,'Access-Control-Allow-Origin':'*'});
+  const split=Math.floor(bytes.length/2);
+  res.write(bytes.subarray(0,split));await gate;res.end(bytes.subarray(split));
+ });
+ await new Promise<void>(resolve=>server.listen(0,'127.0.0.1',resolve));
+ const {port}=server.address() as {port:number};
+ try{
+  await page.addInitScript(()=>{
+   localStorage.setItem('piclex-web.typing-sound','false');
+   Object.defineProperty(window,'speechSynthesis',{configurable:true,value:{speak(){},cancel(){},getVoices:()=>[],addEventListener(){},removeEventListener(){}}});
+  });
+  await page.clock.install();
+  await page.route('**/'+path,route=>route.continue({url:'http://127.0.0.1:'+port+'/photo'}));
+  await page.goto('/piclex-web/#/deck/'+card.id+'?module=spelling&word='+encodeURIComponent(word.id));
+  const progress=page.getByRole('progressbar',{name:'正在加载图片',exact:true});
+  await expect.poll(async()=>Number(await progress.getAttribute('value'))).toBeGreaterThan(0);
+  await fillSpelling(page,word.english);
+  await page.clock.runFor(600);
+  await expect(page.getByRole('heading',{name:word.chinese,exact:true})).toBeVisible();
+  await expect(page.getByRole('button',{name:'下一个',exact:true})).toBeVisible();
+  await page.evaluate(gloss=>{
+   const observer=new MutationObserver(()=>{
+    if(document.querySelector('.focus-image')&&document.querySelector('.native-hint-word')?.textContent===gloss){
+     document.documentElement.dataset.latePhotoDisplayed='true';
+     observer.disconnect();
+    }
+   });
+   observer.observe(document.body,{childList:true,subtree:true});
+  },word.chinese);
+  finish();
+  await expect(page.locator('html')).toHaveAttribute('data-late-photo-displayed','true');
+  await expect(page.getByRole('heading',{name:next.chinese,exact:true})).toBeVisible();
+ }finally{finish();server.closeAllConnections();await new Promise<void>(resolve=>server.close(()=>resolve()));}
 });
