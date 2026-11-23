@@ -1,6 +1,6 @@
 import {restoreCaptureStudy} from './capture-group.mjs';
 import {resolve,mismatch,convertPrompt,fixed} from '../../learning-ui/src/spelling.mjs';
-import {promptsFor,promptIndex,newSentence,reduceSentence,checkSentence,writtenWords,isGuidedWordEditable} from './sentence.mjs';
+import {promptsFor,promptIndex,sentenceIndexForMode,newSentence,reduceSentence,checkSentence,writtenWords,isGuidedWordEditable} from './sentence.mjs';
 export function newStudy(deck){return {version:2,fingerprint:deck.fingerprint,index:0,round:0,presentation:0,module:'spelling',mode:'chunks',rate:1,quick:false,hiddenChinese:false,words:{},history:{},sentences:{},sentenceIndex:0,sentenceFinished:false,pending:null};}
 export const studyKey=s=>`${s.fingerprint}:${s.round}:${s.presentation}:${s.index}:${s.module}:${s.mode}:${s.sentenceIndex}`;
 export function wordDraft(deck,s){return s.words[deck.words[s.index]?.id]||{input:'',hadMistake:false,result:null,quickIndices:null};}
@@ -54,6 +54,7 @@ export function restoreStudy(deck,saved,legacy){
  const prompts=promptsFor(deck);
  if(Number.isInteger(saved.sentenceIndex)&&saved.sentenceIndex>=0&&saved.sentenceIndex<prompts.length)s.sentenceIndex=saved.sentenceIndex;
  s.sentenceFinished=saved.sentenceFinished===true;
+ if(s.module==='listening'&&!s.sentenceFinished)s.sentenceIndex=sentenceIndexForMode(prompts,s.sentenceIndex,s.mode);
  for(const prompt of prompts){const d=saved.sentences?.[prompt.key];if(!d)continue;let next=newSentence(prompt);
   // Reconstruct terminal outcomes from the persisted answer instead of trusting a stored grade.
   if(Array.isArray(d.bank)&&d.bank.length===next.bank.length&&new Set(d.bank).size===next.bank.length&&d.bank.every(i=>next.bank.includes(i)))next.bank=d.bank;
@@ -81,28 +82,44 @@ export function reduceStudy(deck,s,action,preparedPrompts){
  }
  const next=structuredClone(s),word=deck.words[s.index];
  const navigate=(index)=>{next.index=index;pause(next);prepare(deck,next);};
+ const indexForMode=index=>sentenceIndexForMode(prompts,index,next.module==='listening'?next.mode:undefined);
  if(action.type==='pause'){pause(next);return next;}
  if(action.type==='dictationRestart'){
   if(s.module!=='listening'||!s.sentenceFinished)return s;
-  const at=promptIndex(prompts,deck,s.index);next.sentenceIndex=at>=0?at:0;const prompt=prompts[next.sentenceIndex];next.sentences=prompt?{[prompt.key]:newSentence(prompt)}:{};next.sentenceFinished=false;pause(next);return next;
+  const at=promptIndex(prompts,deck,s.index);next.sentenceIndex=indexForMode(at>=0?at:0);const prompt=prompts[next.sentenceIndex];next.sentences=prompt?{[prompt.key]:newSentence(prompt)}:{};next.sentenceFinished=false;pause(next);return next;
  }
  if(action.type==='dictationChallenge'){
   if(s.module!=='listening'||!s.sentenceFinished||s.mode!=='chunks')return s;
-  const last=prompts[s.sentenceIndex],draft=last&&s.sentences[last.key];
+  const index=sentenceIndexForMode(prompts,s.sentenceIndex,'free');
+  const last=prompts[index],draft=last&&s.sentences[last.key];
   if(!last||draft?.outcomes.free)return s;
-  next.mode='free';next.sentenceFinished=false;pause(next);return next;
+  next.mode='free';next.sentenceIndex=index;next.sentenceFinished=false;pause(next);return next;
  }
  if(action.type==='freshSentence'){
   if(s.module!=='listening')return s;
-  if(!forgetSentence(next,prompts,Number.isInteger(action.index)?action.index:s.sentenceIndex))return s;
+  const index=indexForMode(Number.isInteger(action.index)?action.index:s.sentenceIndex);
+  if(!forgetSentence(next,prompts,index))return s;
+  next.sentenceIndex=indexForMode(s.sentenceIndex);
   pause(next);return next;
  }
  if(action.type==='module'){
   if(!['spelling','listening','speaking'].includes(action.value)||action.value===s.module)return s;
-  if(action.value==='listening'){const at=promptIndex(prompts,deck,s.index);if(at>=0&&(!prompts[s.sentenceIndex]||prompts[s.sentenceIndex].wordIndex!==s.index)){next.sentenceIndex=at;next.sentenceFinished=false;if(!deck.words[s.index]?.example)next.index=prompts[at].wordIndex;}}
-  next.module=action.value;pause(next);return next;
+  next.module=action.value;
+  if(next.module==='listening'){
+   const at=promptIndex(prompts,deck,s.index);
+   if(at>=0&&prompts[s.sentenceIndex]?.wordIndex!==s.index){next.sentenceIndex=at;next.sentenceFinished=false;if(!deck.words[s.index]?.example)next.index=prompts[at].wordIndex;}
+   if(!next.sentenceFinished)next.sentenceIndex=indexForMode(next.sentenceIndex);
+  }
+  pause(next);return next;
  }
- if(action.type==='mode'){if(['chunks','free','listening'].includes(action.value)){next.mode=action.value;pause(next);}return next;}
+ if(action.type==='mode'){
+  if(['chunks','free','listening'].includes(action.value)){
+   next.mode=action.value;
+   if(!next.sentenceFinished)next.sentenceIndex=indexForMode(s.sentenceIndex);
+   pause(next);
+  }
+  return next;
+ }
  if(action.type==='preference'){
   if(action.name==='rate'&&[.75,.85,1,1.15].includes(action.value)){next.rate=action.value;return next;}
   if(action.name==='hiddenChinese')next.hiddenChinese=!!action.value;
@@ -116,16 +133,16 @@ export function reduceStudy(deck,s,action,preparedPrompts){
   if(action.name==='quick'&&current&&!draft.result&&draft.input.toLowerCase()===expectedInput(current,draft).toLowerCase())return reduceStudy(deck,next,{type:'input',value:draft.input,question:studyKey(next)});
   return next;
  }
- if(action.type==='restart') {const n=newStudy(deck);if(next.quick)while(deck.words[n.index]&&next.history[deck.words[n.index].id]?.mastered)n.index++;const restarted={...n,...(s.captureScopes?{captureScopes:s.captureScopes,captureWordOrder:s.captureWordOrder,capturePromptOrder:s.capturePromptOrder}:{}),module:s.module,history:next.history,quick:next.quick,hiddenChinese:next.hiddenChinese,rate:next.rate,mode:next.mode,round:s.round+1};if(restarted.module==='spelling'&&restarted.quick)prepare(deck,restarted);return restarted;}
+ if(action.type==='restart') {const n=newStudy(deck);if(next.quick)while(deck.words[n.index]&&next.history[deck.words[n.index].id]?.mastered)n.index++;const restarted={...n,...(s.captureScopes?{captureScopes:s.captureScopes,captureWordOrder:s.captureWordOrder,capturePromptOrder:s.capturePromptOrder}:{}),module:s.module,history:next.history,quick:next.quick,hiddenChinese:next.hiddenChinese,rate:next.rate,mode:next.mode,round:s.round+1};restarted.sentenceIndex=indexForMode(n.sentenceIndex);if(restarted.module==='spelling'&&restarted.quick)prepare(deck,restarted);return restarted;}
  if(action.type==='selectWord'&&Number.isInteger(action.index)&&deck.words[action.index]){
   const listeningFinished=s.sentenceFinished&&s.module==='listening';
   if(action.index===s.index){
    if(!s.sentenceFinished)return s;
-   if(listeningFinished){const at=promptIndex(prompts,deck,action.index),target=at>=0?at:s.sentenceIndex;if(forgetSentence(next,prompts,target)){if(at>=0)next.sentenceIndex=at;pause(next);return next;}}
+   if(listeningFinished){const at=promptIndex(prompts,deck,action.index),target=indexForMode(at>=0?at:s.sentenceIndex);if(forgetSentence(next,prompts,target)){next.sentenceIndex=target;pause(next);return next;}}
    next.sentenceFinished=false;pause(next);return next;
   }
   navigate(action.index);
-  const at=promptIndex(prompts,deck,action.index);if(at>=0){next.sentenceIndex=at;next.sentenceFinished=false;if(listeningFinished)forgetSentence(next,prompts,at);}return next;
+  const at=indexForMode(promptIndex(prompts,deck,action.index));if(at>=0){next.sentenceIndex=at;next.sentenceFinished=false;if(listeningFinished)forgetSentence(next,prompts,at);}return next;
  }
  if(action.type==='retryWord'&&word&&s.module==='spelling'&&s.words[word.id]?.result){reopen(next,word);pause(next);return next;}
  if(action.type==='listeningJump'&&s.module==='listening'&&s.mode==='listening'&&Number.isInteger(action.index)&&prompts[action.index]){next.sentenceIndex=action.index;next.sentenceFinished=false;navigate(prompts[action.index].wordIndex);return next;}
@@ -135,12 +152,14 @@ export function reduceStudy(deck,s,action,preparedPrompts){
   const allWordsShown=s.mode==='free'&&!writtenWords(p.sentence).some(isGuidedWordEditable);
   if(s.mode!=='listening'&&!draft?.outcomes[s.mode]&&!allWordsShown)return s;
   let index=s.sentenceIndex+1;
-  if(s.mode==='free')while(prompts[index]?.repeatedOnPhoto)index++;
+  if(s.mode==='free')while(prompts[index]?.repeatedOnPhoto||indexForMode(index)!==index)index++;
   if(index<prompts.length){next.sentenceIndex=index;navigate(prompts[index].wordIndex);}else {next.sentenceFinished=true;pause(next);}return next;
  }
  if(action.type==='speakingNext'&&s.module==='speaking'&&word){navigate(Math.min(deck.words.length,s.index+1));return next;}
  if(action.type==='sentencePrevious'){
-  if(s.sentenceIndex>0){next.sentenceIndex--;next.sentenceFinished=false;navigate(prompts[next.sentenceIndex].wordIndex);}return next;
+  let index=s.sentenceIndex-1;
+  while(indexForMode(index)!==index)index--;
+  if(index>=0){next.sentenceIndex=index;next.sentenceFinished=false;navigate(prompts[index].wordIndex);}return next;
  }
  if(!word||s.module!=='spelling')return s;
  prepare(deck,next);const draft=next.words[word.id],expected=expectedInput(word,draft);

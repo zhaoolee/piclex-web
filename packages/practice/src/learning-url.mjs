@@ -1,5 +1,5 @@
 import {reduceStudy,studyKey} from './study.mjs';
-import {promptsFor,promptIndex} from './sentence.mjs';
+import {promptsFor,promptIndex,sentenceIndexForMode} from './sentence.mjs';
 const member=(value,choices)=>choices.includes(value)?value:null;
 const positive=value=>/^[1-9]\d{0,8}$/.test(value||'')?Number(value):null;
 /** Hash parameters are locators, never imported answers or grades. */
@@ -25,7 +25,7 @@ export function applyLearningURL(deck,state,route){
   if(index>=0){
    const prompts=promptsFor(deck),anchor=deck.words.findIndex(w=>w.id===route.sentenceWord&&w.imageIndex===deck.words[index].imageIndex),first=promptIndex(prompts,deck,anchor>=0?anchor:index),parts=prompts.map((p,i)=>({p,i})).filter(({p})=>p.wordIndex===prompts[first]?.wordIndex);
    const chosen=parts[(route.sentence||1)-1]?.i??first;
-   if(chosen>=0)next={...next,sentenceIndex:chosen,sentenceFinished:false};
+   if(chosen>=0)next={...next,sentenceIndex:sentenceIndexForMode(prompts,chosen,next.mode),sentenceFinished:false};
   }
  }
  return next;

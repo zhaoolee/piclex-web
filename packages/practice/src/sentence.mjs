@@ -91,9 +91,15 @@ export function promptsFor(deck){
     if(!example)return;
     const identity=word.occurrenceID?`occurrence:${word.occurrenceID}`:`${deck.studySources?word.id.split(':')[0]:word.imageIndex}:${example}`;
     if(seen.has(identity))return;seen.add(identity);
-    for(const [part,value] of sentenceParts(word.example,word.exampleChinese,word.occurrenceID).entries()){
+    const parts=sentenceParts(word.example,word.exampleChinese,word.occurrenceID);
+    const fullSentences=parts.map(({sentence})=>writtenWords(sentence).length>1);
+    const firstIndex=prompts.length,lastFull=fullSentences.lastIndexOf(true);
+    let nextFull=fullSentences.indexOf(true);
+    for(const [part,value] of parts.entries()){
       const prompt={...value,key:`${identity}:${part}`,wordIndex,imageIndex:word.imageIndex};
       // Keep prompt indices and keys stable for saved attempts and direct links.
+      if(fullSentences[part])nextFull=fullSentences.indexOf(true,part+1);
+      else if(lastFull>=0)prompt.freeDictationReplacement=firstIndex+(nextFull>=0?nextFull:lastFull);
       if(!word.occurrenceID){
         const sentenceKey=`${word.imageIndex}:${tokens(value.sentence).join(' ')}`;
         if(photoSentences.has(sentenceKey))prompt.repeatedOnPhoto=true;
@@ -102,6 +108,9 @@ export function promptsFor(deck){
       prompts.push(prompt);
     }
   });promptCache.set(deck,prompts);return prompts;
+}
+export function sentenceIndexForMode(prompts,index,mode){
+  return mode==='free'?(prompts[index]?.freeDictationReplacement??index):index;
 }
 export function promptIndex(prompts,deck,wordIndex){
   const word=deck.words[wordIndex];if(!word)return -1;

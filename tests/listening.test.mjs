@@ -85,3 +85,72 @@ test('a trailing repeated sentence completes free dictation while chunks retain 
   assert.equal(next.sentences[prompts[1].key].outcomes[mode],'assisted');
  }
 });
+
+const fragmentDeck={
+ id:'fragments',fingerprint:'fragments',
+ words:[
+  {id:'ready',imageIndex:0,english:'ready',example:'Ready? We can go. Wait! Take the map. Quiet.'},
+  {id:'stop',imageIndex:1,english:'stop',example:'Stop.'},
+ ],
+};
+const fragmentAction=(state,action)=>reduceStudy(fragmentDeck,state,{...action,question:studyKey(state)});
+
+test('free dictation opens and advances through full sentences on the same card',()=>{
+ const prompts=promptsFor(fragmentDeck),prompt=state=>prompts[state.sentenceIndex].sentence;
+ const spelling=newStudy(fragmentDeck);
+ const chunks=fragmentAction(spelling,{type:'module',value:'listening'});
+ assert.equal(prompt(chunks),'Ready?');
+ const listening=fragmentAction(chunks,{type:'mode',value:'listening'});
+ assert.equal(prompt(listening),'Ready?');
+ let state=fragmentAction(listening,{type:'mode',value:'free'});
+ assert.equal(prompt(state),'We can go.');
+ state=fragmentAction(state,{type:'module',value:'spelling'});
+ state=fragmentAction(state,{type:'selectWord',index:1});
+ state=fragmentAction(state,{type:'selectWord',index:0});
+ state=fragmentAction(state,{type:'module',value:'listening'});
+ assert.equal(prompt(state),'We can go.');
+ assert.equal(state.index,0);
+
+ const advance=(state,values)=>{
+  const solved=fragmentAction(state,{type:'sentence',action:{type:'guided',values}});
+  assert.equal(solved.sentences[prompts[state.sentenceIndex].key].outcomes.free,'correct');
+  return fragmentAction(solved,{type:'sentenceNext'});
+ };
+ state=advance(state,['We','can','go']);
+ assert.equal(prompt(state),'Take the map.');
+ const previous=fragmentAction(state,{type:'sentencePrevious'});
+ assert.equal(prompt(previous),'We can go.');
+ state=advance(state,['Take','the','map']);
+ assert.equal(prompt(state),'Stop.');
+ assert.equal(state.index,1);
+});
+
+test('old fragment links and saved cursors select a full sentence without reusing the fragment draft',()=>{
+ const prompts=promptsFor(fragmentDeck);
+ const start={...newStudy(fragmentDeck),module:'listening',mode:'free',sentenceIndex:1};
+ const drafted=fragmentAction(start,{type:'sentence',action:{type:'guided',values:['We','c']}});
+ const old={...drafted,sentenceIndex:0};
+ const fragmentDraft=fragmentAction(old,{type:'sentence',action:{type:'guided',values:['Re']}});
+ const restored=restoreStudy(fragmentDeck,fragmentDraft);
+ assert.equal(restored.sentenceIndex,1);
+ assert.deepEqual(restored.sentences[prompts[1].key].guided,['We','c','']);
+ assert.deepEqual(restored.sentences[prompts[0].key].guided,['Re']);
+
+ const link=sentence=>parseLearningURL(`#/deck/fragments?module=listening&mode=free&photo=1&word=ready&sentence=${sentence}`);
+ assert.equal(applyLearningURL(fragmentDeck,restored,link(1)).sentenceIndex,1);
+ assert.equal(applyLearningURL(fragmentDeck,restored,link(3)).sentenceIndex,3);
+ assert.equal(applyLearningURL(fragmentDeck,restored,link(5)).sentenceIndex,3);
+ assert.match(learningHash(fragmentDeck,restored),/&sentence=2&/);
+});
+
+test('a free dictation challenge from a final fragment opens the previous full sentence',()=>{
+ const deck={...fragmentDeck,words:fragmentDeck.words.slice(0,1)};
+ const last={...newStudy(deck),module:'listening',mode:'chunks',sentenceIndex:4,sentenceFinished:true};
+ const challenge=reduceStudy(deck,last,{type:'dictationChallenge',question:studyKey(last)});
+ assert.equal(challenge.mode,'free');
+ assert.equal(challenge.sentenceFinished,false);
+ assert.equal(challenge.sentenceIndex,3);
+ const finished={...challenge,sentenceFinished:true};
+ const restarted=reduceStudy(deck,finished,{type:'dictationRestart',question:studyKey(finished)});
+ assert.equal(restarted.sentenceIndex,1);
+});
