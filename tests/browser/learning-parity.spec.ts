@@ -3,11 +3,10 @@ import fs from 'node:fs';
 import {createHash} from 'node:crypto';
 import {fillEnglish} from './helpers/spelling';
 const catalog=JSON.parse(fs.readFileSync('apps/public/public/library/catalog.json','utf8'));
-test('guided word blanks show readable underlines and preserve typing, reveal and difficulty changes',async({page},info)=>{
+test('guided word blanks show readable underlines and preserve typing, reveal and legacy links',async({page},info)=>{
  await page.goto('/piclex-web/#/deck/'+catalog.find((deck:{title:string})=>deck.title==='程序员工作英语').id);
  await page.getByRole('tab',{name:'练听力',exact:true}).click();
  await page.getByLabel('句子练习模式',{exact:true}).selectOption('free');
- await page.getByLabel('听写难度',{exact:true}).selectOption('easy');
  const words=page.locator('.guided-word'),fields=words.locator('input');
  await expect(words).toHaveCount(3);
  expect((await words.allTextContents()).join('')).not.toMatch(/[\p{L}\p{N}]/u);
@@ -26,24 +25,20 @@ test('guided word blanks show readable underlines and preserve typing, reveal an
  await expect(words.nth(1).locator('.guided-letters')).toContainText('m');
  await expect(words.nth(1).locator('.bad-letter')).toHaveCount(0);
  await second.focus();await second.press('End');await second.press('Backspace');await expect(second).toHaveValue("i");
- await page.getByLabel('听写难度',{exact:true}).selectOption('medium');
+ await expect(page.getByLabel('听写难度')).toHaveCount(0);
  await expect(fields.nth(1)).toHaveValue("i");
- const equalWidths=await words.evaluateAll(nodes=>nodes.map(n=>n.getBoundingClientRect().width));
- expect(new Set(equalWidths).size).toBe(1);
- await page.getByLabel('听写难度',{exact:true}).selectOption('easy');
  await expect(page.locator('.peek-letter')).toHaveCount(0);
  const peek=words.first();
- // Difficulty changes can still be scrolling the panel into view; a real
- // scroll cancels a hold, so start only after the word's geometry settles.
+ // The panel may still be scrolling into view; a real scroll cancels a hold,
+ // so start only after the word's geometry settles.
  await peek.scrollIntoViewIfNeeded();await peek.evaluate(node=>new Promise<void>(resolve=>{let previous='',since=performance.now();const frame=()=>{const b=node.getBoundingClientRect(),next=JSON.stringify([b.x,b.y,b.width,b.height,node.closest('.native-body')?.scrollTop]);if(next!==previous){previous=next;since=performance.now();}if(performance.now()-since>=250)resolve();else requestAnimationFrame(frame);};requestAnimationFrame(frame);}));
  await peek.hover();await page.mouse.down();await expect(page.locator('.word-peek-english')).toHaveText('Hi');await expect(page.locator('.word-peek-meaning')).not.toHaveText('查询中…');
  await page.mouse.up();await expect(page.locator('.word-peek')).toHaveCount(0);
  await peek.hover();await page.mouse.down();await expect(page.locator('.word-peek-english')).toHaveText('Hi');await expect(page.locator('.word-peek-meaning')).not.toHaveText('查询中…');
  await page.mouse.move(5,5);await page.mouse.up();await expect(page.locator('.word-peek')).toHaveCount(0);
  await expect(fields.first()).toHaveValue('');
- await page.getByLabel('听写难度',{exact:true}).selectOption('hard');
- await expect(page.locator('.guided-input')).toHaveCount(0);
- await page.getByLabel('听写难度',{exact:true}).selectOption('easy');
+ await page.evaluate(()=>{const [base,query]=location.hash.split('?'),parameters=new URLSearchParams(query||'');parameters.set('difficulty','hard');location.hash=base+'?'+parameters;});
+ await expect(page.locator('.guided-input')).toBeVisible();await expect(page.getByRole('textbox',{name:'听写句子',exact:true})).toHaveCount(0);await expect(page.getByLabel('听写难度')).toHaveCount(0);
  await expect(fields.nth(1)).toHaveValue("i");
  await page.screenshot({path:info.outputPath('guided-typed.png')});
 });
@@ -57,7 +52,6 @@ test('long guided words wrap without covering the next word or reserving an icon
  await page.goto('/piclex-web/#/deck/'+card.id);
  await page.getByRole('tab',{name:'练听力',exact:true}).click();
  await page.getByLabel('句子练习模式',{exact:true}).selectOption('free');
- await page.getByLabel('听写难度',{exact:true}).selectOption('easy');
  const words=page.locator('.guided-word');await expect(words).toHaveCount(3);
  const geometry=await words.nth(1).evaluate(el=>{
   const rect=el.getBoundingClientRect(),letters=[...el.querySelectorAll('.guided-letters i')].map(n=>n.getBoundingClientRect());
@@ -137,11 +131,9 @@ for(const theme of ['light','dark'])test(`${theme} listening answer trays remain
  await page.screenshot({path:info.outputPath(`listening-${theme}.png`)});
  await selected.click();await expect(tray.locator('.chunk')).toHaveCount(0);await expect(page.locator('.chunk-bank').getByRole('button',{name:text,exact:true})).toHaveCount(1);
  await page.getByLabel('句子练习模式',{exact:true}).selectOption('free');
- for(const difficulty of ['easy','medium','hard']){
-  await page.getByLabel('听写难度',{exact:true}).selectOption(difficulty);
-  const inputArea=page.locator(difficulty==='hard'?'.dictation-input':'.guided-input');
-  expect(await inputArea.evaluate(el=>getComputedStyle(el).backgroundColor)).toBe(colors.tray);
- }
+ await expect(page.getByLabel('听写难度')).toHaveCount(0);
+ const inputArea=page.locator('.guided-input');
+ expect(await inputArea.evaluate(el=>getComputedStyle(el).backgroundColor)).toBe(colors.tray);
  await page.locator('.practice-level-target').click();
  await expect(page.getByRole('button',{name:'薯薯求生',exact:true})).toBeVisible();
  await page.getByRole('dialog').screenshot({path:info.outputPath(`level-${theme}.png`)});

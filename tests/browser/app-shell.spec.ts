@@ -77,28 +77,25 @@ test('spelling keyboard mirrors hardware keys on desktop and suppresses the OS k
  await input.press('c');await expect(input).toHaveValue('c');await keyboard.getByRole('button',{name:'按键 R',exact:true}).click();await expect(input).toHaveValue('cr');await keyboard.getByRole('button',{name:'退格',exact:true}).click();await expect(input).toHaveValue('c');await expect(input).toBeFocused();
  await page.keyboard.down('r');await expect(keyboard.locator('[data-key="r"]')).toHaveAttribute('data-pressed','true');await page.keyboard.up('r');await expect(keyboard.locator('[data-key="r"]')).toHaveAttribute('data-pressed','false');await expect(input).toHaveValue('cr');
  await keyboard.getByRole('button',{name:'按键 X',exact:true}).click();await expect(input).toHaveValue('crx');await keyboard.getByRole('button',{name:'按键 O',exact:true}).click();await expect(input).toHaveValue('crx');await keyboard.getByRole('button',{name:'退格',exact:true}).click();await keyboard.getByRole('button',{name:'按键 O',exact:true}).click();await expect(input).toHaveValue('cro');
- await page.getByRole('tab',{name:'练听力',exact:true}).click();await expect(keyboard).toHaveCount(0);await page.getByLabel('句子练习模式').selectOption('free');await page.getByLabel('听写难度').selectOption('easy');await expect(keyboard).toBeVisible();const guided=page.getByRole('textbox',{name:/第 1 个单词/});await guided.focus();await keyboard.getByRole('button',{name:'按键 I',exact:true}).click();await expect(guided).not.toHaveValue('');
+ await page.getByRole('tab',{name:'练听力',exact:true}).click();await expect(keyboard).toHaveCount(0);await page.getByLabel('句子练习模式').selectOption('free');await expect(page.getByLabel('听写难度')).toHaveCount(0);await expect(keyboard).toBeVisible();const guided=page.getByRole('textbox',{name:/第 1 个单词/});await guided.focus();await keyboard.getByRole('button',{name:'按键 I',exact:true}).click();await expect(guided).not.toHaveValue('');
  await page.getByRole('navigation',{name:'底部导航'}).getByRole('button',{name:'设置',exact:true}).click();await expect(keyboard).toHaveCount(0);
 });
 
 
-test('dictation keyboard follows App modes, focuses all difficulty inputs and preserves drafts',async({page},info)=>{
+test('dictation keyboard follows App modes, focuses guided inputs and preserves drafts',async({page},info)=>{
  await importCafe(page);const keyboard=page.getByRole('region',{name:'虚拟键盘'});
  await page.getByRole('tab',{name:'练听力',exact:true}).click();await expect(keyboard).toHaveCount(0);
- const mode=page.getByLabel('句子练习模式');await mode.selectOption('free');
- const sentence=page.getByRole('textbox',{name:'听写句子',exact:true});await expect(sentence).toBeFocused();
- {
-  await expect(keyboard).toBeVisible();await keyboard.getByRole('button',{name:'按键 I',exact:true}).click();await expect(sentence).toHaveValue('i');
-  await page.keyboard.down('a');await expect(keyboard.locator('[data-key="a"]')).toHaveAttribute('data-pressed','true');await page.keyboard.up('a');
-  await keyboard.getByRole('button',{name:'退格',exact:true}).click();await expect(sentence).toHaveValue('i');
- }
- await page.getByLabel('听写难度').selectOption('easy');
+ const mode=page.getByLabel('句子练习模式');await mode.selectOption('free');await expect(page.getByLabel('听写难度')).toHaveCount(0);
  const first=page.getByRole('textbox',{name:/第 1 个单词/}),second=page.getByRole('textbox',{name:/第 2 个单词/});
- await expect(second).toBeFocused();await expect(first).toHaveValue('i');
+ await expect(first).toBeFocused();
+ {
+  await expect(keyboard).toBeVisible();await keyboard.getByRole('button',{name:'按键 I',exact:true}).click();await expect(first).toHaveValue('i');
+  await page.keyboard.down('a');await expect(keyboard.locator('[data-key="a"]')).toHaveAttribute('data-pressed','true');await page.keyboard.up('a');
+  await keyboard.getByRole('button',{name:'退格',exact:true}).click();await expect(first).toHaveValue('i');
+ }
+ await expect(second).toBeFocused();
  if(info.project.name==='desktop'){await keyboard.getByRole('button',{name:'退格',exact:true}).click();await expect(first).toBeFocused();await expect(first).toHaveValue('');await first.press('i');await expect(first).toHaveValue('i');}
- await page.getByLabel('听写难度').selectOption('medium');await expect(first).toHaveValue('i');
- await page.getByLabel('听写难度').selectOption('hard');await expect(sentence).toBeFocused();await expect(sentence).toHaveValue('i');
- await page.getByRole('button',{name:'当前卡组，学习设置'}).click();await page.getByRole('button',{name:'关闭',exact:true}).click();await expect(sentence).toBeFocused();
+ await page.getByRole('button',{name:'当前卡组，学习设置'}).click();await page.getByRole('button',{name:'关闭',exact:true}).click();await expect(second).toBeFocused();
  await mode.selectOption('listening');await expect(keyboard).toHaveCount(0);
  await page.getByRole('tab',{name:'练口语',exact:true}).click();await expect(keyboard).toHaveCount(0);
  await page.getByRole('tab',{name:'拼单词',exact:true}).click();await expect(page.getByRole('textbox',{name:'输入英文',exact:true})).toBeFocused();
@@ -106,16 +103,15 @@ test('dictation keyboard follows App modes, focuses all difficulty inputs and pr
 
 test('dictation keeps its keyboard after assistance and Enter continues without losing focus',async({page},info)=>{
  await importCafe(page);await page.getByRole('tab',{name:'练听力',exact:true}).click();await page.getByLabel('句子练习模式').selectOption('free');
- const keyboard=page.getByRole('region',{name:'虚拟键盘'}),sentence=page.getByRole('textbox',{name:'听写句子',exact:true});
- await page.getByRole('button',{name:'听不懂',exact:true}).click();await expect(sentence).toHaveAttribute('readonly','');
- const answer=await sentence.inputValue();
+ const keyboard=page.getByRole('region',{name:'虚拟键盘'}),fields=page.locator('.guided-input input');
+ await page.getByRole('button',{name:'听不懂',exact:true}).click();await expect(fields.first()).toHaveAttribute('readonly','');
+ const answer=await fields.evaluateAll(nodes=>nodes.map(node=>(node as HTMLInputElement).value));
  {
-  await expect(keyboard).toBeVisible();await keyboard.getByRole('button',{name:'按键 X',exact:true}).click();await expect(sentence).toHaveValue(answer);
+  await expect(keyboard).toBeVisible();await keyboard.getByRole('button',{name:'按键 X',exact:true}).click();expect(await fields.evaluateAll(nodes=>nodes.map(node=>(node as HTMLInputElement).value))).toEqual(answer);
   await page.screenshot({path:'test-results/dictation-keyboard-desktop.png'});
-  if(info.project.name==='desktop')await sentence.press('Enter');
+  if(info.project.name==='desktop')await fields.last().press('Enter');
   else await page.getByRole('button',{name:'下一个',exact:true}).click();
  }
- await expect(sentence).toHaveAttribute('readonly','');await expect(sentence).toHaveValue('');await expect(sentence).toBeFocused();
- await page.getByLabel('听写难度').selectOption('easy');const fields=page.getByRole('textbox',{name:/第 \d+ 个单词/});
+ await expect(fields.first()).toHaveAttribute('readonly','');await expect(fields.first()).toHaveValue('');await expect(fields.first()).toBeFocused();
  await fillEnglish(fields.last(),'wrong');await fields.last().press('Enter');await expect(page.getByRole('status').filter({hasText:'再听一次'})).toBeVisible();
 });

@@ -25,27 +25,28 @@ test('every keyboard row stays clickable with browser chrome, short screens and 
   await keyboardIsUncovered(page);await expect(page.locator('.native-answer').getByRole('button',{name:'退格',exact:true})).toHaveCount(0);await activate(keyboard.getByRole('button',{name:'退格',exact:true}));await expect(spelling).toHaveValue('');
   if(size.height===668)await page.screenshot({path:info.outputPath('spelling-browser-chrome.png')});
   await page.getByRole('tab',{name:'练听力',exact:true}).click();await page.getByLabel('句子练习模式',{exact:true}).selectOption('free');
-  for(const difficulty of ['hard','easy','medium']){
-   await page.getByLabel('听写难度',{exact:true}).selectOption(difficulty);
-   await keyboardIsUncovered(page);
-   const fields=page.locator('.guided-input input,.dictation-input');
-   for(const field of await fields.all()){await expect(field).toHaveAttribute('readonly','');await expect(field).toHaveAttribute('inputmode','none');}
-   const first=fields.first();await first.click();await first.press('ControlOrMeta+a');
-   // A complete lower keyboard row must work without scrolling the page to it.
-   await activate(keyboard.getByRole('button',{name:'按键 Z',exact:true}));await expect(first).toHaveValue('z');
-   await first.focus();await first.press('End');await activate(keyboard.getByRole('button',{name:'退格',exact:true}));await expect(first).toHaveValue('');
-   await keyboardIsUncovered(page);
-   if(size.height===668&&difficulty==='hard')await page.screenshot({path:info.outputPath('dictation-browser-chrome.png')});
-  }
+  await expect(page.getByLabel('听写难度')).toHaveCount(0);
+  await keyboardIsUncovered(page);
+  const fields=page.locator('.guided-input input');
+  for(const field of await fields.all()){await expect(field).toHaveAttribute('readonly','');await expect(field).toHaveAttribute('inputmode','none');}
+  const first=fields.first();await first.click();await first.press('ControlOrMeta+a');
+  // A complete lower keyboard row must work without scrolling the page to it.
+  await activate(keyboard.getByRole('button',{name:'按键 Z',exact:true}));await expect(first).toHaveValue('z');
+  await first.focus();await first.press('End');await activate(keyboard.getByRole('button',{name:'退格',exact:true}));await expect(first).toHaveValue('');
+  await keyboardIsUncovered(page);
+  if(size.height===668)await page.screenshot({path:info.outputPath('dictation-browser-chrome.png')});
   for(const mode of ['chunks','listening']){await page.getByLabel('句子练习模式',{exact:true}).selectOption(mode);await expect(keyboard).toHaveCount(0);}
  }
 });
-test('hard dictation accepts hardware editing and English paste while remaining keyboard protected',async({page})=>{
+test('legacy hard links open guided dictation with hardware editing and English paste while remaining keyboard protected',async({page})=>{
  await page.goto('/piclex-web/#/decks');await expect(page.getByRole('button',{name:'导入自己的卡组'})).toBeEnabled();
  await page.getByLabel('选择照片卡组文件').setInputFiles(path.resolve('tests/fixtures/demo/decks/cafe.piclexdeck'));
- await page.getByRole('tab',{name:'练听力',exact:true}).click();await page.getByLabel('句子练习模式').selectOption('free');await page.getByLabel('听写难度').selectOption('hard');
- const field=page.getByRole('textbox',{name:'听写句子',exact:true});await field.pressSequentially('hello');await expect(field).toHaveValue('h ello');await field.press('ArrowLeft');await field.press('Backspace');await expect(field).toHaveValue('h elo');expect(await field.evaluate((node:HTMLTextAreaElement)=>node.selectionStart)).toBe(4);
+ await page.getByRole('tab',{name:'练听力',exact:true}).click();await page.getByLabel('句子练习模式').selectOption('free');
+ await page.evaluate(()=>{const [base,query]=location.hash.split('?'),parameters=new URLSearchParams(query||'');parameters.set('difficulty','hard');location.hash=base+'?'+parameters;});
+ await expect(page.locator('.guided-input')).toBeVisible();await expect(page.getByRole('textbox',{name:'听写句子',exact:true})).toHaveCount(0);
+ const fields=page.locator('.guided-input input'),field=fields.nth(1);
+ await field.pressSequentially('hello');await expect(field).toHaveValue('hello');await field.press('ArrowLeft');await field.press('Backspace');await expect(field).toHaveValue('helo');expect(await field.evaluate((node:HTMLInputElement)=>node.selectionStart)).toBe(3);
  await field.press('ControlOrMeta+a');await field.evaluate(node=>{const data=new DataTransfer();data.setData('text/plain','hello world');node.dispatchEvent(new ClipboardEvent('paste',{bubbles:true,cancelable:true,clipboardData:data}));});
- await expect(field).toHaveValue('hello world');await expect(field).toHaveAttribute('readonly','');
- await page.reload();await expect(field).toHaveValue('hello world');await expect(field).toHaveAttribute('inputmode','none');await keyboardIsUncovered(page);
+ await expect(fields.nth(1)).toHaveValue('hello');await expect(fields.nth(2)).toHaveValue('world');await expect(field).toHaveAttribute('readonly','');
+ await page.reload();await expect(fields.nth(1)).toHaveValue('hello');await expect(fields.nth(2)).toHaveValue('world');await expect(field).toHaveAttribute('inputmode','none');await keyboardIsUncovered(page);
 });

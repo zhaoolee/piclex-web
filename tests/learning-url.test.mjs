@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {newStudy,reduceStudy,studyKey} from '../packages/practice/src/study.mjs';
+import {newStudy,reduceStudy,restoreStudy,studyKey} from '../packages/practice/src/study.mjs';
 import {promptsFor} from '../packages/practice/src/sentence.mjs';
 import {parseLearningURL,applyLearningURL,learningHash} from '../packages/practice/src/learning-url.mjs';
 const deck={id:'deck / ? 中文',fingerprint:'test',words:[
@@ -12,10 +12,24 @@ const apply=(s,p)=>applyLearningURL(deck,s,parseLearningURL(`#/deck/${encodeURIC
 test('shared links restore each module and exact sentence part in a clean study',()=>{
  const prompts=promptsFor(deck);
  for(const module of ['spelling','listening','speaking'])for(const mode of ['chunks','free','listening']){
-  const original={...newStudy(deck),index:1,module,mode,difficulty:'medium',sentenceIndex:prompts.findLastIndex(p=>p.wordIndex===1)};
+  const original={...newStudy(deck),index:1,module,mode,sentenceIndex:prompts.findLastIndex(p=>p.wordIndex===1)};
   const restored=applyLearningURL(deck,newStudy(deck),parseLearningURL(learningHash(deck,original)));
   assert.equal(restored.module,module);assert.equal(restored.index,1);
-  if(module==='listening'){assert.equal(restored.mode,mode);assert.equal(restored.sentenceIndex,original.sentenceIndex);if(mode==='free')assert.equal(restored.difficulty,'medium');}
+  if(module==='listening'){assert.equal(restored.mode,mode);assert.equal(restored.sentenceIndex,original.sentenceIndex);}
+ }
+});
+test('legacy dictation difficulty does not override the saved or linked exercise',()=>{
+ const prompt=promptsFor(deck)[0];
+ for(const [difficulty,guided] of [['medium',['I','eat','','']],['hard',null]]){
+  const opened=apply(newStudy(deck),`module=listening&mode=free&difficulty=${difficulty}&photo=2&sentence=1`);
+  assert.equal(opened.mode,'free');
+  assert.equal(opened.index,2);
+  assert.match(learningHash(deck,opened),/&difficulty=easy$/);
+  const saved={...newStudy(deck),module:'listening',mode:'free',difficulty,sentences:{[prompt.key]:{freeText:'I eat',guided}}};
+  const restored=restoreStudy(deck,JSON.parse(JSON.stringify(saved)));
+  assert.equal(restored.mode,'free');
+  assert.equal(restored.sentences[prompt.key].freeText,'I eat');
+  assert.deepEqual(restored.sentences[prompt.key].guided,guided);
  }
 });
 test('stable word identity wins after photo reordering; missing word falls back to photo',()=>{

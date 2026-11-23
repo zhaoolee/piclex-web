@@ -1,7 +1,7 @@
 import {test,expect,type Page} from '@playwright/test';
 import fs from 'node:fs';
 import {resolve} from 'node:path';
-import {fillSpelling} from './helpers/spelling';
+import {fillEnglish,fillSpelling} from './helpers/spelling';
 const catalog=JSON.parse(fs.readFileSync('apps/public/public/library/catalog.json','utf8')),card=catalog[0],deck=JSON.parse(fs.readFileSync('apps/public/public/'+card.payload,'utf8'));
 const parameters=(url:string)=>new URLSearchParams(url.split('?').at(-1));
 // Serve the same production build HTML from disk so Linux WebKit's document
@@ -36,10 +36,24 @@ test('share restores module, photo and sentence in a fresh browser without sende
  await page.reload();await expect(page.locator('.listening-sentence')).toHaveText(text);await page.getByRole('button',{name:'设置',exact:true}).click();await page.goBack();await expect(page.locator('.listening-sentence')).toHaveText(text);
  await page.goto(spellingURL);await expect(input).toHaveValue(draft);
 });
-test('same-deck links and refresh restore dictation difficulty, legacy links still open, invalid locations recover',async({page})=>{
+test('same-deck links and refresh restore easy dictation, legacy links open Easy, invalid locations recover',async({page})=>{
  await page.goto('/piclex-web/#/deck/'+card.id+'?module=listening&mode=free&difficulty=easy&photo=2');
- await expect(page.getByLabel('听写难度')).toHaveValue('easy');await expect.poll(()=>parameters(page.url()).get('photo')).toBe('2');
- await page.getByLabel('听写难度').selectOption('medium');await expect.poll(()=>parameters(page.url()).get('difficulty')).toBe('medium');await page.reload();await expect(page.getByLabel('听写难度')).toHaveValue('medium');
+ await expect(page.locator('.guided-input')).toBeVisible();await expect(page.getByLabel('听写难度')).toHaveCount(0);await expect.poll(()=>parameters(page.url()).get('photo')).toBe('2');
+ await page.goto('/piclex-web/#/deck/'+card.id+'?module=listening&mode=free&difficulty=hard&photo=2');
+ await expect(page.locator('.guided-input')).toBeVisible();await expect(page.getByRole('textbox',{name:'听写句子',exact:true})).toHaveCount(0);await expect.poll(()=>parameters(page.url()).get('difficulty')).toBe('easy');await page.reload();await expect(page.locator('.guided-input')).toBeVisible();await expect(page.getByLabel('听写难度')).toHaveCount(0);
+ const draft=page.locator('.guided-input input').first();
+ await fillEnglish(draft,'x');
+ const studyKey=await page.evaluate(()=>Object.keys(localStorage).find(key=>key.startsWith('piclex-web.study.v2.'))!);
+ await expect.poll(()=>page.evaluate(key=>Object.values(JSON.parse(localStorage.getItem(key)!).sentences).some((item:any)=>item.freeText==='x'),studyKey)).toBe(true);
+ await page.evaluate(key=>{
+  const study=JSON.parse(localStorage.getItem(key)!);
+  const sentence=Object.values(study.sentences).find((item:any)=>item.freeText==='x') as {guided:unknown};
+  study.difficulty='hard';sentence.guided=null;
+  localStorage.setItem(key,JSON.stringify(study));
+ },studyKey);
+ await page.reload();
+ await expect(draft).toHaveValue('x');
+ await expect(page.getByLabel('听写难度')).toHaveCount(0);
  await page.evaluate(id=>{location.hash=`/deck/${id}?module=speaking&photo=3`;},card.id);await expect(page.getByRole('tab',{name:'练口语',exact:true})).toHaveAttribute('aria-selected','true');await expect.poll(()=>parameters(page.url()).get('photo')).toBe('3');
  await page.goto('/piclex-web/#/deck/'+card.id);await expect(page.locator('.native-header')).toBeVisible();await expect.poll(()=>parameters(page.url()).get('photo')).toBe('3');
  await page.goto('/piclex-web/#/deck/'+card.id+'?module=invalid&photo=99999999&word=missing&sentence=-1');await expect(page.locator('.native-header')).toBeVisible();await expect.poll(()=>parameters(page.url()).get('photo')).toBe('3');
@@ -65,8 +79,8 @@ test('an incoming learning link wins over a pending local module update',async({
   (Array.from(document.querySelectorAll<HTMLElement>('[role=tab]')).find(tab=>tab.textContent?.includes('练口语'))!).click();
  },target);
  await expect(page.getByRole('tab',{name:'练听力',exact:true})).toHaveAttribute('aria-selected','true');
- await expect(page.getByLabel('听写难度')).toHaveValue('easy');
+ await expect(page.locator('.guided-input')).toBeVisible();await expect(page.getByLabel('听写难度')).toHaveCount(0);
  await expect.poll(()=>parameters(page.url()).get('photo')).toBe('2');
  await page.reload();
- await expect(page.getByLabel('听写难度')).toHaveValue('easy');
+ await expect(page.locator('.guided-input')).toBeVisible();await expect(page.getByLabel('听写难度')).toHaveCount(0);
 });

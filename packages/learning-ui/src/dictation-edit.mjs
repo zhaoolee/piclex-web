@@ -1,7 +1,7 @@
 import {editKeyboardText} from './keyboard-edit.mjs';
 
-// Only Latin letters are typed into hard dictation. Expected spaces, digits,
-// apostrophes and punctuation are decorations at their expected positions.
+// Only Latin letters are typed into a guided dictation word. Expected spaces,
+// digits, apostrophes and punctuation are decorations at their expected positions.
 const editable = c => /^[a-z]$/i.test(c);
 
 function scaffold(expected){
@@ -39,7 +39,7 @@ function caret(raw,value,positions){
 }
 
 /**
- * Apply one hardware/virtual key to a hard-dictation draft while regenerating
+ * Apply one hardware/virtual key to a guided dictation draft while regenerating
  * the expected fixed separators around the typed logical letters. Wrong and
  * overflow letters remain in typed order; only Backspace/Delete and letters are
  * accepted so a space cannot enter the answer manually.

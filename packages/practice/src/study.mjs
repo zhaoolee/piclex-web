@@ -1,7 +1,7 @@
 import {restoreCaptureStudy} from './capture-group.mjs';
 import {resolve,mismatch,convertPrompt,fixed} from '../../learning-ui/src/spelling.mjs';
 import {promptsFor,promptIndex,newSentence,reduceSentence,checkSentence,writtenWords,isGuidedWordEditable} from './sentence.mjs';
-export function newStudy(deck){return {version:2,fingerprint:deck.fingerprint,index:0,round:0,presentation:0,module:'spelling',mode:'chunks',rate:1,difficulty:'hard',quick:false,hiddenChinese:false,words:{},history:{},sentences:{},sentenceIndex:0,sentenceFinished:false,pending:null};}
+export function newStudy(deck){return {version:2,fingerprint:deck.fingerprint,index:0,round:0,presentation:0,module:'spelling',mode:'chunks',rate:1,quick:false,hiddenChinese:false,words:{},history:{},sentences:{},sentenceIndex:0,sentenceFinished:false,pending:null};}
 export const studyKey=s=>`${s.fingerprint}:${s.round}:${s.presentation}:${s.index}:${s.module}:${s.mode}:${s.sentenceIndex}`;
 export function wordDraft(deck,s){return s.words[deck.words[s.index]?.id]||{input:'',hadMistake:false,result:null,quickIndices:null};}
 export function expectedInput(word,draft){return draft.quickIndices?draft.quickIndices.map(i=>[...word.english][i]).join(''):word.english;}
@@ -43,7 +43,6 @@ export function restoreStudy(deck,saved,legacy){
  if(['spelling','listening','speaking'].includes(saved.module))s.module=saved.module;
  if(['chunks','free','listening'].includes(saved.mode))s.mode=saved.mode;
  if([.75,.85,1,1.15].includes(saved.rate))s.rate=saved.rate;
- if(['easy','medium','hard'].includes(saved.difficulty))s.difficulty=saved.difficulty;
  for(const word of deck.words){
   const h=saved.history?.[word.id];if(h&&Array.isArray(h.mistakes))s.history[word.id]={mastered:h.mastered===true,mistakes:[...new Set(h.mistakes.filter(i=>Number.isInteger(i)&&i>=0&&i<word.english.length&&!fixed(word.english[i])))].sort((a,b)=>a-b)};
   const d=saved.words?.[word.id];if(!d||typeof d.input!=='string'||d.input.length>100||!['correct','reviewed','revealed',null].includes(d.result))continue;
@@ -106,7 +105,6 @@ export function reduceStudy(deck,s,action,preparedPrompts){
  if(action.type==='mode'){if(['chunks','free','listening'].includes(action.value)){next.mode=action.value;pause(next);}return next;}
  if(action.type==='preference'){
   if(action.name==='rate'&&[.75,.85,1,1.15].includes(action.value)){next.rate=action.value;return next;}
-  if(action.name==='difficulty'&&['easy','medium','hard'].includes(action.value))next.difficulty=action.value;
   if(action.name==='hiddenChinese')next.hiddenChinese=!!action.value;
   if(action.name==='quick'){
    next.quick=!!action.value;
@@ -118,7 +116,7 @@ export function reduceStudy(deck,s,action,preparedPrompts){
   if(action.name==='quick'&&current&&!draft.result&&draft.input.toLowerCase()===expectedInput(current,draft).toLowerCase())return reduceStudy(deck,next,{type:'input',value:draft.input,question:studyKey(next)});
   return next;
  }
- if(action.type==='restart') {const n=newStudy(deck);if(next.quick)while(deck.words[n.index]&&next.history[deck.words[n.index].id]?.mastered)n.index++;const restarted={...n,...(s.captureScopes?{captureScopes:s.captureScopes,captureWordOrder:s.captureWordOrder,capturePromptOrder:s.capturePromptOrder}:{}),module:s.module,history:next.history,quick:next.quick,hiddenChinese:next.hiddenChinese,rate:next.rate,difficulty:next.difficulty,mode:next.mode,round:s.round+1};if(restarted.module==='spelling'&&restarted.quick)prepare(deck,restarted);return restarted;}
+ if(action.type==='restart') {const n=newStudy(deck);if(next.quick)while(deck.words[n.index]&&next.history[deck.words[n.index].id]?.mastered)n.index++;const restarted={...n,...(s.captureScopes?{captureScopes:s.captureScopes,captureWordOrder:s.captureWordOrder,capturePromptOrder:s.capturePromptOrder}:{}),module:s.module,history:next.history,quick:next.quick,hiddenChinese:next.hiddenChinese,rate:next.rate,mode:next.mode,round:s.round+1};if(restarted.module==='spelling'&&restarted.quick)prepare(deck,restarted);return restarted;}
  if(action.type==='selectWord'&&Number.isInteger(action.index)&&deck.words[action.index]){
   const listeningFinished=s.sentenceFinished&&s.module==='listening';
   if(action.index===s.index){
@@ -134,7 +132,7 @@ export function reduceStudy(deck,s,action,preparedPrompts){
  if(action.type==='sentenceNext'){
   const p=prompts[s.sentenceIndex];if(!p)return s;
   const draft=s.sentences[p.key];
-  const allWordsShown=s.mode==='free'&&s.difficulty!=='hard'&&!writtenWords(p.sentence).some(isGuidedWordEditable);
+  const allWordsShown=s.mode==='free'&&!writtenWords(p.sentence).some(isGuidedWordEditable);
   if(s.mode!=='listening'&&!draft?.outcomes[s.mode]&&!allWordsShown)return s;
   let index=s.sentenceIndex+1;
   if(s.mode==='free')while(prompts[index]?.repeatedOnPhoto)index++;

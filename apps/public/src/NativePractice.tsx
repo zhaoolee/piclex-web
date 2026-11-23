@@ -24,7 +24,7 @@ import useStudyPersistence from './useStudyPersistence';
 import {editKeyboardText} from '../../../packages/learning-ui/src/keyboard-edit.mjs';
 import {transactExperience} from '../../../packages/practice/src/experience-store.mjs';
 import {clearExperienceEffects,emitExperience,prepareExperienceEffects} from '../../../packages/learning-ui/src/experience-effects';
-import {memo,useCallback,useEffect,useLayoutEffect,useMemo,useRef,useState,useSyncExternalStore,type CSSProperties,type KeyboardEvent as ReactKeyboardEvent,type PointerEvent as ReactPointerEvent,type ReactNode} from 'react';
+import {memo,useCallback,useEffect,useLayoutEffect,useMemo,useRef,useState,useSyncExternalStore,type CSSProperties,type PointerEvent as ReactPointerEvent,type ReactNode} from 'react';
 import {PhotoFocus,type Focus,type PhotoLoadState} from '../../../packages/learning-ui/src/PhotoFocus';
 import {AnswerSlots} from '../../../packages/learning-ui/src/AnswerSlots';
 import SpellingGlow from '../../../packages/learning-ui/src/SpellingGlow';
@@ -38,7 +38,7 @@ import './practice.css';
 import {startDictationGoldSweep} from './dictation-gold';
 import GuidedLetters,{letterGroups} from './GuidedLetters';
 import EnglishInput from './EnglishInput';
-import {useWordPeek,WordPeekTooltip,wordTargetAtPoint} from './WordPeek';
+import {useWordPeek,WordPeekTooltip} from './WordPeek';
 import {normalizeDefinitionWord} from './word-definitions';
 import {flushSync} from 'react-dom';
 export type AudioClip={mediaType:string;sha256:string;byteCount:number;durationSeconds:number;dataBase64?:string;path?:string};
@@ -58,7 +58,7 @@ function applyRoute(deck:PracticeDeck,state:any,route:ReturnType<typeof parseLea
 function readJSON(key:string){try{return JSON.parse(readPreference(key)||'null');}catch{return null;}}
 function revealFocusedAnswer(){
  const field=document.activeElement as HTMLElement|null,body=field?.closest<HTMLElement>('.native-body');
- if(!body||!field?.matches('.guided-input input,.dictation-input'))return;
+ if(!body||!field?.matches('.guided-input input'))return;
  const area=body.getBoundingClientRect(),box=field.getBoundingClientRect();
  if(box.bottom>area.bottom)body.scrollTop+=box.bottom-area.bottom+4;
  else if(box.top<area.top)body.scrollTop+=box.top-area.top-4;
@@ -109,9 +109,9 @@ function SentenceLine({sentence,target,translation,hidden,position,open}:{senten
  const display=useMemo(()=>exampleTokens(sentence,target),[sentence,target]),words=useMemo(()=>exampleWords(sentence),[sentence]),index=words.findIndex(w=>position>=w.start&&position<w.end),highlight=tokenForWord(display,index);
  return <button className="native-example" onClick={open} aria-label="查看例句并练口语"><span>{display.map((t,i)=><span key={i} className={i===highlight?'spoken-word':''}>{t.text} </span>)}</span>{!hidden&&<small>{maskExample(translation,target)}</small>}</button>;
 }
-function GuidedInput({sentence,value,difficulty,disabled,feedbackActive,deckWord,deckMeaning,onChange,onWarning,onComposing,onSubmit,onVirtualKey}:{sentence:string;value:string[];difficulty:string;disabled:boolean;feedbackActive:boolean;deckWord:string;deckMeaning:string;onChange:(values:string[])=>void;onWarning:(show:boolean)=>void;onComposing:(active:boolean)=>void;onSubmit:()=>void;onVirtualKey:(key:string)=>void}){
+function GuidedInput({sentence,value,disabled,feedbackActive,deckWord,deckMeaning,onChange,onWarning,onComposing,onSubmit,onVirtualKey}:{sentence:string;value:string[];disabled:boolean;feedbackActive:boolean;deckWord:string;deckMeaning:string;onChange:(values:string[])=>void;onWarning:(show:boolean)=>void;onComposing:(active:boolean)=>void;onSubmit:()=>void;onVirtualKey:(key:string)=>void}){
  const words:string[]=writtenWords(sentence),inputs=useRef<(HTMLInputElement|null)[]>([]);
- const {peek:wordPeek,begin,hover,cancel,consumeClick}=useWordPeek(`${sentence}|${difficulty}|${disabled}`,!disabled);
+ const {peek:wordPeek,begin,hover,cancel,consumeClick}=useWordPeek(`${sentence}|${disabled}`,!disabled);
  const target=(word:string,node:Element)=>()=>({word,anchor:node.getBoundingClientRect(),meaning:normalizeDefinitionWord(word)===normalizeDefinitionWord(deckWord)?deckMeaning:undefined});
  const pasteWords=(start:number,text:string)=>{
   const pasted=text.trim().split(/\s+/),next=[...value];
@@ -124,7 +124,7 @@ function GuidedInput({sentence,value,difficulty,disabled,feedbackActive,deckWord
   }
   onChange(next);
  };
- return <div className="guided-input" onClickCapture={consumeClick} onContextMenu={e=>e.preventDefault()} aria-label={difficulty==='easy'?'显示单词和字母数量':'只显示单词数量'}>{words.map((word,i)=>{
+ return <div className="guided-input" onClickCapture={consumeClick} onContextMenu={e=>e.preventDefault()} aria-label="显示单词和字母数量">{words.map((word,i)=>{
   const pointer={
    onPointerDown:(e:ReactPointerEvent<HTMLElement>)=>{if(!disabled&&e.button===0&&e.isPrimary)begin(target(word,e.currentTarget),e);},
    onPointerEnter:(e:ReactPointerEvent<HTMLElement>)=>hover(target(word,e.currentTarget),e),
@@ -133,8 +133,8 @@ function GuidedInput({sentence,value,difficulty,disabled,feedbackActive,deckWord
   if(!isGuidedWordEditable(word))return <span key={i} className="guided-word guided-word-fixed" lang="en" {...pointer}>{word}</span>;
   const expected=letterGroups(word),entered=value[i]||'',typed=letterGroups(entered),capacity=expected.length,slots=Math.max(capacity,typed.length);
   const nextField=()=>inputs.current.find((node,j)=>node&&j>i);
-  return <label key={i} className="guided-word" style={{width:difficulty==='easy'?`min(${slots*16}px,100%)`:80}} {...pointer}>
-   <EnglishInput key={`${sentence}:${i}`} ref={n=>{inputs.current[i]=n as HTMLInputElement|null;}} label={`第 ${i+1} 个单词${difficulty==='easy'?`，${capacity} 个字母`:''}`} readOnly={disabled} onVirtualKey={onVirtualKey} value={entered} onWarning={onWarning} onComposing={onComposing}
+  return <label key={i} className="guided-word" style={{width:`min(${slots*16}px,100%)`}} {...pointer}>
+   <EnglishInput key={`${sentence}:${i}`} ref={n=>{inputs.current[i]=n as HTMLInputElement|null;}} label={`第 ${i+1} 个单词，${capacity} 个字母`} readOnly={disabled} onVirtualKey={onVirtualKey} value={entered} onWarning={onWarning} onComposing={onComposing}
     onValue={(raw,advance)=>{
      const next=raw.replace(/\s/g,''),updated=[...value];
      updated[i]=next;
@@ -144,25 +144,10 @@ function GuidedInput({sentence,value,difficulty,disabled,feedbackActive,deckWord
     }}
     onPaste={e=>{const text=e.clipboardData.getData('text');if(!/\s/.test(text))return;e.preventDefault();pasteWords(i,text);}}
     onKeyDown={e=>{if(e.nativeEvent.isComposing||e.key!=='Enter')return;e.preventDefault();const next=disabled?null:nextField();if(next)next.focus({preventScroll:true});else onSubmit();}}/>
-   {difficulty==='easy'&&<GuidedLetters expected={expected} typed={typed} active={feedbackActive} sentenceComplete={disabled}/>}
+   <GuidedLetters expected={expected} typed={typed} active={feedbackActive} sentenceComplete={disabled}/>
   </label>;
  })}<WordPeekTooltip peek={wordPeek}/></div>;
 }
-function HardDictationInput({promptKey,sentence,value,disabled,deckWord,deckMeaning,onValue,onWarning,onComposing,onVirtualKey,onKeyDown}:{promptKey:string;sentence:string;value:string;disabled:boolean;deckWord:string;deckMeaning:string;onValue:(value:string)=>void;onWarning:(show:boolean)=>void;onComposing:(active:boolean)=>void;onVirtualKey:(key:string)=>void;onKeyDown:(event:ReactKeyboardEvent<HTMLInputElement|HTMLTextAreaElement>)=>void}){
- const field=useRef<HTMLInputElement|HTMLTextAreaElement|null>(null);
- const {peek,begin,hover,cancel,consumeClick}=useWordPeek(`${promptKey}|${disabled}`,!disabled);
- const target=(x:number,y:number)=>()=>{
-  const node=field.current;if(!node)return null;
-  const hit=wordTargetAtPoint(node,x,y),word=hit&&writtenWords(sentence)[hit.index];
-  return hit&&word?{word,anchor:hit.anchor,meaning:normalizeDefinitionWord(word)===normalizeDefinitionWord(deckWord)?deckMeaning:undefined}:null;
- };
- const press=(e:ReactPointerEvent<HTMLDivElement>)=>{
-  if(disabled||e.button!==0||!e.isPrimary)return;
-  begin(target(e.clientX,e.clientY),e);
- };
- return <div className="hard-dictation-peek" onPointerDown={press} onPointerMove={e=>hover(target(e.clientX,e.clientY),e)} onPointerLeave={e=>{if(e.pointerType==='mouse'&&!e.buttons)cancel();}} onClickCapture={consumeClick} onContextMenu={e=>e.preventDefault()}><EnglishInput ref={field} key={promptKey} multiline className="dictation-input" label="听写句子" onWarning={onWarning} placeholder="听一句，写下听到的英文" value={value} maxLength={2000} onVirtualKey={onVirtualKey} readOnly={disabled} onComposing={onComposing} onValue={onValue} onKeyDown={e=>onKeyDown(e)}/><WordPeekTooltip peek={peek}/></div>;
-}
-
 export default function NativePractice({deck,openGame,gameBusy,deckChoices,loadPurchaseChoices,selectDeck,spellingRequest=0,consumeSpellingRequest,notify,exit,download,share,installedDecks,saveDownloaded}:{deck:PracticeDeck;openGame:()=>void;gameBusy:boolean;deckChoices:DeckPickerChoice[];loadPurchaseChoices:(signal:AbortSignal)=>Promise<DeckPickerChoice[]>;selectDeck:(id:string)=>void;spellingRequest?:number;consumeSpellingRequest:(sequence:number)=>void;notify:(s:string)=>void;exit:()=>void;download:()=>void;share:()=>void;installedDecks:{id:string;fingerprint?:string}[];saveDownloaded:(bytes:Uint8Array,signal:AbortSignal,source?:{url:string;feed:SourceDeck})=>Promise<void>}){
  usePageViewport();
  const desktopKeyboard=useDesktopKeyboard();
@@ -188,7 +173,7 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,loadP
  const promptAudio=recordingFor(deck.words,prompt);
  const active=visible&&!panel,complete=!word,playback=state.module==='listening'&&state.mode==='listening';
  const sentenceResult=sentence?.outcomes[state.mode],check=sentence?.checks[state.mode],revealed=sentence?.revealed.includes(state.mode);
- const layoutRoot=useRef<HTMLElement>(null),dictationFocus=useRef<HTMLInputElement|HTMLTextAreaElement|null>(null);
+ const layoutRoot=useRef<HTMLElement>(null),dictationFocus=useRef<HTMLInputElement|null>(null);
  const ambienceControl=useSentenceAmbience({active:active&&!complete&&state.module!=='speaking',speaking:audio.playing});
  const playlist=useMemo(()=>listeningPlaylist(prompts,deck.words,onePhoto,prompt?.key),[prompts,deck.words,onePhoto,prompt?.key]);
  const nextListeningIndex=playback?listeningNeighbor(playlist,state.sentenceIndex,1):state.sentenceIndex;
@@ -223,7 +208,7 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,loadP
   if(location.hash!==consumedHash.current||parseLearningURL(location.hash)?.id!==deck.id)return;
   const hash=learningHash(deck,state);consumedHash.current=hash;
   if(location.hash!==hash)history.replaceState(history.state,'',hash);
- },[deck,state.module,state.mode,state.difficulty,state.index,state.sentenceIndex,state.sentenceFinished,urlRevision]);
+ },[deck,state.module,state.mode,state.index,state.sentenceIndex,state.sentenceFinished,urlRevision]);
  const credited=useRef(new Set<string>());
  const award=(event:any)=>{const stamp=event.id+':'+(event.matched||'');if(credited.current.has(stamp))return;credited.current.add(stamp);void transactExperience(event).catch(e=>{credited.current.delete(stamp);notify(e.message);});};
  useEffect(()=>{prepareExperienceEffects();return()=>{clearExperienceEffects();stopTypingSound();};},[]);
@@ -248,7 +233,7 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,loadP
   if(!active||previous.key!==key||previous.result)return;
   if(state.module==='spelling'&&(completionResult==='correct'||completionResult==='reviewed'))return completionCue.start(playCue=>playCue());
   if(freeDictation&&completionResult==='correct'&&sentence?.pending==='free'){
-   const board=layoutRoot.current?.querySelector<HTMLElement>('.guided-input,.hard-dictation-peek');
+   const board=layoutRoot.current?.querySelector<HTMLElement>('.guided-input');
    if(!board)return;
    let stopSweep:(()=>void)|undefined;
    const cancel=completionCue.start(playCue=>{
@@ -286,8 +271,8 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,loadP
   return()=>{document.removeEventListener('visibilitychange',visibility,true);window.removeEventListener('pagehide',leave,true);};
  },[deck]);
  const focusAnswer=()=>{
-  const fields=[...(layoutRoot.current?.querySelectorAll<HTMLInputElement|HTMLTextAreaElement>('.spelling-input,.guided-input input,.dictation-input')||[])];
-  const words=freeDictation&&state.difficulty!=='hard'?editableSentenceWords:[];
+  const fields=[...(layoutRoot.current?.querySelectorAll<HTMLInputElement>('.spelling-input,.guided-input input')||[])];
+  const words=freeDictation?editableSentenceWords:[];
   const incomplete=words.length
    ? fields.find((node,i)=>node.value.replace(/[^\p{L}\p{N}]/gu,'').length<words[i].replace(/[^\p{L}\p{N}]/gu,'').length)
    : fields.find(node=>!node.value);
@@ -314,7 +299,7 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,loadP
  useEffect(()=>{if(playback&&active&&listenRun)audio.stopPlayback();else audio.stop();audio.clearError();setImeWarning(false);setComposing(false);if(active&&!complete)focusAnswer();},[key,panel]);
  useEffect(()=>{setSeek(0);setPass(0);},[prompt?.key,state.module,state.mode]);
  useEffect(()=>{if(audio.error)setListenRun(false);},[audio.error]);
- useLayoutEffect(()=>{if(active&&!complete&&(state.module==='spelling'||!state.sentenceFinished))focusAnswer();},[key,panel,state.difficulty,active]);
+ useLayoutEffect(()=>{if(active&&!complete&&(state.module==='spelling'||!state.sentenceFinished))focusAnswer();},[key,panel,active]);
  useEffect(()=>{
   if(!active||!word)return;
   if(revealAudio.current===word.id&&draft.result==='revealed'){revealAudio.current=null;navigationAudio.current=null;audio.play([word.english],state.rate);return;}
@@ -338,7 +323,6 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,loadP
  useLayoutEffect(()=>{if(!spellingRequest)return;consumeSpellingRequest(spellingRequest);if(spellingRequest<=acceptedSpellingSequence)return;acceptedSpellingSequence=spellingRequest;if(parseLearningURL(location.hash)?.module)return;navigationAudio.current=null;readingContinuation.current=false;setListenRun(false);audio.stop();setPanel(null);setState((current:any)=>reduceStudy(deck,current,{type:'module',value:'spelling',question:studyKey(current)}));},[spellingRequest]);
  const selectModule=(value:string)=>{if(value===state.module)return;readingContinuation.current=false;setListenRun(false);audio.stop();flushSync(()=>dispatch({type:'module',value}));focusAnswer();};
  const setMode=(value:string)=>{if(value===state.mode)return;setListenRun(false);setPass(0);audio.stop();flushSync(()=>dispatch({type:'mode',value}));focusAnswer();};
- const setDifficulty=(value:string)=>{setComposing(false);setImeWarning(false);flushSync(()=>dispatch({type:'preference',name:'difficulty',value}));focusAnswer();};
  const replay=()=>{if(!active)return;navigationAudio.current=null;if(state.module==='spelling'&&word)audio.play(word.example?[word.example,word.english]:[word.english],state.rate,undefined,0,word.example?word.audio:undefined,0,'replay');else if(prompt){act({type:'play',rate:state.rate});audio.play([prompt.sentence],state.rate,undefined,0,promptAudio,0,'replay');}};
  // First-load sound stays inside spelling and sentence exercises. Passive
  // listening already has transport state, and speaking has its own microphone
@@ -402,7 +386,7 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,loadP
    const target=e.target instanceof HTMLElement?e.target:null;if(!target)return;
    if(target.closest('button,a,summary,select,[contenteditable=true],[role=button],[role=menuitem]'))return;
    const field=target.closest('input,textarea');
-   if(field&&!field.matches('.spelling-input,.guided-input input,.dictation-input'))return;
+   if(field&&!field.matches('.spelling-input,.guided-input input'))return;
    if(!(target.closest('.native-practice')||target===document.body||target===document.documentElement||target.id==='main-content'))return;
    e.preventDefault();e.stopPropagation();replay();
   };
@@ -421,7 +405,7 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,loadP
   const shortcutTarget=target?.closest('.native-practice')||target===document.body||target===document.documentElement||target?.id==='main-content';
   const shortcutBlocked=target?.closest('select,dialog,[role=dialog],[contenteditable=true],.sentence-ambience')||document.querySelector('.sentence-ambience[open],.chunk-menu');
   const shortcutField=target?.closest('input,textarea');
-  if(desktopShortcut&&e.key==='Escape'&&!complete&&!allWordsShown&&state.module==='listening'&&prompt&&!state.sentenceFinished&&(state.mode==='chunks'||state.mode==='free')&&!sentenceResult&&!shortcutBlocked&&shortcutTarget&&(!shortcutField||shortcutField.matches('.guided-input input,.dictation-input'))){
+  if(desktopShortcut&&e.key==='Escape'&&!complete&&!allWordsShown&&state.module==='listening'&&prompt&&!state.sentenceFinished&&(state.mode==='chunks'||state.mode==='free')&&!sentenceResult&&!shortcutBlocked&&shortcutTarget&&(!shortcutField||shortcutField.matches('.guided-input input'))){
    e.preventDefault();act({type:'giveUp'});return;
   }
   if(state.module==='spelling'&&e.key==='Escape'&&!draft.result&&!shortcutBlocked&&(!shortcutField||shortcutField.matches('.spelling-input'))&&(shortcutTarget||target===document.body||target===document.documentElement||target?.id==='main-content')){
@@ -443,14 +427,14 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,loadP
   }else if(state.module==='listening'&&state.mode==='free'&&!state.sentenceFinished){
    if(pressed===' ')return;
    if(sentenceResult){if(pressed==='Enter'&&sentence.pending!==state.mode)dispatch({type:'sentenceNext'});return;}
-   const inputs=[...(layoutRoot.current?.querySelectorAll<HTMLInputElement|HTMLTextAreaElement>('.guided-input input,.dictation-input')||[])];
+   const inputs=[...(layoutRoot.current?.querySelectorAll<HTMLInputElement>('.guided-input input')||[])];
    const target=inputs.find(node=>node===document.activeElement)||inputs.find(node=>!node.value)||inputs[0];if(!target)return;
    target.focus({preventScroll:true});
    const index=inputs.indexOf(target);
-   const edit=(field:HTMLInputElement|HTMLTextAreaElement,key:string)=>prompt?editDictationText(field.matches('.dictation-input')?prompt.sentence:(editableSentenceWords[inputs.indexOf(field)]||'').replace(/['’‘]/g,''),field.value,field.selectionStart,field.selectionEnd,key):editKeyboardText(field.value,field.selectionStart,field.selectionEnd,key);
-   const commit=(field:HTMLInputElement|HTMLTextAreaElement,edited:{value:string;cursor:number})=>{
-    const prototype=field instanceof HTMLTextAreaElement?HTMLTextAreaElement.prototype:HTMLInputElement.prototype;
-    Object.getOwnPropertyDescriptor(prototype,'value')!.set!.call(field,edited.value);field.setSelectionRange(edited.cursor,edited.cursor);flushSync(()=>field.dispatchEvent(new Event('input',{bubbles:true})));if(field===document.activeElement)field.setSelectionRange(Math.min(edited.cursor,field.value.length),Math.min(edited.cursor,field.value.length));
+   const edit=(field:HTMLInputElement,key:string)=>prompt?editDictationText((editableSentenceWords[inputs.indexOf(field)]||'').replace(/['’‘]/g,''),field.value,field.selectionStart,field.selectionEnd,key):editKeyboardText(field.value,field.selectionStart,field.selectionEnd,key);
+   const commit=(field:HTMLInputElement,edited:{value:string;cursor:number})=>{
+    const setter=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value')!.set!;
+    setter.call(field,edited.value);field.setSelectionRange(edited.cursor,edited.cursor);flushSync(()=>field.dispatchEvent(new Event('input',{bubbles:true})));if(field===document.activeElement)field.setSelectionRange(Math.min(edited.cursor,field.value.length),Math.min(edited.cursor,field.value.length));
    };
    if(pressed==='Escape'){act({type:'giveUp'});return;}
    if(pressed==='Backspace'&&target.selectionStart===target.selectionEnd&&target.selectionStart===0){
@@ -465,7 +449,7 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,loadP
  const results=Object.values(state.words) as any[],correct=results.filter(d=>d.result==='correct').length,reviewed=results.filter(d=>d.result&&d.result!=='correct').length;
  const sentenceWords=prompt?writtenWords(prompt.sentence):[];
  const editableSentenceWords=sentenceWords.filter(isGuidedWordEditable);
- const allWordsShown=freeDictation&&state.difficulty!=='hard'&&!editableSentenceWords.length;
+ const allWordsShown=freeDictation&&!editableSentenceWords.length;
  const photoPalette=usePhotoPalette();
  const spellingPhotoBudget=useRef<{height:number;photo:number}|null>(null);
  useLayoutEffect(()=>{
@@ -493,9 +477,9 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,loadP
   const observer=new ResizeObserver(update);
   for(const element of [root,...root.querySelectorAll('.native-header,.module-tabs,.virtual-keyboard,.native-answer-footer,.native-hint,.sentence-toolbar,.native-example,.sentence-content')])observer.observe(element);
   update();return()=>{cancelAnimationFrame(frame);observer.disconnect();};
- },[state.module,state.mode,state.difficulty,desktopKeyboard,!!word?.example,complete]);
+ },[state.module,state.mode,desktopKeyboard,!!word?.example,complete]);
  const held=useRef(new Set<number>()),swipe=useRef<{x:number;y:number}|null>(null),suppressPhoto=useRef(0);
- return <main onFocusCapture={e=>{const field=e.target;if((field instanceof HTMLInputElement||field instanceof HTMLTextAreaElement)&&field.matches('.guided-input input,.dictation-input'))dictationFocus.current=field;revealFocusedAnswer();}} ref={layoutRoot} style={photoPalette.style} className="native-practice" data-example={!!word?.example} data-module={state.module} data-mode={state.mode} aria-label="学习">
+ return <main onFocusCapture={e=>{const field=e.target;if(field instanceof HTMLInputElement&&field.matches('.guided-input input'))dictationFocus.current=field;revealFocusedAnswer();}} ref={layoutRoot} style={photoPalette.style} className="native-practice" data-example={!!word?.example} data-module={state.module} data-mode={state.mode} aria-label="学习">
   {imeWarning&&<div className="english-input-warning" role="status">请切换到英语输入法</div>}
   <header className="native-header">{state.module!=='spelling'&&<button className="native-back" aria-label="返回单词学习" onClick={()=>selectModule('spelling')}><Icon name="back"/></button>}<PracticeProgress deckTitle={deck.title} position={state.index} count={deck.words.length} openLevel={()=>openPanel('level')} openDeck={()=>openPanel('settings')}/><button className="practice-library" aria-label="下载第三方卡组" onClick={()=>openPanel('download')}><strong>下载</strong><small>第三方卡组</small></button></header>
   <div className="module-tabs" role="tablist" aria-label="学习模块">{modules.map(([id,title])=><button role="tab" aria-selected={state.module===id} key={id} onClick={()=>selectModule(id)}>{state.module===id&&<Icon name={id==='spelling'?'keycap':id==='listening'?'headphones':'microphone'}/>}<span>{title}</span></button>)}</div>
@@ -503,11 +487,11 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,loadP
    <div className="native-body" onPointerDown={e=>{if(e.pointerType==='mouse'||(e.target as HTMLElement).closest('input,textarea,select,.chunk,.reading-content,.native-example'))return;swipe.current={x:e.clientX,y:e.clientY};}} onPointerUp={e=>{const start=swipe.current;swipe.current=null;if(!start||panel||held.current.size>1)return;const dx=e.clientX-start.x,dy=e.clientY-start.y;if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.4){const i=modules.findIndex(([id])=>id===state.module),target=modules[i+(dx<0?1:-1)];if(target){suppressPhoto.current=Date.now()+400;selectModule(target[0]);}}}} onPointerCancel={()=>{swipe.current=null;}}>
     <article className="native-card"><div className="photo-browse">
      <StablePhotoFocus cache={photos} onImageReady={photoPalette.read} src={deck.images[word.imageIndex]} fit={desktopKeyboard||state.module==='listening'?'contain':'focus'} focus={word.focus} alt={word.focus?'训练照片，彩色框标示当前物体':'完整场景照片'} active={active} retry={photoRetry} onLoadState={reportPhotoLoad}/>{audio.blocked&&autoAudioScope&&<button className="audio-unlock" aria-label="开启声音，播放当前内容" title="点击开启声音" onClick={e=>{e.preventDefault();e.stopPropagation();retryCurrent();}} onPointerDown={e=>e.stopPropagation()}><MutedSpeakerIcon/></button>}<button className="photo-open" aria-label={photoState==='error'?'重新加载图片':'选择照片'} onClick={()=>{if(photoState==='error'){setPhotoRetry(n=>n+1);return;}if(Date.now()<suppressPhoto.current){suppressPhoto.current=0;return;}openPanel('gallery');}} onPointerDown={e=>{held.current.add(e.pointerId);if(held.current.size>1)openPanel('gallery');}} onPointerUp={e=>held.current.delete(e.pointerId)} onPointerCancel={()=>held.current.clear()}></button></div>
-     {state.module==='spelling'?<div className="native-hint"><button aria-label={state.hiddenChinese?'显示中文提示':'隐藏中文提示'} aria-pressed={state.hiddenChinese} onClick={()=>dispatch({type:'preference',name:'hiddenChinese',value:!state.hiddenChinese})}><h1 className="native-hint-word" data-hidden={state.hiddenChinese}><span className="native-hint-word-text" aria-hidden={state.hiddenChinese||undefined}>{word.chinese}</span></h1><small>{word.phonetic}</small></button>{ambienceControl}</div>:state.module==='listening'?<div className="sentence-toolbar"><select aria-label="句子练习模式" value={state.mode} onChange={e=>setMode(e.target.value)}>{modes.map(([id,title])=><option key={id} value={id}>{title}</option>)}</select>{ambienceControl}{state.mode==='free'&&<select aria-label="听写难度" value={state.difficulty} onChange={e=>setDifficulty(e.target.value)}><option value="easy">简单 · 字母数量</option><option value="medium">中等 · 单词数量</option><option value="hard">困难 · 无提示</option></select>}</div>:null}
+     {state.module==='spelling'?<div className="native-hint"><button aria-label={state.hiddenChinese?'显示中文提示':'隐藏中文提示'} aria-pressed={state.hiddenChinese} onClick={()=>dispatch({type:'preference',name:'hiddenChinese',value:!state.hiddenChinese})}><h1 className="native-hint-word" data-hidden={state.hiddenChinese}><span className="native-hint-word-text" aria-hidden={state.hiddenChinese||undefined}>{word.chinese}</span></h1><small>{word.phonetic}</small></button>{ambienceControl}</div>:state.module==='listening'?<div className="sentence-toolbar"><select aria-label="句子练习模式" value={state.mode} onChange={e=>setMode(e.target.value)}>{modes.map(([id,title])=><option key={id} value={id}>{title}</option>)}</select>{ambienceControl}</div>:null}
     </article>
     {state.module==='spelling'&&word.example&&<SentenceLine sentence={word.example} target={word.english} translation={word.exampleChinese} hidden={state.hiddenChinese} position={audio.position} open={()=>selectModule('speaking')}/>}
     {state.module==='listening'&&(!prompt?<p className="native-unavailable">这张卡片没有可练习的例句。</p>:state.sentenceFinished?<section className="native-completion"><h2>本轮句子练习完成</h2><p>已到达卡组末尾。</p>{state.mode==='chunks'&&!sentence?.outcomes.free&&<button className="native-button" onClick={()=>dispatch({type:'dictationChallenge'})}>挑战这句自由听写</button>}<button className="native-primary" onClick={()=>dispatch({type:'dictationRestart'})}>再听写一轮</button><button className="native-button" onClick={()=>selectModule('spelling')}>返回单词学习</button></section>:<section className="sentence-content" aria-label={modes.find(([id])=>id===state.mode)?.[1]}>
-     {state.mode==='listening'?<><p className="listening-sentence">{exampleWords(prompt.sentence).map((w,i)=><span className={audio.position>=w.start&&audio.position<w.end?'spoken-word':''} key={i}>{w.text} </span>)}</p><p className="muted">{prompt.translation}</p>{audio.preparing&&<p className="small muted" role="status">正在准备当前句，准备好后立即播放</p>}{audio.error&&<p role="alert">{audio.error}</p>}</>:state.mode==='chunks'?<><p className="chunk-instruction">{sentence.selected.length?'点词块可撤回，长按或右键可调整位置':'听一句，点选词块拼成句子'}</p><div className="chunk-answer" aria-label="已选词块">{sentence.selected.map((id:number)=><Chunk key={id} text={sentence.chunks[id].text} disabled={!!sentenceResult} remove={()=>act({type:'remove',id})} move={offset=>act({type:'move',id,offset})}/>)}</div><div className="chunk-bank" aria-label="待选词块">{sentence.bank.filter((id:number)=>!sentence.selected.includes(id)).map((id:number)=><button className="chunk" key={id} disabled={!!sentenceResult} onClick={()=>act({type:'select',id})}>{sentence.chunks[id].text}</button>)}</div></>:state.difficulty==='hard'?<HardDictationInput deckWord={deck.words[prompt.wordIndex].english} deckMeaning={deck.words[prompt.wordIndex].chinese} promptKey={prompt.key} sentence={prompt.sentence} value={sentence.freeText} disabled={!!sentenceResult} onWarning={setImeWarning} onComposing={setComposing} onVirtualKey={virtualPress} onValue={value=>act({type:'input',value})} onKeyDown={e=>{if(e.key==='Enter'&&!e.nativeEvent.isComposing&&!e.shiftKey){e.preventDefault();if(!sentenceResult)act({type:'submit'});else if(sentence.pending!==state.mode)dispatch({type:'sentenceNext'});}}}/>:<GuidedInput key={prompt.key} deckWord={deck.words[prompt.wordIndex].english} deckMeaning={deck.words[prompt.wordIndex].chinese} onVirtualKey={virtualPress} sentence={prompt.sentence} value={sentence.guided||sentenceWords.map((_:string,i:number)=>writtenWords(sentence.freeText)[i]||'')} difficulty={state.difficulty} disabled={!!sentenceResult} feedbackActive={active&&!revealed} onWarning={setImeWarning} onComposing={setComposing} onSubmit={()=>{if(!sentenceResult)act({type:'submit'});else if(sentence.pending!==state.mode)dispatch({type:'sentenceNext'});}} onChange={values=>act({type:'guided',values})}/>}
+     {state.mode==='listening'?<><p className="listening-sentence">{exampleWords(prompt.sentence).map((w,i)=><span className={audio.position>=w.start&&audio.position<w.end?'spoken-word':''} key={i}>{w.text} </span>)}</p><p className="muted">{prompt.translation}</p>{audio.preparing&&<p className="small muted" role="status">正在准备当前句，准备好后立即播放</p>}{audio.error&&<p role="alert">{audio.error}</p>}</>:state.mode==='chunks'?<><p className="chunk-instruction">{sentence.selected.length?'点词块可撤回，长按或右键可调整位置':'听一句，点选词块拼成句子'}</p><div className="chunk-answer" aria-label="已选词块">{sentence.selected.map((id:number)=><Chunk key={id} text={sentence.chunks[id].text} disabled={!!sentenceResult} remove={()=>act({type:'remove',id})} move={offset=>act({type:'move',id,offset})}/>)}</div><div className="chunk-bank" aria-label="待选词块">{sentence.bank.filter((id:number)=>!sentence.selected.includes(id)).map((id:number)=><button className="chunk" key={id} disabled={!!sentenceResult} onClick={()=>act({type:'select',id})}>{sentence.chunks[id].text}</button>)}</div></> :<GuidedInput key={prompt.key} deckWord={deck.words[prompt.wordIndex].english} deckMeaning={deck.words[prompt.wordIndex].chinese} onVirtualKey={virtualPress} sentence={prompt.sentence} value={sentence.guided||sentenceWords.map((_:string,i:number)=>writtenWords(sentence.freeText)[i]||'')} disabled={!!sentenceResult} feedbackActive={active&&!revealed} onWarning={setImeWarning} onComposing={setComposing} onSubmit={()=>{if(!sentenceResult)act({type:'submit'});else if(sentence.pending!==state.mode)dispatch({type:'sentenceNext'});}} onChange={values=>act({type:'guided',values})}/>}
      {sentenceResult==='assisted'?<p className="sentence-feedback" role="status">参考答案</p>:check&&!check.isCorrect&&<div className="sentence-feedback" role="status"><strong>再听一次，试着修改答案</strong>{state.mode==='chunks'?<p>词块顺序还需要调整。</p>:<><div className="sentence-diff">{check.edits.map((edit:any,i:number)=><span key={i} className={edit.kind==='match'?'matched':'needs-work'}>{edit.kind==='match'?edit.actual:edit.kind==='omission'?revealed?`遗漏：${edit.expected}`:'遗漏一词':edit.kind==='addition'?`多余：${edit.actual}`:revealed?`${edit.actual} → ${edit.expected}`:`替换：${edit.actual}`}</span>)}</div><button className="text-button" onClick={()=>act({type:revealed?'retry':'reveal'})}>{revealed?'重新拼写':'显示答案'}</button></>}</div>}
      {revealed&&<div className="standard-answer"><p>{prompt.sentence}</p><p className="muted">{prompt.translation}</p></div>}
     </section>)}

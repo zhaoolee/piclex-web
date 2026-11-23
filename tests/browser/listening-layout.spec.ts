@@ -22,8 +22,7 @@ for(const kind of ['portrait','landscape'])test(`listening preserves the full ${
  };
  for(const size of [{width:1280,height:720},{width:1440,height:1000},{width:390,height:844}]){
   await page.setViewportSize(size);await mode.selectOption('free');
-  for(const difficulty of ['hard','easy','medium']){await page.getByLabel('听写难度').selectOption(difficulty);await contained();}
-  await page.getByLabel('听写难度').selectOption('hard');
+  await expect(page.getByLabel('听写难度')).toHaveCount(0);await contained();
   const xp=(await page.locator('.learning-experience b').boundingBox())!,title=(await page.locator('.practice-deck-target').boundingBox())!;expect(xp.y).toBeGreaterThanOrEqual(title.y);expect(xp.y+xp.height).toBeLessThanOrEqual(title.y+title.height);
   {
    await expect(keyboard).toBeVisible();
@@ -36,16 +35,15 @@ for(const kind of ['portrait','landscape'])test(`listening preserves the full ${
   for(const next of ['chunks','listening']){await mode.selectOption(next);await contained();await expect(keyboard).toHaveCount(0);}
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
  }
- await page.setViewportSize({width:390,height:430});await mode.selectOption('free');await page.getByLabel('听写难度').selectOption('hard');await contained();
+ await page.setViewportSize({width:390,height:430});await mode.selectOption('free');await expect(page.getByLabel('听写难度')).toHaveCount(0);await contained();
  expect(await page.locator('.native-body').evaluate(el=>el.scrollHeight>el.clientHeight)).toBe(true);
- const dictation=page.getByRole('textbox',{name:'听写句子',exact:true});
- await fillEnglish(dictation,'wrong');
- if(info.project.name==='desktop'){await keyboard.getByRole('button',{name:'退格',exact:true}).click();await expect(dictation).toHaveValue(kind==='portrait'?'w ro n':'w ron');}
- await fillEnglish(dictation,kind==='portrait'?'Iamstillinbad':'Acroissantisonthewoodenplatx');
+ const fields=page.locator('.guided-input input'),answer=kind==='portrait'?['I','am','still','in','bed']:['A','croissant','is','on','the','wooden','plate'];
+ const fillAnswer=async(values:string[])=>{for(const [index,value] of values.entries())await fillEnglish(fields.nth(index),value);};
+ await fillAnswer(answer.map(word=>'x'.repeat(word.length)));
  await expect(page.getByRole('button',{name:'检查答案',exact:true})).toHaveCount(0);
  await expect(page.getByText('再听一次，试着修改答案',{exact:true})).toBeVisible();
- if(info.project.name==='desktop'){await keyboard.getByRole('button',{name:'退格',exact:true}).click();await expect(page.getByText('再听一次，试着修改答案',{exact:true})).toHaveCount(0);}
+ if(info.project.name==='desktop'){await fields.last().press('Backspace');await expect(page.getByText('再听一次，试着修改答案',{exact:true})).toHaveCount(0);}
  await page.clock.install();await page.clock.pauseAt(await page.evaluate(()=>Date.now()+1000));
- await fillEnglish(dictation,kind==='portrait'?'Iamstillinbed':'Acroissantisonthewoodenplate');
+ await fillAnswer(answer);
  await expect(page.locator('.sentence-actions-pending')).toHaveCount(1);
 });

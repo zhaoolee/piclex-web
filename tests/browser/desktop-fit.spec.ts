@@ -6,8 +6,8 @@ test('desktop preserves full photograph and fits answer, rate and keyboard witho
  test.skip(info.project.name!=='desktop','Desktop keyboard layout only');test.setTimeout(90000);
  for(const viewport of [{width:1280,height:720},{width:1366,height:768},{width:1440,height:900}]){
   await page.setViewportSize(viewport);await page.goto('/piclex-web/#/deck/'+card.id);await page.getByRole('tab',{name:'拼单词',exact:true}).click();
-  for(const mode of ['spelling','free-easy','free-medium','free-hard']){
-   if(mode!=='spelling'){await page.getByRole('tab',{name:'练听力',exact:true}).click();await page.getByLabel('句子练习模式',{exact:true}).selectOption('free');await page.getByLabel('听写难度',{exact:true}).selectOption(mode.slice(5));}
+  for(const mode of ['spelling','free']){
+   if(mode!=='spelling'){await page.getByRole('tab',{name:'练听力',exact:true}).click();await page.getByLabel('句子练习模式',{exact:true}).selectOption('free');await expect(page.getByLabel('听写难度')).toHaveCount(0);}
    await expect(page.locator('.focus-image')).toBeVisible();
    await expect.poll(()=>page.locator('.native-practice').evaluate(n=>n.scrollHeight-n.clientHeight)).toBeLessThanOrEqual(1);
    const geometry=await page.evaluate(()=>{

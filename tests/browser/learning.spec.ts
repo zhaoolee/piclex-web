@@ -83,7 +83,7 @@ test('native modules preserve independent sentence drafts, shuffle order and pho
  const bank=page.getByLabel('待选词块');const selected=page.getByLabel('已选词块');
  const bankOrder=await bank.getByRole('button').allTextContents();
  await bank.getByRole('button',{name:'I',exact:true}).click();
- await mode.selectOption('free');await fillEnglish(page.getByRole('textbox',{name:'听写句子'}),'Iam');
+ await mode.selectOption('free');await fillEnglish(page.locator('.guided-input input').nth(0),'I');await fillEnglish(page.locator('.guided-input input').nth(1),'am');
  await mode.selectOption('chunks');await expect(selected).toContainText('I');
  await page.getByRole('button',{name:'选择照片',exact:true}).click();
  await page.getByRole('button',{name:'照片 2',exact:true}).click();
@@ -93,10 +93,10 @@ test('native modules preserve independent sentence drafts, shuffle order and pho
  await expect(selected.getByRole('button')).toHaveText(['I']);
  await page.reload();await expect(selected.getByRole('button')).toHaveText(['I']);
  expect(await bank.getByRole('button').allTextContents()).toEqual(bankOrder.filter(t=>t!=='I'));
- await mode.selectOption('free');await expect(page.getByRole('textbox',{name:'听写句子'})).toHaveValue('I am');
+ await mode.selectOption('free');await expect(page.locator('.guided-input input').nth(0)).toHaveValue('I');await expect(page.locator('.guided-input input').nth(1)).toHaveValue('am');
  await page.getByRole('button',{name:'听不懂',exact:true}).click();
  await expect(page.getByRole('status').filter({hasText:'参考答案'})).toBeVisible();
- await expect(page.getByRole('textbox',{name:'听写句子'})).toHaveValue(publicDeck.words[0].example);
+ await expect(page.locator('.guided-input input').nth(0)).toHaveValue('I');await expect(page.locator('.guided-input input').nth(1)).toHaveValue('am');
  await page.getByRole('tab',{name:'拼单词'}).click();await expect(page.getByRole('textbox',{name:'输入英文'})).toHaveValue('b');
  await expect.poll(()=>page.locator('.focus-ring').evaluate(n=>getComputedStyle(n,'::after').animationDuration)).toBe('5s');
  await page.screenshot({path:`test-results/native-spelling-${testInfo.project.name}.png`,fullPage:true});
@@ -118,16 +118,17 @@ test('sentence fill checks automatically; failed order can be corrected and assi
  await page.getByRole('button',{name:'播放句子',exact:true}).click();
  await expect(page.getByRole('button',{name:'挑战自由听写'})).toBeVisible();
  await page.getByRole('button',{name:'挑战自由听写'}).click();
- const dictation=page.getByRole('textbox',{name:'听写句子'});
- await fillEnglish(dictation,'Iamstillinbad');
+ const guided=page.locator('.guided-input input'),wrong=['I','am','still','in','bad'];
+ const fillAnswer=async(values:string[])=>{for(const [index,value] of values.entries())await fillEnglish(guided.nth(index),value);};
+ await fillAnswer(wrong);
  await expect(page.getByRole('button',{name:'检查答案',exact:true})).toHaveCount(0);
  await expect(page.locator('.sentence-feedback[role=status]')).toContainText('再听一次');
- await dictation.press('Backspace');await expect(page.locator('.sentence-feedback')).toHaveCount(0);
- await fillEnglish(dictation,'Iamstillinbad');await expect(page.locator('.sentence-feedback[role=status]')).toContainText('再听一次');
+ await guided.last().press('Backspace');await expect(page.locator('.sentence-feedback')).toHaveCount(0);
+ await fillEnglish(guided.last(),'bad');await expect(page.locator('.sentence-feedback[role=status]')).toContainText('再听一次');
  await page.getByRole('button',{name:'显示答案',exact:true}).click();await expect(page.locator('.standard-answer')).toContainText('I am still in bed.');
- await page.getByRole('button',{name:'重新拼写',exact:true}).click();await expect(page.getByRole('textbox',{name:'听写句子'})).toHaveValue('');
- await fillEnglish(page.getByRole('textbox',{name:'听写句子'}),'iamstillinbed');
- await expect(page.getByRole('textbox',{name:'听写句子'})).toHaveValue(''); // auto-advance to next sentence
+ await page.getByRole('button',{name:'重新拼写',exact:true}).click();await expect(guided.first()).toHaveValue('');
+ await fillAnswer(['I','am','still','in','bed']);
+ await expect(guided.first()).toHaveValue(''); // auto-advance to next sentence
  await page.getByRole('button',{name:'当前卡组，学习设置'}).click();await expect(page.getByRole('dialog',{name:'选择卡组',exact:true})).toBeVisible();await page.getByRole('button',{name:'关闭',exact:true}).click();
  await page.getByRole('tab',{name:'拼单词'}).click();await expect(page.locator('.answer-feedback')).toHaveCount(0);
 });
@@ -135,14 +136,12 @@ test('sentence fill checks automatically; failed order can be corrected and assi
 test('guided dictation, listening controls, compact height and reduced-motion remain usable',async({page})=>{
  await page.goto('/piclex-web/#/deck/'+publicCard.id);await page.getByRole('tab',{name:'练听力'}).click();
  await page.getByRole('combobox',{name:'句子练习模式'}).selectOption('free');
- await page.getByRole('combobox',{name:'听写难度'}).selectOption('easy');
  await expect(page.getByRole('textbox',{name:/第 \d+ 个单词/})).toHaveCount(5);
  await fillEnglish(page.getByRole('textbox',{name:'第 2 个单词，2 个字母',exact:true}),'am');
- await page.getByRole('combobox',{name:'听写难度'}).selectOption('medium');
- await expect(page.getByRole('textbox',{name:'第 2 个单词',exact:true})).toHaveValue('am');
  await page.getByRole('combobox',{name:'句子练习模式'}).selectOption('listening');
  await expect(page.getByRole('combobox',{name:'循环方式'})).toBeVisible();
  await expect(page.getByRole('slider',{name:'句子播放位置'})).toBeVisible();
+ await page.getByRole('combobox',{name:'句子练习模式'}).selectOption('free');await expect(page.getByRole('textbox',{name:'第 2 个单词，2 个字母',exact:true})).toHaveValue('am');
  await page.getByRole('tab',{name:'拼单词'}).click();await page.setViewportSize({width:390,height:430});
  await page.getByRole('button',{name:'不认识',exact:true}).scrollIntoViewIfNeeded();
  const rect=await page.getByRole('button',{name:'不认识',exact:true}).boundingBox();expect(rect!.y+rect!.height).toBeLessThanOrEqual(378);

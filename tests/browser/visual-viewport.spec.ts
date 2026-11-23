@@ -6,7 +6,7 @@ async function viewport(page:Page){
   const w=window as any,v=window.visualViewport!;w.__viewport={height:668,width:393,offsetTop:0,offsetLeft:0,scale:1};w.__unsafeFocus=[];
   for(const name of Object.keys(w.__viewport))Object.defineProperty(v,name,{configurable:true,get:()=>w.__viewport[name]});
   w.__moveViewport=(next:any,event='resize')=>{Object.assign(w.__viewport,next);v.dispatchEvent(new Event(event));};
-  const focus=HTMLElement.prototype.focus;HTMLElement.prototype.focus=function(options){if(this.matches('.spelling-input,.guided-input input,.dictation-input')&&!options?.preventScroll)w.__unsafeFocus.push(this.className);return focus.call(this,options);};
+  const focus=HTMLElement.prototype.focus;HTMLElement.prototype.focus=function(options){if(this.matches('.spelling-input,.guided-input input')&&!options?.preventScroll)w.__unsafeFocus.push(this.className);return focus.call(this,options);};
  });
  await page.goto('/piclex-web/#/decks');await expect(page.getByRole('button',{name:'导入自己的卡组',exact:true})).toBeEnabled();await page.getByLabel('选择照片卡组文件').setInputFiles(path.resolve('tests/fixtures/demo/decks/cafe.piclexdeck'));await expect(page.getByRole('textbox',{name:'输入英文',exact:true})).toBeVisible();await page.getByRole('button',{name:'关闭提示',exact:true}).click();
 }
@@ -27,7 +27,8 @@ test('learning header, input and tabs share the moving visual viewport instead o
  expect(await page.evaluate(()=>(window as any).__unsafeFocus)).toEqual([]);
  await page.screenshot({path:info.outputPath('chrome-bars-spelling.png'),clip:{x:0,y:0,width:393,height:668}});
  await page.getByRole('tab',{name:'练听力',exact:true}).click();await page.getByLabel('句子练习模式').selectOption('free');
- for(const difficulty of ['hard','easy','medium']){await page.getByLabel('听写难度').selectOption(difficulty);await fit(page);const field=page.locator('.dictation-input,.guided-input input').first();await field.click();await expect(field).toHaveAttribute('readonly','');await expect(field).toHaveAttribute('inputmode','none');await fit(page);}
+ await expect(page.getByLabel('听写难度')).toHaveCount(0);
+ await fit(page);const field=page.locator('.guided-input input').first();await field.click();await expect(field).toHaveAttribute('readonly','');await expect(field).toHaveAttribute('inputmode','none');await fit(page);
  await page.getByRole('tab',{name:'拼单词',exact:true}).click();await page.reload();await fit(page);expect(await page.evaluate(()=>(window as any).__unsafeFocus)).toEqual([]);
 });
 test('viewport ownership handles dialogs, pinch zoom and leaving practice without locking settings',async({page})=>{

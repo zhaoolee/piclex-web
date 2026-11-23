@@ -102,22 +102,3 @@ export function WordPeekTooltip({peek}:{peek:WordPeekState|null}){
  const meaning=peek.status==='loading'?'查询中…':peek.status==='found'?peek.meaning:peek.status==='error'?'释义暂不可用':'暂无释义';
  return createPortal(<div ref={ref} className="word-peek" role="tooltip" data-placement={position?.placement||'above'} style={position?{left:position.left,top:position.top}:{left:0,top:0,visibility:'hidden'}}><strong className="word-peek-english">{peek.word}</strong><span className="word-peek-meaning">{meaning}</span></div>,document.body);
 }
-
-/** Textarea contents are not DOM text nodes in WebKit. Measure a temporary
- * typography-identical mirror instead of guessing from the old caret position. */
-export function wordTargetAtPoint(field:HTMLInputElement|HTMLTextAreaElement,x:number,y:number){
- const bounds=field.getBoundingClientRect();
- if(x<bounds.left||x>bounds.right||y<bounds.top||y>bounds.bottom)return null;
- const style=getComputedStyle(field),mirror=document.createElement('div');
- for(const property of ['font-family','font-size','font-weight','font-style','font-variant','font-stretch','line-height','letter-spacing','word-spacing','text-align','text-indent','text-transform','tab-size','padding-top','padding-right','padding-bottom','padding-left','word-break'])mirror.style.setProperty(property,style.getPropertyValue(property));
- Object.assign(mirror.style,{position:'fixed',left:`${bounds.left+field.clientLeft-field.scrollLeft}px`,top:`${bounds.top+field.clientTop-field.scrollTop}px`,width:`${field.clientWidth}px`,boxSizing:'border-box',margin:'0',border:'0',whiteSpace:field instanceof HTMLTextAreaElement?'pre-wrap':'pre',overflowWrap:'break-word',visibility:'hidden',pointerEvents:'none'});
- const node=document.createTextNode(field.value);mirror.append(node);document.body.append(mirror);
- try{
-  const words=[...field.value.matchAll(/[\p{L}\p{N}]+(?:['’‘][\p{L}\p{N}]+)*/gu)];
-  for(const [index,word] of words.entries()){
-   const range=document.createRange();range.setStart(node,word.index!);range.setEnd(node,word.index!+word[0].length);
-   for(const rect of range.getClientRects())if(x>=rect.left-2&&x<=rect.right+2&&y>=rect.top-2&&y<=rect.bottom+2)return {index,anchor:{left:rect.left,top:rect.top,right:rect.right,bottom:rect.bottom}};
-  }
-  return null;
- }finally{mirror.remove();}
-}

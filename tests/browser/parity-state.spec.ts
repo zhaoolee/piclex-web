@@ -7,13 +7,15 @@ const catalog=JSON.parse(fs.readFileSync('apps/public/public/library/catalog.jso
 const cafeLastSentence='The table is made of dark wood.';
 const tabs=(page:Page)=>page.getByRole('navigation',{name:'底部导航'});
 const modeOf=(page:Page)=>page.getByLabel('句子练习模式',{exact:true});
-const difficultyOf=(page:Page)=>page.getByLabel('听写难度',{exact:true});
 const completion=(page:Page)=>page.getByRole('heading',{name:'本轮句子练习完成',exact:true});
 async function importCafe(page:Page){
  await page.goto('/piclex-web/#/decks');
  await expect(page.getByRole('button',{name:'导入自己的卡组',exact:true})).toBeEnabled();
  await page.getByLabel('选择照片卡组文件').setInputFiles(path.resolve('tests/fixtures/demo/decks/cafe.piclexdeck'));
  await expect(page.getByRole('heading',{name:'牛角包',exact:true})).toBeVisible();
+}
+async function fillGuided(page:Page,sentence:string){
+ for(const [index,word] of sentence.split(/\s+/).entries())await fillEnglish(page.locator('.guided-input input').nth(index),word.replace(/[^\p{L}\p{N}]/gu,''));
 }
 async function finishAssisted(page:Page,count:number){
  for(let i=0;i<count;i++){
@@ -34,8 +36,8 @@ test('a warm Learning entry is one-shot and never overrides an explicit listenin
  await importCafe(page);
  const spelling=page.getByRole('textbox',{name:'输入英文',exact:true});
  await page.getByRole('tab',{name:'练听力',exact:true}).click();
- await modeOf(page).selectOption('free');await difficultyOf(page).selectOption('hard');
- await fillEnglish(page.getByRole('textbox',{name:'听写句子',exact:true}),'Ilike');
+ await modeOf(page).selectOption('free');await expect(page.getByLabel('听写难度')).toHaveCount(0);
+ await fillEnglish(page.locator('.guided-input input').nth(0),'I');await fillEnglish(page.locator('.guided-input input').nth(1),'like');
  const listeningHash=await page.evaluate(()=>location.hash);
  const [deckPath,query]=listeningHash.split('?'),parameters=new URLSearchParams(query||'');
  const deckID=decodeURIComponent(deckPath.replace(/^#\/deck\//,''));
@@ -56,7 +58,7 @@ test('a warm Learning entry is one-shot and never overrides an explicit listenin
  await page.evaluate(hash=>{location.hash=hash;},explicit);
  await expect(page.getByRole('tab',{name:'练听力',exact:true})).toHaveAttribute('aria-selected','true');
  await expect(modeOf(page)).toHaveValue('free');
- await expect(difficultyOf(page)).toHaveValue('easy');
+ await expect(page.locator('.guided-input')).toBeVisible();await expect(page.getByLabel('听写难度')).toHaveCount(0);
  await expect(page.locator('.guided-input input').nth(0)).toHaveValue('I');await expect(page.locator('.guided-input input').nth(1)).toHaveValue('like');
  expect(await page.evaluate(()=>location.hash)).toContain(deckID);
  if(test.info().project.name==='mobile')await evidenceScreenshot(page,'/01-listening-link.png');
@@ -83,17 +85,17 @@ test('finished dictation offers challenge, another round and word learning witho
  await challenge.click();
  await expect(completion(page)).toHaveCount(0);
  await expect(modeOf(page)).toHaveValue('free');
- const dictation=page.getByRole('textbox',{name:'听写句子',exact:true});
- await expect(dictation).toHaveValue('');
+ const dictation=page.locator('.guided-input input');
+ await expect(dictation.first()).toHaveValue('');
  await page.getByRole('button',{name:'听不懂',exact:true}).click();
- await expect(dictation).toHaveValue(cafeLastSentence);
+ await expect(dictation.first()).toHaveValue('The');await expect(dictation.nth(1)).toHaveValue('table');
  await page.getByRole('button',{name:'下一个',exact:true}).click();
  await expect(completion(page)).toBeVisible();
  await expect(challenge).toHaveCount(0);
  await restart.click();
  await expect(completion(page)).toHaveCount(0);
  await expect(modeOf(page)).toHaveValue('free');
- await expect(dictation).toHaveValue('');
+ await expect(dictation.first()).toHaveValue('');
  await page.getByRole('tab',{name:'拼单词',exact:true}).click();
  await expect.poll(()=>page.evaluate(()=>Object.keys(localStorage).filter(k=>k.startsWith('piclex-web.study.v2.')).some(k=>Object.values(JSON.parse(localStorage.getItem(k)!).words||{}).some((d:any)=>d.input==='cr')))).toBe(true);
 });
@@ -103,18 +105,18 @@ test('another dictation round preserves reward dedupe identity and spelling hist
  const spelling=page.getByRole('textbox',{name:'输入英文',exact:true});
  await fillSpelling(page,'cr');
  await page.getByRole('tab',{name:'练听力',exact:true}).click();
- await modeOf(page).selectOption('free');await difficultyOf(page).selectOption('hard');
+ await modeOf(page).selectOption('free');await expect(page.getByLabel('听写难度')).toHaveCount(0);
  await finishAssisted(page,5);
- const dictation=page.getByRole('textbox',{name:'听写句子',exact:true});
- await expect(dictation).toHaveValue('');
- await fillEnglish(dictation,cafeLastSentence.replace(/\s/g,''));
+ const dictation=page.locator('.guided-input input');
+ await expect(dictation.first()).toHaveValue('');
+ await fillGuided(page,cafeLastSentence);
  await expect(completion(page)).toBeVisible();
  await expect.poll(()=>experienceTotal(page)).toBeGreaterThan(0);
  const total=await experienceTotal(page);
  await page.getByRole('button',{name:'再听写一轮',exact:true}).click();
  await expect(completion(page)).toHaveCount(0);
- await expect(dictation).toHaveValue('');
- await fillEnglish(dictation,cafeLastSentence.replace(/\s/g,''));
+ await expect(dictation.first()).toHaveValue('');
+ await fillGuided(page,cafeLastSentence);
  await expect(completion(page)).toBeVisible();
  await page.waitForTimeout(300);
  expect(await experienceTotal(page)).toBe(total);

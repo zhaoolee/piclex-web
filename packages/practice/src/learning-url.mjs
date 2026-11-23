@@ -8,10 +8,10 @@ export function parseLearningURL(hash){
  if(!match)return null;
  let id;try{id=decodeURIComponent(match[1]);}catch{return null;}
  const p=new URLSearchParams(match[2]);
- return {id,module:member(p.get('module'),['spelling','listening','speaking']),mode:member(p.get('mode'),['listening','chunks','free']),difficulty:member(p.get('difficulty'),['easy','medium','hard']),photo:positive(p.get('photo')),word:(p.get('word')||'').slice(0,256),sentenceWord:(p.get('sentenceWord')||'').slice(0,256),sentence:positive(p.get('sentence'))};
+ return {id,module:member(p.get('module'),['spelling','listening','speaking']),mode:member(p.get('mode'),['listening','chunks','free']),photo:positive(p.get('photo')),word:(p.get('word')||'').slice(0,256),sentenceWord:(p.get('sentenceWord')||'').slice(0,256),sentence:positive(p.get('sentence'))};
 }
 export function applyLearningURL(deck,state,route){
- if(!route||route.id!==deck.id||!['module','mode','difficulty','photo','word','sentence'].some(k=>route[k]))return state;
+ if(!route||route.id!==deck.id||!['module','mode','photo','word','sentence'].some(k=>route[k]))return state;
  const dispatch=(s,action)=>reduceStudy(deck,s,{...action,question:studyKey(s)});
  let next=dispatch(state,{type:'pause'}),index=deck.words.findIndex(w=>w.id===route.word);
  if(index<0&&route.photo)index=deck.words.findIndex(w=>w.imageIndex===route.photo-1);
@@ -22,7 +22,6 @@ export function applyLearningURL(deck,state,route){
  if(route.module==='spelling'&&index>=0&&deck.words[index].id===route.word)next=dispatch(next,{type:'retryWord'});
  if(next.module==='listening'){
   if(route.mode)next=dispatch(next,{type:'mode',value:route.mode});
-  if(route.difficulty)next=dispatch(next,{type:'preference',name:'difficulty',value:route.difficulty});
   if(index>=0){
    const prompts=promptsFor(deck),anchor=deck.words.findIndex(w=>w.id===route.sentenceWord&&w.imageIndex===deck.words[index].imageIndex),first=promptIndex(prompts,deck,anchor>=0?anchor:index),parts=prompts.map((p,i)=>({p,i})).filter(({p})=>p.wordIndex===prompts[first]?.wordIndex);
    const chosen=parts[(route.sentence||1)-1]?.i??first;
@@ -42,7 +41,8 @@ export function learningHash(deck,state){
  if(state.module==='listening'){
   p.set('mode',state.mode);
   if(prompt){p.set('sentence',String(prompts.filter(p=>p.wordIndex===prompt.wordIndex).indexOf(prompt)+1));if(prompt.wordIndex!==state.index)p.set('sentenceWord',deck.words[prompt.wordIndex].id);}
-  if(state.mode==='free')p.set('difficulty',state.difficulty);
+  // Older Web versions still read this parameter and otherwise default to hard.
+  if(state.mode==='free')p.set('difficulty','easy');
  }
  return `#/deck/${encodeURIComponent(deck.id)}?${p}`;
 }

@@ -63,6 +63,10 @@ test('a saved draft and direct link to a repeated sentence still open that attem
  s=answer(s,['Send']);
  s=restoreStudy(dialogueDeck,JSON.parse(JSON.stringify(s)));
  assert.equal(learningHash(dialogueDeck,s),link);
+ // A legacy hard link opens the same easy guided attempt and writes the current link.
+ const legacy=applyLearningURL(dialogueDeck,start(),parseLearningURL(link.replace('difficulty=easy','difficulty=hard')));
+ assert.equal(legacy.sentenceIndex,2);assert.equal(legacy.mode,'free');
+ assert.equal(learningHash(dialogueDeck,restoreStudy(dialogueDeck,JSON.parse(JSON.stringify(legacy)))),link);
  const prompts=promptsFor(dialogueDeck);
  assert.equal(s.sentences[prompts[2].key].guided[0],'Send');
  s=act(answer(s,['Send','a','request']),{type:'sentenceNext'});

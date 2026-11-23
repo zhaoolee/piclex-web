@@ -21,9 +21,10 @@ test('dictation assistance speaks its answer; replay of a correct answer holds t
  await page.clock.install();await open(page);await page.getByRole('tab',{name:'练听力',exact:true}).click();await page.getByLabel('句子练习模式',{exact:true}).selectOption('free');
  // Freeze the answer deadline before entering the final character: slow CI must still click replay before auto-next.
  await page.clock.pauseAt(await page.evaluate(()=>Date.now()+1000));
- await fillEnglish(page.getByRole('textbox',{name:'听写句子',exact:true}),'Iamstillinbed');
+ const fields=page.locator('.guided-input input');
+ for(const [index,word] of ['I','am','still','in','bed'].entries())await fillEnglish(fields.nth(index),word);
  await page.locator('.playback-button').click();await expect.poll(()=>page.evaluate(()=>(window as any).__spoken.at(-1)?.text)).toBe('I am still in bed.');
- await page.clock.runFor(1150);await expect(page.getByRole('textbox',{name:'听写句子',exact:true})).toHaveValue('I am still in bed.');
+ await page.clock.runFor(1150);await expect(fields.first()).toHaveValue('I');await expect(fields.nth(1)).toHaveValue('am');await expect(fields.nth(2)).toHaveValue('still');await expect(fields.nth(3)).toHaveValue('in');await expect(fields.nth(4)).toHaveValue('bed');
  await page.getByRole('button',{name:'下一个',exact:true}).click();await page.clock.runFor(150);await expect.poll(()=>page.evaluate(()=>(window as any).__spoken.length)).toBe(2);
  await page.getByRole('button',{name:'听不懂',exact:true}).click();await expect(page.locator('.sentence-feedback')).toContainText('参考答案');await expect.poll(()=>page.evaluate(()=>(window as any).__spoken.length)).toBe(3);
 });
@@ -42,7 +43,8 @@ test('classic key sound works at LV0 for physical and touch input, dictation and
  await expect.poll(()=>page.evaluate(()=>(window as any).__keyStarts)).toBeGreaterThan(0);expect(await page.evaluate(()=>(window as any).__keyCalls)).toBe(1);
  await page.getByRole('textbox',{name:'输入英文',exact:true}).press('e');await page.getByRole('button',{name:'退格',exact:true}).click();expect(await page.evaluate(()=>(window as any).__keyCalls)).toBe(3);
  await page.getByRole('tab',{name:'练听力',exact:true}).click();await page.getByLabel('句子练习模式',{exact:true}).selectOption('free');
- for(const difficulty of ['hard','medium','easy']){await page.getByLabel('听写难度',{exact:true}).selectOption(difficulty);const target=page.getByRole('region',{name:'虚拟键盘'}).getByRole('button',{name:'按键 I',exact:true});const before=await page.evaluate(()=>(window as any).__keyCalls);if(info.project.use.hasTouch)await target.tap();else await target.click();expect(await page.evaluate(()=>(window as any).__keyCalls)).toBe(before+1);}
+ await expect(page.getByLabel('听写难度')).toHaveCount(0);
+ for(let index=0;index<3;index++){const target=page.getByRole('region',{name:'虚拟键盘'}).getByRole('button',{name:'按键 I',exact:true});const before=await page.evaluate(()=>(window as any).__keyCalls);if(info.project.use.hasTouch)await target.tap();else await target.click();expect(await page.evaluate(()=>(window as any).__keyCalls)).toBe(before+1);}
  expect(await page.evaluate(()=>(window as any).__keyErrors)).toEqual([]);
  const decoded=await page.evaluate(async()=>{const bytes=await fetch('/piclex-web/audio/key-click.wav').then(r=>r.arrayBuffer());const context=new OfflineAudioContext(1,1,44100),buffer=await context.decodeAudioData(bytes);return {duration:buffer.duration,peak:Math.max(...buffer.getChannelData(0).map(Math.abs))};});expect(decoded.duration).toBeGreaterThan(0);expect(decoded.peak).toBeGreaterThan(.01);
 });

@@ -46,13 +46,8 @@ test('learning keyboards show exactly 26 letters and Backspace at desktop and mo
  }
  await page.getByRole('tab',{name:'练听力',exact:true}).click();
  await page.getByLabel('句子练习模式',{exact:true}).selectOption('free');
- for(const viewport of [{width:1440,height:1000},{width:390,height:844}]){
-  await page.setViewportSize(viewport);
-  for(const difficulty of ['easy','medium','hard']){
-   await page.getByLabel('听写难度',{exact:true}).selectOption(difficulty);
-   await expectLetterKeyboard(page);
-  }
- }
+ await expect(page.getByLabel('听写难度')).toHaveCount(0);
+ for(const viewport of [{width:1440,height:1000},{width:390,height:844}]){await page.setViewportSize(viewport);await expectLetterKeyboard(page);}
 });
 
 test('PC Esc and Space keycaps follow the desktop media query without changing button names',async({page},info)=>{
@@ -71,49 +66,41 @@ test('PC Esc and Space keycaps follow the desktop media query without changing b
  await expect(playback).not.toHaveAttribute('aria-keyshortcuts','Space');
 });
 
-for(const difficulty of ['easy','medium','hard'])test(`continuous letter-only input inserts sentence separators in free ${difficulty}`,async({page})=>{
+test('continuous letter-only input inserts sentence separators in free dictation',async({page})=>{
  await openCafe(page);
  await page.getByRole('tab',{name:'练听力',exact:true}).click();
  await page.getByLabel('句子练习模式',{exact:true}).selectOption('free');
- await page.getByLabel('听写难度',{exact:true}).selectOption(difficulty);
+ await expect(page.getByLabel('听写难度')).toHaveCount(0);
  await page.clock.install();await page.clock.pauseAt(await page.evaluate(()=>Date.now()+1000));
- if(difficulty==='hard'){
-  const field=page.getByRole('textbox',{name:'听写句子',exact:true});
-  await field.focus();await field.pressSequentially(sentenceLetters);
-  await expect(field).toHaveValue('a croissant is on the wooden plate.');
- }else{
-  await page.getByRole('textbox',{name:/第 1 个单词/}).focus();
-  await page.keyboard.type(sentenceLetters);
-  const values=await page.locator('.guided-input input').evaluateAll(nodes=>nodes.map(node=>(node as HTMLInputElement).value));
-  expect(values).toEqual(['a','croissant','is','on','the','wooden','plate']);
- }
+ await page.getByRole('textbox',{name:/第 1 个单词/}).focus();
+ await page.keyboard.type(sentenceLetters);
+ const values=await page.locator('.guided-input input').evaluateAll(nodes=>nodes.map(node=>(node as HTMLInputElement).value));
+ expect(values).toEqual(['a','croissant','is','on','the','wooden','plate']);
 });
 
-for(const difficulty of ['easy','medium','hard'])test(`free ${difficulty} dictation checks complete wrong answers without a submit control`,async({page})=>{
+test('free dictation checks complete wrong answers without a submit control',async({page})=>{
  await openCafe(page);
  await page.getByRole('tab',{name:'练听力',exact:true}).click();
  await page.getByLabel('句子练习模式',{exact:true}).selectOption('free');
- await page.getByLabel('听写难度',{exact:true}).selectOption(difficulty);
+ await expect(page.getByLabel('听写难度')).toHaveCount(0);
  await expect(page.getByRole('button',{name:'检查答案',exact:true})).toHaveCount(0);
  await page.clock.install();await page.clock.pauseAt(await page.evaluate(()=>Date.now()+1000));
- const fields=page.locator('.guided-input input,.dictation-input'),words=['A','croissant','is','on','the','wooden','plate.'];
+ const fields=page.locator('.guided-input input'),words=['A','croissant','is','on','the','wooden','plate.'];
  await fields.first().focus();await page.keyboard.type('x');
  await expect(page.locator('.sentence-feedback')).toHaveCount(0);
- if(difficulty==='hard')await fillEnglish(page.getByRole('textbox',{name:'听写句子',exact:true}),'x'.repeat(sentenceLetters.length));
- else for(const [index,word] of words.entries())await fillEnglish(page.locator('.guided-input input').nth(index),'x'.repeat(word.replace(/[^\p{L}\p{N}]/gu,'').length));
+ for(const [index,word] of words.entries())await fillEnglish(page.locator('.guided-input input').nth(index),'x'.repeat(word.replace(/[^\p{L}\p{N}]/gu,'').length));
  await expect(page.getByRole('button',{name:'检查答案',exact:true})).toHaveCount(0);
  await expect(page.getByText('再听一次，试着修改答案',{exact:true})).toBeVisible();
  await page.keyboard.press('Backspace');
  await expect(page.getByText('再听一次，试着修改答案',{exact:true})).toHaveCount(0);
- if(difficulty==='hard')await fillEnglish(page.getByRole('textbox',{name:'听写句子',exact:true}),sentenceLetters);
- else for(const [index,word] of words.entries())await fillEnglish(page.locator('.guided-input input').nth(index),word.replace(/[^\p{L}\p{N}]/gu,''));
+ for(const [index,word] of words.entries())await fillEnglish(page.locator('.guided-input input').nth(index),word.replace(/[^\p{L}\p{N}]/gu,''));
  await expect(page.locator('.sentence-actions-pending')).toHaveCount(1);
 });
-for(const difficulty of ['easy','medium'])test(`boundary Backspace returns to the previous ${difficulty} word and deletes its last letter`,async({page})=>{
+test('boundary Backspace returns to the previous guided word and deletes its last letter',async({page})=>{
  await openCafe(page);
  await page.getByRole('tab',{name:'练听力',exact:true}).click();
  await page.getByLabel('句子练习模式',{exact:true}).selectOption('free');
- await page.getByLabel('听写难度',{exact:true}).selectOption(difficulty);
+ await expect(page.getByLabel('听写难度')).toHaveCount(0);
  const first=page.getByRole('textbox',{name:/第 1 个单词/}),second=page.getByRole('textbox',{name:/第 2 个单词/});
  await first.focus();await first.press('a');
  await expect(first).toHaveValue('a');await expect(second).toBeFocused();
@@ -143,20 +130,21 @@ test('Space replays exactly once from answer fields and noneditable learning are
 
  await page.getByRole('tab',{name:'练听力',exact:true}).click();
  await page.getByLabel('句子练习模式',{exact:true}).selectOption('free');
- await page.getByLabel('听写难度',{exact:true}).selectOption('easy');
+ await expect(page.getByLabel('听写难度')).toHaveCount(0);
  const guided=page.locator('.guided-input input').nth(1);
  await guided.focus();await guided.pressSequentially('cr');
  const guidedValue=await guided.inputValue();
  await resetSpeech(page);await page.keyboard.press('Space');
  expect(await guided.inputValue()).toBe(guidedValue);expect(await playCount(page)).toBe(shortcut?1:0);
 
- await page.getByLabel('听写难度',{exact:true}).selectOption('hard');
- const hard=page.getByRole('textbox',{name:'听写句子',exact:true});
- await hard.focus();await hard.press('ControlOrMeta+a');await hard.press('Backspace');await hard.pressSequentially('Iam');
- await hard.evaluate(node=>node.setSelectionRange(1,1));
- const hardValue=await hard.inputValue();
+ await page.evaluate(()=>{const [base,query]=location.hash.split('?'),parameters=new URLSearchParams(query||'');parameters.set('difficulty','hard');location.hash=base+'?'+parameters;});
+ await expect(page.locator('.guided-input')).toBeVisible();await expect(page.getByRole('textbox',{name:'听写句子',exact:true})).toHaveCount(0);
+ const legacy=page.locator('.guided-input input').nth(1);
+ await legacy.focus();await legacy.press('ControlOrMeta+a');await legacy.press('Backspace');await legacy.pressSequentially('Iam');
+ await legacy.evaluate(node=>node.setSelectionRange(1,1));
+ const legacyValue=await legacy.inputValue();
  await resetSpeech(page);await page.keyboard.press('Space');
- expect(await hard.inputValue()).toBe(hardValue);expect(await selection(page,'.dictation-input')).toBe(1);
+ expect(await legacy.inputValue()).toBe(legacyValue);expect(await legacy.evaluate((node:HTMLInputElement)=>node.selectionStart)).toBe(1);
  expect(await playCount(page)).toBe(shortcut?1:0);
 
  await page.getByLabel('句子练习模式',{exact:true}).selectOption('chunks');
@@ -186,7 +174,7 @@ test('Escape acts once and respects modified, repeated and IME keys, selects, di
 
  await page.getByRole('tab',{name:'练听力',exact:true}).click();
  const mode=page.getByLabel('句子练习模式',{exact:true});
- await mode.selectOption('free');await page.getByLabel('听写难度',{exact:true}).selectOption('easy');
+ await mode.selectOption('free');await expect(page.getByLabel('听写难度')).toHaveCount(0);
  const first=page.getByRole('textbox',{name:/第 1 个单词/});
  await first.focus();
  for(const extra of [{repeat:true},{shiftKey:true},{ctrlKey:true},{altKey:true},{metaKey:true},{isComposing:true}])await first.dispatchEvent('keydown',{key:'Escape',code:'Escape',bubbles:true,cancelable:true,...extra});
@@ -200,7 +188,7 @@ test('Escape acts once and respects modified, repeated and IME keys, selects, di
 
  await page.getByRole('button',{name:'下一个',exact:true}).click();await expect(answer).toHaveCount(0);
  await expect.poll(()=>playCount(page)).toBeGreaterThan(0); // Await the existing delayed next-sentence playback before measuring Escape.
- const difficulty=page.getByLabel('听写难度',{exact:true});await difficulty.focus();
+ await mode.focus();
  await resetSpeech(page);await page.keyboard.press('Escape');await expect(answer).toHaveCount(0);expect(await playCount(page)).toBe(0);
 
  await page.getByRole('button',{name:'当前卡组，学习设置',exact:true}).click();
@@ -215,16 +203,13 @@ test('Escape acts once and respects modified, repeated and IME keys, selects, di
  await resetSpeech(page);await page.keyboard.press('Escape');await expect(answer).toBeVisible();await expect.poll(()=>playCount(page)).toBe(1);
 });
 
-for(const difficulty of ['easy','medium','hard'])test(`letters alone complete contractions and fixed numbers in ${difficulty}`,async({page})=>{
- await openCafe(page,"I'm in room 3 at 8 pm.");await page.getByRole('tab',{name:'练听力',exact:true}).click();await page.getByLabel('句子练习模式').selectOption('free');await page.getByLabel('听写难度').selectOption(difficulty);
+test('letters alone complete contractions and fixed numbers',async({page})=>{
+ await openCafe(page,"I'm in room 3 at 8 pm.");await page.getByRole('tab',{name:'练听力',exact:true}).click();await page.getByLabel('句子练习模式').selectOption('free');await expect(page.getByLabel('听写难度')).toHaveCount(0);
  await page.clock.install();await page.clock.pauseAt(await page.evaluate(()=>Date.now()+1000));
- const fields=page.locator('.guided-input input,.dictation-input');
- if(difficulty!=='hard'){
-  await expect(page.locator('.guided-word-fixed')).toHaveText(['3','8']);
-  await expect(fields).toHaveCount(5);
- }
+ const fields=page.locator('.guided-input input');
+ await expect(page.locator('.guided-word-fixed')).toHaveText(['3','8']);
+ await expect(fields).toHaveCount(5);
  await fields.first().focus();await page.keyboard.type('Iminroomatpm');
- if(difficulty==='hard')await expect(page.getByRole('textbox',{name:'听写句子',exact:true})).toHaveValue("I'm in room 3 at 8 pm.");
- else expect(await fields.evaluateAll(nodes=>nodes.map(n=>(n as HTMLInputElement).value))).toEqual(['Im','in','room','at','pm']);
+ expect(await fields.evaluateAll(nodes=>nodes.map(n=>(n as HTMLInputElement).value))).toEqual(['Im','in','room','at','pm']);
  await expect(page.locator('.sentence-actions-pending')).toHaveCount(1);await expectLetterKeyboard(page);
 });
