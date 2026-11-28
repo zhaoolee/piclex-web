@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import {flushSync} from 'react-dom';
 import { focusLayout, visibleFocusBox, visibleFocusStyle } from './focus.mjs';
 import {PhotoCache,type CachedPhoto} from './photo-cache';
@@ -6,7 +6,7 @@ import LoadProgress,{type DownloadProgress} from './LoadProgress';
 export type Focus = { visible: boolean; box: number[] } | null;
 export type PhotoLoadState='loading'|'ready'|'error';
 /** Keep the card's dimensions while downloading and decoding its current photo. */
-export function PhotoFocus({ src, focus, alt, active = true,fit='focus',retry=0,cache,onLoadState,onImageReady }: { src: string; cache?:PhotoCache; focus: Focus; alt: string; active?: boolean;fit?:'focus'|'contain';retry?:number;onImageReady?:(image:HTMLImageElement)=>void;onLoadState?:(state:PhotoLoadState)=>void }) {
+export function PhotoFocus({ src, focus, alt, active = true,fit='focus',retry=0,cache,onLoadState,onImageReady,onImageInsets }: { src: string; cache?:PhotoCache; focus: Focus; alt: string; active?: boolean;fit?:'focus'|'contain';retry?:number;onImageReady?:(image:HTMLImageElement)=>void;onLoadState?:(state:PhotoLoadState)=>void;onImageInsets?:(top:number,right:number)=>void }) {
  const host=useRef<HTMLDivElement>(null),[size,setSize]=useState({width:0,height:0});
  const localCache=useMemo(()=>new PhotoCache(),[]),photos=cache||localCache;
  const [photo,setPhoto]=useState<CachedPhoto>();
@@ -21,6 +21,9 @@ export function PhotoFocus({ src, focus, alt, active = true,fit='focus',retry=0,
  },[src,retry,photos,onLoadState,onImageReady]);
  useEffect(()=>{const observer=new ResizeObserver(([entry])=>{const {width,height}=entry.contentRect;flushSync(()=>setSize(current=>current.width===width&&current.height===height?current:{width,height}));});if(host.current)observer.observe(host.current);return()=>observer.disconnect();},[]);
  const current=photos.peek(src)||(photo?.source===src?photo:undefined),layout=current&&focusLayout(current,size,focus,fit),target=visibleFocusBox(layout?.box,size);
+ const imageTop=Math.max(0,layout?.image.y??0);
+ const imageRight=layout?Math.max(0,size.width-layout.image.x-layout.image.width):0;
+ useLayoutEffect(()=>{onImageInsets?.(imageTop,imageRight);},[onImageInsets,imageTop,imageRight]);
  return <div className={`photo-focus ${active?'':'effects-paused'}`} ref={host} data-fit={fit} aria-busy={!current&&broken!==src}>
   {current&&<img key={current.src} src={current.src} alt={alt} className="focus-image" style={layout?{left:layout.image.x,top:layout.image.y,width:layout.image.width,height:layout.image.height}:undefined}/>}
   {broken===src?<p className="image-error">图片加载失败，点击重试</p>:!current&&<div className="photo-loading"><LoadProgress label="正在加载图片" progress={transfer?.source===src?transfer.progress:null} finishing={transfer?.source===src&&transfer.decoding}/></div>}

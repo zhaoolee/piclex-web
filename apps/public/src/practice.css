@@ -71,6 +71,8 @@ body[data-practice=true] .app-tabs{position:absolute}
 .native-practice{position:relative}.english-input-warning{position:absolute;top:104px;left:50%;transform:translateX(-50%);z-index:30;max-width:calc(100% - 32px);padding:9px 14px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);font-size:13px;line-height:1.4;white-space:nowrap;pointer-events:none}
 
 .photo-browse{position:relative}.photo-open{position:absolute;inset:0;width:100%;height:100%;background:transparent;border:0;padding:0}.photo-open:focus-visible{outline:2px solid var(--ink);outline-offset:-3px}
+.photo-open-icon{position:absolute;top:calc(var(--photo-top-inset,0px) + 10px);right:calc(var(--photo-right-inset,0px) + 10px);display:grid;place-items:center;width:44px;height:44px;border:1px solid #ffffff59;border-radius:12px;background:#0000008c;color:#fff;box-shadow:0 2px 8px #0003;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);pointer-events:none}.photo-open-icon svg{display:block;width:24px;height:24px}
+@media(hover:hover){.photo-open:hover .photo-open-icon{background:#000000a6;border-color:#ffffffa6}}.photo-open:focus-visible .photo-open-icon{background:#000000a6;border-color:#fff;outline:2px solid #fff;outline-offset:2px}
 
 .practice-library{flex:none;width:52px;height:50px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:0}.practice-library strong{font-size:15px;font-weight:600}.practice-library small{font-size:9px;font-weight:500}
 
@@ -294,7 +296,7 @@ body[data-practice=true] .learning-dialog{position:fixed;inset:auto;top:calc(var
 .dictation-gold-text{display:block}
 .dictation-gold-row{overflow:visible}
 
-.audio-unlock{position:absolute;top:10px;right:10px;z-index:4;width:34px;height:34px;display:grid;place-items:center;padding:0;border:1px solid #ffffff4d;border-radius:50%;background:#00000073;color:#fff;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 2px 8px #0003;touch-action:manipulation}.audio-unlock svg{width:18px;height:18px}.audio-unlock:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.audio-unlock{position:absolute;top:calc(var(--photo-top-inset,0px) + 10px);right:calc(var(--photo-right-inset,0px) + 64px);z-index:4;width:34px;height:34px;display:grid;place-items:center;padding:0;border:1px solid #ffffff4d;border-radius:50%;background:#00000073;color:#fff;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 2px 8px #0003;touch-action:manipulation}.audio-unlock svg{width:18px;height:18px}.audio-unlock:focus-visible{outline:2px solid #fff;outline-offset:2px}
 
 /* PC-only Escape keycaps stay out of the accessible name; narrow layouts keep
    the existing buttons without an always-on hint. */

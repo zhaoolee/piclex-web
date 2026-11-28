@@ -27,7 +27,21 @@ test('share restores module, photo and sentence in a fresh browser without sende
  await page.goto('/piclex-web/#/deck/'+card.id);const input=page.getByRole('textbox',{name:'输入英文',exact:true});await expect(input).toBeVisible();
  const draft=deck.words[0].english.slice(0,1);await fillSpelling(page,draft);const spellingURL=page.url();const history=await page.evaluate(()=>window.history.length);
  await page.getByRole('tab',{name:'练听力',exact:true}).click();await page.getByLabel('句子练习模式').selectOption('listening');
- await page.getByRole('button',{name:'选择照片',exact:true}).click();await page.getByRole('button',{name:'照片 2',exact:true}).click();
+ const galleryButton=page.getByRole('button',{name:'选择照片',exact:true});
+ const galleryIcon=galleryButton.locator('.photo-open-icon');
+ await expect(galleryIcon).toBeVisible();
+ await expect.poll(()=>galleryIcon.evaluate(icon=>{
+  const image=icon.closest('.photo-browse')?.querySelector('.focus-image');
+  if(!image)return false;
+  const overlay=icon.getBoundingClientRect(),frame=image.getBoundingClientRect();
+  return overlay.top>=frame.top && overlay.right<=frame.right;
+ })).toBe(true);
+ const icon=await galleryIcon.boundingBox(),photoButton=await galleryButton.boundingBox();
+ if(!icon||!photoButton)throw new Error('Missing photo gallery control');
+ const iconCenter={x:icon.x-photoButton.x+icon.width/2,y:icon.y-photoButton.y+icon.height/2};
+ expect(iconCenter.x).toBeGreaterThan(photoButton.width/2);
+ expect(iconCenter.y).toBeLessThan(photoButton.height/2);
+ await galleryButton.click({position:iconCenter});await page.getByRole('button',{name:'照片 2',exact:true}).click();
  await expect.poll(()=>parameters(page.url()).get('photo')).toBe('2');await page.getByRole('button',{name:'下一句',exact:true}).click();
  const shared=page.url(),text=await page.locator('.listening-sentence').innerText(),photo=await photoHash(page);
  expect(parameters(shared).get('module')).toBe('listening');expect(parameters(shared).get('mode')).toBe('listening');expect(parameters(shared).get('word')).toBeTruthy();expect(await page.evaluate(()=>window.history.length)).toBe(history);
