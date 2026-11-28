@@ -45,7 +45,10 @@ test('cover grid shows separate saved progress and opens paid deck actions witho
   }
  },{first,second});
  await page.goto('/piclex-web/#/deck/'+first.id);
- await expect(page.getByRole('heading',{name:load(first).words[0].chinese,exact:true})).toBeVisible();
+ const firstWord=load(first).words[0];
+ await expect(page.getByRole('heading',{name:firstWord.chinese,exact:true})).toBeVisible();
+ const selector=page.getByRole('button',{name:'当前卡组，学习设置',exact:true});
+ await expect(selector.locator('.practice-deck-count')).toHaveText(`${firstWord.imageIndex+1}/${first.photoCount}`);
  const url=page.url(),dialog=await picker(page);
  const firstCard=dialog.locator('.practice-deck-item').filter({has:page.locator(`[data-deck-id="${first.id}"]`)});
  const secondCard=dialog.locator('.practice-deck-item').filter({has:page.locator(`[data-deck-id="${second.id}"]`)});
@@ -78,8 +81,13 @@ test('cover grid shows separate saved progress and opens paid deck actions witho
  await expect(dialog).toBeVisible();await expect(menu).toBeFocused();
  await secondCard.locator('.practice-deck-option').click();
  await expect(dialog).toHaveCount(0);
- await expect(page.getByRole('heading',{name:load(second).words[2].chinese,exact:true})).toBeVisible();
+ const restoredWord=load(second).words[2];
+ await expect(page.getByRole('heading',{name:restoredWord.chinese,exact:true})).toBeVisible();
+ const cardCount=`${restoredWord.imageIndex+1}/${second.photoCount}`;
+ await expect(selector.locator('.practice-deck-count')).toHaveText(cardCount);
+ await expect(selector).toHaveAccessibleDescription(`${second.title} ${cardCount}`);
  await page.reload();
+ await expect(selector.locator('.practice-deck-count')).toHaveText(cardCount);
  const reopened=await picker(page);
  await expect(reopened.locator('.practice-deck-item').filter({has:page.locator(`[data-deck-id="${second.id}"]`)}).locator('.practice-deck-percent')).toHaveText(Math.round(200/second.count)+'%');
 });
