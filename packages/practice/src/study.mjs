@@ -153,7 +153,20 @@ export function reduceStudy(deck,s,action,preparedPrompts){
   if(s.mode!=='listening'&&!draft?.outcomes[s.mode]&&!allWordsShown)return s;
   let index=s.sentenceIndex+1;
   if(s.mode==='free')while(prompts[index]?.repeatedOnPhoto||indexForMode(index)!==index)index++;
-  if(index<prompts.length){next.sentenceIndex=index;navigate(prompts[index].wordIndex);}else {next.sentenceFinished=true;pause(next);}return next;
+  if(index<prompts.length){
+   const target=prompts[index],saved=next.sentences[target.key];
+   // Forward navigation starts a fresh free-dictation attempt on the destination.
+   if(s.mode==='free'&&saved){
+    saved.freeText='';
+    saved.guided=null;
+    delete saved.checks.free;
+    delete saved.outcomes.free;
+    saved.revealed=saved.revealed.filter(mode=>mode!=='free');
+   }
+   next.sentenceIndex=index;
+   navigate(target.wordIndex);
+  }else {next.sentenceFinished=true;pause(next);}
+  return next;
  }
  if(action.type==='speakingNext'&&s.module==='speaking'&&word){navigate(Math.min(deck.words.length,s.index+1));return next;}
  if(action.type==='sentencePrevious'){

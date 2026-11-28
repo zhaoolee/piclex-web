@@ -56,6 +56,38 @@ test('free dictation advances past repeated sentences on the same photo only',()
  assert.deepEqual(Object.keys(s.sentences),[0,1,4,5].map(i=>prompts[i].key));
 });
 
+test('advancing in free dictation opens a blank attempt for a saved destination',()=>{
+ const [first,second]=promptsFor(dialogueDeck);
+ for(const savedAnswer of [
+  {type:'guided',values:['Read','the','reply']},
+  {type:'giveUp'},
+  {type:'guided',values:['Read','th']},
+ ]){
+  let s={...start('chunks'),sentenceIndex:1};
+  s=act(s,{type:'sentence',action:{type:'select',id:0}});
+  s=act(s,{type:'mode',value:'free'});
+  s=act(s,{type:'sentence',action:savedAnswer});
+  s=act(s,{type:'sentencePrevious'});
+  s=restoreStudy(dialogueDeck,JSON.parse(JSON.stringify(s)));
+  const saved=s.sentences[second.key];
+  assert.notEqual(saved.freeText,'');
+
+  s=act(answer(s,['Send','a','request']),{type:'sentenceNext'});
+  assert.equal(s.sentenceIndex,1);
+  assert.equal(s.sentences[first.key].outcomes.free,'correct');
+  const fresh=s.sentences[second.key];
+  assert.equal(fresh.freeText,'');
+  assert.equal(fresh.guided,null);
+  assert.equal(fresh.pending,null);
+  assert.equal(fresh.outcomes.free,undefined);
+  assert.equal(fresh.checks.free,undefined);
+  assert.ok(!fresh.revealed.includes('free'));
+  assert.deepEqual(fresh.selected,saved.selected);
+  assert.deepEqual(fresh.statistics,saved.statistics);
+  assert.deepEqual(answer(s,['R']).sentences[second.key].guided,['R','','']);
+ }
+});
+
 test('a saved draft and direct link to a repeated sentence still open that attempt',()=>{
  const link='#/deck/dialogue?module=listening&photo=1&word=request&mode=free&sentence=1&difficulty=easy';
  let s=applyLearningURL(dialogueDeck,start(),parseLearningURL(link));

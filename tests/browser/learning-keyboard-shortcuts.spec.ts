@@ -78,6 +78,31 @@ test('continuous letter-only input inserts sentence separators in free dictation
  expect(values).toEqual(['a','croissant','is','on','the','wooden','plate']);
 });
 
+test('automatic advance opens previously answered dictation fields blank and ready for typing',async({page})=>{
+ await openCafe(page,'Bring the map. Take my coat.');
+ await page.getByRole('tab',{name:'练听力',exact:true}).click();
+ await page.getByLabel('句子练习模式',{exact:true}).selectOption('free');
+ await expect(page).toHaveURL(/&sentence=1&/);
+ const firstURL=page.url();
+ const secondURL=firstURL.replace('&sentence=1&','&sentence=2&');
+ const fields=page.locator('.guided-input input');
+ await page.goto(secondURL);
+ await expect(fields.first()).toHaveAccessibleName('第 1 个单词，4 个字母');
+ await page.getByRole('button',{name:'听不懂',exact:true}).click();
+ await expect(fields.first()).toHaveValue('Take');
+
+ await page.goto(firstURL);
+ await expect(fields.first()).toHaveAccessibleName('第 1 个单词，5 个字母');
+ await fields.first().focus();
+ await page.keyboard.type('bringthemap');
+ await expect(page).toHaveURL(secondURL);
+ await expect(fields).toHaveCount(3);
+ for(const field of await fields.all())await expect(field).toHaveValue('');
+ await expect(fields.first()).toBeFocused();
+ await page.keyboard.type('t');
+ await expect(fields.first()).toHaveValue('t');
+});
+
 test('free dictation checks complete wrong answers without a submit control',async({page})=>{
  await openCafe(page);
  await page.getByRole('tab',{name:'练听力',exact:true}).click();
