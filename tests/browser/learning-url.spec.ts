@@ -203,18 +203,24 @@ test('movie titles blur independently and follow the current listening photo',as
 test('free dictation starts each sentence with a blurred translation and one fresh answer',async({page},info)=>{
  const movie=catalog.find((entry:{title:string})=>entry.title==='经典电影台词');
  const movies=JSON.parse(fs.readFileSync('apps/public/public/'+movie.payload,'utf8'));
- const first=movies.words.find((word:{example:string})=>word.example.startsWith('Until I walk amongst you again'));
- const second=movies.words.find((word:{example:string})=>word.example==='My precious.');
+ type MovieWord={id:string;example:string;exampleChinese:string;imageIndex:number};
+ const words=movies.words as MovieWord[];
+ const filled=(word:MovieWord)=>typeof word.exampleChinese==='string'&&word.exampleChinese.trim()!=='';
+ const first=words.find(word=>filled(word)&&/^[A-Za-z]{3,} /.test(word.example)&&word.example.trim().split(/\s+/).length>=6);
+ if(!first)throw new Error('Movie payload has no Chinese example with at least six words and a three-letter first token');
+ const second=words.find(word=>word.imageIndex!==first.imageIndex&&filled(word)&&/^[A-Za-z]+ [A-Za-z]+[.!?]$/.test(word.example));
+ if(!second)throw new Error('Movie payload has no different photo with a two-word Chinese example');
+ const partial=first.example.slice(0,2).toLowerCase();
  const press=(locator:ReturnType<Page['locator']>)=>info.project.use.hasTouch?locator.tap():locator.click();
  const translation=page.locator('.dictation-translation');
  const answer=page.locator('.guided-input');
  const field=answer.locator('input').first();
  await page.goto('/piclex-web/#/deck/'+movie.id+'?module=listening&mode=free&photo='+(first.imageIndex+1)+'&word='+encodeURIComponent(first.id));
  await expect(translation).toHaveAttribute('aria-label','显示中文译文');
- await fillEnglish(field,'un');
+ await fillEnglish(field,partial);
  await press(translation);
  await expect(translation.locator('span')).toHaveCSS('filter','blur(0px)');
- await expect(field).toHaveValue('un');
+ await expect(field).toHaveValue(partial);
  await expect(field).toBeFocused();
  await press(translation);
  await expect(translation).toHaveAttribute('aria-label','显示中文译文');
