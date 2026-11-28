@@ -199,3 +199,34 @@ test('movie titles blur independently and follow the current listening photo',as
  await expect(title).toHaveCount(0);
  await expect(page.getByRole('button',{name:'显示中文提示',exact:true})).toHaveAttribute('aria-pressed','true');
 });
+
+test('free dictation starts each sentence with a blurred translation and one fresh answer',async({page},info)=>{
+ const movie=catalog.find((entry:{title:string})=>entry.title==='经典电影台词');
+ const movies=JSON.parse(fs.readFileSync('apps/public/public/'+movie.payload,'utf8'));
+ const first=movies.words.find((word:{example:string})=>word.example.startsWith('Until I walk amongst you again'));
+ const second=movies.words.find((word:{example:string})=>word.example==='My precious.');
+ const press=(locator:ReturnType<Page['locator']>)=>info.project.use.hasTouch?locator.tap():locator.click();
+ const translation=page.locator('.dictation-translation');
+ const answer=page.locator('.guided-input');
+ const field=answer.locator('input').first();
+ await page.goto('/piclex-web/#/deck/'+movie.id+'?module=listening&mode=free&photo='+(first.imageIndex+1)+'&word='+encodeURIComponent(first.id));
+ await expect(translation).toHaveAttribute('aria-label','显示中文译文');
+ await fillEnglish(field,'un');
+ await press(translation);
+ await expect(translation.locator('span')).toHaveCSS('filter','blur(0px)');
+ await expect(field).toHaveValue('un');
+ await expect(field).toBeFocused();
+ await press(translation);
+ await expect(translation).toHaveAttribute('aria-label','显示中文译文');
+ await press(translation);
+ await expect(translation.locator('span')).toHaveCSS('filter','blur(0px)');
+ await press(page.locator('.photo-open-icon'));
+ const gallery=page.getByRole('dialog',{name:'选择照片'});
+ await press(gallery.getByRole('button',{name:new RegExp('^照片 '+(second.imageIndex+1)+'(?:，|$)')}));
+ await expect(translation).toHaveText(second.exampleChinese);
+ await expect(translation).toHaveAttribute('aria-label','显示中文译文');
+ await expect(answer).toHaveCount(1);
+ await expect(answer.locator('input')).toHaveCount(2);
+ await expect(field).toHaveValue('');
+ await expect(page.locator('.listening-movie-title')).toHaveAttribute('aria-pressed','false');
+});

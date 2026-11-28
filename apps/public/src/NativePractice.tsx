@@ -76,9 +76,11 @@ function BookshelfIcon(){
   <rect x="18" y="6" width="3.2" height="14" rx="1.05" transform="rotate(-4.5 19.6 20)"/>
  </svg>;
 }
-function ListeningMovieTitle({title}:{title:string}){
- const [hidden,setHidden]=useState(false);
- // Arrow keys scroll only when the focused title actually overflows, so every
+// One blurred reveal control for the photo title and the dictation translation.
+// Each instance owns its own hidden state and keeps the caller's layout classes.
+function BlurredTextToggle({text,className,textClassName,showLabel,hideLabel,initiallyHidden=false}:{text:string;className:string;textClassName:string;showLabel:string;hideLabel:string;initiallyHidden?:boolean}){
+ const [hidden,setHidden]=useState(initiallyHidden);
+ // Arrow keys scroll only when the focused text actually overflows, so every
  // other key keeps its browser meaning and no arrow is swallowed needlessly.
  const scrollByArrow=(event:ReactKeyboardEvent<HTMLButtonElement>)=>{
   if(event.key!=='ArrowLeft'&&event.key!=='ArrowRight')return;
@@ -88,11 +90,17 @@ function ListeningMovieTitle({title}:{title:string}){
   const step=Math.max(24,Math.round(node.clientWidth*.6));
   node.scrollLeft=Math.max(0,Math.min(overflow,node.scrollLeft+(event.key==='ArrowRight'?step:-step)));
  };
- return <button type="button" className="listening-movie-title" data-hidden={hidden}
-  aria-label={hidden?'显示电影名':`隐藏电影名，${title}`} aria-pressed={hidden}
+ return <button type="button" className={className} data-hidden={hidden}
+  aria-label={hidden?showLabel:`${hideLabel}，${text}`} aria-pressed={hidden}
   onPointerDown={event=>event.stopPropagation()} onMouseDown={event=>event.preventDefault()} onKeyDown={scrollByArrow} onClick={()=>setHidden(value=>!value)}>
-  <span className="listening-movie-title-text" aria-hidden={hidden||undefined}>{title}</span>
+  <span className={textClassName} aria-hidden={hidden||undefined}>{text}</span>
  </button>;
+}
+function ListeningMovieTitle({title}:{title:string}){
+ return <BlurredTextToggle text={title} className="listening-movie-title" textClassName="listening-movie-title-text" showLabel="显示电影名" hideLabel="隐藏电影名"/>;
+}
+function DictationTranslation({text}:{text:string}){
+ return <BlurredTextToggle text={text} className="dictation-translation" textClassName="dictation-translation-text" showLabel="显示中文译文" hideLabel="隐藏中文译文" initiallyHidden/>;
 }
 function PlaybackFill({progress}:{progress:ReturnType<typeof useSpeech>['progress']}){
  const {value,indeterminate}=useSyncExternalStore(progress.subscribe,progress.getSnapshot);
@@ -389,7 +397,7 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,loadP
   // denied play() and its blocked-state render. The request ref is immediate;
   // ordinary later gestures have no pending request and must not replay.
   const retryGesture=()=>{if(!audio.retryBlocked()&&audio.blocked)playCurrentRef.current();};
-  const excluded='.audio-unlock,.native-header,.module-tabs,.sentence-toolbar,.native-playback,.listening-transport,.listening-metadata,.reading-actions,.reading-next,.native-primary,.sentence-actions,.peek-letter,.photo-open,.native-completion,.native-example,.practice-library,[role=dialog]';
+  const excluded='.audio-unlock,.native-header,.module-tabs,.sentence-toolbar,.native-playback,.listening-transport,.listening-metadata,.reading-actions,.reading-next,.native-primary,.sentence-actions,.peek-letter,.photo-open,.native-completion,.native-example,.dictation-translation,.practice-library,[role=dialog]';
   const click=(event:MouseEvent)=>{const target=event.target as Element|null;if(!event.isTrusted)return;if(target?.closest?.(excluded)){audio.acknowledgeGesture();return;}retryGesture();};
   const key=(event:KeyboardEvent)=>{if(!event.isTrusted||event.repeat||event.isComposing||event.metaKey||event.ctrlKey||event.altKey)return;if(/^[a-z]$/i.test(event.key)||/^Key[A-Z]$/.test(event.code))retryGesture();};
   document.addEventListener('click',click);window.addEventListener('keydown',key,true);
@@ -488,6 +496,7 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,loadP
  const sentenceWords=prompt?writtenWords(prompt.sentence):[];
  const editableSentenceWords=sentenceWords.filter(isGuidedWordEditable);
  const allWordsShown=freeDictation&&!editableSentenceWords.length;
+ const dictationTranslation=freeDictation&&!revealed?prompt?.translation.trim():undefined;
  const photoPalette=usePhotoPalette();
  const spellingPhotoBudget=useRef<{height:number;photo:number}|null>(null);
  useLayoutEffect(()=>{
@@ -533,6 +542,7 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,loadP
     {state.module==='spelling'&&word.example&&<SentenceLine sentence={word.example} target={word.english} translation={word.exampleChinese} hidden={state.hiddenChinese} position={audio.position} open={()=>selectModule('speaking')}/>}
     {state.module==='listening'&&(!prompt?<p className="native-unavailable">这张卡片没有可练习的例句。</p>:state.sentenceFinished?<section className="native-completion"><h2>本轮句子练习完成</h2><p>已到达卡组末尾。</p>{challengePrompt&&!state.sentences[challengePrompt.key]?.outcomes.free&&<button className="native-button" onClick={()=>dispatch({type:'dictationChallenge'})}>挑战这句自由听写</button>}<button className="native-primary" onClick={()=>dispatch({type:'dictationRestart'})}>再听写一轮</button><button className="native-button" onClick={()=>selectModule('spelling')}>返回单词学习</button></section>:<section className="sentence-content" aria-label={modes.find(([id])=>id===state.mode)?.[1]}>
      {state.mode==='listening'?<><p className="listening-sentence">{exampleWords(prompt.sentence).map((w,i)=><span className={audio.position>=w.start&&audio.position<w.end?'spoken-word':''} key={i}>{w.text} </span>)}</p><p className="muted">{prompt.translation}</p>{audio.preparing&&<p className="small muted" role="status">正在准备当前句，准备好后立即播放</p>}{audio.error&&<p role="alert">{audio.error}</p>}</>:state.mode==='chunks'?<><p className="chunk-instruction">{sentence.selected.length?'点词块可撤回，长按或右键可调整位置':'听一句，点选词块拼成句子'}</p><div className="chunk-answer" aria-label="已选词块">{sentence.selected.map((id:number)=><Chunk key={id} text={sentence.chunks[id].text} disabled={!!sentenceResult} remove={()=>act({type:'remove',id})} move={offset=>act({type:'move',id,offset})}/>)}</div><div className="chunk-bank" aria-label="待选词块">{sentence.bank.filter((id:number)=>!sentence.selected.includes(id)).map((id:number)=><button className="chunk" key={id} disabled={!!sentenceResult} onClick={()=>act({type:'select',id})}>{sentence.chunks[id].text}</button>)}</div></> :<GuidedInput key={prompt.key} deckWord={deck.words[prompt.wordIndex].english} deckMeaning={deck.words[prompt.wordIndex].chinese} onVirtualKey={virtualPress} sentence={prompt.sentence} value={sentence.guided||sentenceWords.map((_:string,i:number)=>writtenWords(sentence.freeText)[i]||'')} disabled={!!sentenceResult} feedbackActive={active&&!revealed} onWarning={setImeWarning} onComposing={setComposing} onSubmit={()=>{if(!sentenceResult)act({type:'submit'});else if(sentence.pending!==state.mode)dispatch({type:'sentenceNext'});}} onChange={values=>act({type:'guided',values})}/>}
+     {dictationTranslation&&<DictationTranslation key={`translation:${prompt.key}`} text={dictationTranslation}/>}
      {sentenceResult==='assisted'?<p className="sentence-feedback" role="status">参考答案</p>:check&&!check.isCorrect&&<div className="sentence-feedback" role="status"><strong>再听一次，试着修改答案</strong>{state.mode==='chunks'?<p>词块顺序还需要调整。</p>:<><div className="sentence-diff">{check.edits.map((edit:any,i:number)=><span key={i} className={edit.kind==='match'?'matched':'needs-work'}>{edit.kind==='match'?edit.actual:edit.kind==='omission'?revealed?`遗漏：${edit.expected}`:'遗漏一词':edit.kind==='addition'?`多余：${edit.actual}`:revealed?`${edit.actual} → ${edit.expected}`:`替换：${edit.actual}`}</span>)}</div><button className="text-button" onClick={()=>act({type:revealed?'retry':'reveal'})}>{revealed?'重新拼写':'显示答案'}</button></>}</div>}
      {revealed&&<div className="standard-answer"><p>{prompt.sentence}</p><p className="muted">{prompt.translation}</p></div>}
     </section>)}
