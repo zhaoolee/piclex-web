@@ -320,7 +320,7 @@ test('fresh free completion lights the full answer and plays the spelling cue on
  expect((await cue()).started).toBe(1);
 });
 
-test('a delayed cue decode never rings after the sentence feedback has started',async({page})=>{
+test('a delayed cue decode never rings after the sentence feedback has started',async({page},info)=>{
  await isolateSpeech(page);
  await observeCompletionCue(page);
  await page.addInitScript(()=>{
@@ -332,9 +332,13 @@ test('a delayed cue decode never rings after the sentence feedback has started',
  try{
   await page.goto(progressURL('3'));
   const board=page.locator('.guided-input');
-  await board.locator('input').first().focus();
   const url=page.url();
-  await page.keyboard.type('Onetestisfailing');
+  if(info.project.use.hasTouch){
+   for(const letter of 'onetestisfailing')await page.locator(`.virtual-key[data-key="${letter}"]`).tap();
+  }else{
+   await board.locator('input').first().focus();
+   await page.keyboard.type('Onetestisfailing');
+  }
   await expect(board).toHaveClass(/gold-sweep/,{timeout:500});
   await expect.poll(()=>page.evaluate(()=>(window as any).__cues.animation)).toEqual(expect.any(Number));
   expect(await page.evaluate(()=>(window as any).__cues.started)).toBe(0);
