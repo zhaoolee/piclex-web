@@ -66,7 +66,7 @@ function revealFocusedAnswer(){
 }
 function SpeakerIcon(){return <Icon name="sound"/>;}
 function MutedSpeakerIcon(){return <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 9.5v5h3.5L12 18V6L7.5 9.5H4z"/><path d="m15.5 9.5 5 5m0-5-5 5"/></svg>;}
-function BookshelfIcon(){return <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><rect x="4.4" y="6.4" width="4.1" height="11.6" rx=".8"/><rect x="10.2" y="4.4" width="4.2" height="13.6" rx=".8"/><g transform="rotate(11 17.3 18)"><rect x="15.8" y="5.2" width="3.9" height="12.8" rx=".8"/></g></svg>;}
+function BookshelfIcon(){return <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><rect x="4.5" y="7.7" width="4" height="10.3" rx=".7"/><rect x="9.3" y="5.8" width="4.6" height="12.2" rx=".7"/><path d="M10.5 9h2.2M10.5 15h2.2"/><g transform="rotate(9 17.1 18)"><rect x="15.4" y="6.6" width="3.4" height="11.4" rx=".7"/></g></svg>;}
 function ListeningMovieTitle({title}:{title:string}){
  const [hidden,setHidden]=useState(false);
  // Arrow keys scroll only when the focused title actually overflows, so every

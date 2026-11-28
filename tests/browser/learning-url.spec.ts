@@ -22,21 +22,26 @@ test('startup navigation before the first hash subscription is not lost',async({
  await expect(page.getByRole('heading',{name:'关于',exact:true})).toBeVisible();
 });
 async function photoHash(page:Page){await expect(page.locator('.photo-browse img')).toBeVisible();return page.locator('.photo-browse img').evaluate(async(image)=>{const data=await (await fetch((image as HTMLImageElement).src)).arrayBuffer();return Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',data))).map(n=>n.toString(16).padStart(2,'0')).join('');});}
+// The gallery icon belongs to its .photo-browse frame, not to the letterboxed
+// photo inside it: both insets stay at 10px for any aspect ratio.
+async function expectGalleryIconInset(page:Page){
+ const icon=page.locator('.photo-browse .photo-open-icon');
+ await expect(icon).toBeVisible();
+ await expect.poll(()=>icon.evaluate(node=>{
+  const frame=node.closest('.photo-browse');
+  if(!frame)return Infinity;
+  const overlay=node.getBoundingClientRect(),box=frame.getBoundingClientRect();
+  return Math.max(Math.abs(overlay.top-box.top-10),Math.abs(box.right-overlay.right-10));
+ })).toBeLessThanOrEqual(1);
+}
 test('share restores module, photo and sentence in a fresh browser without sender progress',async({page,browser})=>{
  await page.addInitScript(()=>Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async(text:string)=>{(window as any).__shared=text;}}}));
  await page.goto('/piclex-web/#/deck/'+card.id);const input=page.getByRole('textbox',{name:'输入英文',exact:true});await expect(input).toBeVisible();
  const draft=deck.words[0].english.slice(0,1);await fillSpelling(page,draft);const spellingURL=page.url();const history=await page.evaluate(()=>window.history.length);
  await page.getByRole('tab',{name:'练听力',exact:true}).click();await page.getByLabel('句子练习模式').selectOption('listening');
  const galleryButton=page.getByRole('button',{name:'选择照片',exact:true});
- const galleryIcon=galleryButton.locator('.photo-open-icon');
- await expect(galleryIcon).toBeVisible();
- await expect.poll(()=>galleryIcon.evaluate(icon=>{
-  const image=icon.closest('.photo-browse')?.querySelector('.focus-image');
-  if(!image)return false;
-  const overlay=icon.getBoundingClientRect(),frame=image.getBoundingClientRect();
-  return overlay.top>=frame.top && overlay.right<=frame.right;
- })).toBe(true);
- const icon=await galleryIcon.boundingBox(),photoButton=await galleryButton.boundingBox();
+ await expectGalleryIconInset(page);
+ const icon=await galleryButton.locator('.photo-open-icon').boundingBox(),photoButton=await galleryButton.boundingBox();
  if(!icon||!photoButton)throw new Error('Missing photo gallery control');
  const iconCenter={x:icon.x-photoButton.x+icon.width/2,y:icon.y-photoButton.y+icon.height/2};
  expect(iconCenter.x).toBeGreaterThan(photoButton.width/2);
@@ -171,6 +176,9 @@ test('movie titles blur independently and follow the current listening photo',as
  await press(toolbar.locator('summary'));
  await expect(toolbar.getByLabel('背景声音量')).toBeVisible();
  await press(toolbar.locator('summary'));
+ // These movie stills are letterboxed inside .photo-browse; the icon must not
+ // drift with the image insets reported by the audio-unlock control.
+ await expectGalleryIconInset(page);
  await press(page.locator('.photo-open-icon'));
  await expect(gallery).toBeVisible();
  await press(gallery.getByRole('button',{name:new RegExp('^照片 '+(previous.imageIndex+2)+'(?:，|$)')}));
