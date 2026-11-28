@@ -14,7 +14,7 @@ export function PracticeProgress({deckTitle,position,count,cardPosition,cardCoun
    <span className="practice-experience-target">
    <span className="learning-experience" role="progressbar" aria-label="等级经验" aria-valuenow={Math.round(xp.fraction*100)} aria-valuemin={0} aria-valuemax={100}><i style={{width:`${xp.fraction*100}%`}}/><b>{(xp.fraction*100).toFixed(2)}%</b></span>
    </span>
-   <span className="practice-deck-lane" style={{'--deck-progress':deckProgress} as CSSProperties}><span className="practice-deck-title" id={`${id}-title`}>{deckTitle}</span><span className="practice-deck-count" id={`${id}-count`}>{cardPosition}/{cardCount}</span><i aria-hidden="true">▾</i></span>
+   <span className="practice-deck-lane" style={{'--deck-progress':deckProgress} as CSSProperties}><span className="practice-deck-title" id={`${id}-title`}>{deckTitle}</span><small className="practice-deck-count" id={`${id}-count`}>{cardPosition}/{cardCount}</small><i aria-hidden="true">▾</i></span>
   </button>
   <span className="sr-only" role="progressbar" aria-label="本轮练习进度" aria-valuenow={position} aria-valuemin={0} aria-valuemax={count}/>
  </div>;

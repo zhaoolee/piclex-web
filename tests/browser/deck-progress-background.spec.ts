@@ -5,7 +5,7 @@ import {fillSpelling} from './helpers/spelling';
 const cafe=path.resolve('tests/fixtures/demo/decks/cafe.piclexdeck');
 const travel=path.resolve('tests/fixtures/demo/decks/travel.piclexdeck');
 const cafeTitle='咖啡馆的早晨',travelTitle='下一站，出发';
-const heads={header:'.native-header',battery:'.practice-progress-battery',level:'.practice-level-target',deck:'.practice-deck-target',xp:'.practice-experience-target .learning-experience',lane:'.practice-deck-lane',title:'.practice-deck-lane > span',arrow:'.practice-deck-lane > i'};
+const heads={header:'.native-header',battery:'.practice-progress-battery',level:'.practice-level-target',deck:'.practice-deck-target',xp:'.practice-experience-target .learning-experience',lane:'.practice-deck-lane',title:'.practice-deck-lane > .practice-deck-title',arrow:'.practice-deck-lane > i'};
 type Box={x:number;y:number;width:number;height:number};
 type Geometry=Record<string,Box>;
 
@@ -56,7 +56,7 @@ const distance=(a:number[],b:number[])=>a.slice(0,3).reduce((sum,value,index)=>s
 async function lanePixels(page:Page,points:{body:number;beyond:number;edge:number}){
  const lane=page.locator('.practice-deck-lane');
  await expect(page.locator('canvas.experience-particles')).toHaveCount(0,{timeout:10_000});
- await lane.evaluate(el=>el.querySelectorAll('span,i').forEach(node=>((node as HTMLElement).style.visibility='hidden')));
+ await lane.evaluate(el=>el.querySelectorAll(':scope > *').forEach(node=>((node as HTMLElement).style.visibility='hidden')));
  try{
   const png=await lane.screenshot();
   return await page.evaluate(async ({png,points})=>{
@@ -69,7 +69,7 @@ async function lanePixels(page:Page,points:{body:number;beyond:number;edge:numbe
    return {body:sample(points.body),beyond:sample(points.beyond),edge:sample(points.edge)};
   },{png:png.toString('base64'),points});
  }finally{
-  await lane.evaluate(el=>el.querySelectorAll('span,i').forEach(node=>((node as HTMLElement).style.visibility='')));
+  await lane.evaluate(el=>el.querySelectorAll(':scope > *').forEach(node=>((node as HTMLElement).style.visibility='')));
  }
 }
 
@@ -77,7 +77,7 @@ for(const theme of ['light','dark'] as const)test(`deck lane shows real traversa
  await prepare(page,theme);
  await importDeck(page,cafe,'牛角包');
  await expect(page.locator('html')).toHaveAttribute('data-theme',theme);
- const lane=page.locator('.practice-deck-lane'),title=lane.locator('span'),arrow=lane.locator('i');
+ const lane=page.locator('.practice-deck-lane'),title=lane.locator('.practice-deck-title'),arrow=lane.locator('i');
  await expect(title).toHaveText(cafeTitle);await expect(arrow).toHaveText('▾');
  const baseline=await geometry(page),baseBackground=await backgroundOf(lane),width=(await lane.boundingBox())!.width;
  expect(await ratioOf(lane)).toBeCloseTo(0,3);expect(await durationOf(lane)).toBe('0.25s');
@@ -122,7 +122,7 @@ test('switching decks and reload preserve the original deck ratio',async({page})
  const progressed=await geometry(page);
 
  await importDeck(page,travel,'护照');
- await expect(lane.locator('span')).toHaveText(travelTitle);
+ await expect(lane.locator('.practice-deck-title')).toHaveText(travelTitle);
  await expect.poll(()=>ratioOf(lane)).toBeCloseTo(0,3);
  await page.getByRole('button',{name:'当前卡组，学习设置',exact:true}).click();
  const picker=page.getByRole('group',{name:'切换卡组',exact:true});
@@ -130,7 +130,7 @@ test('switching decks and reload preserve the original deck ratio',async({page})
  await picker.locator(`[data-deck-id="${cafeID}"]`).click();
  await expect(page).toHaveURL(new RegExp(`/deck/${cafeID}(?:\\?|$)`));
  await expect(page.getByRole('heading',{name:'勺子',exact:true})).toBeVisible();
- await expect(lane.locator('span')).toHaveText(cafeTitle);
+ await expect(lane.locator('.practice-deck-title')).toHaveText(cafeTitle);
  await expect.poll(()=>ratioOf(lane)).toBeCloseTo(1/6,3);
  expectSameGeometry(progressed,await geometry(page));
 
