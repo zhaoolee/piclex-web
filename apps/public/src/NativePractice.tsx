@@ -24,7 +24,7 @@ import useStudyPersistence from './useStudyPersistence';
 import {editKeyboardText} from '../../../packages/learning-ui/src/keyboard-edit.mjs';
 import {transactExperience} from '../../../packages/practice/src/experience-store.mjs';
 import {clearExperienceEffects,emitExperience,prepareExperienceEffects} from '../../../packages/learning-ui/src/experience-effects';
-import {memo,useCallback,useEffect,useLayoutEffect,useMemo,useRef,useState,useSyncExternalStore,type CSSProperties,type PointerEvent as ReactPointerEvent,type ReactNode} from 'react';
+import {memo,useCallback,useEffect,useLayoutEffect,useMemo,useRef,useState,useSyncExternalStore,type CSSProperties,type KeyboardEvent as ReactKeyboardEvent,type PointerEvent as ReactPointerEvent,type ReactNode} from 'react';
 import {PhotoFocus,type Focus,type PhotoLoadState} from '../../../packages/learning-ui/src/PhotoFocus';
 import {AnswerSlots} from '../../../packages/learning-ui/src/AnswerSlots';
 import SpellingGlow from '../../../packages/learning-ui/src/SpellingGlow';
@@ -69,9 +69,19 @@ function MutedSpeakerIcon(){return <svg viewBox="0 0 24 24" aria-hidden="true" f
 function BookshelfIcon(){return <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><rect x="4.4" y="6.4" width="4.1" height="11.6" rx=".8"/><rect x="10.2" y="4.4" width="4.2" height="13.6" rx=".8"/><g transform="rotate(11 17.3 18)"><rect x="15.8" y="5.2" width="3.9" height="12.8" rx=".8"/></g></svg>;}
 function ListeningMovieTitle({title}:{title:string}){
  const [hidden,setHidden]=useState(false);
+ // Arrow keys scroll only when the focused title actually overflows, so every
+ // other key keeps its browser meaning and no arrow is swallowed needlessly.
+ const scrollByArrow=(event:ReactKeyboardEvent<HTMLButtonElement>)=>{
+  if(event.key!=='ArrowLeft'&&event.key!=='ArrowRight')return;
+  const node=event.currentTarget,overflow=node.scrollWidth-node.clientWidth;
+  if(overflow<=1)return;
+  event.preventDefault();
+  const step=Math.max(24,Math.round(node.clientWidth*.6));
+  node.scrollLeft=Math.max(0,Math.min(overflow,node.scrollLeft+(event.key==='ArrowRight'?step:-step)));
+ };
  return <button type="button" className="listening-movie-title" data-hidden={hidden}
   aria-label={hidden?'显示电影名':`隐藏电影名，${title}`} aria-pressed={hidden}
-  onMouseDown={event=>event.preventDefault()} onClick={()=>setHidden(value=>!value)}>
+  onPointerDown={event=>event.stopPropagation()} onMouseDown={event=>event.preventDefault()} onKeyDown={scrollByArrow} onClick={()=>setHidden(value=>!value)}>
   <span className="listening-movie-title-text" aria-hidden={hidden||undefined}>{title}</span>
  </button>;
 }

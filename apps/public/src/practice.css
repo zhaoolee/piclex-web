@@ -199,8 +199,12 @@ body[data-practice=true] .toast button{pointer-events:auto}
 .sentence-toolbar{position:relative;padding:0 10px;z-index:3}
 .sentence-toolbar>select{max-width:calc(100% - 52px);min-height:44px;font-weight:500}
 .sentence-toolbar:has(.listening-movie-title)>select{flex:none}
-.listening-movie-title{flex:1;min-width:0;height:44px;display:grid;place-items:center;border:0;background:transparent;color:inherit;padding:0 4px;font-size:14px;line-height:1.25;text-align:center;overflow:hidden}
-.listening-movie-title-text{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;overflow-wrap:anywhere}
+/* One line at a stable 14px on every viewport. A title wider than the button
+   keeps the button's fixed height and scrolls horizontally inside it (scrollbar
+   hidden); the child's auto inline margins center only while it still fits. */
+.listening-movie-title{flex:1;min-width:0;height:44px;display:flex;align-items:center;border:0;background:transparent;color:inherit;padding:0 4px;font-size:14px;line-height:1.25;text-align:center;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;overscroll-behavior-x:contain}
+.listening-movie-title::-webkit-scrollbar{display:none}
+.listening-movie-title-text{flex:none;margin-inline:auto;white-space:nowrap}
 .listening-movie-title:focus-visible{outline:2px solid currentColor;outline-offset:-2px}
 .sentence-ambience{position:relative;flex:none;margin-left:auto}
 /* The trigger belongs to the photo palette; the popup belongs to the app theme. */

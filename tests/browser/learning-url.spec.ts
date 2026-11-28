@@ -136,6 +136,38 @@ test('movie titles blur independently and follow the current listening photo',as
  expect(bounds[1].right).toBeLessThanOrEqual(bounds[2].left);
  expect(bounds.every(box=>box.left>=0&&box.height>=44)).toBe(true);
  expect(bounds[2].right).toBeLessThanOrEqual(await page.evaluate(()=>innerWidth));
+ await expect(title).toHaveAttribute('aria-label','隐藏电影名，'+movies.photos[0].title);
+ // The longest bilingual Lord of the Rings title cannot fit the toolbar, so it
+ // proves the stable 14px one-line overflow and real keyboard scrolling in
+ // every project without toggling the blur or leaving the listening mode.
+ const rings=movies.photos.map((photo:{title:string},index:number)=>({title:photo.title,index})).filter(photo=>/Lord of the Rings/i.test(photo.title)).sort((a,b)=>b.title.length-a.title.length)[0];
+ expect(rings).toBeTruthy();
+ await page.goto(root+'?module=listening&mode=free&photo='+(rings.index+1));
+ await expect(title).toHaveText(rings.title);
+ await expect(mode).toHaveValue('free');
+ const typography=await text.evaluate(span=>{
+  const style=getComputedStyle(span),box=span.getBoundingClientRect();
+  return {whiteSpace:style.whiteSpace,textOverflow:style.textOverflow,fontSize:parseFloat(style.fontSize),lineHeight:parseFloat(style.lineHeight),height:box.height};
+ });
+ expect(typography.fontSize).toBe(14);
+ expect(typography.whiteSpace).toBe('nowrap');
+ expect(typography.textOverflow).not.toBe('ellipsis');
+ expect(typography.height).toBeLessThanOrEqual(typography.lineHeight+1);
+ const strip=await title.evaluate(node=>({overflowX:getComputedStyle(node).overflowX,scrollWidth:node.scrollWidth,clientWidth:node.clientWidth}));
+ expect(strip.overflowX).toBe('auto');
+ expect(strip.scrollWidth).toBeGreaterThan(strip.clientWidth);
+ await title.focus();
+ await expect(title).toBeFocused();
+ expect(await title.evaluate(node=>node.scrollLeft)).toBe(0);
+ await page.keyboard.press('ArrowRight');
+ await expect.poll(()=>title.evaluate(node=>node.scrollLeft)).toBeGreaterThan(0);
+ const scrolled=await title.evaluate(node=>node.scrollLeft);
+ await page.keyboard.press('ArrowLeft');
+ await expect.poll(()=>title.evaluate(node=>node.scrollLeft)).toBeLessThan(scrolled);
+ await expect(title).toHaveAttribute('aria-pressed','false');
+ await expect(text).toHaveCSS('filter','blur(0px)');
+ await expect(mode).toHaveValue('free');
+ await expect(page.getByRole('tab',{name:'练听力',exact:true})).toHaveAttribute('aria-selected','true');
  await press(toolbar.locator('summary'));
  await expect(toolbar.getByLabel('背景声音量')).toBeVisible();
  await press(toolbar.locator('summary'));
