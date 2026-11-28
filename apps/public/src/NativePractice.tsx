@@ -51,6 +51,7 @@ function recordingFor(words:Word[],prompt?:{wordIndex:number;sentence:string}){
  return word?.example.trim()===prompt.sentence.trim()?word.audio:undefined;
 }
 const StablePhotoFocus=memo(PhotoFocus);
+const classicMovieDeckID='b33417a7-0f7e-4081-be35-2fe44d9d30c4';
 const modes=[['listening','随身听'],['chunks','词块拼句'],['free','自由听写']];
 const modules=[['spelling','拼单词'],['listening','练听力'],['speaking','练口语']];
 let acceptedSpellingSequence=0;
@@ -66,6 +67,14 @@ function revealFocusedAnswer(){
 function SpeakerIcon(){return <Icon name="sound"/>;}
 function MutedSpeakerIcon(){return <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 9.5v5h3.5L12 18V6L7.5 9.5H4z"/><path d="m15.5 9.5 5 5m0-5-5 5"/></svg>;}
 function BookshelfIcon(){return <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><rect x="4.4" y="6.4" width="4.1" height="11.6" rx=".8"/><rect x="10.2" y="4.4" width="4.2" height="13.6" rx=".8"/><g transform="rotate(11 17.3 18)"><rect x="15.8" y="5.2" width="3.9" height="12.8" rx=".8"/></g></svg>;}
+function ListeningMovieTitle({title}:{title:string}){
+ const [hidden,setHidden]=useState(false);
+ return <button type="button" className="listening-movie-title" data-hidden={hidden}
+  aria-label={hidden?'显示电影名':`隐藏电影名，${title}`} aria-pressed={hidden}
+  onMouseDown={event=>event.preventDefault()} onClick={()=>setHidden(value=>!value)}>
+  <span className="listening-movie-title-text" aria-hidden={hidden||undefined}>{title}</span>
+ </button>;
+}
 function PlaybackFill({progress}:{progress:ReturnType<typeof useSpeech>['progress']}){
  const {value,indeterminate}=useSyncExternalStore(progress.subscribe,progress.getSnapshot);
  const fill=useRef<HTMLSpanElement>(null);
@@ -170,6 +179,7 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,loadP
  const prompt=prompts[state.sentenceIndex],word=deck.words[state.index],draft=wordDraft(deck,state),sentence=prompt?(state.sentences[prompt.key]||newSentence(prompt)):null;
  const challengePrompt=state.sentenceFinished&&state.mode==='chunks'?prompts[sentenceIndexForMode(prompts,state.sentenceIndex,'free')]:null;
  const photoSource=word&&deck.images[word.imageIndex];
+ const movieTitle=deck.id===classicMovieDeckID&&word?deck.photoTitles?.[word.imageIndex]:undefined;
  // Free dictation shows the whole photo: no object rectangle, and an alt that matches.
  const photoFocus:Focus=freeDictation||!word?null:word.focus;
  const photoState=photoLoad&&photoLoad.source===photoSource?photoLoad.state:'loading';
@@ -498,7 +508,8 @@ export default function NativePractice({deck,openGame,gameBusy,deckChoices,loadP
      <StablePhotoFocus cache={photos} onImageReady={photoPalette.read} src={deck.images[word.imageIndex]} fit={desktopKeyboard||state.module==='listening'?'contain':'focus'} focus={photoFocus} alt={photoFocus?'训练照片，彩色框标示当前物体':'完整场景照片'} active={active} retry={photoRetry} onLoadState={reportPhotoLoad} onImageInsets={reportPhotoInsets}/>
      {audio.blocked&&autoAudioScope&&<button className="audio-unlock" aria-label="开启声音，播放当前内容" title="点击开启声音" onClick={e=>{e.preventDefault();e.stopPropagation();retryCurrent();}} onPointerDown={e=>e.stopPropagation()}><MutedSpeakerIcon/></button>}
      <button className="photo-open" aria-label={photoState==='error'?'重新加载图片':'选择照片'} title={photoState==='error'?'重新加载图片':'选择照片，打开图库'} aria-haspopup={photoState==='error'?undefined:'dialog'} onClick={()=>{if(photoState==='error'){setPhotoRetry(n=>n+1);return;}if(Date.now()<suppressPhoto.current){suppressPhoto.current=0;return;}openPanel('gallery');}} onPointerDown={e=>{held.current.add(e.pointerId);if(held.current.size>1)openPanel('gallery');}} onPointerUp={e=>held.current.delete(e.pointerId)} onPointerCancel={()=>held.current.clear()}>{photoState!=='error'&&<span className="photo-open-icon" aria-hidden="true"><BookshelfIcon/></span>}</button></div>
-     {state.module==='spelling'?<div className="native-hint"><button aria-label={state.hiddenChinese?'显示中文提示':'隐藏中文提示'} aria-pressed={state.hiddenChinese} onClick={()=>dispatch({type:'preference',name:'hiddenChinese',value:!state.hiddenChinese})}><h1 className="native-hint-word" data-hidden={state.hiddenChinese}><span className="native-hint-word-text" aria-hidden={state.hiddenChinese||undefined}>{word.chinese}</span></h1><small>{word.phonetic}</small></button>{ambienceControl}</div>:state.module==='listening'?<div className="sentence-toolbar"><select aria-label="句子练习模式" value={state.mode} onChange={e=>setMode(e.target.value)}>{modes.map(([id,title])=><option key={id} value={id}>{title}</option>)}</select>{ambienceControl}</div>:null}
+     {state.module==='spelling'?<div className="native-hint"><button aria-label={state.hiddenChinese?'显示中文提示':'隐藏中文提示'} aria-pressed={state.hiddenChinese} onClick={()=>dispatch({type:'preference',name:'hiddenChinese',value:!state.hiddenChinese})}><h1 className="native-hint-word" data-hidden={state.hiddenChinese}><span className="native-hint-word-text" aria-hidden={state.hiddenChinese||undefined}>{word.chinese}</span></h1><small>{word.phonetic}</small></button>{ambienceControl}</div>:state.module==='listening'?<div className="sentence-toolbar"><select aria-label="句子练习模式" value={state.mode} onChange={e=>setMode(e.target.value)}>{modes.map(([id,title])=><option key={id} value={id}>{title}</option>)}</select>{movieTitle&&<ListeningMovieTitle key={photoSource} title={movieTitle}/>}
+      {ambienceControl}</div>:null}
     </article>
     {state.module==='spelling'&&word.example&&<SentenceLine sentence={word.example} target={word.english} translation={word.exampleChinese} hidden={state.hiddenChinese} position={audio.position} open={()=>selectModule('speaking')}/>}
     {state.module==='listening'&&(!prompt?<p className="native-unavailable">这张卡片没有可练习的例句。</p>:state.sentenceFinished?<section className="native-completion"><h2>本轮句子练习完成</h2><p>已到达卡组末尾。</p>{challengePrompt&&!state.sentences[challengePrompt.key]?.outcomes.free&&<button className="native-button" onClick={()=>dispatch({type:'dictationChallenge'})}>挑战这句自由听写</button>}<button className="native-primary" onClick={()=>dispatch({type:'dictationRestart'})}>再听写一轮</button><button className="native-button" onClick={()=>selectModule('spelling')}>返回单词学习</button></section>:<section className="sentence-content" aria-label={modes.find(([id])=>id===state.mode)?.[1]}>
