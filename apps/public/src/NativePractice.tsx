@@ -66,7 +66,16 @@ function revealFocusedAnswer(){
 }
 function SpeakerIcon(){return <Icon name="sound"/>;}
 function MutedSpeakerIcon(){return <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 9.5v5h3.5L12 18V6L7.5 9.5H4z"/><path d="m15.5 9.5 5 5m0-5-5 5"/></svg>;}
-function BookshelfIcon(){return <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><rect x="4.5" y="7.7" width="4" height="10.3" rx=".7"/><rect x="9.3" y="5.8" width="4.6" height="12.2" rx=".7"/><path d="M10.5 9h2.2M10.5 15h2.2"/><g transform="rotate(9 17.1 18)"><rect x="15.4" y="6.6" width="3.4" height="11.4" rx=".7"/></g></svg>;}
+function BookshelfIcon(){
+ return <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" strokeWidth="1.35" strokeLinecap="round" strokeLinejoin="round">
+  <rect x="2.9" y="6.7" width="3" height="13.3" rx="1.05"/>
+  <rect x="7.3" y="8.6" width="3.3" height="11.4" rx="1.05"/>
+  <path d="M8.1 12h1.7M8.1 17h1.7"/>
+  <rect x="12.1" y="4.5" width="3.2" height="15.5" rx="1.05"/>
+  <path d="M13 7.5h1.4"/>
+  <rect x="18" y="6" width="3.2" height="14" rx="1.05" transform="rotate(-4.5 19.6 20)"/>
+ </svg>;
+}
 function ListeningMovieTitle({title}:{title:string}){
  const [hidden,setHidden]=useState(false);
  // Arrow keys scroll only when the focused title actually overflows, so every
